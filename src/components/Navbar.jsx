@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import JoinUsButton from './JoinUsButton';
+import { useState, useEffect } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import JoinUsButton from "./JoinUsButton";
+import JoinUsModal from "./JoinUsModal";
 
 // Assets from public directory
 import srlLogo from "/SRL Logo.svg";
@@ -13,8 +14,8 @@ const ksvLogo = "/ksv.png";
 const Navbar = () => {
     const [open, setOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const location = useLocation();
-    const navigate = useNavigate();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -24,7 +25,7 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Requested Sequence: SRL Sessions | Achievements | researchers | Leaderboard | Join Us | Appointment
+    // Requested Sequence: SRL Sessions | Achievements | Researchers | Leaderboard | Join Us | Appointment
     const menuItems = [
         { label: "SRL Sessions", path: "/sessions" },
         { label: "Achievements", path: "/achievements" },
@@ -38,7 +39,7 @@ const Navbar = () => {
                 <div className="max-w-[1536px] mx-auto px-4 sm:px-8 h-full font-sans">
                     <div className="flex items-center h-full">
 
-                        {/* LEFT — SRL Identity */}
+                        {/* LEFT — SRL Identity (No 'Lab' written underneath) */}
                         <Link to="/" className="flex items-center gap-3 shrink-0 group">
                             <img
                                 src={srlLogo}
@@ -52,7 +53,7 @@ const Navbar = () => {
 
                         {/* RIGHT SECTION — TABS + BUTTONS + PARTNERS */}
                         <div className="hidden xl:flex items-center ml-auto gap-8">
-                            {/* NAVIGATION TABS */}
+                            {/* NAVIGATION TABS (Moved to right side) */}
                             <div className="flex items-center gap-6">
                                 {menuItems.map((item) => (
                                     <NavLink
@@ -73,7 +74,7 @@ const Navbar = () => {
                                 ))}
                             </div>
 
-                            {/* ACTION BUTTONS (Single Line) */}
+                            {/* ACTION BUTTONS (Single line each) */}
                             <div className="flex items-center gap-4">
                                 <JoinUsButton
                                     onClick={() => setIsModalOpen(true)}
@@ -83,7 +84,7 @@ const Navbar = () => {
                                     to="/appointment"
                                     className={({ isActive }) =>
                                         `text-[10px] font-black uppercase tracking-widest px-6 py-3 rounded-full transition-all border-2 whitespace-nowrap
-                                        ${isActive ? 'bg-white text-[#134E4A] border-white' : 'bg-transparent text-white border-white/30 hover:bg-white hover:text-[#134E4A] hover:border-white hover:shadow-lg'}`
+                                        ${isActive ? 'bg-white text-[#134E4A] border-white font-bold' : 'bg-transparent text-white border-white/30 hover:bg-white hover:text-[#134E4A] hover:border-white hover:shadow-lg'}`
                                     }
                                 >
                                     SRL Appointment System
@@ -115,7 +116,7 @@ const Navbar = () => {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="xl:hidden bg-[#05877a] shadow-2xl overflow-hidden border-t border-white/10"
+                            className="xl:hidden bg-[#134E4A] shadow-2xl overflow-hidden border-t border-white/10"
                         >
                             <div className="flex flex-col px-6 py-8 gap-5">
                                 {menuItems.map((item) => (
@@ -131,12 +132,12 @@ const Navbar = () => {
                                     </NavLink>
                                 ))}
 
-                                <div className="pt-6 space-y-4">
-                                    <JoinUsButton onClick={() => { navigate('/join'); setOpen(false); }} className="w-full justify-center py-5" />
+                                <div className="mt-6 pt-6 border-t border-white/10 space-y-4">
+                                    <JoinUsButton onClick={() => { setIsModalOpen(true); setOpen(false); }} className="w-full justify-center py-4" />
                                     <NavLink
                                         to="/appointment"
                                         onClick={() => setOpen(false)}
-                                        className="block w-full bg-white text-[#05877a] text-center py-4 rounded-full font-black uppercase tracking-widest hover:bg-opacity-90 transition-all font-sans"
+                                        className="block w-full bg-white text-[#134E4A] text-center py-4 rounded-full font-black uppercase tracking-widest hover:bg-opacity-90 transition-all font-sans"
                                     >
                                         SRL Appointment System
                                     </NavLink>
@@ -147,6 +148,7 @@ const Navbar = () => {
                 </AnimatePresence>
             </nav>
 
+            <JoinUsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </>
     );
 };
