@@ -4,7 +4,7 @@ import mmpsrpcLogo from "../assets/MMPSRPC Logo.png";
 import chhaganbhaPhoto from "../assets/pujya_chhaganbha.jpg";
 import shriManeklal from "../assets/shri_maneklal_patel.jpg";
 import chairmanPhoto from "../assets/chairman.png";
-// import mamPhoto from "../assets/Ma'am Photo.png";
+import mamPhoto from "../assets/Ma'am Photo.png";
 
 export const organizationData = {
     "svkm": {
@@ -111,13 +111,13 @@ export const organizationData = {
         ],
         mission: "Empowering student researchers through comprehensive grant support and funding initiatives to drive innovation and scientific discovery.",
         vision: "Shaping the future of research through student-led innovation and global collaboration.",
-        // founders: [
-        //     {
-        //         name: "Dr. Himani Trivedi",
-        //         image: mamPhoto,
-        //         quote: "Discipline builds excellence."
-        //     }
-        // ],
+        founders: [
+            {
+                name: "Dr. Himani Trivedi",
+                image: mamPhoto,
+                quote: "Discipline builds excellence."
+            }
+        ],
         objectives: [
             {
                 title: "Research Excellence",
