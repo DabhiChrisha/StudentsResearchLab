@@ -1,6 +1,5 @@
 import React from "react";
 import { motion } from "framer-motion";
-import srlLogo from "../assets/SRL Logo.png";
 
 const objectives = [
     {
@@ -75,12 +74,6 @@ const objectives = [
     }
 ];
 
-const stats = [
-    { label: "Active Members", value: "30+" },
-    { label: "Research Domains", value: "8+" },
-    { label: "Publications", value: "2+" }
-];
-
 const CategoryBadge = ({ children, color }) => (
     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase ${color.replace('bg-', 'text-').replace('-50', '-700')} ${color} inline-block mb-2`}>
         {children}
@@ -91,13 +84,13 @@ const Objectives = () => {
     return (
         <section id="objectives" className="py-24 bg-slate-50 relative overflow-hidden">
             {/* Background Decorative Elements */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-40">
-                <div className="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] bg-secondary/5 rounded-full blur-[120px]" />
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">
+                <div className="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] bg-secondary/10 rounded-full blur-[120px]" />
                 <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px]" />
             </div>
 
             <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
-                <div className="text-center mb-20">
+                <div className="text-center mb-16">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
@@ -110,7 +103,7 @@ const Objectives = () => {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-4xl lg:text-6xl font-black text-slate-900 mb-6 font-serif tracking-tight"
+                        className="text-4xl lg:text-5xl font-black text-slate-900 mb-6 font-serif tracking-tight"
                     >
                         Objectives of SRL
                     </motion.h2>
@@ -119,157 +112,47 @@ const Objectives = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.1 }}
-                        className="text-slate-500 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed font-light"
+                        className="text-slate-500 text-lg max-w-3xl mx-auto leading-relaxed"
                     >
                         Pioneering excellence through a structured mission focused on innovation,
                         growth, and empowerment within the research ecosystem.
                     </motion.p>
                 </div>
 
-                {/* BENTO GRID */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-[180px]">
-                    {/* Stat: Active Members */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        whileHover={{ y: -5 }}
-                        className="bg-white rounded-[2rem] p-8 flex flex-col items-center justify-center text-center shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100"
-                    >
-                        <span className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">{stats[0].label}</span>
-                        <span className="text-5xl font-black text-slate-900 leading-none">{stats[0].value}</span>
-                    </motion.div>
+                {/* UNIFORM GRID OF 10 OBJECTIVES */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                    {objectives.map((obj, index) => (
+                        <motion.div
+                            key={obj.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: index * 0.05 }}
+                            whileHover={{ y: -5, shadow: "0 20px 40px rgba(0,0,0,0.05)" }}
+                            className="bg-white rounded-3xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.02)] border border-slate-100 flex flex-col h-full group transition-all duration-300"
+                        >
+                            <div className="flex justify-between items-start mb-4">
+                                <span className="text-[12px] font-black text-slate-200 group-hover:text-secondary/20 transition-colors">
+                                    {obj.id}
+                                </span>
+                                <CategoryBadge color={obj.color}>
+                                    {obj.group}
+                                </CategoryBadge>
+                            </div>
 
-                    {/* Objective: Applied Innovation (L-Shape Span) */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        whileHover={{ y: -5 }}
-                        className="lg:col-span-2 bg-white rounded-[2rem] p-8 flex flex-col justify-center shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 relative group overflow-hidden"
-                    >
-                        <CategoryBadge color={objectives[6].color}>{objectives[6].group}</CategoryBadge>
-                        <h3 className="text-2xl font-bold text-slate-900 mb-2 font-serif">{objectives[6].title}</h3>
-                        <p className="text-slate-500 text-sm leading-relaxed max-w-xs">{objectives[6].description}</p>
-                        <div className="absolute -bottom-4 -right-4 text-8xl font-black text-slate-50 group-hover:text-secondary/5 transition-colors">07</div>
-                    </motion.div>
+                            <h3 className="text-lg font-bold text-slate-900 mb-3 font-serif leading-tight group-hover:text-secondary transition-colors">
+                                {obj.title}
+                            </h3>
 
-                    {/* Stat: Research Domains */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.2 }}
-                        whileHover={{ y: -5 }}
-                        className="bg-white rounded-[2rem] p-8 flex flex-col items-center justify-center text-center shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100"
-                    >
-                        <span className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">{stats[1].label}</span>
-                        <span className="text-5xl font-black text-slate-900 leading-none">{stats[1].value}</span>
-                    </motion.div>
+                            <p className="text-sm text-slate-500 leading-relaxed mb-4 flex-grow">
+                                {obj.description}
+                            </p>
 
-                    {/* Objective: Guided Mentorship */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.3 }}
-                        whileHover={{ y: -5 }}
-                        className="bg-white rounded-[2rem] p-8 flex flex-col justify-center shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 relative group overflow-hidden"
-                    >
-                        <CategoryBadge color={objectives[5].color}>{objectives[5].group}</CategoryBadge>
-                        <h3 className="text-xl font-bold text-slate-900 mb-2 font-serif">{objectives[5].title}</h3>
-                        <p className="text-slate-500 text-xs leading-relaxed">{objectives[5].description}</p>
-                        <div className="absolute -bottom-2 -right-2 text-6xl font-black text-slate-50 group-hover:text-secondary/5 transition-colors">06</div>
-                    </motion.div>
-
-                    {/* Central Logo Panel */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-                        whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ type: "spring", stiffness: 100 }}
-                        className="md:col-span-2 md:row-span-2 bg-gradient-to-br from-white to-slate-50 rounded-[3rem] shadow-xl border border-white flex flex-col items-center justify-center p-12 relative overflow-hidden"
-                    >
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-secondary/5 via-transparent to-transparent opacity-60" />
-                        <div className="relative w-48 h-48 sm:w-64 sm:h-64 bg-white rounded-full p-8 shadow-inner flex items-center justify-center border-8 border-slate-50">
-                            <img
-                                src={srlLogo}
-                                alt="SRL Logo"
-                                className="w-full h-auto object-contain drop-shadow-md"
-                            />
-                        </div>
-                        <div className="mt-8 text-center">
-                            <h4 className="text-xl font-black text-slate-900 font-serif mb-1 tracking-tighter">STUDENTS RESEARCH LAB</h4>
-                            <p className="text-secondary font-bold text-[10px] uppercase tracking-[0.3em]">MMPSRPC, KSV, GANDHINAGAR</p>
-                        </div>
-                    </motion.div>
-
-                    {/* Objective: Hands-on Experience */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.4 }}
-                        whileHover={{ y: -5 }}
-                        className="bg-white rounded-[2rem] p-8 flex flex-col justify-center shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 relative group overflow-hidden"
-                    >
-                        <CategoryBadge color={objectives[2].color}>{objectives[2].group}</CategoryBadge>
-                        <h3 className="text-xl font-bold text-slate-900 mb-2 font-serif uppercase tracking-tight leading-tight">{objectives[2].title}</h3>
-                        <div className="absolute -bottom-2 -right-2 text-6xl font-black text-slate-50 group-hover:text-secondary/5 transition-colors">03</div>
-                    </motion.div>
-
-                    {/* Objective: Bridging Theory & Practice */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.5 }}
-                        whileHover={{ y: -5 }}
-                        className="lg:col-span-2 bg-white rounded-[2rem] p-8 flex flex-col justify-center shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100 relative group overflow-hidden"
-                    >
-                        <CategoryBadge color={objectives[4].color}>{objectives[4].group}</CategoryBadge>
-                        <h3 className="text-2xl font-bold text-slate-900 mb-2 font-serif">{objectives[4].title}</h3>
-                        <p className="text-slate-500 text-sm leading-relaxed max-w-sm">{objectives[4].description}</p>
-                        <div className="absolute -bottom-4 -right-4 text-8xl font-black text-slate-50 group-hover:text-secondary/5 transition-colors">05</div>
-                    </motion.div>
-
-                    {/* Stat: Publications */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.6 }}
-                        whileHover={{ y: -5 }}
-                        className="bg-white rounded-[2rem] p-8 flex flex-col items-center justify-center text-center shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100"
-                    >
-                        <span className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">{stats[2].label}</span>
-                        <span className="text-5xl font-black text-slate-900 leading-none">{stats[2].value}</span>
-                    </motion.div>
-
-                    {/* Secondary Row: The rest of the objectives */}
-                    <div className="lg:col-span-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-4">
-                        {[0, 1, 3, 7, 8, 9].map((idx, i) => (
-                            <motion.div
-                                key={idx}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.7 + (i * 0.1) }}
-                                whileHover={{ scale: 1.02 }}
-                                className="bg-white rounded-[1.5rem] p-6 shadow-[0_5px_20px_rgba(0,0,0,0.02)] border border-slate-100 hover:border-secondary/20 transition-all cursor-default group"
-                            >
-                                <div className="flex justify-between items-start mb-4">
-                                    <span className="text-[10px] font-black text-slate-300">{objectives[idx].id}</span>
-                                    <CategoryBadge color={objectives[idx].color}>{objectives[idx].group}</CategoryBadge>
-                                </div>
-                                <h4 className="text-sm font-bold text-slate-900 mb-2 font-serif leading-tight">{objectives[idx].title}</h4>
-                                <p className="text-[11px] text-slate-500 leading-normal hidden sm:block">
-                                    {objectives[idx].description}
-                                </p>
-                            </motion.div>
-                        ))}
-                    </div>
+                            <div className="pt-4 border-t border-slate-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div className="w-12 h-1 bg-secondary/20 rounded-full" />
+                            </div>
+                        </motion.div>
+                    ))}
                 </div>
             </div>
         </section>
