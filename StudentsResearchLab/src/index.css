@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-primary text-slate-900 font-sans;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-secondary text-white px-6 py-2.5 rounded-full font-medium transition-all duration-300 hover:bg-secondary-dark hover:shadow-lg active:scale-95;
+  }
+
+  .btn-outline {
+    @apply border-2 border-secondary text-secondary px-6 py-2.5 rounded-full font-medium transition-all duration-300 hover:bg-secondary hover:text-white active:scale-95;
+  }
+
+  .nav-link {
+    @apply text-slate-700 hover:text-secondary font-medium transition-colors duration-200 relative py-1;
+  }
+
+  .nav-link::after {
+    @apply content-[''] absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300;
+  }
+
+  .nav-link:hover::after {
+    @apply w-full;
+  }
+
+  .nav-link.active::after {
+    @apply w-full;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-primary;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-secondary/30 rounded-full hover:bg-secondary/50 transition-colors;
+}
+
+/* ===== HERO ANIMATIONS & STYLES ===== */
+.hero-main {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(180deg, #e6f0ee 0%, #f6f9f7 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 90px;
+  text-align: center;
+}
+
+.hero-logo-container {
+  transform: scale(0.35) translateY(-80px);
+  opacity: 0;
+}
+
+.hero-grow {
+  animation: growLogo 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.hero-logo-big {
+  width: 220px;
+}
+
+@keyframes growLogo {
+  0% {
+    transform: scale(0.35) translateY(-80px);
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.hero-title {
+  margin-top: 40px;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.hero-text-show {
+  animation: showText 1.2s ease forwards;
+  animation-delay: 1.2s;
+}
+
+@keyframes showText {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.8s ease-out forwards;
+}
