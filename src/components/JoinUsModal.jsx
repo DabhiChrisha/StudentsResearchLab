@@ -1,51 +1,324 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
-import { JoinUsForm } from '../pages/JoinUs';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabaseClient";
 
-const JoinUsModal = ({ isOpen, onClose }) => {
-    return (
-        <AnimatePresence>
-            {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                    {/* Backdrop */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={onClose}
-                        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                    />
+export default function JoinUs() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-                    {/* Modal Container */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden overflow-y-auto max-h-[90vh]"
-                    >
-                        {/* Header */}
-                        <div className="sticky top-0 z-10 bg-white px-8 py-6 border-b border-slate-100 flex items-center justify-between">
-                            <div>
-                                <h2 className="text-2xl font-bold font-serif text-slate-900">Join SRL</h2>
-                                <p className="text-sm text-slate-500">Registration Form</p>
-                            </div>
-                            <button
-                                onClick={onClose}
-                                className="p-2 hover:bg-slate-100 rounded-full transition-colors"
-                            >
-                                <X className="w-6 h-6 text-slate-400" />
-                            </button>
-                        </div>
+  const [formData, setFormData] = useState({
+    name: "",
+    enrollment: "",
+    semester: "",
+    division: "",
+    branch: "",
+    college: "",
+    contact: "",
+    email: "",
+    batch: "",
+    source: "",
+    reference_name: "",
+  });
 
-                        {/* Form Content */}
-                        <div className="p-8">
-                            <JoinUsForm isModal onClose={onClose} />
-                        </div>
-                    </motion.div>
-                </div>
-            )}
-        </AnimatePresence>
-    );
-};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-export default JoinUsModal;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.from("join_us").insert([formData]);
+
+      if (error) throw error;
+
+      alert("✅ Application Submitted Successfully!");
+
+      setFormData({
+        name: "",
+        enrollment: "",
+        semester: "",
+        division: "",
+        branch: "",
+        college: "",
+        contact: "",
+        email: "",
+        batch: "",
+        source: "",
+        reference_name: "",
+      });
+
+      // Redirect to home page after successful submission
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } catch (err) {
+      console.error(err);
+      alert("❌ Error submitting form");
+    }
+
+    setLoading(false);
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      name: "",
+      enrollment: "",
+      semester: "",
+      division: "",
+      branch: "",
+      college: "",
+      contact: "",
+      email: "",
+      batch: "",
+      source: "",
+      reference_name: "",
+    });
+    navigate("/");
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-12">
+      <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 relative">
+        {/* Close Button */}
+        <button
+          onClick={handleCancel}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-full"
+          aria-label="Close"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        
+        <h2 className="text-4xl font-bold text-[#05877a] mb-2">
+          Join SRL
+        </h2>
+        <p className="text-gray-600 mb-8">
+          Fill out the form to join the Students Research Lab
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          
+          {/* Name and Enrollment - Row 1 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormInput 
+              label="Name of Student" 
+              name="name" 
+              value={formData.name} 
+              onChange={handleChange}
+              placeholder="Enter your full name"
+              required
+            />
+            <FormInput 
+              label="Enrollment Number" 
+              name="enrollment" 
+              value={formData.enrollment} 
+              onChange={handleChange}
+              placeholder="Enter your enrollment number"
+              required
+            />
+          </div>
+
+          {/* Semester and Division - Row 2 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormSelect 
+              label="Semester" 
+              name="semester" 
+              value={formData.semester} 
+              onChange={handleChange}
+              options={[
+                { value: "", label: "Select Semester" },
+                { value: "1", label: "1st Semester" },
+                { value: "2", label: "2nd Semester" },
+                { value: "3", label: "3rd Semester" },
+                { value: "4", label: "4th Semester" },
+                { value: "5", label: "5th Semester" },
+                { value: "6", label: "6th Semester" },
+                { value: "7", label: "7th Semester" },
+                { value: "8", label: "8th Semester" },
+              ]}
+              required
+            />
+            <FormSelect 
+              label="Division" 
+              name="division" 
+              value={formData.division} 
+              onChange={handleChange}
+              options={[
+                { value: "", label: "Select Division" },
+                { value: "A", label: "Division A" },
+                { value: "B", label: "Division B" },
+                { value: "C", label: "Division C" },
+                { value: "D", label: "Division D" },
+                { value: "E", label: "Division E" },
+                { value: "F", label: "Division F" },
+                { value: "G", label: "Division G" },
+                { value: "I", label: "Division I" },
+                { value: "J", label: "Division J" },
+                { value: "K", label: "Division K" },
+                { value: "P", label: "Division P" },
+                { value: "Q", label: "Division Q" },
+              ]}
+              required
+            />
+          </div>
+
+          {/* Branch and Batch - Row 3 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormSelect 
+              label="Branch" 
+              name="branch" 
+              value={formData.branch} 
+              onChange={handleChange}
+              options={[
+                { value: "", label: "Select Branch" },
+                { value: "CE", label: "Computer Engineering" },
+                { value: "CSE", label: "Computer Science Engineering" },
+                { value: "IT", label: "Information Technology" },
+                { value: "ECE", label: "Electronics & Communication Engineering" },
+                { value: "EEE", label: "Electrical Engineering" },
+                { value: "MECH", label: "Mechanical Engineering" },
+                { value: "CIVIL", label: "Civil Engineering" },
+              ]}
+              required
+            />
+            <FormInput 
+              label="Batch" 
+              name="batch" 
+              value={formData.batch} 
+              onChange={handleChange}
+              placeholder="e.g., 2022-2026"
+              required
+            />
+          </div>
+
+          {/* College - Row 4 */}
+          <FormInput 
+            label="College Name" 
+            name="college" 
+            value={formData.college} 
+            onChange={handleChange}
+            placeholder="Enter your college name"
+            required
+          />
+
+          {/* Contact and Email - Row 5 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormInput 
+              label="Contact Number" 
+              name="contact" 
+              value={formData.contact} 
+              onChange={handleChange}
+              placeholder="Enter your contact number"
+              required
+            />
+            <FormInput 
+              label="Email ID" 
+              name="email" 
+              type="email"
+              value={formData.email} 
+              onChange={handleChange}
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+
+          {/* Source Dropdown */}
+          <FormSelect 
+            label="Where did you come to know from?" 
+            name="source" 
+            value={formData.source} 
+            onChange={handleChange}
+            options={[
+              { value: "", label: "Select" },
+              { value: "Friend", label: "Friend" },
+              { value: "Faculty", label: "Faculty" },
+              { value: "Social Media", label: "Social Media" },
+              { value: "Website", label: "Website" },
+              { value: "Others", label: "Others" },
+            ]}
+            required
+          />
+
+          {/* Conditional Field */}
+          {(formData.source === "Friend" || formData.source === "Faculty" || formData.source === "Others") && (
+            <FormInput
+              label="Name of the Person"
+              name="reference_name"
+              value={formData.reference_name}
+              onChange={handleChange}
+              placeholder="Enter name"
+            />
+          )}
+
+          {/* Buttons - Row 6 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-[#05877a] text-white font-semibold py-3 px-6 rounded-lg hover:bg-[#046b66] transition-colors duration-300 disabled:opacity-70"
+            >
+              {loading ? "Submitting..." : "Submit"}
+            </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="border-2 border-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-lg hover:bg-gray-50 transition-colors duration-300"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function FormInput({ label, name, type = "text", value, onChange, placeholder, required = false }) {
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-gray-700 mb-2">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        required={required}
+        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-[#05877a] focus:ring-2 focus:ring-[#05877a]/20 transition-all"
+      />
+    </div>
+  );
+}
+
+function FormSelect({ label, name, value, onChange, options, required = false }) {
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-gray-700 mb-2">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+      <select
+        name={name}
+        value={value}
+        onChange={onChange}
+        required={required}
+        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-[#05877a] focus:ring-2 focus:ring-[#05877a]/20 transition-all"
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}

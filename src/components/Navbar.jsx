@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
-import JoinUsButton from "./JoinUsButton";
-import JoinUsModal from "./JoinUsModal";
+import { useState, useEffect } from 'react';
+import { Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import JoinUsButton from './JoinUsButton';
 
 // Assets from public directory
 import srlLogo from "/SRL Logo.svg";
@@ -14,8 +13,8 @@ const ksvLogo = "/ksv.png";
 const Navbar = () => {
     const [open, setOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -116,7 +115,7 @@ const Navbar = () => {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="xl:hidden bg-[#134E4A] shadow-2xl overflow-hidden border-t border-white/10"
+                            className="xl:hidden bg-[#05877a] shadow-2xl overflow-hidden border-t border-white/10"
                         >
                             <div className="flex flex-col px-6 py-8 gap-5">
                                 {menuItems.map((item) => (
@@ -132,12 +131,12 @@ const Navbar = () => {
                                     </NavLink>
                                 ))}
 
-                                <div className="mt-6 pt-6 border-t border-white/10 space-y-4">
-                                    <JoinUsButton onClick={() => { setIsModalOpen(true); setOpen(false); }} className="w-full justify-center py-4" />
+                                <div className="pt-6 space-y-4">
+                                    <JoinUsButton onClick={() => { navigate('/join'); setOpen(false); }} className="w-full justify-center py-5" />
                                     <NavLink
                                         to="/appointment"
                                         onClick={() => setOpen(false)}
-                                        className="block w-full bg-white text-[#134E4A] text-center py-4 rounded-full font-black uppercase tracking-widest hover:bg-opacity-90 transition-all font-sans"
+                                        className="block w-full bg-white text-[#05877a] text-center py-4 rounded-full font-black uppercase tracking-widest hover:bg-opacity-90 transition-all font-sans"
                                     >
                                         SRL Appointment System
                                     </NavLink>
@@ -148,7 +147,6 @@ const Navbar = () => {
                 </AnimatePresence>
             </nav>
 
-            <JoinUsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </>
     );
 };

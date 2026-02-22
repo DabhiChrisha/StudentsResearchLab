@@ -16,6 +16,7 @@ import Achievements from './pages/Achievements';
 import Researchers from './pages/Researchers';
 import LeaderBoard from './pages/LeaderBoard';
 import { JoinUs } from './pages/JoinUs';
+import JoinUsSuccess from './pages/JoinUsSuccess';
 import Appointment from './pages/Appointment';
 import OrganizationDetails from './pages/OrganizationDetails';
 
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/researchers" element={<Researchers />} />
                 <Route path="/leaderboard" element={<LeaderBoard />} />
                 <Route path="/join" element={<JoinUs />} />
+                <Route path="/join/success" element={<JoinUsSuccess />} />
                 <Route path="/appointment" element={<Appointment />} />
                 <Route path="/organization/:orgId" element={<OrganizationDetails />} />
               </Routes>
