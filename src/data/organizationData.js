@@ -13,7 +13,7 @@ export const organizationData = {
         image: svkmLogo,
         website: "https://svkm.org.in/",
         description: [
-            "Sarva Vidyalaya Kelavani Mandal (SVKM) was founded in 1919 by the visionary philanthropist Pujya Chhaganbha, whose guiding philosophy, “કર ભલા, હોગા ભલા” (Do good, and good will come), continues to inspire the institution’s journey in education and service. From its humble beginning with just six students, SVKM has grown into a vast educational network, now nurturing the academic aspirations of over 54,000 students across Kadi and Gandhinagar."
+            "Sarva Vidyalaya Kelavani Mandal (SVKM) was founded in 1919 by the visionary philanthropist Pujya Chhaganbha, whose guiding philosophy, 'કર ભલા, હોગા ભલા' (Do good, and good will come), continues to inspire the institution's journey in education and service. From its humble beginning with just six students, SVKM has grown into a vast educational network, now nurturing the academic aspirations of over 54,000 students across Kadi and Gandhinagar."
         ],
         stats: [
             { label: "Years of Legacy", value: "100+" },
@@ -60,7 +60,7 @@ export const organizationData = {
         image: ksvLogo,
         website: "https://ksv.ac.in/",
         description: [
-            "Kadi Sarva Vishwavidyalaya (KSV) was established in May 2007 under the Gujarat State Government Act 21 of 2007 and is recognized by the University Grants Commission (UGC). Founded by Sarva Vidyalaya Kelavani Mandal (SVKM), a philanthropic trust with over 105 years of legacy guided by the principle “Kar Bhala, Hoga Bhala” (Do good, and good will come), the university is dedicated to providing inclusive, value-based education to students from all sections of society.The university’s growth was significantly strengthened by the visionary leadership of Late Shri Maneklal M. Patel, under whom the Gandhinagar and Kadi campuses and their constituent colleges were unified in March 2012 under the umbrella of KSV. Today, with 23+ constituent colleges and departments across its campuses, KSV offers contemporary, need-based programs while promoting research, innovation, and holistic development for societal and economic advancement."
+            "Kadi Sarva Vishwavidyalaya (KSV) was established in May 2007 under the Gujarat State Government Act 21 of 2007 and is recognized by the University Grants Commission (UGC). Founded by Sarva Vidyalaya Kelavani Mandal (SVKM), a philanthropic trust with over 105 years of legacy guided by the principle 'Kar Bhala, Hoga Bhala' (Do good, and good will come), the university is dedicated to providing inclusive, value-based education to students from all sections of society.The university's growth was significantly strengthened by the visionary leadership of Late Shri Maneklal M. Patel, under whom the Gandhinagar and Kadi campuses and their constituent colleges were unified in March 2012 under the umbrella of KSV. Today, with 23+ constituent colleges and departments across its campuses, KSV offers contemporary, need-based programs while promoting research, innovation, and holistic development for societal and economic advancement."
         ],
         stats: [
             { label: "Acre Campus", value: "100+" },

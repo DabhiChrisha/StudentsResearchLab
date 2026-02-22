@@ -71,9 +71,9 @@ const Footer = () => {
                                     Researchers
                                 </Link>
 
-                                <a href="#join" className="hover:underline">
+                                {/* <a href="#join" className="hover:underline">
                                     Join Us
-                                </a>
+                                </a> */}
 
                                 <a
                                     href="https://appointment.mmpsrpc.in/student"
