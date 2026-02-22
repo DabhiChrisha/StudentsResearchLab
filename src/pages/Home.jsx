@@ -3,6 +3,7 @@ import Hero from '../components/Hero';
 import HeadSRL from '../components/HeadSRL';
 import Objectives from '../components/Objectives';
 import Timeline from '../components/Timeline';
+import About from '../components/About';
 
 const Home = () => {
     return (
@@ -17,36 +18,7 @@ const Home = () => {
             <Hero />
 
             {/* 2. Founders Section */}
-            <section id="founders" className="py-32 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
-                <div className="max-w-7xl mx-auto relative z-10">
-                    <div className="text-center mb-24">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 text-secondary text-[10px] font-black tracking-widest uppercase mb-6">
-                            Visionary Leadership
-                        </div>
-                        <h2 className="text-4xl lg:text-7xl font-black font-serif text-slate-900 mb-6">Meet Our Founders</h2>
-                        <div className="w-24 h-1.5 bg-secondary mx-auto rounded-full mb-8" />
-                    </div>
-
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
-                        {[1, 2, 3].map(i => (
-                            <motion.div
-                                key={i}
-                                whileHover={{ y: -10 }}
-                                className="group bg-slate-50 rounded-[3rem] p-10 border border-slate-100 hover:bg-white hover:shadow-2xl transition-all"
-                            >
-                                <div className="aspect-square bg-slate-200 rounded-[2.5rem] mb-8 overflow-hidden">
-                                    <div className="w-full h-full flex items-center justify-center text-slate-300 font-serif text-4xl">F{i}</div>
-                                </div>
-                                <h3 className="text-2xl font-bold text-slate-900 font-serif mb-2">Founder Name</h3>
-                                <p className="text-secondary font-bold text-sm uppercase tracking-widest mb-6 underline decoration-primary-dark underline-offset-4">Executive Director</p>
-                                <p className="text-slate-500 font-light leading-relaxed">
-                                    Leading the institution with a vision for standardized global education and pioneering research methodologies.
-                                </p>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <About />
 
             {/* 3. Head SRL Profile */}
             <HeadSRL />

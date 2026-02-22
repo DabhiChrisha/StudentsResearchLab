@@ -18,6 +18,10 @@ export default {
                 },
                 accent: {
                     gold: "#d4af37",
+                },
+                text: {
+                    primary: "#0f172a", // slate-900
+                    muted: "#64748b",   // slate-500
                 }
             },
             fontFamily: {
