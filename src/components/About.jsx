@@ -33,7 +33,7 @@ const About = () => {
                                     <img
                                         src={founder.image}
                                         alt={founder.name}
-                                        className="w-72 md:w-80 h-auto block rounded-lg sepia-[0.2] group-hover:sepia-0 transition-all duration-700"
+                                        className="w-56 md:w-64 h-auto block rounded-lg sepia-[0.2] group-hover:sepia-0 transition-all duration-700"
                                     />
                                 </div>
                             </div>

@@ -4,7 +4,7 @@ import mmpsrpcLogo from "../assets/MMPSRPC Logo.png";
 import chhaganbhaPhoto from "../assets/pujya_chhaganbha.jpg";
 import shriManeklal from "../assets/shri_maneklal_patel.jpg";
 import chairmanPhoto from "../assets/chairman.png";
-import mamPhoto from "../assets/Ma'am Photo.png";
+import mamPhoto from "../assets/Dr.Himani Trivedi Ma'am.png";
 
 export const organizationData = {
     "svkm": {
@@ -70,13 +70,13 @@ export const organizationData = {
         ],
         mission: "To deliver need-based education relevant to contemporary times, promote excellence in research and innovation, and cultivate an inclusive and welcoming environment for all students.",
         vision: "To be a leading university that provides quality education and research opportunities to students from all backgrounds, contributing significantly to the social, economic, and cultural development of society.",
-        founders: [
-            {
-                name: "Chhaganbhai Patel",
-                image: chairmanPhoto, // Using available chairman photo as placeholder if specific KSV founder not available
-                quote: "કર ભલા હોગા ભલા."
-            }
-        ],
+        // founders: [
+        //     {
+        //         name: "Chhaganbhai Patel",
+        //         image: chairmanPhoto, // Using available chairman photo as placeholder if specific KSV founder not available
+        //         quote: "કર ભલા હોગા ભલા."
+        //     }
+        // ],
         // goals: [
         //     "Integrating technology in education.",
         //     "Encouraging social responsibility.",
@@ -111,11 +111,32 @@ export const organizationData = {
         ],
         mission: "Empowering student researchers through comprehensive grant support and funding initiatives to drive innovation and scientific discovery.",
         vision: "Shaping the future of research through student-led innovation and global collaboration.",
-        founders: [
+        leadership: [
             {
+                role: "Chief Patron",
+                header: "Message from Hon. Chairman Sir",
+                name: "Shri Vallabhbhai M. Patel",
+                designation: "Chairman, Sarva Vidyalaya Kelvani Mandal, Kadi & Gandhinagar. President, Kadi Sarva Vishwavidyalaya Gandhinagar.",
+                image: chairmanPhoto,
+                cardQuote: "Knowledge is valuable, but wisdom with compassion, that's what truly builds a better tomorrow.",
+                mainQuote: "Optimism, tradition, inclusiveness, service, compassion, tolerance, hope, and faithfulness are the underpinnings of Sarva Vidyalaya Kelvani Mandal for decades now.",
+                message: [
+                    "With the objective of providing education to one and all, our trust has been managing various educational institutions from Pre-Primary to University level. The M. M. Patel Students Research Project Cell is a testament to our commitment to fostering innovation and research among our students.",
+                    "My vision is to serve every student of KSV in every possible better way, ensuring academic and personal growth. I am dedicated to supporting and nurturing careers, believing in the power of education to transform lives and communities, making education accessible and inclusive for all."
+                ]
+            },
+            {
+                role: "Head, MMPSRPC",
+                header: "Message from the Head",
                 name: "Dr. Himani Trivedi",
+                designation: "Head of M. M. Patel Students Research Project Cell, KSV",
                 image: mamPhoto,
-                quote: "Discipline builds excellence."
+                cardQuote: "Growth comes from steady effort, continuous learning, and discipline.",
+                mainQuote: "Aspirations, curiosity, excellence, and dedication form the foundation of the Students Research Project Cell. For the students, By the students, Of the students!",
+                message: [
+                    "Aspirations, curiosity, excellence, and dedication form the foundation of SRL — a space created to nurture disciplined, research-driven minds. SRL is designed to foster academic rigor, consistency, and intellectual growth.",
+                    "Through structured mentorship and purpose-driven initiatives, students are guided toward meaningful research and long-term impact. This guidance helps students to succeed in their future careers and make valuable contribution to society."
+                ]
             }
         ],
         objectives: [
