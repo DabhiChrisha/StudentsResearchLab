@@ -22,6 +22,7 @@ export default function JoinUs() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log('Field changed:', name, 'Value:', value);
 
     setFormData((prev) => ({
       ...prev,
@@ -33,13 +34,18 @@ export default function JoinUs() {
     e.preventDefault();
     setLoading(true);
 
+    console.log('Form data being submitted:', formData);
+
     try {
-      const { error } = await supabase.from("join_us").insert([formData]);
+      const { data, error } = await supabase.from("join_us").insert([formData]);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
 
-      alert("✅ Application Submitted Successfully!");
-
+      console.log('Success! Data inserted:', data);
+      
       setFormData({
         name: "",
         enrollment: "",
@@ -54,11 +60,20 @@ export default function JoinUs() {
         reference_name: "",
       });
 
-      // Redirect to success page
-      navigate('/join/success');
+      // Show success message and redirect to home
+      alert("✅ Application Submitted Successfully! Welcome to the SRL community! 🎉");
+      navigate('/');
     } catch (err) {
-      console.error(err);
-      alert("❌ Error submitting form");
+      console.error('Full error details:', err);
+      
+      // Check for specific errors
+      if (err.message && err.message.includes('unique_enrollment')) {
+        alert('❌ This enrollment number is already registered. Please check your enrollment number or contact support if you believe this is an error.');
+      } else if (err.message && err.message.includes('duplicate key')) {
+        alert('❌ A record with this information already exists in the database.');
+      } else {
+        alert(`❌ Error submitting form: ${err.message || 'Unknown error occurred'}`);
+      }
     }
 
     setLoading(false);
