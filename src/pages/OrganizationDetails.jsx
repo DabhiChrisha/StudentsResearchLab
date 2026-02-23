@@ -1,6 +1,7 @@
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate, Link } from "react-router-dom";
 import { organizationData } from "../data/organizationData";
 import { motion } from "framer-motion";
+import { ExternalLink, ArrowLeft, Globe, Mail, Phone, MapPin } from "lucide-react";
 
 const OrganizationDetails = () => {
     const { orgId } = useParams();
@@ -12,8 +13,19 @@ const OrganizationDetails = () => {
 
     return (
         <div className="pt-[88px] min-h-screen" style={{ backgroundColor: '#F5F1E8' }}>
+            {/* Back Button */}
+            <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 pt-8">
+                <Link
+                    to="/"
+                    className="inline-flex items-center gap-2 text-slate-500 hover:text-secondary-dark transition-colors font-serif italic text-lg group"
+                >
+                    <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                    Back to Laboratory
+                </Link>
+            </div>
+
             {/* HERO SECTION */}
-            <section className="relative py-24 px-6 sm:px-10 lg:px-14 overflow-hidden">
+            <section className="relative py-16 px-6 sm:px-10 lg:px-14 overflow-hidden">
                 {/* Academic Pattern Overlay */}
                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4v-4H4v4H0v2h4v4h2v-4h4v-2H6zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
 
@@ -25,7 +37,7 @@ const OrganizationDetails = () => {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="relative mb-12"
+                        className="relative mb-8"
                     >
                         <motion.button
                             onClick={() => {
@@ -35,13 +47,17 @@ const OrganizationDetails = () => {
                             }}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.98 }}
-                            className="relative h-28 sm:h-36 px-8 py-4 bg-white/30 backdrop-blur-md rounded-2xl border border-white/40 shadow-lg cursor-pointer transition-all duration-500"
+                            className="relative h-28 sm:h-36 px-8 py-4 bg-white/30 backdrop-blur-md rounded-2xl border border-white/40 shadow-lg cursor-pointer transition-all duration-500 group"
                         >
                             <img
                                 src={data.image}
                                 alt={data.title}
                                 className="h-full w-auto object-contain drop-shadow-md"
                             />
+                            {/* Floating redirect icon */}
+                            <div className="absolute -top-3 -right-3 w-10 h-10 bg-[#d4af37] text-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <ExternalLink className="w-5 h-5" />
+                            </div>
                         </motion.button>
                     </motion.div>
 
@@ -154,8 +170,8 @@ const OrganizationDetails = () => {
                                         <div className="mt-4 h-[1px] w-24 bg-[#d4af37]/30 mx-auto" />
                                     </div>
 
-                                    <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center w-full max-w-6xl mx-auto">
-                                        {/* Left Side: Photo + Information */}
+                                    <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start w-full max-w-6xl mx-auto">
+                                        {/* Left Side: Photo + Name/Designation */}
                                         <div className="w-full lg:w-[400px] flex flex-col items-center shrink-0">
                                             <div className="relative group mb-8 w-full">
                                                 <div className="absolute -inset-4 border border-[#d4af37]/20 rounded-[3rem] group-hover:scale-105 transition-transform duration-700" />
@@ -169,8 +185,7 @@ const OrganizationDetails = () => {
                                                 <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-[#d4af37]/5 rounded-full blur-xl pointer-events-none" />
                                             </div>
 
-                                            {/* Name and Designation Block */}
-                                            <div className="text-center w-full">
+                                            <div className="text-center w-full px-4 mt-2">
                                                 <h4 className="text-2xl font-black text-slate-900 font-serif mb-1">{person.name}</h4>
                                                 <p className="text-xs text-secondary-dark font-bold uppercase tracking-[0.3em] font-sans">{person.designation}</p>
                                             </div>
@@ -189,7 +204,6 @@ const OrganizationDetails = () => {
                                                     <p key={pIndex}>{p}</p>
                                                 ))}
                                             </div>
-
                                         </div>
                                     </div>
                                 </motion.div>
@@ -403,6 +417,33 @@ const OrganizationDetails = () => {
                                     </div>
 
                                     <div className="mt-12 pt-8 border-t border-[#d4af37]/10">
+                                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#d4af37]/60 mb-6">Social Connect</p>
+                                        <div className="flex gap-4">
+                                            <a
+                                                href="https://www.linkedin.com/company/mmpsrpc"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="w-10 h-10 rounded-full bg-[#134E4A]/5 flex items-center justify-center text-[#134E4A] hover:bg-[#134E4A] hover:text-white transition-all duration-300 shadow-sm"
+                                            >
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.041 0 3.604 2.002 3.604 4.604v5.592z" /></svg>
+                                            </a>
+                                            <a
+                                                href="https://www.linkedin.com/school/kadi-sarva-vishwavidyalaya-gandihnagar/"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="w-10 h-10 rounded-full bg-[#134E4A]/5 flex items-center justify-center text-[#134E4A] hover:bg-[#134E4A] hover:text-white transition-all duration-300 shadow-sm"
+                                            >
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.041 0 3.604 2.002 3.604 4.604v5.592z" /></svg>
+                                            </a>
+                                            <a
+                                                href={data.website}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="w-10 h-10 rounded-full bg-[#134E4A]/5 flex items-center justify-center text-[#134E4A] hover:bg-[#134E4A] hover:text-white transition-all duration-300 shadow-sm"
+                                            >
+                                                <Globe className="w-5 h-5" />
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
 
