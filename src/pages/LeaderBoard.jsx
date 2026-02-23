@@ -125,7 +125,7 @@ const LeaderBoard = () => {
                 transition={{ duration: 70, repeat: Infinity, ease: "linear" }}
                 className="fixed -top-[30vw] -left-[30vw] lg:-top-[400px] lg:-left-[400px] w-[120vw] h-[120vw] lg:w-[1000px] lg:h-[1000px] opacity-[0.35] pointer-events-none z-0"
                 style={{
-                    backgroundImage: 'url("/watermark.png")',
+                    backgroundImage: 'url("/watermark.jpeg")',
                     backgroundPosition: 'center',
                     backgroundSize: 'contain',
                     backgroundRepeat: 'no-repeat'
@@ -137,7 +137,7 @@ const LeaderBoard = () => {
                 transition={{ duration: 70, repeat: Infinity, ease: "linear" }}
                 className="fixed -bottom-[30vw] -right-[30vw] lg:-bottom-[400px] lg:-right-[400px] w-[120vw] h-[120vw] lg:w-[1000px] lg:h-[1000px] opacity-[0.35] pointer-events-none z-0"
                 style={{
-                    backgroundImage: 'url("/watermark.png")',
+                    backgroundImage: 'url("/watermark.jpeg")',
                     backgroundPosition: 'center',
                     backgroundSize: 'contain',
                     backgroundRepeat: 'no-repeat'
@@ -224,7 +224,7 @@ const LeaderBoard = () => {
                                 transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
                                 className="absolute -inset-[100%] z-0 opacity-[0.25] pointer-events-none mix-blend-multiply origin-center"
                                 style={{
-                                    backgroundImage: 'url("/watermark2.png")',
+                                    backgroundImage: 'url("/watermark.jpeg")',
                                     backgroundPosition: 'center',
                                     backgroundSize: '25%',
                                     backgroundRepeat: 'no-repeat'

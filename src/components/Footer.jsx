@@ -33,7 +33,7 @@ const Footer = () => {
                         {/* SRL BRAND */}
                         <div className="flex flex-col items-center text-center">
                             <img
-                                src="/SRL Logo.svg"
+                                src="/SRL.svg"
                                 alt="Student Research Lab"
                                 className="h-14 scale-[1.90] mb-8"
                             />
@@ -71,9 +71,9 @@ const Footer = () => {
                                     Researchers
                                 </Link>
 
-                                <a href="#join" className="hover:underline">
+                                {/* <a href="#join" className="hover:underline">
                                     Join Us
-                                </a>
+                                </a> */}
 
                                 <a
                                     href="https://appointment.mmpsrpc.in/student"

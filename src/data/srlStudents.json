@@ -1,0 +1,954 @@
+[
+    {
+        "student_name": "Dabhi Chrisha Manish",
+        "enrollment_no": "24BECE30489",
+        "department": "CE",
+        "semester": "4",
+        "division": "G",
+        "email": "chrishaadabhii0704@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/chrishadabhi/",
+        "photo": "/students/Dabhi Chrisha Manish.png",
+        "contact_no": "9870094446",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Being part of SRL, I've learnt how to work efficiently and with perfection.",
+        "research": [
+            "Cloud Computing Optimization",
+            "Microservices Architecture"
+        ],
+        "researchWorks": [
+            "Performance Analysis of Kubernetes Clusters",
+            "Edge Computing in IoT"
+        ],
+        "achievements": [
+            "1st Prize in TechFest 2024",
+            "Dean's List Semester 3"
+        ]
+    },
+    {
+        "student_name": "Aayush Viral Pandya",
+        "enrollment_no": "24BECE30541",
+        "department": "CE",
+        "semester": "4",
+        "division": "P",
+        "email": "pandyaaayush2006@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/aayush-pandya04/",
+        "photo": "/students/Pandya Aayush Viral.jpeg",
+        "contact_no": "9687041106",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL transformed how I approach problems. Instead of rushing to solutions, I now focus on structuring the problem, validating assumptions, and documenting outcomes clearly.",
+        "research": [
+            "Computer Vision",
+            "Object Detection"
+        ],
+        "researchWorks": [
+            "Real-time Traffic Monitoring System",
+            "Face Recognition in Low Light"
+        ],
+        "achievements": [
+            "Best Project Award 2023",
+            "Hackathon Finalist"
+        ]
+    },
+    {
+        "student_name": "Mahi Parmar",
+        "enrollment_no": "24BECE30548",
+        "department": "CE",
+        "semester": "4",
+        "division": "P",
+        "email": "mahiparmar2708@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/mahi-parmar-42a17131a/",
+        "photo": "/students/Parmar Mahi Nitinchandra.JPG",
+        "contact_no": "9998801402",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Being part of SRL introduced me to disciplined research practices. Regular discussions and critiques helped me think critically and defend ideas with logic rather than intuition.",
+        "research": [
+            "Human-Computer Interaction",
+            "UX Research"
+        ],
+        "researchWorks": [
+            "Accessible Design for Visually Impaired",
+            "Psychology of User Interface"
+        ],
+        "achievements": [
+            "Design Excellence Award",
+            "Merit Scholar"
+        ]
+    },
+    {
+        "student_name": "Pragati Varu",
+        "enrollment_no": "24BECE30436",
+        "department": "CE",
+        "semester": "4",
+        "division": "F",
+        "batch": "2024-2028",
+        "email": "pragativaru23@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/pragati-varu-18474731b/",
+        "photo": "/students/Pragati Varu.jpeg",
+        "contact_no": "9875122785",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Through SRL, I learned that consistent guidance and disciplined effort are key to meaningful growth.",
+        "research": [
+            "Embedded Systems",
+            "Robotics"
+        ],
+        "researchWorks": [
+            "Autonomous Warehouse Robot",
+            "Low-power Sensor Networks"
+        ],
+        "achievements": [
+            "RoboCon 2024 Semi-finalist",
+            "Academic Excellence Award"
+        ]
+    },
+    {
+        "student_name": "Yash Kumavat",
+        "enrollment_no": "24BECE30122",
+        "department": "CE",
+        "semester": "4",
+        "division": "B",
+        "batch": "2024-2028",
+        "email": "yashnkumavat2005@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/yash-kumavat-503a6a326/",
+        "photo": "/students/Yash Kumavat.jpeg",
+        "contact_no": "8128575707",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL cultivated patience and rigor in my research work. The emphasis on methodology and validation reshaped how I evaluate results and draw conclusions.",
+        "research": [
+            "Blockchain",
+            "Cryptocurrency Security"
+        ],
+        "researchWorks": [
+            "Smart Contract Vulnerability Assessment",
+            "Decentralized Voting System"
+        ],
+        "achievements": [
+            "Cyber Security Workshop Topper",
+            "NPTEL Certified in Blockchain"
+        ]
+    },
+    {
+        "student_name": "Kandarp Gajjar",
+        "enrollment_no": "22BECE30091",
+        "department": "CE",
+        "semester": "8",
+        "division": "B",
+        "batch": "2022-2026",
+        "email": "kandarp.gajjar.460@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/kandarpgajjar/",
+        "photo": "/students/Kandarp Gajjar.jpeg",
+        "contact_no": "7567600101",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Research Assistant",
+            "Student Member"
+        ],
+        "reflection": "Serving as a Research Assistant in SRL strengthened my ability to mentor juniors while maintaining rigorous research standards. It refined my leadership, documentation practices, and accountability towards high-quality outputs.",
+        "research": [
+            "Artificial Intelligence",
+            "Neural Networks"
+        ],
+        "researchWorks": [
+            "Novel Architecture for CNNs",
+            "Generative Adversarial Networks for Art"
+        ],
+        "achievements": [
+            "Published Paper in IEEE",
+            "Best RA Award 2024"
+        ]
+    },
+    {
+        "student_name": "Nancy Patel",
+        "enrollment_no": "22BEIT30123",
+        "department": "IT",
+        "semester": "8",
+        "division": "J",
+        "batch": "2022-2026",
+        "email": "nancyp9210@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/xcodenancy/",
+        "photo": "/students/Nancy.jpeg",
+        "contact_no": "9725673402",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Research Assistant",
+            "Student Member"
+        ],
+        "reflection": "SRL enhanced my technical depth and professional confidence. Collaborating on structured research projects helped me bridge theoretical knowledge with practical implementation.",
+        "research": [
+            "Data Science",
+            "Big Data Analytics"
+        ],
+        "researchWorks": [
+            "Predictive Analysis for Healthcare",
+            "Twitter Sentiment Analysis Tool"
+        ],
+        "achievements": [
+            "Data Science Hackathon Winner",
+            "Microsoft Certified Professional"
+        ]
+    },
+    {
+        "student_name": "Antra Gajjar",
+        "enrollment_no": "24BECE30081",
+        "department": "CE",
+        "semester": "4",
+        "division": "B",
+        "batch": "2024-2028",
+        "email": "gajjarantra03@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/antra-gajjar-957977330/",
+        "photo": "/students/Gajjar Antra Ashvinkumar.jpeg",
+        "contact_no": "7990912121",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Early exposure to SRL made me more confident in questioning assumptions and justifying decisions. It changed how I learn and apply concepts beyond coursework.",
+        "research": [
+            "Cyber Security",
+            "Ethical Hacking"
+        ],
+        "researchWorks": [
+            "Network Penetration Testing Lab",
+            "Phishing Detection using ML"
+        ],
+        "achievements": [
+            "Capture The Flag (CTF) winner",
+            "Certified Ethical Hacker (CEH) trainee"
+        ]
+    },
+    {
+        "student_name": "Rudr Halvadiya",
+        "enrollment_no": "24BECE0094",
+        "department": "CE",
+        "semester": "4",
+        "division": "B",
+        "batch": "2024-2028",
+        "email": "rudrhalvadiya2000@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/rudr-halvadiya/",
+        "photo": "/students/Halvdadiya Rudr.jpeg",
+        "contact_no": "9427375784",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL helped me see research as a structured process rather than trial and error. Peer reviews and mentoring played a major role in shaping my analytical skills.",
+        "research": [
+            "Mathematics of Computing",
+            "Algorithm Design"
+        ],
+        "researchWorks": [
+            "Efficient Sorting Algorithms",
+            "Graph Theory Applications"
+        ],
+        "achievements": [
+            "Math Olympiad 2023 Runner-up",
+            "CodeChef 4-star"
+        ]
+    },
+    {
+        "student_name": "Dev Kansara",
+        "enrollment_no": "24BECE30114",
+        "department": "CE",
+        "semester": "4",
+        "division": "B",
+        "batch": "2024-2028",
+        "email": "kansaradev95@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/dev-kansara-37b37037a/",
+        "photo": "/students/Kansara Dev Dharmeshkumar.jpeg",
+        "contact_no": "9925669832",
+        "member_type": "Peer-Nominated",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "The biggest change SRL brought was clarity in thinking. It taught me how to break complex research problems into manageable steps and stay consistent through uncertainty.",
+        "research": [
+            "Compiler Design",
+            "Operating Systems"
+        ],
+        "researchWorks": [
+            "Custom Language Compiler",
+            "Task Scheduling in RTOS"
+        ],
+        "achievements": [
+            "Open Source Contributor (GSoC)",
+            "Tech Quiz Winner"
+        ]
+    },
+    {
+        "student_name": "Krishna Bhatt",
+        "enrollment_no": "23BECE30023",
+        "department": "CE",
+        "semester": "6",
+        "division": "A",
+        "batch": "2023-2027",
+        "email": "bhattkrishna0908@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/krishnabhatt2958/",
+        "photo": "/students/Krishna Bhatt.jpeg",
+        "contact_no": "6354262335",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Being part of SRL improved my analytical thinking and collaborative mindset. Structured discussions helped me refine my reasoning and elevate the quality of my work.",
+        "research": [
+            "Web Performance",
+            "Cloud Native Apps"
+        ],
+        "researchWorks": [
+            "Optimizing React Render Cycles",
+            "Serverless Architecture Case Study"
+        ],
+        "achievements": [
+            "Best Web Developer Award",
+            "Dean's List Semester 5"
+        ]
+    },
+    {
+        "student_name": "Zenisha Devani",
+        "enrollment_no": "23BECE30058",
+        "department": "CE",
+        "semester": "6",
+        "division": "A",
+        "batch": "2023-2027",
+        "email": "zenishadevani@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/zenisha-devani-4aba532b1/",
+        "photo": "/students/Zenisha Devani.jpeg",
+        "contact_no": "6359222727",
+        "member_type": "Peer-Nominated",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL helped me become more consistent and detail-oriented. The regular review process strengthened my discipline and professional outlook.",
+        "research": [
+            "Bioinformatics",
+            "Genetic Algorithms"
+        ],
+        "researchWorks": [
+            "DNA Sequencing with ML",
+            "Protein Folding Prediction"
+        ],
+        "achievements": [
+            "Inter-college Science Fair Winner",
+            "Gold Medalist in Biology"
+        ]
+    },
+    {
+        "student_name": "Rachita Devda",
+        "enrollment_no": "23BECE30059",
+        "department": "CE",
+        "semester": "6",
+        "division": "A",
+        "batch": "2023-2027",
+        "email": "rachitadevda0410@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/rachita-devda-b83834326/",
+        "photo": "/students/Devda Rachita Bharatsinh.jpeg",
+        "contact_no": "9313258627",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Through SRL, I developed clarity in presenting ideas logically and confidently. It improved my communication and academic articulation.",
+        "research": [
+            "Digital Marketing Analytics",
+            "E-commerce Trends"
+        ],
+        "researchWorks": [
+            "Consumer Behavior on Instagram",
+            "SEO Optimization Strategies"
+        ],
+        "achievements": [
+            "Marketing Lead at Club",
+            "Google Analytics Certified"
+        ]
+    },
+    {
+        "student_name": "Janki Chitroda",
+        "enrollment_no": "23BECE30040",
+        "department": "CE",
+        "semester": "6",
+        "division": "A",
+        "batch": "2023-2027",
+        "email": "jankichitroda8@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/janki-chitroda-66a3782b8/",
+        "photo": "/students/Janki Chitroda.jpeg",
+        "contact_no": "9499676967",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL cultivated structured thinking in me. I learned to align creativity with methodology to produce meaningful and measurable outcomes.",
+        "research": [
+            "Game Development",
+            "Virtual Reality"
+        ],
+        "researchWorks": [
+            "Procedural World Generation",
+            "VR Classroom for Kids"
+        ],
+        "achievements": [
+            "Game Jam 2024 Finalist",
+            "Unity Developer Certificate"
+        ]
+    },
+    {
+        "student_name": "Kanksha Buch",
+        "enrollment_no": "23BECE30029",
+        "department": "CE",
+        "semester": "6",
+        "division": "A",
+        "batch": "2023-2027",
+        "email": "kanksha.buch@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/kanksha-buch-7b17a131b/",
+        "photo": "/students/Kanksha Keyur Buch.jpeg",
+        "contact_no": "7203073100",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Being in SRL strengthened my ability to plan strategically and execute systematically. It encouraged me to collaborate professionally and maintain consistency in deliverables.",
+        "research": [
+            "FinTech",
+            "Digital Banking"
+        ],
+        "researchWorks": [
+            "Fraud Detection in UPI Transactions",
+            "Micro-investment Platform Study"
+        ],
+        "achievements": [
+            "Finnovation 2023 Runner-up",
+            "CFA Level 1 Candidate"
+        ]
+    },
+    {
+        "student_name": "Yashvi Chavda",
+        "enrollment_no": "23BECE30036",
+        "department": "CE",
+        "semester": "6",
+        "division": "A",
+        "batch": "2023-2027",
+        "email": "yashvichavda6@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/yashvi-chavda-b71047287/",
+        "photo": "/students/Chavda Yashvi Surendrasinh.jpeg",
+        "contact_no": "6356519390",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL improved my time management and strengthened my professional mindset. The structured workflow helped me approach responsibilities with clarity and discipline.",
+        "research": [
+            "Mobile App Dev",
+            "Cross-platform Tech"
+        ],
+        "researchWorks": [
+            "Performance Comparison: Flutter vs React Native",
+            "Offline-first Mobile Apps"
+        ],
+        "achievements": [
+            "10k downloads for side-project",
+            "App Store Optimization Specialist"
+        ]
+    },
+    {
+        "student_name": "Honey Modha",
+        "enrollment_no": "224SBECE30016",
+        "department": "CE",
+        "semester": "6",
+        "division": "B",
+        "batch": "2023-2027",
+        "email": "honeymodha02@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/honey-modha/",
+        "photo": "/students/Honey Modha.jpeg",
+        "contact_no": "8141912433",
+        "member_type": "General Members",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "My experience in SRL enhanced my teamwork and communication abilities. Working in a collaborative environment helped me understand the power of collective effort.",
+        "research": [
+            "Distributed Databases",
+            "NoSQL Patterns"
+        ],
+        "researchWorks": [
+            "Consistent Hashing in DynamoDB",
+            "Sharding Strategies for PostgreSQL"
+        ],
+        "achievements": [
+            "SQL Expert Award",
+            "Open Source Contributor"
+        ]
+    },
+    {
+        "student_name": "Zeel Kanudawala",
+        "enrollment_no": "23BECE30101",
+        "department": "CE",
+        "semester": "6",
+        "division": "B",
+        "batch": "2023-2027",
+        "email": "zeelkanudawala@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/zeel-kanudawala-3b81412b5/",
+        "photo": "/students/Kanudawala Zeel PareshKumar.jpeg",
+        "contact_no": "6355424403",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL refined my analytical approach and encouraged data-driven reasoning. I learned to validate results carefully before drawing conclusions.",
+        "research": [
+            "Quantum Computing",
+            "Cryptography"
+        ],
+        "researchWorks": [
+            "Short-algorithm Implementation",
+            "Post-quantum Cryptography Standards"
+        ],
+        "achievements": [
+            "Quantum Summer School Participant",
+            "Distinction in Discrete Maths"
+        ]
+    },
+    {
+        "student_name": "Jainee Patel",
+        "enrollment_no": "23BECE30203",
+        "department": "CE",
+        "semester": "6",
+        "division": "C",
+        "batch": "2023-2027",
+        "email": "jainu2426@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/jainee-patel-242006j/",
+        "photo": "/students/Patel Jainee Hasmukhbhai.jpeg",
+        "contact_no": "7984123552",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Being part of SRL strengthened my critical thinking skills and attention to detail. It helped me approach academic tasks with greater precision.",
+        "research": [
+            "Natural Language Processing",
+            "Chatbots"
+        ],
+        "researchWorks": [
+            "Local Language Translation with Transformers",
+            "Emotional Intelligence in AI"
+        ],
+        "achievements": [
+            "NLP Workshop organizer",
+            "Winner of College Debate 2023"
+        ]
+    },
+    {
+        "student_name": "Banshari Patel",
+        "enrollment_no": "23BECE30168",
+        "department": "CE",
+        "semester": "6",
+        "division": "C",
+        "batch": "2023-2027",
+        "email": "bansharipatel6595@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/banshari-patel-b699542b5/",
+        "photo": "/students/Patel Banshari Rahulkumar.jpeg",
+        "contact_no": "9724334964",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL provided a growth-focused environment that encouraged perseverance and structured execution. It shaped my mindset toward long-term academic excellence.",
+        "research": [
+            "Parallel Processing",
+            "GPU Acceleration"
+        ],
+        "researchWorks": [
+            "CUDA Implementation for Matrix Multiply",
+            "Heterogeneous Computing on Raspberry Pi"
+        ],
+        "achievements": [
+            "TCS Ninja Candidate",
+            "Math Pro Award"
+        ]
+    },
+    {
+        "student_name": "Charmi Padh",
+        "enrollment_no": "23BECE30144",
+        "department": "CE",
+        "semester": "6",
+        "division": "C",
+        "batch": "2023-2027",
+        "email": "charmi.padh030206@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/charmi-padh/",
+        "photo": "/students/Padh Charmi Ketankumar.jpeg",
+        "contact_no": "7016405750",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Through SRL, I developed stronger documentation and reporting practices. It improved my ability to articulate technical concepts clearly and professionally.",
+        "research": [
+            "Quality Assurance",
+            "Automated Testing"
+        ],
+        "researchWorks": [
+            "Selenium vs Playwright Comparison",
+            "CI/CD Pipeline Security"
+        ],
+        "achievements": [
+            "ISTQB Foundation Level",
+            "Best Presenter at Seminar"
+        ]
+    },
+    {
+        "student_name": "Prem Raichura",
+        "enrollment_no": "224SBECE30059",
+        "department": "CE",
+        "semester": "6",
+        "division": "F",
+        "batch": "2023-2027",
+        "email": "premraichura7@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/prem-raichura/",
+        "photo": "/students/Prem Raichura.jpeg",
+        "contact_no": "9327681649",
+        "member_type": "Peer-Nominated",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL instilled accountability and consistency in my workflow. I learned how disciplined collaboration leads to impactful research outcomes.",
+        "research": [
+            "Augmented Reality",
+            "Spatial Computing"
+        ],
+        "researchWorks": [
+            "AR Navigation for Indoors",
+            "Gesture Recognition in AR"
+        ],
+        "achievements": [
+            "AR/VR Hackathon Finalist",
+            "Creative Design Award"
+        ]
+    },
+    {
+        "student_name": "Rohan Thakar",
+        "enrollment_no": "23BECE30364",
+        "department": "CE",
+        "semester": "6",
+        "division": "F",
+        "batch": "2023-2027",
+        "email": "rpthakar35@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/rohan-thakar-609335326/",
+        "photo": "/students/Rohan Thakar.png",
+        "contact_no": "8320846359",
+        "member_type": "Peer-Nominated",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Being part of SRL broadened my perspective on structured research methodologies. It enhanced my logical reasoning and commitment to quality.",
+        "research": [
+            "Reinforcement Learning",
+            "Autonomous Vehicles"
+        ],
+        "researchWorks": [
+            "Path Planning with Q-Learning",
+            "Simulation of Self-driving Carts"
+        ],
+        "achievements": [
+            "CodeChef 3-star",
+            "AI Enthusiast Award"
+        ]
+    },
+    {
+        "student_name": "Hetvi Hinsu",
+        "enrollment_no": "23BECE30449",
+        "department": "CE",
+        "semester": "6",
+        "division": "G",
+        "batch": "2023-2027",
+        "email": "hetvi0925@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/hetvi-hinsu-4a87aa288/",
+        "photo": "/students/Hetvi Hinsu.jpeg",
+        "contact_no": "9428086585",
+        "member_type": "Peer-Nominated",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL improved my confidence in presenting technical insights. Regular peer interactions strengthened both my communication and analytical capabilities.",
+        "research": [
+            "Network Security",
+            "Intrusion Detection"
+        ],
+        "researchWorks": [
+            "Deep Learning for DDOS Prediction",
+            "VPN Encryption Standards"
+        ],
+        "achievements": [
+            "Cisco Certified Network Associate",
+            "Security Seminar Speaker"
+        ]
+    },
+    {
+        "student_name": "Krish Patel",
+        "enrollment_no": "23BECE30532",
+        "department": "CE",
+        "semester": "6",
+        "division": "P",
+        "batch": "2023-2027",
+        "email": "krishp728@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/krish-patel-24285827b/",
+        "photo": "/students/Patel Krish Himanshu.jpeg",
+        "contact_no": "8780064214",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "The structured environment of SRL enhanced my efficiency and professionalism. I developed stronger ownership toward assigned research tasks.",
+        "research": [
+            "Containerization",
+            "DevOps"
+        ],
+        "researchWorks": [
+            "Docker vs Podman Performance",
+            "Automating Lab Deployments"
+        ],
+        "achievements": [
+            "AWS Certified Cloud Practitioner",
+            "Lab Infrastructure Lead"
+        ]
+    },
+    {
+        "student_name": "Heny Patel",
+        "enrollment_no": "23BECE30521",
+        "department": "CE",
+        "semester": "6",
+        "division": "P",
+        "batch": "2023-2027",
+        "email": "henypatel26012005@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/heny-patel-22a8b9262/",
+        "photo": "/students/Heny Patel.jpeg",
+        "contact_no": "9328211453",
+        "member_type": "Peer-Nominated",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL encouraged continuous learning and systematic experimentation. It shaped my approach toward validating ideas with clarity and structure.",
+        "research": [
+            "Graph Neural Networks",
+            "Social Network Analysis"
+        ],
+        "researchWorks": [
+            "Fake News Detection on Twitter",
+            "Disease Spread Modeling"
+        ],
+        "achievements": [
+            "Research Grant Recipient",
+            "Gold Medal in Mathematics"
+        ]
+    },
+    {
+        "student_name": "Mihir Patel",
+        "enrollment_no": "23BECE30542",
+        "department": "CE",
+        "semester": "6",
+        "division": "P",
+        "batch": "2023-2027",
+        "email": "mihir.rockshi@gmail.com",
+        "linkedin": "",
+        "photo": "/students/Mihir Patel.png",
+        "contact_no": "9428038999",
+        "member_type": "Peer-Nominated",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Being part of SRL improved my ability to decompose complex challenges into manageable phases. It strengthened my consistency and structured execution.",
+        "research": [
+            "High Performance Computing",
+            "Cluster Management"
+        ],
+        "researchWorks": [
+            "Beowulf Cluster Setup",
+            "MPI benchmarking"
+        ],
+        "achievements": [
+            "Linux Guru Award",
+            "System Admin Certificate"
+        ]
+    },
+    {
+        "student_name": "Hemant Pande",
+        "enrollment_no": "23BECE30493",
+        "department": "CE",
+        "semester": "6",
+        "division": "P",
+        "batch": "2023-2027",
+        "email": "hp926591@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/hemant-pande926591/",
+        "photo": "/students/Pande Hemant Rameshwarkumar.jpeg",
+        "contact_no": "8780508139",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL strengthened my disciplined research habits and critical evaluation skills. It refined my ability to maintain precision in outcomes.",
+        "research": [
+            "Information Theory",
+            "Data Compression"
+        ],
+        "researchWorks": [
+            "Huffman Architecture for Text",
+            "Image Compression Patterns"
+        ],
+        "achievements": [
+            "Algorithms Workshop Winner",
+            "Merit Scholar"
+        ]
+    },
+    {
+        "student_name": "Henit Panchal",
+        "enrollment_no": "23BECE30490",
+        "department": "CE",
+        "semester": "6",
+        "division": "P",
+        "batch": "2023-2027",
+        "email": "henitpanchal007@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/henit-panchal-250524274/",
+        "photo": "/students/Panchal Henit Shaileshbhai.jpeg",
+        "contact_no": "9016809674",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Through SRL, I gained clarity in strategic planning and adaptability. The collaborative culture helped me grow both technically and professionally.",
+        "research": [
+            "Full Stack Architecture",
+            "Microservices"
+        ],
+        "researchWorks": [
+            "Scalable Grocery App Backend",
+            "Auth Systems Comparison"
+        ],
+        "achievements": [
+            "Full Stack Developer of the Year",
+            "Hacktoberfest Contributor"
+        ]
+    },
+    {
+        "student_name": "Parva Kumar",
+        "enrollment_no": "22BECE30153",
+        "department": "CE",
+        "semester": "8",
+        "division": "C",
+        "batch": "2022-2026",
+        "email": "parva300504@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/parva-kumar/",
+        "photo": "/students/Parva Kumar.jpeg",
+        "contact_no": "9510493577",
+        "member_type": "Peer-Nominated",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL enriched my academic maturity and research exposure. I learned how to guide peers while maintaining structured and rigorous standards.",
+        "research": [
+            "Robotic Process Automation",
+            "Business Logic"
+        ],
+        "researchWorks": [
+            "Automating University Admissions",
+            "RPA in Logistics"
+        ],
+        "achievements": [
+            "UiPath Certified Developer",
+            "Academic Mentor"
+        ]
+    },
+    {
+        "student_name": "Krutika Patel",
+        "enrollment_no": "22BEIT30118",
+        "department": "IT",
+        "semester": "8",
+        "division": "J",
+        "batch": "2022-2026",
+        "email": "krutika8114@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/stack-krutika/",
+        "photo": "/students/Krutika Vijaybhai Patel.jpeg",
+        "contact_no": "9624336970",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Being part of SRL enhanced my technical articulation and strengthened my confidence in presenting research-backed innovations.",
+        "research": [
+            "UI/UX Design Patterns",
+            "Frontend Frameworks"
+        ],
+        "researchWorks": [
+            "Accessibility in Modern Web",
+            "Next.js Performance Benchmarks"
+        ],
+        "achievements": [
+            "UI Design Finalist",
+            "Web Accessibility Advocate"
+        ]
+    },
+    {
+        "student_name": "Ridham Patel",
+        "enrollment_no": "22BEIT30133",
+        "department": "IT",
+        "semester": "8",
+        "division": "J",
+        "batch": "2022-2026",
+        "email": "ridhampatel2k4@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/ridhampatel2k4/",
+        "photo": "/students/Ridham Patel.png",
+        "contact_no": "8849155025",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL strengthened my analytical mindset and improved my collaborative efficiency. I became more focused on precision and measurable outcomes.",
+        "research": [
+            "Cyber Forensics",
+            "Data Privacy"
+        ],
+        "researchWorks": [
+            "Malware Analysis Lab",
+            "GDPR Compliance Checker"
+        ],
+        "achievements": [
+            "Cyber Security Scholar",
+            "Industry Internship at Forensics Lab"
+        ]
+    },
+    {
+        "student_name": "Jenish Sorathiya",
+        "enrollment_no": "23BEIT54020",
+        "department": "IT",
+        "semester": "6",
+        "division": "-",
+        "batch": "2023-2027",
+        "email": "23beit54020@vsitr.ac.in",
+        "linkedin": "https://www.linkedin.com/in/jenish-sorathiya-419b042a5/",
+        "photo": "/students/Jenish Sorathiya.jpeg",
+        "contact_no": "9099158812",
+        "member_type": "General Members",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL introduced me to a structured research culture that improved my discipline, communication skills, and ability to work in a goal-driven environment.",
+        "research": [
+            "Internet of Things",
+            "Smart Cities"
+        ],
+        "researchWorks": [
+            "IoT-based Garbage Monitoring",
+            "Smart Traffic Lights Implementation"
+        ],
+        "achievements": [
+            "Smart India Hackathon Participant",
+            "IoT Workshop Topper"
+        ]
+    }
+]

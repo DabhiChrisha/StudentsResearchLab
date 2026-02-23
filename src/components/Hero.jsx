@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import slide1 from "../assets/HERO.jpg";
 import slide2 from "../assets/hero2.jpg";
 import slide3 from "../assets/hero3.jpg";
-import srlLogo from "/SRL Logo.svg";
+import srlLogo from "/SRL.svg";
 
 export default function Hero() {
     const [current, setCurrent] = useState(0);
