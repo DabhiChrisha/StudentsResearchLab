@@ -1,0 +1,49 @@
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\App.jsx[24m[0m
+[0m  [2m1:20[22m  [31merror[39m  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z_]/u    [2mno-unused-vars[22m[0m
+[0m  [2m2:50[22m  [31merror[39m  'useLocation' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\components\AnimatedPreloader.jsx[24m[0m
+[0m  [2m3:10[22m  [31merror[39m  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\components\HeadSRL.jsx[24m[0m
+[0m  [2m1:10[22m  [31merror[39m  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\components\JoinUsButton.jsx[24m[0m
+[0m  [2m1:10[22m  [31merror[39m  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\components\JoinUsModal.jsx[24m[0m
+[0m  [2m1:10[22m  [31merror[39m  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\components\Navbar.jsx[24m[0m
+[0m  [2m3:10[22m  [31merror[39m  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\components\Objectives.jsx[24m[0m
+[0m  [2m2:10[22m  [31merror[39m  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\pages\Achievements.jsx[24m[0m
+[0m  [2m1:10[22m  [31merror[39m  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\pages\Appointment.jsx[24m[0m
+[0m  [2m1:10[22m  [31merror[39m  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\pages\Home.jsx[24m[0m
+[0m  [2m1:10[22m  [31merror[39m  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\pages\JoinUs.jsx[24m[0m
+[0m  [2m2:10[22m  [31merror[39m  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\pages\LeaderBoard.jsx[24m[0m
+[0m  [2m1:10[22m  [31merror[39m  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\pages\OrganizationDetails.jsx[24m[0m
+[0m  [2m3:10[22m  [31merror[39m  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\pages\Researchers.jsx[24m[0m
+[0m  [2m1:10[22m  [31merror[39m  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mD:\StudentsResearchLab\src\pages\Sessions.jsx[24m[0m
+[0m  [2m1:10[22m  [31merror[39m  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[31m[1m✖ 16 problems (16 errors, 0 warnings)[22m[39m[0m
+[0m[31m[1m[22m[39m[0m
