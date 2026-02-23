@@ -53,15 +53,14 @@ function App() {
                 <Route path="/appointment" element={<Appointment />} />
                 <Route path="/organization/:orgId" element={<OrganizationDetails />} />
                 <Route path="/cv/:studentId" element={<StudentCV />} />
-              </Routes >
-            </AnimatePresence >
+              </Routes>
+            </AnimatePresence>
 
             <Footer />
           </>
-        )
-        }
-      </div >
-    </Router >
+        )}
+      </div>
+    </Router>
   );
 }
 
