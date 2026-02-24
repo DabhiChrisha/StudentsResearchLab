@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from "framer-motion";
+import TreeBackground from './tree';
 
 // Inline SVG Icons
 const RocketIcon = () => (
@@ -270,9 +271,12 @@ const TimelineItem = ({ item, index }) => {
 
 const Timeline = () => {
   return (
-    <section id="timeline" className="py-16 sm:py-20 overflow-hidden overflow-x-hidden" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>
-      <div className="max-w-7xl mx-auto">
-        <div className="rounded-2xl bg-card px-6 sm:px-10 lg:px-14 py-8 sm:py-12 mx-4 sm:mx-6 lg:mx-8">
+    <section id="timeline" className="relative py-16 sm:py-20 overflow-hidden overflow-x-hidden bg-white" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-80">
+        <TreeBackground />
+      </div>
+      <div className="relative max-w-7xl mx-auto z-10">
+        <div className="rounded-2xl bg-white/70 backdrop-blur-md px-6 sm:px-10 lg:px-14 py-8 sm:py-12 mx-4 sm:mx-6 lg:mx-8 shadow-lg border border-gray-100">
           {/* HEADER */}
           <div className="text-center mb-16 sm:mb-24 max-w-3xl mx-auto">
             <motion.h2

@@ -6,64 +6,64 @@ const topPerformers = [
         rank: 1,
         points: 84,
         students: [
-            { id: 1, name: "Kandarp\nDipakkumar\nGajjar", image: encodeURI("/students/Kandarp Gajjar.jpeg"), enrollment: "22BECE30091", dept: "CE", semester: "8th" },
-            { id: 2, name: "Nancy Rajesh\nPatel", image: encodeURI("/students/Nancy.jpeg"), enrollment: "22BEIT30123", dept: "IT", semester: "8th" }
+            { id: 1, name: "Kandarp\nDipakkumar\nGajjar", image: encodeURI("/students/Kandarp Gajjar.jpeg"), enrollment: "22BECE30091", dept: "CE", semester: "8th", attendance: 11 },
+            { id: 2, name: "Nancy Rajesh\nPatel", image: encodeURI("/students/Nancy.jpeg"), enrollment: "22BEIT30123", dept: "IT", semester: "8th", attendance: 8 }
         ]
     },
     {
         rank: 2,
         points: 58,
         students: [
-            { id: 3, name: "Pande Hemant\nRameshwarkumar", image: encodeURI("/students/Pande Hemant Rameshwarkumar.jpeg"), enrollment: "23BECE30493", dept: "CE", semester: "6th" }
+            { id: 3, name: "Pande Hemant\nRameshwarkumar", image: encodeURI("/students/Pande Hemant Rameshwarkumar.jpeg"), enrollment: "23BECE30493", dept: "CE", semester: "6th", attendance: 12 }
         ]
     },
     {
         rank: 3,
         points: 54,
         students: [
-            { id: 4, name: "Patel Krish\nHimanshu", image: encodeURI("/students/Patel Krish Himanshu.jpeg"), enrollment: "23BECE30532", dept: "CE", semester: "6th" }
+            { id: 4, name: "Patel Krish\nHimanshu", image: encodeURI("/students/Patel Krish Himanshu.jpeg"), enrollment: "23BECE30532", dept: "CE", semester: "6th", attendance: 12 }
         ]
     },
     {
         rank: 4,
         points: 54,
         students: [
-            { id: 5, name: "Patel Banshari\nRahulkumar", image: encodeURI("/students/Patel Banshari Rahulkumar.jpeg"), enrollment: "23BECE30168", dept: "CE", semester: "6th" }
+            { id: 5, name: "Patel Banshari\nRahulkumar", image: encodeURI("/students/Patel Banshari Rahulkumar.jpeg"), enrollment: "23BECE30168", dept: "CE", semester: "6th", attendance: 9 }
         ]
     }
 ];
 
 const studentsList = [
-    { name: "Jenish Sorathiya", enrollment: "23BEIT54020", dept: "IT", semester: "6th", div: "-", batch: "2023-2027", image: "Jenish Sorathiya.jpeg", score: 50 },
-    { name: "Patel Jainee Hasmukhbhai", enrollment: "23BECE30203", dept: "CE", semester: "6th", div: "C", batch: "2023-2027", image: "Patel Jainee Hasmukhbhai.jpeg", score: 46 },
-    { name: "Dabhi Chrisha Manish", enrollment: "24BECE30489", dept: "CE", semester: "4th", div: "G", batch: "2024-2028", image: "Dabhi Chrisha Manish.png", score: 36 },
-    { name: "Kansara Dev Dharmeshkumar", enrollment: "24BECE30114", dept: "CE", semester: "4th", div: "B", batch: "2024-2028", image: "Kansara Dev Dharmeshkumar.jpeg", score: 35 },
-    { name: "Yash Kumavat", enrollment: "24BECE30122", dept: "CE", semester: "4th", div: "B", batch: "2024-2028", image: "Yash Kumavat.jpeg", score: 35 },
-    { name: "Halvdadiya Rudr", enrollment: "24BECE30094", dept: "CE", semester: "4th", div: "B", batch: "2024-2028", image: "Halvdadiya Rudr.jpeg", score: 35 },
-    { name: "Gajjar Antra Ashvinkumar", enrollment: "24BECE30081", dept: "CE", semester: "4th", div: "B", batch: "2024-2028", image: "Gajjar Antra Ashvinkumar.jpeg", score: 34 },
-    { name: "Chavda Yashvi Surendrasinh", enrollment: "23BECE30036", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: "Chavda Yashvi Surendrasinh.jpeg", score: 33 },
-    { name: "Devda Rachita Bharatsinh", enrollment: "23BECE30059", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: "Devda Rachita Bharatsinh.jpeg", score: 32 },
-    { name: "Ghetiya Poojan Rahulbhai", enrollment: "25MECE30003", dept: "CE", semester: "1st", div: "J", batch: "2025-2027", image: "Ghetiya Poojan Rahulbhai.jpeg", score: 32 },
-    { name: "Heny Patel", enrollment: "23BECE30521", dept: "CE", semester: "6th", div: "P", batch: "2023-2027", image: "Heny Patel.jpeg", score: 31 },
-    { name: "Hetvi Hinsu", enrollment: "23BECE30449", dept: "CE", semester: "6th", div: "G", batch: "2023-2027", image: "Hetvi Hinsu.jpeg", score: 30 },
-    { name: "Honey Modha", enrollment: "224SBECE30016", dept: "CE", semester: "6th", div: "B", batch: "2023-2027", image: "Honey Modha.jpeg", score: 30 },
-    { name: "Janki Chitroda", enrollment: "23BECE30040", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: "Janki Chitroda.jpeg", score: 28 },
-    { name: "Kanksha Keyur Buch", enrollment: "23BECE30029", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: "Kanksha Keyur Buch.jpeg", score: 28 },
-    { name: "Kanudawala Zeel PareshKumar", enrollment: "23BECE30101", dept: "CE", semester: "6th", div: "B", batch: "2023-2027", image: "Kanudawala Zeel PareshKumar.jpeg", score: 27 },
-    { name: "Krishna Bhatt", enrollment: "23BECE30023", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: "Krishna Bhatt.jpeg", score: 26 },
-    { name: "Krutika Vijaybhai Patel", enrollment: "22BEIT30118", dept: "IT", semester: "8th", div: "J", batch: "2022-2026", image: "Krutika Vijaybhai Patel.jpeg", score: 25 },
-    { name: "Mihir Patel", enrollment: "23BECE30542", dept: "CE", semester: "6th", div: "P", batch: "2023-2027", image: "Mihir Patel.png", score: 25 },
-    { name: "Padh Charmi Ketankumar", enrollment: "23BECE30144", dept: "CE", semester: "6th", div: "C", batch: "2023-2027", image: "Padh Charmi Ketankumar.jpeg", score: 24 },
-    { name: "Panchal Henit Shaileshbhai", enrollment: "23BECE30490", dept: "CE", semester: "6th", div: "P", batch: "2023-2027", image: "Panchal Henit Shaileshbhai.jpeg", score: 23 },
-    { name: "Pandya Aayush Viral", enrollment: "24BECE30541", dept: "CE", semester: "4th", div: "P", batch: "2024-2028", image: "Pandya Aayush Viral.jpeg", score: 22 },
-    { name: "Parmar Mahi Nitinchandra", enrollment: "24BECE30548", dept: "CE", semester: "4th", div: "P", batch: "2024-2028", image: "Parmar Mahi Nitinchandra.JPG", score: 22 },
-    { name: "Parva Kumar", enrollment: "22BECE30153", dept: "CE", semester: "8th", div: "C", batch: "2022-2026", image: "Parva Kumar.jpeg", score: 21 },
-    { name: "Pragati Varu", enrollment: "24BECE30436", dept: "CE", semester: "4th", div: "F", batch: "2024-2028", image: "Pragati Varu.jpeg", score: 20 },
-    { name: "Prem Raichura", enrollment: "224SBECE30059", dept: "CE", semester: "6th", div: "F", batch: "2023-2027", image: "Prem Raichura.jpeg", score: 18 },
-    { name: "Ridham Patel", enrollment: "22BEIT30133", dept: "IT", semester: "8th", div: "J", batch: "2022-2026", image: "Ridham Patel.png", score: 18 },
-    { name: "Rohan Thakar", enrollment: "23BECE30364", dept: "CE", semester: "6th", div: "F", batch: "2023-2027", image: "Rohan Thakar.png", score: 17 },
-    { name: "Yajurshi Velani", enrollment: "24BECE30094", dept: "CE", semester: "4th", div: "F", batch: "2024-2028", image: "Yajurshi Velani.png", score: 15 },
-    { name: "Zenisha Devani", enrollment: "23BECE30058", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: "Zenisha Devani.jpeg", score: 10 },
+    { name: "Jenish Sorathiya", enrollment: "23BEIT54020", dept: "IT", semester: "6th", div: "-", batch: "2023-2027", image: "Jenish Sorathiya.jpeg", score: 50, attendance: 11 },
+    { name: "Patel Jainee Hasmukhbhai", enrollment: "23BECE30203", dept: "CE", semester: "6th", div: "C", batch: "2023-2027", image: "Patel Jainee Hasmukhbhai.jpeg", score: 46, attendance: 10 },
+    { name: "Dabhi Chrisha Manish", enrollment: "24BECE30489", dept: "CE", semester: "4th", div: "G", batch: "2024-2028", image: "Dabhi Chrisha Manish.png", score: 36, attendance: 11 },
+    { name: "Kansara Dev Dharmeshkumar", enrollment: "24BECE30114", dept: "CE", semester: "4th", div: "B", batch: "2024-2028", image: "Kansara Dev Dharmeshkumar.jpeg", score: 35, attendance: 10 },
+    { name: "Yash Kumavat", enrollment: "24BECE30122", dept: "CE", semester: "4th", div: "B", batch: "2024-2028", image: "Yash Kumavat.jpeg", score: 35, attendance: 10 },
+    { name: "Halvdadiya Rudr", enrollment: "24BECE30094", dept: "CE", semester: "4th", div: "B", batch: "2024-2028", image: "Halvdadiya Rudr.jpeg", score: 35, attendance: 10 },
+    { name: "Gajjar Antra Ashvinkumar", enrollment: "24BECE30081", dept: "CE", semester: "4th", div: "B", batch: "2024-2028", image: "Gajjar Antra Ashvinkumar.jpeg", score: 34, attendance: 10 },
+    { name: "Chavda Yashvi Surendrasinh", enrollment: "23BECE30036", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: "Chavda Yashvi Surendrasinh.jpeg", score: 33, attendance: 3 },
+    { name: "Devda Rachita Bharatsinh", enrollment: "23BECE30059", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: "Devda Rachita Bharatsinh.jpeg", score: 32, attendance: 2 },
+    { name: "Ghetiya Poojan Rahulbhai", enrollment: "25MECE30003", dept: "CE", semester: "1st", div: "J", batch: "2025-2027", image: "Ghetiya Poojan Rahulbhai.jpeg", score: 32, attendance: 2 },
+    { name: "Heny Patel", enrollment: "23BECE30521", dept: "CE", semester: "6th", div: "P", batch: "2023-2027", image: "Heny Patel.jpeg", score: 31, attendance: 6 },
+    { name: "Hetvi Hinsu", enrollment: "23BECE30449", dept: "CE", semester: "6th", div: "G", batch: "2023-2027", image: "Hetvi Hinsu.jpeg", score: 30, attendance: 5 },
+    { name: "Honey Modha", enrollment: "224SBECE30016", dept: "CE", semester: "6th", div: "B", batch: "2023-2027", image: "Honey Modha.jpeg", score: 30, attendance: 3 },
+    { name: "Janki Chitroda", enrollment: "23BECE30040", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: "Janki Chitroda.jpeg", score: 28, attendance: 3 },
+    { name: "Kanksha Keyur Buch", enrollment: "23BECE30029", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: "Kanksha Keyur Buch.jpeg", score: 28, attendance: 4 },
+    { name: "Kanudawala Zeel PareshKumar", enrollment: "23BECE30101", dept: "CE", semester: "6th", div: "B", batch: "2023-2027", image: "Kanudawala Zeel PareshKumar.jpeg", score: 27, attendance: 7 },
+    { name: "Krishna Bhatt", enrollment: "23BECE30023", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: "Krishna Bhatt.jpeg", score: 26, attendance: 2 },
+    { name: "Krutika Vijaybhai Patel", enrollment: "22BEIT30118", dept: "IT", semester: "8th", div: "J", batch: "2022-2026", image: "Krutika Vijaybhai Patel.jpeg", score: 25, attendance: 1 },
+    { name: "Mihir Patel", enrollment: "23BECE30542", dept: "CE", semester: "6th", div: "P", batch: "2023-2027", image: "Mihir Patel.png", score: 25, attendance: 8 },
+    { name: "Padh Charmi Ketankumar", enrollment: "23BECE30144", dept: "CE", semester: "6th", div: "C", batch: "2023-2027", image: "Padh Charmi Ketankumar.jpeg", score: 24, attendance: 3 },
+    { name: "Panchal Henit Shaileshbhai", enrollment: "23BECE30490", dept: "CE", semester: "6th", div: "P", batch: "2023-2027", image: "Panchal Henit Shaileshbhai.jpeg", score: 23, attendance: 8 },
+    { name: "Pandya Aayush Viral", enrollment: "24BECE30541", dept: "CE", semester: "4th", div: "P", batch: "2024-2028", image: "Pandya Aayush Viral.jpeg", score: 22, attendance: 11 },
+    { name: "Parmar Mahi Nitinchandra", enrollment: "24BECE30548", dept: "CE", semester: "4th", div: "P", batch: "2024-2028", image: "Parmar Mahi Nitinchandra.JPG", score: 22, attendance: 11 },
+    { name: "Parva Kumar", enrollment: "22BECE30153", dept: "CE", semester: "8th", div: "C", batch: "2022-2026", image: "Parva Kumar.jpeg", score: 21, attendance: 1 },
+    { name: "Pragati Varu", enrollment: "24BECE30436", dept: "CE", semester: "4th", div: "F", batch: "2024-2028", image: "Pragati Varu.jpeg", score: 20, attendance: 9 },
+    { name: "Prem Raichura", enrollment: "224SBECE30059", dept: "CE", semester: "6th", div: "F", batch: "2023-2027", image: "Prem Raichura.jpeg", score: 18, attendance: 3 },
+    { name: "Ridham Patel", enrollment: "22BEIT30133", dept: "IT", semester: "8th", div: "J", batch: "2022-2026", image: "Ridham Patel.png", score: 18, attendance: 1 },
+    { name: "Rohan Thakar", enrollment: "23BECE30364", dept: "CE", semester: "6th", div: "F", batch: "2023-2027", image: "Rohan Thakar.png", score: 17, attendance: 7 },
+    { name: "Yajurshi Velani", enrollment: "24BECE30094", dept: "CE", semester: "4th", div: "F", batch: "2024-2028", image: "Yajurshi Velani.png", score: 15, attendance: 7 },
+    { name: "Zenisha Devani", enrollment: "23BECE30058", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: "Zenisha Devani.jpeg", score: 10, attendance: 3 },
 ];
 
 const sortedOtherStudents = studentsList
@@ -88,10 +88,10 @@ const regularPerformers = sortedOtherStudents.map((student) => {
 const LeaderBoard = () => {
     const rankStyles = {
         1: {
-            card: "bg-gradient-to-br from-yellow-200 via-yellow-400 to-amber-500 border-yellow-500 shadow-yellow-500/40 lg:col-span-2",
-            badge: "bg-gradient-to-tr from-yellow-500 to-amber-600",
-            glow: "bg-yellow-300/50",
-            pts: "bg-white/30 text-yellow-950 border-white/40"
+            card: "bg-gradient-to-br from-yellow-100 via-yellow-200 to-amber-300 border-yellow-500 border-3 shadow-yellow-200/50 lg:col-span-2",
+            badge: "bg-gradient-to-tr from-yellow-400 to-amber-500",
+            glow: "bg-yellow-200/40",
+            pts: "bg-yellow-500/10 text-yellow-800 border-yellow-200/50"
         },
         2: {
             card: "bg-gradient-to-br from-slate-200 via-slate-300 to-slate-400 border-slate-400 shadow-slate-400/40",
@@ -125,7 +125,7 @@ const LeaderBoard = () => {
                 transition={{ duration: 70, repeat: Infinity, ease: "linear" }}
                 className="fixed -top-[30vw] -left-[30vw] lg:-top-[400px] lg:-left-[400px] w-[120vw] h-[120vw] lg:w-[1000px] lg:h-[1000px] opacity-[0.35] pointer-events-none z-0"
                 style={{
-                    backgroundImage: 'url("/watermark.jpeg")',
+                    backgroundImage: 'url("/watermark.png")',
                     backgroundPosition: 'center',
                     backgroundSize: 'contain',
                     backgroundRepeat: 'no-repeat'
@@ -137,7 +137,7 @@ const LeaderBoard = () => {
                 transition={{ duration: 70, repeat: Infinity, ease: "linear" }}
                 className="fixed -bottom-[30vw] -right-[30vw] lg:-bottom-[400px] lg:-right-[400px] w-[120vw] h-[120vw] lg:w-[1000px] lg:h-[1000px] opacity-[0.35] pointer-events-none z-0"
                 style={{
-                    backgroundImage: 'url("/watermark.jpeg")',
+                    backgroundImage: 'url("/watermark.png")',
                     backgroundPosition: 'center',
                     backgroundSize: 'contain',
                     backgroundRepeat: 'no-repeat'
@@ -192,16 +192,22 @@ const LeaderBoard = () => {
                                         <div key={student.id} className="flex flex-col items-center">
                                             <div className="relative mt-2 mb-4">
                                                 <div className={`absolute inset-0 rounded-full ${rankStyles[performer.rank].glow} blur-xl group-hover:blur-2xl transition-all duration-500`}></div>
-                                                <div className={`${performer.rank === 1 ? 'w-24 h-24 sm:w-28 sm:h-28' : 'w-28 h-28 sm:w-32 sm:h-32'} rounded-full border-4 border-white shadow-xl relative z-10 overflow-hidden bg-white/50 backdrop-blur-sm transform transition-transform duration-500 group-hover:scale-105`}>
+                                                <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-white shadow-xl relative z-10 overflow-hidden bg-white/50 backdrop-blur-sm transform transition-transform duration-500 group-hover:scale-105">
                                                     <img src={student.image} alt={student.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                                 </div>
                                             </div>
 
                                             <div className="text-center mb-4">
-                                                <h3 className={`${performer.rank === 1 ? 'text-xs' : 'text-sm'} font-black text-gray-900 leading-tight mb-1 whitespace-pre-line`}>{student.name}</h3>
+                                                <h3 className="text-sm font-black text-gray-900 leading-tight mb-1 whitespace-pre-line">{student.name}</h3>
                                                 <div className="flex flex-col items-center">
                                                     <p className="text-[10px] font-bold text-gray-700 uppercase tracking-widest">{student.enrollment}</p>
                                                     <p className="text-[10px] font-black text-gray-900 mt-0.5 drop-shadow-[0_1px_1px_rgba(255,255,255,0.5)]">{student.dept} • {student.semester} Sem</p>
+                                                    <div className="flex items-center gap-1.5 mt-2 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 shadow-sm backdrop-blur-md">
+                                                        <img src="/Attendance1.png" alt="Attendance" className="w-3.5 h-3.5 object-contain intensity-high" style={{ filter: 'brightness(0.8) sepia(1) hue-rotate(70deg) saturate(500%)' }} />
+                                                        <span className="text-[9px] font-black text-emerald-900 tracking-wider">
+                                                            {student.attendance} ATTENDANCE
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -216,7 +222,7 @@ const LeaderBoard = () => {
                     </div>
 
                     {/* Table Section: Scrollable from Rank 5 onwards */}
-                    <div className="max-w-4xl mx-auto px-4">
+                    <div className="max-w-5xl mx-auto px-4">
                         <div className="bg-white/70 backdrop-blur-xl rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-2xl p-4 sm:p-6 lg:p-8 relative">
                             {/* Container Watermark */}
                             <motion.div
@@ -224,7 +230,7 @@ const LeaderBoard = () => {
                                 transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
                                 className="absolute -inset-[100%] z-0 opacity-[0.25] pointer-events-none mix-blend-multiply origin-center"
                                 style={{
-                                    backgroundImage: 'url("/watermark.jpeg")',
+                                    backgroundImage: 'url("/watermark.png")',
                                     backgroundPosition: 'center',
                                     backgroundSize: '25%',
                                     backgroundRepeat: 'no-repeat'
@@ -238,7 +244,7 @@ const LeaderBoard = () => {
                                 .scrollable-container::-webkit-scrollbar-thumb { background: #fde68a; border-radius: 10px; }
                                 .scrollable-container::-webkit-scrollbar-thumb:hover { background: #fac131ff; }
                             `}} />
-                                <div className="flex flex-col gap-4">
+                                <div className="flex flex-col gap-3">
                                     {regularPerformers.filter(s => s.rank >= 5).map((student, idx) => (
                                         <motion.div
                                             key={student.name}
@@ -247,6 +253,8 @@ const LeaderBoard = () => {
                                             transition={{ delay: 0.1 + (idx * 0.05) }}
                                             className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white/85 hover:bg-gradient-to-r hover:from-white/90 hover:to-amber-50/90 border border-gray-100/80 rounded-[1.5rem] transition-all duration-400 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 group relative overflow-hidden backdrop-blur-sm"
                                         >
+
+
                                             {/* Shiny effect on hover for the list items */}
                                             <div className="absolute top-0 bottom-0 left-[-100%] w-[100%] bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-[10deg] transition-all duration-700 ease-in-out group-hover:left-[200%] z-0 pointer-events-none"></div>
 
@@ -276,11 +284,24 @@ const LeaderBoard = () => {
                                                     </div>
                                                 </div>
 
-                                                <div className="text-right pr-2 sm:pr-4 shrink-0 mt-2 sm:mt-0">
-                                                    <div className="text-lg sm:text-xl font-black text-gray-800 transition-all duration-300 group-hover:scale-110 group-hover:text-amber-500 drop-shadow-sm">
-                                                        {student.score}
+                                                <div className="flex items-center gap-6 pr-2 sm:pr-4 shrink-0 mt-2 sm:mt-0">
+                                                    {/* New Attendance Column at the marked blue dot position */}
+                                                    <div className="flex flex-col items-center justify-center min-w-[70px]">
+                                                        <div className="flex items-center gap-1.5">
+                                                            <img src="/Attendance1.png" alt="Attendance" className="w-8 h-8 object-contain" style={{ filter: 'brightness(0.8) sepia(1) hue-rotate(70deg) saturate(500%)' }} />
+                                                            <span className="text-lg sm:text-xl font-black text-emerald-600 drop-shadow-sm">
+                                                                {student.attendance}
+                                                            </span>
+                                                        </div>
+                                                        <div className="text-[8px] sm:text-[9px] font-bold text-gray-400 tracking-widest uppercase">Attendance</div>
                                                     </div>
-                                                    <div className="text-[8px] sm:text-[9px] font-bold text-gray-400 tracking-widest mt-0.5">PTS</div>
+
+                                                    <div className="text-right border-l border-gray-100 pl-6">
+                                                        <div className="text-lg sm:text-xl font-black text-gray-800 transition-all duration-300 group-hover:scale-110 group-hover:text-amber-500 drop-shadow-sm">
+                                                            {student.score}
+                                                        </div>
+                                                        <div className="text-[8px] sm:text-[9px] font-bold text-gray-400 tracking-widest mt-0.5">PTS</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </motion.div>
