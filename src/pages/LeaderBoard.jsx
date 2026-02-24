@@ -28,7 +28,7 @@ const topPerformers = [
         rank: 4,
         points: 54,
         students: [
-            { id: 5, name: "Patel Banshari\nRahulkumar", image: encodeURI("/students/Patel Banshari Rahulkumar.jpeg"), enrollment: "23BECE30168", dept: "CE", semester: "6th", attendance: 9 }
+            { id: 5, name: "Patel Banshari\nRahulkumar", image: encodeURI("/students/Patel Banshari Rahulkumar.jpg"), enrollment: "23BECE30168", dept: "CE", semester: "6th", attendance: 9 }
         ]
     }
 ];
