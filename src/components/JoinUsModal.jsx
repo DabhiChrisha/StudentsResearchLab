@@ -6,7 +6,7 @@ const JoinUsModal = ({ isOpen, onClose }) => {
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4">
                     {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -21,10 +21,10 @@ const JoinUsModal = ({ isOpen, onClose }) => {
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden overflow-y-auto max-h-[90vh]"
+                        className="relative w-full max-w-2xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden overflow-y-auto max-h-[92vh]"
                     >
                         {/* Header */}
-                        <div className="sticky top-0 z-10 bg-white px-8 py-6 border-b border-slate-100 flex items-center justify-between">
+                        <div className="sticky top-0 z-10 bg-white px-5 sm:px-8 py-4 sm:py-6 border-b border-slate-100 flex items-center justify-between">
                             <div>
                                 <h2 className="text-2xl font-bold font-serif text-slate-900">Join SRL</h2>
                                 <p className="text-sm text-slate-500">Registration Form</p>
@@ -38,7 +38,7 @@ const JoinUsModal = ({ isOpen, onClose }) => {
                         </div>
 
                         {/* Form Content */}
-                        <div className="p-8">
+                        <div className="p-5 sm:p-8">
                             <JoinUs isModal onClose={onClose} />
                         </div>
                     </motion.div>
