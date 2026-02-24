@@ -34,7 +34,7 @@ export default function Hero() {
     }, [slides.length]);
 
     return (
-        <section id="top" className="relative h-screen w-full overflow-hidden">
+        <section id="top" className="relative min-h-[100svh] w-full overflow-hidden">
 
             {/* ===== BACKGROUND SLIDES ===== */}
             {slides.map((slide, index) => (
@@ -52,7 +52,7 @@ export default function Hero() {
 
             {/* ===== TEXT CONTAINER ===== */}
             <div
-                className={`absolute inset-0 flex flex-col px-6 md:px-16 ${slides[current].align} transition-all duration-700`}
+                className={`absolute inset-0 flex flex-col px-4 sm:px-6 md:px-16 ${slides[current].align} transition-all duration-700`}
             >
                 <div className="max-w-3xl w-full">
 

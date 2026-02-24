@@ -11,6 +11,7 @@
 
   body {
     @apply bg-primary text-slate-900 font-sans;
+    overflow-x: hidden;
   }
 
   h1,
@@ -171,6 +172,7 @@
   animation: gradient-slow 8s linear infinite;
 }
 
+<<<<<<< Updated upstream
 /* ===== GLOW BUTTON STYLES ===== */
 @property --a {
   syntax: "<angle>";
@@ -231,4 +233,14 @@
 .glow-button:hover .glow-effect {
   animation-duration: 1.5s;
   opacity: 1;
+=======
+* {
+  box-sizing: border-box;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+>>>>>>> Stashed changes
 }
