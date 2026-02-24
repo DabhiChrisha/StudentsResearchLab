@@ -1,52 +1,208 @@
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+
+/* 🔹 Dummy data (UNCHANGED — your original data) */
+const sessions = [
+  {
+    id: 1,
+    category: "learning",
+    title: "Written and Verbal Articulation of Algorithmic Concepts",
+    description:
+      "At the Students Research Lab under the M. M. Patel Students Research Project Cell, KSV (MMPSRPC), Kadi Sarva Vishwavidyalaya, Gandhinagar, an academic session focused on efficient analysis of recursive problems using structured and optimized approaches. Students solved advanced problem sets requiring quick evaluation and accurate case identification, showcasing how complex recurrences can be simplified through methodical thinking. Such application-driven learning strengthens analytical sharpness, improves performance under time constraints, and reinforces a results-oriented academic mindset 🚀💡.",
+    type: "video",
+    media: ["/Sessions/Articulation-of-Algorithmic-Concepts/video-3.mp4"],
+    linkedin:
+      "https://www.linkedin.com/posts/mmpsrpc_mmpsrpc-ksv-svkm-activity-7412364021376413696-DFUn?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFJiBFMBBjWJQ8FYFoDQDvjaardrEEtrUsI",
+    date: "12th Feb 2026",
+  },
+  {
+    id: 2,
+    category: "learning",
+    title: "Algorithm Optimization Through Recurrence Analysis",
+    description:
+      "At the Students Research Lab under the M. M. Patel Students Research Project Cell, KSV (MMPSRPC), Kadi Sarva Vishwavidyalaya, Gandhinagar, students participated in an interactive session focused on algorithm optimization, applying concepts through discussion and collaborative teamwork. The activity strengthened their logical understanding and fostered a structured problem-solving approach. The Students Research Lab at KSV continues to cultivate a dynamic academic environment that sharpens minds and promotes 360° student development across disciplines 🚀💡.",
+    type: "video",
+    media: ["/Sessions/Algorithm-Optimization/video-1.mp4"],
+    linkedin:
+      "https://www.linkedin.com/posts/mmpsrpc_mmpsrpc-ksv-svkm-activity-7411274469664759809-rDsK?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFJiBFMBBjWJQ8FYFoDQDvjaardrEEtrUsI",
+    date: "25th Feb 2026",
+  },
+  {
+    id: 3,
+    category: "success",
+    title:
+      "Alumni Success Story - Shubham Kumar Chandravanshi (Deloitte), Dhruvkumar Patel (Myntra), Jay Patel (QloudX)",
+    description:
+      "The Alumni Connect Session at the Student Research Lab, M. M. Patel Students Research Project Cell, KSV, brought together students and alumni for an insightful interaction focused on industry exposure, career journeys, and key professional learnings.",
+    type: "video",
+    media: ["/Sessions/Alumni-Success-Shubham-Dhruvkumar-Jay/video-2.mp4"],
+    linkedin:
+      "https://www.linkedin.com/posts/mmpsrpc_ksv-svkm-mmpsrpc-activity-7417800043421843456-rV2a?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFJiBFMBBjWJQ8FYFoDQDvjaardrEEtrUsI",
+    date: "3rd Jan 2026",
+  },
+  {
+    id: 4,
+    category: "success",
+    title:
+      "Alumni Success Story - Manan Darji (Google), Dhwani Jakhaniya (AMD)",
+    description:
+      "Alumni of the CE Department, LDRP ITR, KSV conducted an insightful interaction session highlighting focused effort, mentorship, and adaptability for professional growth.",
+    type: "video",
+    media: ["/Sessions/Alumni-Success-Manan-Dhwani/video-1.mp4"],
+    linkedin:
+      "https://www.linkedin.com/posts/mmpsrpc_ksv-svkm-mmpsrc-activity-7413813644284682240-u9XF?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFJiBFMBBjWJQ8FYFoDQDvjaardrEEtrUsI",
+    date: "27th Dec 2025",
+  },
+  {
+    id: 5,
+    category: "success",
+    title: "Alumni Success Story - Dhruvkumar Patel (Myntra)",
+    description:
+      "🎓 Alumni Connect Session at LDRP-ITR, KSV! Mr. Dhruvkumar Patel shared valuable insights on research-driven career growth and technical excellence.",
+    type: "photo",
+    media: [
+      "/Sessions/Alumni-Success-Dhruvkumar/img-1.jpg",
+      "/Sessions/Alumni-Success-Dhruvkumar/img-2.jpg",
+      "/Sessions/Alumni-Success-Dhruvkumar/img-3.jpg",
+      "/Sessions/Alumni-Success-Dhruvkumar/img-4.jpg",
+      "/Sessions/Alumni-Success-Dhruvkumar/img-5.jpg",
+    ],
+    linkedin:
+      "https://www.linkedin.com/posts/mmpsrpc_ksv-ldrpitr-mmpsrpc-activity-7393559476517273600-F8s-?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFJiBFMBBjWJQ8FYFoDQDvjaardrEEtrUsI",
+    date: "8th Nov 2025",
+  },
+];
+
+/* 🔥 Image Carousel */
+const ImageCarousel = ({ images }) => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (!images || images.length <= 1) return;
+    const interval = setInterval(
+      () => setIndex((prev) => (prev + 1) % images.length),
+      2600
+    );
+    return () => clearInterval(interval);
+  }, [images]);
+
+  return (
+    <div className="w-full h-full relative pointer-events-none">
+      {images.map((img, i) => (
+        <img
+          key={i}
+          src={img}
+          alt=""
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+            i === index ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      ))}
+    </div>
+  );
+};
 
 const Sessions = () => {
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="pt-32 pb-40 px-4 sm:px-6 lg:px-8 bg-primary/20 min-h-screen relative overflow-hidden"
-        >
-            {/* Background patterns to reduce white space */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-3xl -mr-64 -mt-64" />
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `radial-gradient(#00887b 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+  const [activeTab, setActiveTab] = useState("all");
 
-            <div className="max-w-7xl mx-auto relative z-10">
-                <div className="mb-16">
-                    <h1 className="text-5xl lg:text-7xl font-black font-serif text-slate-900 mb-6 drop-shadow-sm">SRL Sessions</h1>
-                    <div className="w-24 h-2 bg-secondary rounded-full mb-8 shadow-sm" />
-                    <p className="text-xl text-slate-700 max-w-2xl leading-relaxed font-light">
-                        Discover our curated series of workshops, colloquiums, and technical discussions designed to sharpen your research skills and academic integrity.
-                    </p>
-                </div>
+  const filteredSessions =
+    activeTab === "all"
+      ? sessions
+      : sessions.filter((s) => s.category === activeTab);
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    {[1, 2, 3, 4, 5, 6].map((i) => (
-                        <motion.div
-                            key={i}
-                            whileHover={{ y: -10 }}
-                            className="bg-white p-10 rounded-[2.5rem] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] border border-white hover:border-secondary/20 transition-all group overflow-hidden relative"
-                        >
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 -mr-16 -mt-16 rounded-full group-hover:bg-secondary/10 transition-colors duration-500" />
-                            <div className="text-secondary font-black text-xs uppercase tracking-[0.2em] mb-6">Upcoming • Session {i}</div>
-                            <h3 className="text-2xl font-bold text-slate-800 mb-4 font-serif leading-tight">Advanced Research Methodology & Publication Ethics</h3>
-                            <p className="text-slate-500 text-sm mb-8 leading-relaxed font-normal">
-                                Deep dive into the fundamental principles of conducting high-impact academic research, focusing on systematic reviews and ethical standards.
-                            </p>
-                            <button className="flex items-center gap-3 text-secondary font-black text-xs uppercase tracking-widest group">
-                                <span className="relative">
-                                    Register Now
-                                    <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all group-hover:w-full" />
-                                </span>
-                                <span className="group-hover:translate-x-1 transition-transform">→</span>
-                            </button>
-                        </motion.div>
-                    ))}
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="pt-20 lg:pt-24 pb-40 px-4 sm:px-6 lg:px-8 bg-primary/20 min-h-screen"
+    >
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-4">
+          <h1 className="text-5xl lg:text-7xl font-black font-serif text-slate-900 mb-6">
+            SRL Sessions
+          </h1>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex gap-4 mb-8 flex-wrap">
+          {[
+            { key: "all", label: "All Sessions" },
+            { key: "learning", label: "Learning Sessions" },
+            { key: "success", label: "Success Stories" },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`px-6 py-2 rounded-full text-sm font-bold transition ${
+                activeTab === tab.key
+                  ? "bg-secondary text-white shadow-md"
+                  : "bg-white text-slate-600 hover:bg-slate-100"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 items-start">
+          {filteredSessions.map((session) => (
+            <motion.a
+              key={session.id}
+              href={session.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ y: -6, scale: 1.012 }}
+              transition={{ type: "spring", stiffness: 220, damping: 22 }}
+              className="group block bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.12)] transform-gpu will-change-transform"
+            >
+              {/* MEDIA */}
+              <div className="h-64 lg:h-72 bg-white overflow-hidden">
+                {session.type === "video" ? (
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    className="w-full h-full object-contain pointer-events-none transform-gpu"
+                  >
+                    <source src={session.media[0]} type="video/mp4" />
+                  </video>
+                ) : (
+                  <ImageCarousel images={session.media} />
+                )}
+              </div>
+
+              {/* TEXT (smooth hover reveal) */}
+              <div className="px-6 pb-6 pt-4">
+                <h3 className="text-lg lg:text-xl font-bold text-slate-800 font-serif leading-tight">
+                  {session.title}
+                </h3>
+
+                <div className="max-h-0 opacity-0 group-hover:max-h-52 group-hover:opacity-100 transition-[max-height,opacity] duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden will-change-[max-height,opacity]">
+                  <div className="text-xs text-slate-500 mt-2">
+                    📅 {session.date}
+                  </div>
+
+                  <p className="text-slate-600 text-sm leading-relaxed mt-2 line-clamp-3">
+                    {session.description}
+                  </p>
                 </div>
-            </div>
-        </motion.div>
-    );
+              </div>
+            </motion.a>
+          ))}
+        </div>
+
+        {filteredSessions.length === 0 && (
+          <div className="text-center text-slate-500 mt-20">
+            No items to display.
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
 };
 
 export default Sessions;
