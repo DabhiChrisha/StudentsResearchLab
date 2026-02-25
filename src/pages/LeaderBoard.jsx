@@ -51,15 +51,17 @@ const LeaderBoard = () => {
         const fetchScores = async () => {
             try {
                 // Fetch dynamic scores and attendance records from the backend
-                const [scoresResponse, attendanceResponse] = await Promise.all([
+                const [scoresResponse, attendanceResponse, srlResponse] = await Promise.all([
                     fetch('http://127.0.0.1:8000/api/scores'),
-                    fetch('http://127.0.0.1:8000/api/attendance')
+                    fetch('http://127.0.0.1:8000/api/attendance'),
+                    fetch('http://127.0.0.1:8000/api/srl_sessions')
                 ]);
 
-                if (!scoresResponse.ok || !attendanceResponse.ok) throw new Error("Failed to fetch backend data");
+                if (!scoresResponse.ok || !attendanceResponse.ok || !srlResponse.ok) throw new Error("Failed to fetch backend data");
                 
                 const scoresData = await scoresResponse.json();
                 const attendanceData = await attendanceResponse.json();
+                const srlData = await srlResponse.json();
                 
                 // Construct a score map: { "enrollment_no": total_points }
                 const scoreMap = {};
@@ -67,27 +69,57 @@ const LeaderBoard = () => {
                     scoreMap[record.enrollment_no] = record.total_points;
                 });
 
-                // Construct an attendance map: { "enrollment_no": total_hours }
+                // Construct an attendance map for percentage calculation
                 const attendanceMap = {};
                 attendanceData.records.forEach(record => {
                     const en = record.enrollment_no;
-                    if (!attendanceMap[en]) attendanceMap[en] = 0;
-                    attendanceMap[en] += (record.hours || 0);
+                    const date = record.date;
+                    const hours = record.hours || 0;
+                    
+                    if (!attendanceMap[en]) attendanceMap[en] = { totalHours: 0, dailyHours: {} };
+                    
+                    attendanceMap[en].totalHours += hours;
+                    if (date) {
+                        attendanceMap[en].dailyHours[date] = (attendanceMap[en].dailyHours[date] || 0) + hours;
+                    }
                 });
 
-                // Merge static profiles with dynamic scores and attendance hours
+                // Build a Set of valid SRL Session dates for fast lookup
+                const srlDates = new Set(srlData.records.map(r => r.session_date).filter(Boolean));
+
+                // Merge static profiles with dynamic scores and attendance percentage
                 const mergedStudents = STUDENT_PROFILES.map((student, index) => {
                     // Normalize the enrollment strings just in case 
                     const studentEnrollment = student.enrollment.trim().toUpperCase();
-                    // Lookup score and hours, default to 0 if not found
+                    // Lookup score and percentage, default to 0 if not found
                     const score = scoreMap[studentEnrollment] || 0;
-                    const hours = attendanceMap[studentEnrollment] || 0;
+                    
+                    let percentage = 0;
+                    let srlPercentage = 0;
+                    const attData = attendanceMap[studentEnrollment];
+                    if (attData) {
+                        const dates = Object.keys(attData.dailyHours);
+                        const totalDays = dates.length;
+                        if (totalDays > 0) {
+                            const presentDays = dates.filter(d => attData.dailyHours[d] > 0).length;
+                            percentage = Math.round((presentDays / totalDays) * 100);
+                        }
+                        
+                        // Calculate SRL specific percentage based on inner join logic 
+                        const srlValidDates = dates.filter(d => srlDates.has(d));
+                        const totalSrlDays = srlValidDates.length;
+                        if (totalSrlDays > 0) {
+                            const presentSrlDays = srlValidDates.filter(d => attData.dailyHours[d] > 0).length;
+                            srlPercentage = Math.round((presentSrlDays / totalSrlDays) * 100);
+                        }
+                    }
                     
                     return {
                         ...student,
                         id: student.id || index + 1, // Fallback ID if not provided
                         score: score,
-                        attendance: hours // Overwrite hardcoded static attribute
+                        attendance: percentage, // Overwrite hardcoded static attribute
+                        srlAttendance: srlPercentage // Add SRL attribute
                     };
                 });
 
@@ -121,8 +153,8 @@ const LeaderBoard = () => {
 
                 setTopPerformers(tmpTopPerformers);
                 
-                // Group the rest (Rank 6 and beyond)
-                const restOfTheStudents = rankedStudents.filter(s => s.rank >= 6);
+                // Group the rest (Rank 4 and beyond, to show 4 & 5 on mobile list)
+                const restOfTheStudents = rankedStudents.filter(s => s.rank >= 4);
                 setRegularPerformers(restOfTheStudents);
                 setLoading(false);
 
@@ -132,7 +164,7 @@ const LeaderBoard = () => {
                 // Fallback rendering incase backend is down: rank all 0
                 const fallbackStudents = STUDENT_PROFILES.map((s, i) => ({ ...s, id: i+1, score: 0, rank: 1, attendance: 0 }));
                 setTopPerformers([{ rank: 1, points: 0, students: fallbackStudents.slice(0, 5) }]);
-                setRegularPerformers(fallbackStudents.slice(5));
+                setRegularPerformers(fallbackStudents.slice(3));
                 setLoading(false);
             }
         };
@@ -156,7 +188,7 @@ const LeaderBoard = () => {
                 badge: "bg-gradient-to-br from-yellow-400 to-amber-600 shadow-yellow-500/50",
                 glow: "bg-yellow-300/60",
                 pts: "bg-white text-yellow-700 border-yellow-200 shadow-sm flex items-center justify-center gap-1",
-                height: "h-[190px] sm:h-[220px]",
+                height: "h-[220px] sm:h-[260px]",
                 crown: true
             },
             2: {
@@ -164,53 +196,41 @@ const LeaderBoard = () => {
                 badge: "bg-gradient-to-br from-slate-400 to-slate-600 shadow-slate-500/50",
                 glow: "bg-slate-300/60",
                 pts: "bg-white text-slate-700 border-slate-200 shadow-sm flex items-center justify-center gap-1",
-                height: "h-[160px] sm:h-[190px]"
+                height: "h-[190px] sm:h-[220px]"
             },
             3: {
                 card: "bg-gradient-to-b from-orange-50 via-orange-100 to-orange-200 border-orange-300 border-x-2 border-t-4 border-b-0 shadow-[0_-5px_20px_rgba(251,146,60,0.2)] z-20",
                 badge: "bg-gradient-to-br from-orange-400 to-orange-600 shadow-orange-500/50",
                 glow: "bg-orange-300/60",
                 pts: "bg-white text-orange-800 border-orange-200 shadow-sm flex items-center justify-center gap-1",
-                height: "h-[130px] sm:h-[160px]"
+                height: "h-[160px] sm:h-[190px]"
             },
             4: {
                 card: "bg-gradient-to-b from-emerald-50 via-emerald-100 to-emerald-200 border-emerald-300 border-x-2 border-t-4 border-b-0 shadow-[0_-5px_20px_rgba(52,211,153,0.15)] z-10",
                 badge: "bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-emerald-500/50",
                 glow: "bg-emerald-300/40",
                 pts: "bg-white text-emerald-800 border-emerald-200 shadow-sm flex items-center justify-center gap-1",
-                height: "h-[100px] sm:h-[130px]"
+                height: "h-[140px] sm:h-[160px]"
             },
             5: {
                 card: "bg-gradient-to-b from-sky-50 via-sky-100 to-sky-200 border-sky-300 border-x-2 border-t-4 border-b-0 shadow-[0_-5px_20px_rgba(56,189,248,0.15)] z-10",
                 badge: "bg-gradient-to-br from-sky-400 to-sky-600 shadow-sky-500/50",
                 glow: "bg-sky-300/40",
                 pts: "bg-white text-sky-800 border-sky-200 shadow-sm flex items-center justify-center gap-1",
-                height: "h-[90px] sm:h-[110px]"
+                height: "h-[120px] sm:h-[140px]"
             }
         };
         return rankStyles[rank];
     };
 
     // Helper to order the top performers for the podium layout
-    // Expected visual order from left to right: 4, 2, 1, 3, 5
-    const getPodiumOrder = () => {
-        const orderMap = { 1: 2, 2: 1, 3: 3, 4: 0, 5: 4 }; // Indexes for [4, 2, 1, 3, 5]
-        const ordered = new Array(5).fill(null);
-        
-        topPerformers.forEach(p => {
-            if (p.rank <= 5) {
-                ordered[orderMap[p.rank]] = p;
-            }
-        });
-        
-        return ordered.filter(p => p !== null);
-    };
+    // No longer strictly needed for mobile flow, but kept as a reference 
 
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="pt-10 pb-16 px-4 sm:px-6 lg:px-8 bg-[#fafafa] min-h-screen relative overflow-hidden font-sans"
+            className="pt-6 pb-16 px-4 sm:px-6 lg:px-8 bg-[#fafafa] min-h-screen relative overflow-hidden font-sans"
         >
             {/* Elegant Background Accents */}
             <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-amber-500/5 to-transparent pointer-events-none z-0"></div>
@@ -257,7 +277,7 @@ const LeaderBoard = () => {
                         initial={{ y: -30, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ duration: 0.6, ease: "easeOut" }}
-                        className="flex flex-col items-center justify-center gap-4 mb-20 text-center relative"
+                        className="flex flex-col items-center justify-center gap-4 mb-16 text-center relative"
                     >
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm mb-2">
                              <TrendingUp size={16} className="text-amber-600" />
@@ -275,25 +295,33 @@ const LeaderBoard = () => {
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.2, duration: 0.5 }}
-                        className="max-w-6xl mx-auto mb-20 px-2 mt-20 sm:mt-24 lg:mt-32"
+                        className="max-w-6xl mx-auto mb-10 px-2 mt-8 sm:mt-12 lg:mt-16"
                     >
                     {/* Top 5 Podium UI */}
-                    <div className="flex flex-col lg:flex-row items-center lg:items-end justify-center gap-12 sm:gap-16 lg:gap-3 h-auto lg:h-[300px] relative pb-8 mt-16 lg:mt-12 lg:pt-8 w-full scale-100 lg:scale-[0.85] origin-bottom">
+                    <div className="flex flex-row flex-nowrap items-end justify-center gap-x-1.5 sm:gap-x-3 h-[250px] sm:h-[300px] lg:h-[350px] relative mt-16 sm:mt-24 lg:mt-20 lg:pt-8 w-full scale-100 lg:scale-[0.82] origin-bottom mb-10 lg:mb-0">
                         
-                        {/* Pedestal Base Line (Desktop Only) */}
-                        <div className="hidden lg:block absolute bottom-0 left-10 right-10 h-3 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full shadow-inner z-0"></div>
 
-                        {getPodiumOrder().map((performer, idx) => {
+                        {topPerformers.filter(p => p.rank <= 5).map((performer, idx) => {
                             const styles = getRankStyles(performer.rank);
                             const isFirst = performer.rank === 1;
                             
+                            // Enforce exact desktop layout order on mobile: 2-1-3 (4 and 5 hidden on mobile)
+                            const orderMap = { 1: "order-3", 2: "order-2", 3: "order-4", 4: "order-1", 5: "order-5" };
+                            const orderClass = orderMap[performer.rank];
+                            
+                            // Proportional scaling: 3 items take roughly 96% on mobile, 5 take 95% on desktop
+                            const widthClass = "w-[32%] lg:w-[19%]";
+                            
+                            // Hide ranks 4 and 5 on mobile to save space
+                            const displayClass = performer.rank > 3 ? "hidden lg:flex" : "flex";
+
                             return (
                                 <motion.div
                                     key={performer.rank}
                                     initial={{ y: 50, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.2 + (5 - performer.rank) * 0.15, type: "spring", stiffness: 100 }}
-                                    className={`relative w-full lg:w-[19%] flex flex-col items-center group mb-8 lg:mb-0`}
+                                    className={`relative ${widthClass} ${orderClass} ${displayClass} flex-col items-center group mb-4 lg:mb-4`}
                                 >
                                     {/* Data Section (Floating above the block) */}
                                     <div className={`flex flex-col items-center justify-end z-40 relative pb-6 w-full ${isFirst ? 'scale-110 mb-2' : ''}`}>
@@ -345,7 +373,7 @@ const LeaderBoard = () => {
                                     </div>
                                     
                                     {/* Podium Block Base */}
-                                    <div className={`w-[90%] lg:w-full rounded-t-2xl sm:rounded-t-3xl ${styles.card} relative overflow-hidden flex flex-col justify-start items-center pt-6 pb-4 transition-all duration-300 hover:brightness-105 mx-auto ${styles.height}`}>
+                                    <div className={`w-[90%] lg:w-full rounded-t-2xl sm:rounded-t-3xl ${styles.card} relative overflow-hidden flex flex-col justify-start items-center pt-2 pb-2 transition-all duration-300 hover:brightness-105 mx-auto ${styles.height}`}>
                                         {/* Internal Shimmer Effect */}
                                         <div className="absolute top-0 left-[-100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[20deg] group-hover:animate-shimmer pointer-events-none z-0"></div>
 
@@ -364,11 +392,24 @@ const LeaderBoard = () => {
                                                          <div className="text-[9px] font-black text-gray-400 mb-1 w-full text-center border-b border-gray-200/50 pb-1">TIE: {student.name.split('\n')[0]}</div>
                                                     )}
                                                     <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest truncate w-full text-center">{student.enrollment}</p>
-                                                    <div className="flex items-center gap-1 mt-1.5 bg-white px-2 py-0.5 rounded-md shadow-[0_1px_2px_rgba(0,0,0,0.05)] border border-gray-100/80 w-full justify-center">
-                                                        <Zap size={10} className="text-emerald-500 fill-emerald-500" />
-                                                        <span className="text-[11px] font-black text-gray-800">
-                                                            {student.attendance} <span className="text-[9px] text-gray-400 font-bold ml-0.5">Hrs Dedicated</span>
-                                                        </span>
+                                                    <div className="flex flex-col items-center mt-1.5 w-full gap-1">
+                                                        <div className="flex flex-row gap-1 w-full justify-center">
+                                                            <div className="flex flex-col items-center bg-white px-1 sm:px-2 py-1 rounded-md shadow-[0_1px_2px_rgba(0,0,0,0.05)] border border-gray-100/80 flex-1 overflow-hidden">
+                                                                <div className="flex items-center gap-0.5 sm:gap-1">
+                                                                    <Award size={10} className="text-blue-500 fill-blue-500 shrink-0" />
+                                                                    <span className="text-[10px] sm:text-[11px] font-black text-gray-800">{student.srlAttendance}%</span>
+                                                                </div>
+                                                                <span className="text-[6px] sm:text-[7px] text-gray-400 font-bold leading-none mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis w-full text-center">SRL SESSIONS</span>
+                                                            </div>
+                                                            <div className="flex flex-col items-center bg-white px-1 sm:px-2 py-1 rounded-md shadow-[0_1px_2px_rgba(0,0,0,0.05)] border border-gray-100/80 flex-1 overflow-hidden">
+                                                                <div className="flex items-center gap-0.5 sm:gap-1">
+                                                                    <Zap size={10} className="text-emerald-500 fill-emerald-500 shrink-0" />
+                                                                    <span className="text-[10px] sm:text-[11px] font-black text-gray-800">{student.attendance}%</span>
+                                                                </div>
+                                                                <span className="text-[6px] sm:text-[8px] text-gray-400 font-bold leading-none mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis w-full text-center">OVERALL</span>
+                                                            </div>
+                                                        </div>
+                                                        <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest mt-0.5">Attendance</span>
                                                     </div>
                                                 </div>
                                              ))}
@@ -404,67 +445,90 @@ const LeaderBoard = () => {
                                 .scrollable-container::-webkit-scrollbar-thumb:hover { background: #fac131ff; }
                             `}} />
                                 <div className="flex flex-col gap-3">
-                                    {regularPerformers.filter(s => s.rank >= 5).map((student, idx) => (
+                                    {regularPerformers.map((student, idx) => {
+                                        // Ranks 4 and 5 are hidden on desktop (in podium instead) but shown on mobile
+                                        const displayClass = student.rank <= 5 ? "flex lg:hidden" : "flex";
+                                        return (
                                         <motion.div
                                             key={student.name}
                                             initial={{ opacity: 0, y: 15 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: 0.1 + (idx * 0.05) }}
-                                            className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white/85 hover:bg-gradient-to-r hover:from-white/90 hover:to-amber-50/90 border border-gray-100/80 rounded-[1.5rem] transition-all duration-400 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 group relative overflow-hidden backdrop-blur-sm"
+                                            className={`${displayClass} flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white/85 hover:bg-gradient-to-r hover:from-white/90 hover:to-amber-50/90 border border-gray-100/80 rounded-[1.5rem] transition-all duration-400 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 group relative overflow-hidden backdrop-blur-sm`}
                                         >
 
 
                                             {/* Shiny effect on hover for the list items */}
                                             <div className="absolute top-0 bottom-0 left-[-100%] w-[100%] bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-[10deg] transition-all duration-700 ease-in-out group-hover:left-[200%] z-0 pointer-events-none"></div>
 
-                                            <div className="flex items-center gap-4 sm:gap-6 relative z-10 w-full">
-                                                <div className="w-[40px] text-center font-black text-gray-400 group-hover:text-amber-500 transition-colors text-md sm:text-lg">
-                                                    #{student.rank}
-                                                </div>
+                                            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 relative z-10 w-full">
+                                                <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto flex-1">
+                                                    <div className="w-[30px] sm:w-[40px] text-center font-black text-gray-400 group-hover:text-amber-500 transition-colors text-sm sm:text-lg">
+                                                        #{student.rank}
+                                                    </div>
 
-                                                <div className="flex items-center gap-4 flex-1">
-                                                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border-2 border-white shadow-md bg-gray-100 flex-shrink-0 group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
+                                                    <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border-2 border-white shadow-md bg-gray-100 flex-shrink-0 group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
                                                         <img src={student.image} alt={student.name} className="w-full h-full object-cover" />
                                                     </div>
 
                                                     <div className="flex flex-col flex-1 min-w-0">
                                                         <div className="flex items-center gap-2 mb-1">
-                                                            <h4 className="text-[13px] sm:text-[15px] font-bold text-gray-800 group-hover:text-amber-900 transition-colors truncate">{student.name}</h4>
+                                                            <h4 className="text-[12px] sm:text-[15px] font-bold text-gray-800 group-hover:text-amber-900 transition-colors truncate">{student.name}</h4>
                                                             <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-amber-100/50 text-amber-700 text-[9px] font-black uppercase tracking-wider">{student.batch}</span>
                                                         </div>
-                                                        <div className="flex flex-wrap items-center gap-2">
-                                                            <span className="text-[10px] sm:text-[11px] font-medium text-gray-500 group-hover:text-gray-600">
+                                                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                                            <span className="text-[9px] sm:text-[11px] font-medium text-gray-500 group-hover:text-gray-600">
                                                                 {student.enrollment} • {student.dept}
                                                             </span>
-                                                            <span className="text-[9px] sm:text-[10px] bg-gray-100 group-hover:bg-amber-100/50 group-hover:text-amber-700 text-gray-500 px-2 py-0.5 rounded-md font-bold transition-colors">
+                                                            <span className="text-[8px] sm:text-[10px] bg-gray-100 group-hover:bg-amber-100/50 group-hover:text-amber-700 text-gray-500 px-1.5 sm:px-2 py-0.5 rounded-md font-bold transition-colors">
                                                                 {student.semester} Sem
                                                             </span>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div className="flex items-center gap-6 pr-2 sm:pr-4 shrink-0 mt-2 sm:mt-0">
+                                                <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-6 w-full sm:w-auto px-1 sm:px-0 pr-2 sm:pr-4 shrink-0 mt-1 sm:mt-0 border-t border-gray-100/50 sm:border-0 pt-3 sm:pt-0">
                                                     {/* New Attendance Column at the marked blue dot position */}
-                                                    <div className="flex flex-col items-center justify-center min-w-[70px]">
-                                                        <div className="flex items-center gap-1.5">
-                                                            <img src="/Attendance1.png" alt="Attendance" className="w-8 h-8 object-contain" style={{ filter: 'brightness(0.8) sepia(1) hue-rotate(70deg) saturate(500%)' }} />
-                                                            <span className="text-lg sm:text-xl font-black text-emerald-600 drop-shadow-sm">
-                                                                {student.attendance}
-                                                            </span>
+                                                    <div className="flex flex-col items-center justify-center min-w-[70px] gap-1">
+                                                        <div className="flex flex-row items-center justify-center gap-3 sm:gap-6">
+                                                            {/* SRL Attendance (Left) */}
+                                                            <div className="flex flex-col items-center">
+                                                                <div className="flex items-center gap-1 sm:gap-1.5">
+                                                                    <Award size={14} className="text-blue-500 fill-blue-500 opacity-90 sm:w-4 sm:h-4 w-3.5 h-3.5" />
+                                                                    <span className="text-sm sm:text-lg font-black text-blue-600 drop-shadow-sm">
+                                                                        {student.srlAttendance}%
+                                                                    </span>
+                                                                </div>
+                                                                <div className="text-[6px] sm:text-[8px] font-bold text-gray-400 tracking-widest mt-0.5 whitespace-nowrap">SRL SESSIONS</div>
+                                                            </div>
+
+                                                            <div className="h-6 sm:h-8 w-px bg-gray-200/60 block"></div>
+
+                                                            {/* Overall Attendance (Right) */}
+                                                            <div className="flex flex-col items-center">
+                                                                <div className="flex items-center gap-1 sm:gap-1.5">
+                                                                    <Zap size={14} className="text-emerald-500 fill-emerald-500 opacity-90 sm:w-4 sm:h-4 w-3.5 h-3.5" />
+                                                                    <span className="text-sm sm:text-lg font-black text-emerald-600 drop-shadow-sm">
+                                                                        {student.attendance}%
+                                                                    </span>
+                                                                </div>
+                                                                <div className="text-[6px] sm:text-[8px] font-bold text-gray-400 tracking-widest mt-0.5">OVERALL</div>
+                                                            </div>
                                                         </div>
-                                                        <div className="text-[8px] sm:text-[9px] font-bold text-gray-400 tracking-widest">Hrs Dedicated</div>
+                                                        <div className="text-[8px] sm:text-[10px] font-bold text-gray-500 tracking-widest uppercase mt-0.5 sm:mt-1">Attendance</div>
                                                     </div>
 
-                                                    <div className="text-right border-l border-gray-100 pl-6">
-                                                        <div className="text-lg sm:text-xl font-black text-gray-800 transition-all duration-300 group-hover:scale-110 group-hover:text-amber-500 drop-shadow-sm">
+                                                    <div className="text-right border-l border-gray-100/80 pl-4 sm:pl-6">
+                                                        <div className="text-base sm:text-xl font-black text-gray-800 transition-all duration-300 group-hover:scale-110 group-hover:text-amber-500 drop-shadow-sm">
                                                             {student.score}
                                                         </div>
-                                                        <div className="text-[8px] sm:text-[9px] font-bold text-gray-400 tracking-widest mt-0.5">PTS</div>
+                                                        <div className="text-[7px] sm:text-[9px] font-bold text-gray-400 tracking-widest mt-0.5">PTS</div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </motion.div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>
