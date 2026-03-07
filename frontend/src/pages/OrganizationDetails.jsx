@@ -21,12 +21,25 @@ const OrganizationDetails = () => {
 
 
             {/* HERO SECTION */}
+<<<<<<< Updated upstream
             <section className="relative pt-4 pb-12 px-6 sm:px-10 lg:px-14 overflow-hidden">
                 {/* Sparkle Pattern Overlay - Header Specific */}
                 <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4v-4H4v4H0v2h4v4h2v-4h4v-2H6zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
+=======
+            <section className="relative py-16 px-6 sm:px-10 lg:px-14 overflow-hidden min-h-[40vh] flex items-center">
+                {/* Hero Background Image */}
+                {data.heroImage && (
+                    <img
+                        src={data.heroImage}
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover z-0 filter brightness-[1.1] contrast-[1.05] saturate-[1.05]"
+                        style={{ imageRendering: '-webkit-optimize-contrast' }}
+                    />
+                )}
+>>>>>>> Stashed changes
 
-                {/* Soft Neutral Shade */}
-                <div className="absolute inset-0 bg-[#F5F1E8]/60" />
+                {/* Sparkle Pattern Overlay - Header Specific */}
+                <div className="absolute inset-0 opacity-[0.04] pointer-events-none z-[1]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4v-4H4v4H0v2h4v4h2v-4h4v-2H6zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
 
                 <div className="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
                     <motion.div
@@ -43,7 +56,7 @@ const OrganizationDetails = () => {
                             }}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.98 }}
-                            className="relative h-28 sm:h-36 px-8 py-4 bg-white/30 backdrop-blur-md rounded-2xl border border-white/40 shadow-lg cursor-pointer transition-all duration-500 group"
+                            className="relative h-28 sm:h-36 cursor-pointer transition-all duration-500 group"
                         >
                             <img
                                 src={data.image}
@@ -57,25 +70,30 @@ const OrganizationDetails = () => {
                         </motion.button>
                     </motion.div>
 
-                    <motion.h1
+                    <motion.h2
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
+<<<<<<< Updated upstream
                         transition={{ duration: 0.7, delay: 0.2 }}
                         className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-slate-900 mb-4 font-serif tracking-tight leading-tight max-w-7xl mx-auto px-4"
+=======
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        className="text-4xl sm:text-5xl lg:text-7xl font-black text-teal-900 mb-6 tracking-tight font-serif drop-shadow-2xl"
+                        style={{ textShadow: "2px 2px 4px rgba(255,255,255,0.8)" }}
+>>>>>>> Stashed changes
                     >
                         {data.title}
-                    </motion.h1>
+                    </motion.h2>
 
-                    <motion.div
-                        initial={{ opacity: 0, scaleX: 0 }}
-                        animate={{ opacity: 1, scaleX: 1 }}
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
-                        className="flex flex-col items-center gap-4 py-2"
+                        className="text-lg sm:text-xl lg:text-2xl font-bold text-teal-800/90 max-w-3xl font-serif italic drop-shadow-lg"
+                        style={{ textShadow: "1px 1px 2px rgba(255,255,255,0.8)" }}
                     >
-                        <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-secondary-dark max-w-4xl uppercase tracking-[0.2em] font-serif text-[#006d62]">
-                            “{data.subtitle}”
-                        </p>
-                    </motion.div>
+                        “{data.subtitle}”
+                    </motion.p>
                 </div>
             </section>
 

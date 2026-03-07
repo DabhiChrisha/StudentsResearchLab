@@ -5,73 +5,6 @@ import studentsData from "../data/srlStudents.json";
 import ChromaGrid from "../components/react-bits/ChromaGrid";
 import GradientText from "../components/GradientText";
 
-// --- StudentReflections Component ---
-function StudentReflections() {
-    const [students, setStudents] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        // Filter only students who have reflections
-        const withReflections = studentsData.filter(
-            (student) => student.reflection && student.reflection.trim() !== ""
-        );
-        setStudents(withReflections);
-        setLoading(false);
-    }, []);
-
-    return (
-        <section className="relative py-24 bg-[#0b0f0e] text-white overflow-hidden rounded-2xl sm:rounded-[3rem] my-16 mx-4 sm:mx-8">
-            <div className="max-w-7xl mx-auto px-6">
-                {/* Header */}
-                <div className="mb-16 text-center">
-                    <h2 className="text-4xl font-semibold tracking-tight font-serif">
-                        Student Reflections
-                    </h2>
-                    <p className="mt-4 text-gray-400 max-w-2xl mx-auto font-light">
-                        How being part of SRL reshaped the way students think, research, and execute.
-                    </p>
-                </div>
-
-                {/* Animated Container */}
-                <div className="relative h-[280px] sm:h-[350px] lg:h-[400px] overflow-hidden">
-                    {loading ? (
-                        <div className="flex items-center justify-center h-full text-gray-500">
-                            Loading reflections…
-                        </div>
-                    ) : students.length === 0 ? (
-                        <div className="flex items-center justify-center h-full text-gray-500">
-                            No reflections available yet.
-                        </div>
-                    ) : (
-                        <div className="absolute inset-0 flex flex-col gap-6 animate-scroll-up hover:[animation-play-state:paused]">
-                            {[...students, ...students, ...students].map((student, index) => (
-                                <div
-                                    key={index}
-                                    className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6"
-                                >
-                                    <p className="text-gray-200 leading-relaxed italic">
-                                        “{student.reflection}”
-                                    </p>
-
-                                    <div className="mt-4">
-                                        <p className="font-medium text-secondary">{student.student_name}</p>
-                                        <p className="text-xs text-gray-400">
-                                            {student.department} · {student.semester} Semester
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Fade Effects */}
-            <div className="pointer-events-none absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#0b0f0e] to-transparent" />
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0b0f0e] to-transparent" />
-        </section>
-    );
-}
 
 // --- Main Researchers Component ---
 export default function Researchers() {
@@ -108,7 +41,6 @@ export default function Researchers() {
             subtitle: `${s.department} • Semester ${s.semester}`,
             email: s.email || "",
             linkedin: s.linkedin || "",
-            reflection: s.reflection || "",
             researchWorks: s.researchWorks || [],
             research: s.research || [],
             achievements: s.achievements || [],
@@ -231,11 +163,8 @@ export default function Researchers() {
                             Student Members
                         </GradientText>
                     </div>
-                    <ChromaGrid items={chromaItems} onImageClick={(s) => s.reflection && openModalFor(s)} />
+                    <ChromaGrid items={chromaItems} onImageClick={(s) => openModalFor(s)} />
                 </div>
-
-                {/* Reflections Section */}
-                <StudentReflections />
 
             </div>
 
@@ -283,6 +212,7 @@ export default function Researchers() {
                                     <h3 className="text-3xl font-black text-slate-900 font-serif mb-1.5">{activeStudent.title}</h3>
                                     <p className="text-secondary font-black text-xs uppercase tracking-widest mb-10">{activeStudent.subtitle}</p>
 
+<<<<<<< Updated upstream
                                     <div className="space-y-6">
                                         <div>
                                             <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">The SRL Journey</h4>
@@ -292,6 +222,10 @@ export default function Researchers() {
                                         </div>
 
                                         <div className="grid sm:grid-cols-2 gap-6">
+=======
+                                    <div className="space-y-8">
+                                        <div className="grid sm:grid-cols-2 gap-8">
+>>>>>>> Stashed changes
                                             <div>
                                                 <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Research Areas</h4>
                                                 <div className="flex flex-wrap gap-1.5">
@@ -356,6 +290,7 @@ export default function Researchers() {
                     </div>
                 )}
             </AnimatePresence>
+<<<<<<< Updated upstream
 
             {/* Global CSS for Reflection Animation */}
             <style dangerouslySetInnerHTML={{
@@ -388,6 +323,8 @@ export default function Researchers() {
           scrollbar-width: none;
         }
       `}} />
+=======
+>>>>>>> Stashed changes
         </motion.div>
     );
 }
