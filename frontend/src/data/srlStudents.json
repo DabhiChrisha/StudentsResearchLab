@@ -984,5 +984,63 @@
             "Smart India Hackathon Participant",
             "IoT Workshop Topper"
         ]
+    },
+    {
+        "student_name": "Hemant Pande",
+        "enrollment_no": "23BECE30493",
+        "department": "CE",
+        "semester": "6",
+        "division": "P",
+        "batch": "2023-2027",
+        "email": "hp926591@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/hemant-pande926591/",
+        "photo": "/students/Pande Hemant Rameshwarkumar.jpeg",
+        "contact_no": "8780508139",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "The biggest change SRL brought was clarity in thinking. It taught me how to break complex research problems into manageable steps and stay consistent through uncertainty.",
+        "research": [
+            "Compiler Design",
+            "Operating Systems"
+        ],
+        "researchWorks": [
+            "Custom Language Compiler",
+            "Task Scheduling in RTOS"
+        ],
+        "achievements": [
+            "Open Source Contributor (GSoC)",
+            "Tech Quiz Winner"
+        ]
+    },
+    {
+        "student_name": "Poojan Ghetiya",
+        "enrollment_no": "-",
+        "department": "Masters in CE",
+        "semester": "1",
+        "division": "-",
+        "batch": "-",
+        "email": "ghetiyapoojan@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/ghetiyapoojan/",
+        "photo": "/students/Ghetiya Poojan Rahulbhai.jpeg",
+        "contact_no": "8530088085",
+        "member_type": "General Members",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL introduced me to a structured research culture that improved my discipline, communication skills, and ability to work in a goal-driven environment.",
+        "research": [
+            "Internet of Things",
+            "Smart Cities"
+        ],
+        "researchWorks": [
+            "IoT-based Garbage Monitoring",
+            "Smart Traffic Lights Implementation"
+        ],
+        "achievements": [
+            "Smart India Hackathon Participant",
+            "IoT Workshop Topper"
+        ]
     }
 ]

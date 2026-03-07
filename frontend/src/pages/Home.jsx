@@ -4,6 +4,8 @@ import HeadSRL from '../components/HeadSRL';
 import Objectives from '../components/Objectives';
 import Timeline from '../components/Timeline';
 import ScrollToTopButton from '../components/ScrollToTopButton';
+import SplashCursor from '../components/react-bits/SplashCursor';
+import GradientText from '../components/react-bits/GradientText';
 
 const Home = () => {
     return (
@@ -27,21 +29,27 @@ const Home = () => {
             <Timeline />
 
             {/* 5. Impact Metrics */}
-            <section id="impact" className="py-32 px-4 bg-[#0b1f35]">
-                
-                <div className="max-w-7xl mx-auto text-center">
-
-                    <h2 className="text-4xl font-bold text-white mb-16">
-                        Impact Metrics
-                    </h2>
+            <section id="impact" className="pt-12 pb-32 px-4 bg-[#0b1f35] relative overflow-hidden">
+                <SplashCursor />
+                <div className="max-w-7xl mx-auto text-center relative z-10">
+                    <div className="mb-16">
+                        <GradientText
+                            colors={["#16B29D", "#FFFFFF", "#16B29D", "#FFFFFF", "#16B29D"]}
+                            animationSpeed={6}
+                            showBorder={false}
+                            className="text-4xl sm:text-6xl font-bold"
+                        >
+                            Impact Metrics
+                        </GradientText>
+                    </div>
 
                     <div className="flex flex-wrap justify-center gap-8">
 
                         {[
-                            { icon: "👨‍🔬", label: "Active Researchers", value: "500+" },
-                            { icon: "📄", label: "Papers Published", value: "120+" },
-                            { icon: "⚙️", label: "Patent Filings", value: "15" },
-                            { icon: "🏆", label: "Awards Won", value: "45" }
+                            { icon: "👨‍🔬", label: "Active Researchers", value: "35+" },
+                            { icon: "📄", label: "Papers Published", value: "10+" },
+                            { icon: "⚙️", label: "Patent Filings", value: "2" },
+                            { icon: "🏆", label: "Awards Won", value: "5+" }
                         ].map((stat, i) => (
 
                             <div

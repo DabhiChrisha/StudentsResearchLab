@@ -118,13 +118,13 @@ const Timeline = () => {
                 }
               }}
               viewport={{ once: true }}
-              className="relative w-72 h-72 sm:w-[420px] sm:h-[420px] z-10"
+              className="relative w-64 h-64 sm:w-[340px] sm:h-[340px] z-10"
             >
-              <div className="absolute inset-0 rounded-full border-[15px] border-l-[#16B29D] border-t-[#16B29D] border-r-transparent border-b-transparent rotate-[-45deg] z-0 shadow-[0_0_30px_rgba(22,178,157,0.1)]" />
-              <div className="absolute inset-0 rounded-full border-[15px] border-l-transparent border-t-transparent border-r-[#F9EBD2] border-b-[#F9EBD2] rotate-[-45deg] z-0" />
+              <div className="absolute inset-0 rounded-full border-[12px] border-l-[#16B29D] border-t-[#16B29D] border-r-transparent border-b-transparent rotate-[-45deg] z-0 shadow-[0_0_20px_rgba(22,178,157,0.1)]" />
+              <div className="absolute inset-0 rounded-full border-[12px] border-l-transparent border-t-transparent border-r-[#F9EBD2] border-b-[#F9EBD2] rotate-[-45deg] z-0" />
 
-              <div className="absolute inset-6 rounded-full bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] flex flex-col items-center justify-center p-12 text-center ring-1 ring-slate-100">
-                <div className="w-32 h-32 mb-6 rounded-full flex items-center justify-center">
+              <div className="absolute inset-4 rounded-full bg-white shadow-[0_15px_40px_-10px_rgba(0,0,0,0.15)] flex flex-col items-center justify-center p-6 text-center ring-1 ring-slate-100">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 mb-0 rounded-full flex items-center justify-center">
                   <img src="/SRL.svg" alt="SRL Logo" className="w-full h-full object-contain" />
                 </div>
 
@@ -133,7 +133,7 @@ const Timeline = () => {
                     initial={{ y: 40 }}
                     whileInView={{ y: 0 }}
                     transition={{ duration: 0.8, ease: "circOut" }}
-                    className="text-2xl sm:text-4xl font-black text-slate-800 tracking-[0.05em] uppercase mb-2"
+                    className="text-xl sm:text-2xl font-black text-slate-800 tracking-[0.05em] uppercase mb-1"
                   >
                     Our Journey
                   </motion.h2>
@@ -143,23 +143,23 @@ const Timeline = () => {
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   transition={{ delay: 0.5, duration: 1 }}
-                  className="text-[#16B29D] font-bold text-xs sm:text-base tracking-[0.3em] uppercase mb-4"
+                  className="text-[#16B29D] font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-2"
                 >
                   Students Research Lab
                 </motion.span>
 
                 <motion.div
                   initial={{ width: 0 }}
-                  whileInView={{ width: 64 }}
+                  whileInView={{ width: 48 }}
                   transition={{ delay: 0.3, duration: 0.8 }}
-                  className="h-[2px] bg-slate-200 mb-4"
+                  className="h-[1px] bg-slate-200 mb-2"
                 />
 
                 <motion.p
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6, duration: 0.8 }}
-                  className="text-slate-500 text-sm sm:text-lg leading-relaxed max-w-[320px] font-medium italic"
+                  className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-[240px] font-medium italic"
                 >
                   "Exploring the milestones that define our path from humble beginnings to a hub of innovation."
                 </motion.p>
