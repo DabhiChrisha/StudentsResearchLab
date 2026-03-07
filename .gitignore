@@ -24,3 +24,4 @@ docker-compose.override.yml
 __pycache__/
 *.pyc
 *.pyo
+node_modules
