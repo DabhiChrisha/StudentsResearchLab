@@ -117,6 +117,21 @@ export default function JoinUs() {
           Fill out the form to join the Students Research Lab
         </p>
 
+        {/* Important Instructions */}
+        <div className="bg-blue-50 border-l-4 border-[#05877a] p-6 mb-8 rounded-md">
+          <h3 className="text-lg font-semibold text-[#05877a] mb-3">Important Note</h3>
+          <ul className="space-y-2 text-gray-700">
+            <li className="flex items-start gap-3">
+              <span className="text-[#05877a] font-bold mt-1">•</span>
+              <span><strong>Filling this form does not confirm that you are an SRL member.</strong></span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="text-[#05877a] font-bold mt-1">•</span>
+              <span><strong>This form only shows that you are interested in joining SRL.</strong> Your application will be reviewed by our team.</span>
+            </li>
+          </ul>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-8">
           
           {/* Name and Enrollment - Row 1 */}
