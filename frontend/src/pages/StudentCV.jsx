@@ -71,18 +71,36 @@ export default function StudentCV() {
                     </p>
 
                     <div className="flex flex-wrap gap-6 text-xs font-bold text-slate-400 uppercase tracking-widest">
-                        <a href={student.resume || "#"} target={student.resume ? "_blank" : undefined} rel={student.resume ? "noopener noreferrer" : undefined} className="flex items-center gap-2 hover:text-slate-900 transition-colors">
-                            <FileText size={14} className="text-slate-400" /> Resume
-                        </a>
-                        <a href={student.scholar || "#"} target={student.scholar ? "_blank" : undefined} rel={student.scholar ? "noopener noreferrer" : undefined} className="flex items-center gap-2 hover:text-slate-900 transition-colors">
-                            <GraduationCap size={14} className="text-slate-400" /> Scholar
-                        </a>
-                        <a href={student.github || "#"} target={student.github ? "_blank" : undefined} rel={student.github ? "noopener noreferrer" : undefined} className="flex items-center gap-2 hover:text-slate-900 transition-colors">
-                            <Github size={14} className="text-slate-400" /> GitHub
-                        </a>
-                        <a href={student.linkedin || "#"} target={student.linkedin ? "_blank" : undefined} rel={student.linkedin ? "noopener noreferrer" : undefined} className="flex items-center gap-2 hover:text-slate-900 transition-colors">
-                            <Linkedin size={14} className="text-slate-400" /> LinkedIn
-                        </a>
+                        {student.scholar && (
+                            <a
+                                href={student.scholar}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 hover:text-slate-900 transition-colors"
+                            >
+                                <GraduationCap size={14} className="text-slate-400" /> Scholar
+                            </a>
+                        )}
+                        {student.github && (
+                            <a
+                                href={student.github}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 hover:text-slate-900 transition-colors"
+                            >
+                                <Github size={14} className="text-slate-400" /> GitHub
+                            </a>
+                        )}
+                        {student.linkedin && (
+                            <a
+                                href={student.linkedin}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 hover:text-slate-900 transition-colors"
+                            >
+                                <Linkedin size={14} className="text-slate-400" /> LinkedIn
+                            </a>
+                        )}
                         <a href={`mailto:${student.email}`} className="flex items-center gap-2 hover:text-slate-900 transition-colors">
                             <Mail size={14} className="text-slate-400" /> Email
                         </a>
@@ -149,21 +167,20 @@ export default function StudentCV() {
                 </section>
 
                 {/* Footer Section */}
-                <footer className="pt-20 border-t border-black/5 flex flex-col md:flex-row justify-between items-center gap-8">
-                    <div className="flex items-center gap-6">
-                        <a href={student.resume || "#"} target={student.resume ? "_blank" : undefined} rel={student.resume ? "noopener noreferrer" : undefined} className="text-xs font-black text-slate-400 hover:text-slate-900 transition-colors uppercase tracking-[0.2em] flex items-center gap-2">
-                            View Resume <ExternalLink size={14} />
-                        </a>
-                    </div>
+                <footer className="pt-20 border-t border-black/5 flex flex-col md:flex-row justify-end items-center gap-8">
                     <div className="flex gap-6 text-slate-400 items-center">
-                        <a href={student.github || "#"} target={student.github ? "_blank" : undefined} rel={student.github ? "noopener noreferrer" : undefined}>
-                            <Github size={18} className="hover:text-slate-900 transition-colors" />
-                        </a>
-                        <a href={student.linkedin || "#"} target={student.linkedin ? "_blank" : undefined} rel={student.linkedin ? "noopener noreferrer" : undefined}>
-                            <Linkedin size={18} className="hover:text-slate-900 transition-colors" />
-                        </a>
-                        <a href={`mailto:${student.email}`}>
-                            <Mail size={18} className="hover:text-slate-900 transition-colors" />
+                        {student.github ? (
+                            <a href={student.github} target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 transition-colors">
+                                <Github size={18} />
+                            </a>
+                        ) : null}
+                        {student.linkedin ? (
+                            <a href={student.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 transition-colors">
+                                <Linkedin size={18} />
+                            </a>
+                        ) : null}
+                        <a href={`mailto:${student.email}`} className="hover:text-slate-900 transition-colors">
+                            <Mail size={18} />
                         </a>
                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-200">SRL © 2025</span>
                     </div>
