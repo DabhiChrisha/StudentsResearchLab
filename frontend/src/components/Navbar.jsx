@@ -76,11 +76,12 @@ const Navbar = () => {
 
     const closeSidebar = useCallback(() => setOpen(false), []);
 
-    // Exact Sequence: 1. Home | 2. SRL Sessions | 3. Achievements | 4. Researchers | 5. Leaderboard | 6. About Us
+    // Exact Sequence: 1. Home | 2. SRL Sessions | 3. Achievements | 4. Activities | 5. Researchers | 6. Leaderboard | 7. About Us
     const menuItems = [
         { label: "Home", path: "/" },
         { label: "SRL Sessions", path: "/sessions" },
         { label: "Achievements", path: "/achievements" },
+        { label: "Activities", path: "/activities" },
         { label: "Researchers", path: "/researchers" },
         { label: "Leaderboard", path: "/leaderboard" },
     ];
