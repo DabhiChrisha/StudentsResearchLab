@@ -212,7 +212,6 @@ export default function Researchers() {
                                     <h3 className="text-3xl font-black text-slate-900 font-serif mb-1.5">{activeStudent.title}</h3>
                                     <p className="text-secondary font-black text-xs uppercase tracking-widest mb-10">{activeStudent.subtitle}</p>
 
-<<<<<<< Updated upstream
                                     <div className="space-y-6">
                                         <div>
                                             <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">The SRL Journey</h4>
@@ -222,10 +221,6 @@ export default function Researchers() {
                                         </div>
 
                                         <div className="grid sm:grid-cols-2 gap-6">
-=======
-                                    <div className="space-y-8">
-                                        <div className="grid sm:grid-cols-2 gap-8">
->>>>>>> Stashed changes
                                             <div>
                                                 <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Research Areas</h4>
                                                 <div className="flex flex-wrap gap-1.5">
@@ -290,7 +285,6 @@ export default function Researchers() {
                     </div>
                 )}
             </AnimatePresence>
-<<<<<<< Updated upstream
 
             {/* Global CSS for Reflection Animation */}
             <style dangerouslySetInnerHTML={{
@@ -323,8 +317,6 @@ export default function Researchers() {
           scrollbar-width: none;
         }
       `}} />
-=======
->>>>>>> Stashed changes
         </motion.div>
     );
 }

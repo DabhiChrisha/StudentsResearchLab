@@ -21,11 +21,6 @@ const OrganizationDetails = () => {
 
 
             {/* HERO SECTION */}
-<<<<<<< Updated upstream
-            <section className="relative pt-4 pb-12 px-6 sm:px-10 lg:px-14 overflow-hidden">
-                {/* Sparkle Pattern Overlay - Header Specific */}
-                <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4v-4H4v4H0v2h4v4h2v-4h4v-2H6zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
-=======
             <section className="relative py-16 px-6 sm:px-10 lg:px-14 overflow-hidden min-h-[40vh] flex items-center">
                 {/* Hero Background Image */}
                 {data.heroImage && (
@@ -36,7 +31,6 @@ const OrganizationDetails = () => {
                         style={{ imageRendering: '-webkit-optimize-contrast' }}
                     />
                 )}
->>>>>>> Stashed changes
 
                 {/* Sparkle Pattern Overlay - Header Specific */}
                 <div className="absolute inset-0 opacity-[0.04] pointer-events-none z-[1]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4v-4H4v4H0v2h4v4h2v-4h4v-2H6zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
@@ -73,14 +67,9 @@ const OrganizationDetails = () => {
                     <motion.h2
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-<<<<<<< Updated upstream
-                        transition={{ duration: 0.7, delay: 0.2 }}
-                        className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-slate-900 mb-4 font-serif tracking-tight leading-tight max-w-7xl mx-auto px-4"
-=======
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="text-4xl sm:text-5xl lg:text-7xl font-black text-teal-900 mb-6 tracking-tight font-serif drop-shadow-2xl"
                         style={{ textShadow: "2px 2px 4px rgba(255,255,255,0.8)" }}
->>>>>>> Stashed changes
                     >
                         {data.title}
                     </motion.h2>
