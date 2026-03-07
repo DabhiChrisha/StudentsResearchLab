@@ -1,0 +1,7 @@
+{
+  "name": "studentsresearchlab-backend-runner",
+  "private": true,
+  "scripts": {
+    "dev": "python -m uvicorn main:app --reload"
+  }
+}

@@ -1,24 +1,9 @@
 {
-  "name": "studentsresearchlab",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "studentsresearchlab-workspace",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DabhiChrisha/StudentsResearchLab.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/DabhiChrisha/StudentsResearchLab/issues"
-  },
-  "homepage": "https://github.com/DabhiChrisha/StudentsResearchLab#readme",
-  "dependencies": {
-    "express": "^5.2.1"
+    "dev": "npm --prefix frontend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "npm --prefix backend run dev"
   }
 }
