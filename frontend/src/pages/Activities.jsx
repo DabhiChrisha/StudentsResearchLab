@@ -40,16 +40,16 @@ const Activities = () => {
                 {/* Header */}
                 <div className="text-center mb-16">
 
-    <h1 className="text-5xl md:text-7xl font-extrabold text-[#0F172A] font-serif tracking-wide mb-6">
-        ACTIVITIES
-    </h1>
+                    <h1 className="text-5xl md:text-7xl font-extrabold text-[#0F172A] font-serif tracking-wide mb-6">
+                        ACTIVITIES
+                    </h1>
 
-    <p className="text-lg text-gray-600 max-w-xl mx-auto">
-        Discover the various initiatives and events organized by Students Research Lab
-        to foster a culture of innovation and excellence.
-    </p>
+                    <p className="text-lg text-gray-600 max-w-xl mx-auto">
+                        Discover the various initiatives and events organized by Students Research Lab
+                        to foster a culture of innovation and excellence.
+                    </p>
 
-</div>
+                </div>
 
                 {/* Loading */}
                 {loading && (
@@ -74,7 +74,7 @@ const Activities = () => {
 
                 {/* Activities Grid */}
                 {!loading && !error && activities.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 items-stretch">
 
                         {activities.map((act, i) => (
 
@@ -83,41 +83,68 @@ const Activities = () => {
                                 initial={{ opacity: 0, y: 40 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.15 }}
-                                className="
-                                p-8
-                                rounded-2xl
-                                bg-white
-                                shadow-lg
-                                border border-gray-100
-                                hover:shadow-2xl
-                                hover:-translate-y-2
-                                transition-all
-                                duration-300
-                                group
-                                relative
-                                overflow-hidden
-                                "
+                                className="relative group h-full"
                             >
 
-                                {/* Accent Bar */}
-                                <div className="absolute top-0 left-0 w-full h-1 bg-[#0D9488] opacity-0 group-hover:opacity-100 transition"></div>
+                                {/* Neon Glow */}
+                                <div className="
+                                    absolute -inset-1
+                                    rounded-2xl
+                                    bg-gradient-to-r
+                                    from-lime-300
+                                    via-green-300
+                                    to-emerald-300
+                                    opacity-0
+                                    blur-xl
+                                    group-hover:opacity-70
+                                    transition
+                                    duration-500
+                                "></div>
 
-                                {/* Year */}
-                                {act.year && (
-                                    <span className="inline-block bg-[#0D9488]/10 text-[#0D9488] px-3 py-1 rounded-full text-xs font-semibold tracking-wider">
-                                        {act.year}
-                                    </span>
-                                )}
+                                {/* Card */}
+                                <div className="
+                                    relative
+                                    p-8
+                                    rounded-2xl
+                                    bg-white
+                                    shadow-lg
+                                    border border-gray-100
+                                    hover:-translate-y-2
+                                    hover:shadow-2xl
+                                    transition-all
+                                    duration-300
+                                    overflow-hidden
+                                    flex
+                                    flex-col
+                                    h-full
+                                    min-h-[220px]
+                                ">
 
-                                {/* Title */}
-                                <h3 className="text-xl font-bold mt-4 mb-3 text-gray-800 group-hover:text-[#0D9488] transition-colors duration-200">
-                                    {act.title}
-                                </h3>
+                                    {/* Accent Bar */}
+                                    <div className="absolute top-0 left-0 w-full h-1 bg-green-400 opacity-0 group-hover:opacity-100 transition"></div>
 
-                                {/* Description */}
-                                <p className="text-gray-500 text-sm leading-relaxed">
-                                    {act.description}
-                                </p>
+                                    <div className="flex flex-col flex-grow">
+
+                                        {/* Year */}
+                                        {act.year && (
+                                            <span className="inline-block bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-semibold tracking-wider w-fit">
+                                                {act.year}
+                                            </span>
+                                        )}
+
+                                        {/* Title */}
+                                        <h3 className="text-xl font-bold mt-4 mb-3 text-gray-800 group-hover:text-green-600 transition-colors duration-200">
+                                            {act.title}
+                                        </h3>
+
+                                        {/* Description */}
+                                        <p className="text-gray-500 text-sm leading-relaxed flex-grow">
+                                            {act.description}
+                                        </p>
+
+                                    </div>
+
+                                </div>
 
                             </motion.div>
 
