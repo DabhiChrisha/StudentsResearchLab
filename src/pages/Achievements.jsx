@@ -293,12 +293,12 @@ const Achievements = () => {
               <div className="aspect-[4/3] bg-white flex items-center justify-center overflow-hidden">
                 {selected.type === "image" ? (
                   <Swiper
-  modules={[Autoplay, Pagination]}
-  autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true, }}
-  pagination={{ clickable: true }}
-  loop
-  className="w-full h-full"
->
+                    modules={[Autoplay, Pagination]}
+                    autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+                    pagination={{ clickable: true }}
+                    loop
+                    className="w-full h-full"
+                  >
                     {selected.media.map((img, index) => (
                       <SwiperSlide
                         key={index}
