@@ -24,12 +24,16 @@ const OrganizationDetails = () => {
             <section className="relative py-16 px-6 sm:px-10 lg:px-14 overflow-hidden min-h-[40vh] flex items-center">
                 {/* Hero Background Image */}
                 {data.heroImage && (
-                    <img
-                        src={data.heroImage}
-                        alt=""
-                        className="absolute inset-0 w-full h-full object-cover z-0 filter brightness-[1.1] contrast-[1.05] saturate-[1.05]"
-                        style={{ imageRendering: '-webkit-optimize-contrast' }}
-                    />
+                    <>
+                        <img
+                            src={data.heroImage}
+                            alt=""
+                            className="absolute inset-0 w-full h-full object-cover z-0 filter brightness-100"
+                            style={{ imageRendering: '-webkit-optimize-contrast' }}
+                        />
+                        {/* Beige Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-[#F5F1E8]/80 via-[#F5F1E8]/50 to-[#F5F1E8]/90 z-0 pointer-events-none" />
+                    </>
                 )}
 
                 {/* Sparkle Pattern Overlay - Header Specific */}
@@ -68,8 +72,9 @@ const OrganizationDetails = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="text-4xl sm:text-5xl lg:text-7xl font-black text-teal-900 mb-6 tracking-tight font-serif drop-shadow-2xl"
-                        style={{ textShadow: "2px 2px 4px rgba(255,255,255,0.8)" }}
+                        className={`font-black text-slate-900 mb-6 tracking-tight font-serif drop-shadow-xl ${orgId === 'mmpsrpc' ? 'text-3xl sm:text-4xl lg:text-5xl whitespace-nowrap' : 'text-4xl sm:text-5xl lg:text-7xl'
+                            }`}
+                        style={{ textShadow: "1px 1px 3px rgba(255,255,255,0.7)" }}
                     >
                         {data.title}
                     </motion.h2>
@@ -78,7 +83,7 @@ const OrganizationDetails = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
-                        className="text-lg sm:text-xl lg:text-2xl font-bold text-teal-800/90 max-w-3xl font-serif italic drop-shadow-lg"
+                        className="text-lg sm:text-xl lg:text-2xl font-bold max-w-3xl font-serif italic drop-shadow-md text-slate-800"
                         style={{ textShadow: "1px 1px 2px rgba(255,255,255,0.8)" }}
                     >
                         “{data.subtitle}”

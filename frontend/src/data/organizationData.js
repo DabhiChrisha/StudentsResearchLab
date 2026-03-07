@@ -2,7 +2,7 @@ import svkmLogo from "../assets/svkm.png";
 import ksvLogo from "../assets/KSV Logo.png";
 import mmpsrpcLogo from "../assets/MMPSRPC Logo.png";
 import ksvCampus from "../assets/ksv_campus.jpg";
-import mmpsrpcCampus from "../assets/mmpsrpc_campus.jpg";
+import mmpsrpcCampus from "../assets/mmpsrpc_campus.jpeg";
 import svkmCampus from "../assets/svkm_campus.jpg";
 import chhaganbhaPhoto from "../assets/pujya_chhaganbha.jpg";
 import shriManeklal from "../assets/shri_maneklal_patel.jpg";
@@ -140,8 +140,7 @@ export const organizationData = {
                 cardQuote: "Growth comes from steady effort, continuous learning, and discipline.",
                 mainQuote: "Aspirations, curiosity, excellence, and dedication form the foundation of the Students Research Project Cell. For the students, By the students, Of the students!",
                 message: [
-                    "Aspirations, curiosity, excellence, and dedication form the foundation of SRL — a space created to nurture disciplined, research-driven minds. SRL is designed to foster academic rigor, consistency, and intellectual growth.",
-                    "Through structured mentorship and purpose-driven initiatives, students are guided toward meaningful research and long-term impact. This guidance helps students to succeed in their future careers and make valuable contribution to society."
+                    "Dedicated to fostering the growth of KSV students, the M. M. Patel Students Research Project Cell upholds a strong commitment to academic excellence. The Students Research Cell empowers skill development through meaningful activities and opportunities that strengthen knowledge and growth of students. This guidance and support helps students to succeed in their future careers and make valuable contribution to the society."
                 ]
             }
         ],

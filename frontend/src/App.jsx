@@ -42,7 +42,7 @@ function App() {
             <Background />
             <Navbar />
 
-            <div id="main-content" className="flex-1 w-full h-full overflow-y-auto overflow-x-hidden relative z-10 pt-0 pb-0">
+            <div id="main-content" className="flex-1 w-full h-full overflow-y-auto overflow-x-hidden relative z-10 pt-[72px] lg:pt-[88px] pb-0">
               <AnimatePresence mode="wait">
                 <Routes>
                   <Route path="/" element={<Home />} />
