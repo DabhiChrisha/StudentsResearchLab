@@ -102,6 +102,7 @@ export default function Researchers() {
     const chromaItems = useMemo(() => {
         return members.map((s) => ({
             id: s.enrollment_no || s.student_name.toLowerCase().replace(/\s+/g, "-"),
+            enrollment: s.enrollment_no,
             image: s.photo || "/students/schoolstudent.png",
             title: s.student_name,
             subtitle: `${s.department} • Semester ${s.semester}`,
@@ -166,6 +167,7 @@ export default function Researchers() {
                                         <button
                                             onClick={() => openModalFor({
                                                 id: ra.enrollment_no || ra.student_name.toLowerCase().replace(/\s+/g, "-"),
+                                                enrollment: ra.enrollment_no,
                                                 image: ra.photo || "/students/schoolstudent.png",
                                                 title: ra.student_name,
                                                 subtitle: ra.department + " • Semester " + ra.semester,
@@ -327,7 +329,7 @@ export default function Researchers() {
 
                                     <div className="mt-10 pt-6 border-t border-slate-100 flex flex-wrap gap-3">
                                         <a
-                                            href={`/cv/${activeStudent.id}`}
+                                            href={`/cv/${activeStudent.enrollment}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary text-white hover:bg-secondary-dark transition-all text-xs font-bold shadow-lg"
