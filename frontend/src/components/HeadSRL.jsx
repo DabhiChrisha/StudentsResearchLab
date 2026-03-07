@@ -66,7 +66,7 @@ export default function HeadSRL() {
                                     href="mailto:himani_ce@ldrp.ac.in"
                                     className="underline hover:text-[#05877a] break-all"
                                 >
-                                    himani_ce@ldrp.ac.in
+                                    mmpsrc.ksv@gmail.com
                                 </a>
                             </div>
 
