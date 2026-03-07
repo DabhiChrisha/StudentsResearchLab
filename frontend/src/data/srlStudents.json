@@ -109,6 +109,34 @@
         ]
     },
     {
+        "student_name": "Yajurshi Velani",
+        "enrollment_no": "24BECE30441",
+        "department": "CE",
+        "semester": "4",
+        "division": "F",
+        "batch": "2024-2028",
+        "email": "yajurshivelani@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/yajurshi-velani",
+        "photo": "/students/Yajurshi Velani.png",
+        "contact_no": "8799123685",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Through SRL, I learned that consistent efforts and disciplined effort are key to meaningful growth.",
+        "research": [
+            "Embedded Systems",
+            "Robotics"
+        ],
+        "researchWorks": [
+            "Autonomous Warehouse Robot",
+            "Low-power Sensor Networks"
+        ],
+        "achievements": [
+            "RoboCon 2024 Semi-finalist",
+            "Academic Excellence Award"
+        ]
+    },
+    {
         "student_name": "Yash Kumavat",
         "enrollment_no": "24BECE30122",
         "department": "CE",
@@ -230,6 +258,35 @@
         "achievements": [
             "Capture The Flag (CTF) winner",
             "Certified Ethical Hacker (CEH) trainee"
+        ]
+    },
+    {
+        "student_name": "Jadeja Bhagyashree",
+        "enrollment_no": "24BECE30099",
+        "department": "CE",
+        "semester": "4",
+        "division": "B",
+        "batch": "2024-2028",
+        "email": "bhagyashreejadeja76@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/bhagyashree-jadeja-2340b2330?",
+        "photo": "/students/Jadeja Bhagyashree.jpeg",
+        "contact_no": "6356020582",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL provided an environment where questioning, experimenting, and learning from mistakes is encouraged. This experience helped me grow both academically and intellectually",
+        "research": [
+            "Full Stack Development",
+            "Web Technologies"
+        ],
+        "researchWorks": [
+            "Interactive Research Lab Website",
+            "Event Management System"
+        ],
+        "achievements": [
+            "Developed Multiple Web Applications",
+            "Contributor to College Technical Projects"
         ]
     },
     {
