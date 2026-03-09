@@ -1,7 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @layer components {
   .neon-gradient-border {
     position: relative;
-    z-index: 1;
+    z-index: 0;
     transition: transform 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
   }
   .neon-gradient-border::before {
@@ -10,13 +15,13 @@
     inset: 0;
     z-index: -1;
     border-radius: 1rem;
+    pointer-events: none;
     padding: 0;
     background: linear-gradient(90deg, #00eaff, #0fffc1, #007cf0, #00eaff 100%);
     opacity: 0;
     transition: opacity 0.3s, box-shadow 0.3s;
-    pointer-events: none;
     border: 3px solid transparent;
-    -webkit-mask: 
+    -webkit-mask:
       linear-gradient(#fff 0 0) content-box, 
       linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -26,18 +31,12 @@
   }
   .neon-gradient-border:hover::before {
     opacity: 1;
-    border: 3px solid transparent;
   }
   .neon-gradient-border:hover {
     transform: translateY(-10px) scale(1.03);
     box-shadow: 0 8px 32px 0 #00eaff44, 0 1.5px 8px 0 #007cf044;
   }
 }
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 @layer base {
   html {
