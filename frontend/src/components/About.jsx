@@ -82,9 +82,9 @@ const About = () => {
                                 >
                                     <div className="px-8 pb-8 pt-2">
                                         <div className="h-[1px] w-full bg-teal-50 mb-8" />
-                                        <div className="prose prose-slate max-w-none">
-                                            <p className="text-gray-600 leading-relaxed text-lg font-light text-justify italic">
-                                                “{organizationData.svkm.description[0]}”
+                                        <div className="w-full">
+                                            <p className="text-gray-800 leading-[1.7] text-[15px] font-normal text-justify">
+                                                {organizationData.svkm.description[0]}
                                             </p>
                                         </div>
                                         <div className="mt-8 flex flex-wrap gap-3">
@@ -145,9 +145,9 @@ const About = () => {
                                 >
                                     <div className="px-8 pb-8 pt-2">
                                         <div className="h-[1px] w-full bg-teal-50 mb-8" />
-                                        <div className="prose prose-slate max-w-none">
-                                            <p className="text-gray-600 leading-relaxed text-lg font-light text-justify italic">
-                                                “{organizationData.ksv.description[0]}”
+                                        <div className="w-full">
+                                            <p className="text-gray-800 leading-[1.7] text-[15px] font-normal text-justify">
+                                                {organizationData.ksv.description[0]}
                                             </p>
                                         </div>
                                         <div className="mt-8 flex flex-wrap gap-3">
@@ -208,9 +208,9 @@ const About = () => {
                                 >
                                     <div className="px-8 pb-8 pt-2">
                                         <div className="h-[1px] w-full bg-teal-50 mb-8" />
-                                        <div className="prose prose-slate max-w-none">
-                                            <p className="text-gray-600 leading-relaxed text-lg font-light text-justify italic">
-                                                “{organizationData.mmpsrpc.description[0]}”
+                                        <div className="w-full">
+                                            <p className="text-gray-800 leading-[1.7] text-[15px] font-normal text-justify">
+                                                {organizationData.mmpsrpc.description[0]}
                                             </p>
                                         </div>
                                         <div className="mt-8 flex flex-wrap gap-3">

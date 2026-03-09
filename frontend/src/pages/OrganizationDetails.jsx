@@ -106,15 +106,15 @@ const OrganizationDetails = () => {
                         className="mb-20"
                     >
                         <div
-                            className="relative p-12 sm:p-20 rounded-[2.5rem] shadow-2xl border border-white/50 bg-[#FAF8F3]/70 backdrop-blur-xl hover:-translate-y-2 transition-transform duration-500 group overflow-hidden"
+                            className="relative p-8 sm:p-12 rounded-[2.5rem] shadow-2xl border border-white/50 bg-[#FAF8F3]/70 backdrop-blur-xl hover:-translate-y-2 transition-transform duration-500 group overflow-hidden"
                         >
                             {/* Academic Accent - Feather line */}
                             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[#00887b]/30 to-transparent" />
 
                             <div className="relative z-10">
-                                <div className="space-y-8">
+                                <div className="space-y-6">
                                     {data.description.map((paragraph, index) => (
-                                        <p key={index} className="text-slate-700 leading-relaxed text-lg sm:text-2xl font-light font-sans text-center">
+                                        <p key={index} className="text-slate-800 leading-[1.7] text-[16px] font-normal font-sans text-justify">
                                             {paragraph}
                                         </p>
                                     ))}
@@ -204,13 +204,13 @@ const OrganizationDetails = () => {
                                             <div className="mb-4 relative">
                                                 <div className="relative">
                                                     <span className="absolute -top-3 -left-6 text-3xl text-[#00887b]/30 font-serif italic select-none">“</span>
-                                                    <div className="text-base lg:text-xl text-slate-900 font-bold leading-relaxed font-serif italic relative z-10 pr-6">
+                                                    <div className="text-base lg:text-lg text-slate-900 font-bold leading-relaxed font-serif italic relative z-10 pr-6">
                                                         <span className="inline">{person.mainQuote.trim()}</span>
                                                         <span className="inline text-3xl text-[#00887b]/30 font-serif italic leading-none ml-1">”</span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="space-y-3 lg:ml-12 text-slate-700 leading-relaxed font-normal text-lg font-sans text-justify">
+                                            <div className="space-y-3 lg:ml-12 text-slate-700 leading-relaxed font-normal text-base font-sans text-justify">
                                                 {person.message.map((p, pIndex) => (
                                                     <p key={pIndex}>{p}</p>
                                                 ))}
@@ -278,15 +278,15 @@ const OrganizationDetails = () => {
                                     viewport={{ once: true, amount: 0.2 }}
                                     transition={{ duration: 0.4, ease: "easeOut" }}
                                     whileHover={{ y: -10 }}
-                                    className="group relative bg-[#FAF8F3]/70 backdrop-blur-md p-14 rounded-[3rem] border-l-8 border-[#00887b] border-r border-t border-b border-white shadow-xl hover:shadow-2xl transition-all duration-500"
+                                    className="group relative bg-[#FAF8F3]/70 backdrop-blur-md p-8 rounded-[2rem] border-l-8 border-[#00887b] border-r border-t border-b border-white shadow-xl hover:shadow-2xl transition-all duration-500"
                                 >
-                                    <div className="mb-10 text-secondary-dark flex items-center gap-6">
-                                        <div className="w-16 h-16 rounded-2xl bg-secondary/10 flex items-center justify-center group-hover:bg-secondary group-hover:text-white transition-all duration-500 shadow-inner">
-                                            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                    <div className="mb-6 text-secondary-dark flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-2xl bg-secondary/10 flex items-center justify-center group-hover:bg-secondary group-hover:text-white transition-all duration-500 shadow-inner">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                                         </div>
-                                        <h3 className="text-3xl font-black text-slate-900 font-sans tracking-tight">Mission</h3>
+                                        <h3 className="text-xl font-black text-slate-900 font-sans tracking-tight">Mission</h3>
                                     </div>
-                                    <p className="text-slate-700 leading-relaxed text-xl font-normal font-sans">{data.mission}</p>
+                                    <p className="text-slate-700 leading-[1.7] text-[16px] font-normal font-sans">{data.mission}</p>
                                 </motion.div>
                             )}
                             {data.vision && (
@@ -296,15 +296,15 @@ const OrganizationDetails = () => {
                                     viewport={{ once: true, amount: 0.2 }}
                                     transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
                                     whileHover={{ y: -10 }}
-                                    className="group relative bg-[#FAF8F3]/70 backdrop-blur-md p-14 rounded-[3rem] border-l-8 border-[#00887b] border-r border-t border-b border-white shadow-xl hover:shadow-2xl transition-all duration-500"
+                                    className="group relative bg-[#FAF8F3]/70 backdrop-blur-md p-8 rounded-[2rem] border-l-8 border-[#00887b] border-r border-t border-b border-white shadow-xl hover:shadow-2xl transition-all duration-500"
                                 >
-                                    <div className="mb-10 text-[#00887b] flex items-center gap-6">
-                                        <div className="w-16 h-16 rounded-2xl bg-[#00887b]/10 flex items-center justify-center group-hover:bg-[#00887b] group-hover:text-white transition-all duration-500 shadow-inner">
-                                            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                    <div className="mb-6 text-[#00887b] flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-2xl bg-[#00887b]/10 flex items-center justify-center group-hover:bg-[#00887b] group-hover:text-white transition-all duration-500 shadow-inner">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                         </div>
-                                        <h3 className="text-3xl font-black text-slate-900 font-sans tracking-tight">Vision</h3>
+                                        <h3 className="text-xl font-black text-slate-900 font-sans tracking-tight">Vision</h3>
                                     </div>
-                                    <p className="text-slate-700 leading-relaxed text-xl font-normal font-sans">{data.vision}</p>
+                                    <p className="text-slate-700 leading-[1.7] text-[16px] font-normal font-sans">{data.vision}</p>
                                 </motion.div>
                             )}
                         </div>
@@ -334,19 +334,19 @@ const OrganizationDetails = () => {
                                         viewport={{ once: true, amount: 0.1 }}
                                         transition={{ duration: 0.4, delay: index * 0.08, ease: "easeOut" }}
                                         whileHover={{ y: -8, backgroundColor: "#FAF8F3" }}
-                                        className="p-10 rounded-[2.5rem] bg-[#FAF8F3]/40 backdrop-blur-sm border border-white/50 shadow-md hover:shadow-2xl transition-all duration-500 group relative overflow-hidden"
+                                        className="p-6 rounded-[1.5rem] bg-[#FAF8F3]/40 backdrop-blur-sm border border-white/50 shadow-md hover:shadow-2xl transition-all duration-500 group relative overflow-hidden"
                                     >
 
                                         {/* Number Badge */}
-                                        <div className="absolute top-0 right-0 p-6 font-black text-6xl font-serif text-[#00887b]/30 group-hover:scale-125 transition-transform duration-700">
+                                        <div className="absolute top-0 right-0 p-4 font-black text-3xl font-serif text-[#00887b]/30 group-hover:scale-125 transition-transform duration-700">
                                             {index + 1}
                                         </div>
 
 
-                                        <h4 className="text-2xl font-bold text-slate-800 mb-4 font-sans leading-snug group-hover:text-secondary-dark transition-colors duration-300 pr-12 relative z-10">
+                                        <h4 className="text-lg font-bold text-slate-800 mb-2 font-sans leading-snug group-hover:text-secondary-dark transition-colors duration-300 pr-8 relative z-10">
                                             {obj.title}
                                         </h4>
-                                        <p className="text-slate-500 font-light leading-relaxed group-hover:text-slate-700 font-sans">
+                                        <p className="text-slate-600 font-normal leading-[1.6] text-[15px] group-hover:text-slate-800 font-sans">
                                             {obj.description}
                                         </p>
                                     </motion.div>
