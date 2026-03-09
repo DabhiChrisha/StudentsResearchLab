@@ -39,6 +39,7 @@ export default function ScrollToTop() {
 
     // Keep both listeners to support the in-app scroll container and fallback pages.
     window.addEventListener("scroll", handleScroll, { passive: true });
+    document.addEventListener("scroll", handleScroll, { passive: true, capture: true });
 
     const mainContent = document.getElementById("main-content");
     if (mainContent) {
@@ -50,6 +51,7 @@ export default function ScrollToTop() {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("scroll", handleScroll, true);
 
       if (mainContent) {
         mainContent.removeEventListener("scroll", handleScroll);
