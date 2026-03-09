@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion } from "framer-motion";
 import Tree from './tree';
+import GradientText from './react-bits/GradientText';
 
 const timelineSteps = [
   {
@@ -37,143 +38,192 @@ const timelineSteps = [
   },
 ];
 
-const TimelineItem = ({ item, index }) => {
+const TimelineItem = ({ item, index, scrollRoot }) => {
   const isEven = index % 2 === 0;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="relative flex items-center justify-center w-full mb-32 group"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ root: scrollRoot, margin: "-10% 0% -10% 0%" }}
+      variants={{
+        hidden: { opacity: 0 },
+        visible: { 
+          opacity: 1,
+          transition: { staggerChildren: 0.15, delayChildren: 0.1 }
+        }
+      }}
+      className="relative flex items-center justify-center w-full mb-32 group px-4"
     >
+      {/* Center Track */}
       <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center top-0 bottom-[-150%]">
-        <div className="w-12 h-12 rounded-full bg-[#16B29D] flex items-center justify-center text-white shadow-lg z-10 border-4 border-white">
+        <div className="w-10 h-10 rounded-full bg-[#16B29D] flex items-center justify-center text-white shadow-lg z-10 border-4 border-white">
           {item.icon}
         </div>
         {index < timelineSteps.length - 1 && (
-          <div className="w-[3px] h-full bg-slate-100 flex-1" />
+          <div className="w-[2px] h-full bg-slate-200/50 flex-1" />
         )}
       </div>
 
       <div className="flex w-full items-center">
-        <div className="w-1/2 pr-12 text-right">
+        {/* LEFT COMPONENT: Slides further left */}
+        <motion.div 
+          className="w-1/2 pr-10 text-right"
+          variants={{
+            hidden: { opacity: 0, x: 50 },
+            visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 100, damping: 12 } }
+          }}
+        >
           {isEven ? (
             <div>
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-800 leading-tight mb-1">{item.title}</h3>
-              <p className="text-sm text-slate-500 max-w-[280px] ml-auto leading-relaxed">{item.description}</p>
+              <h3 className="text-xl font-bold text-slate-800 leading-tight mb-1">{item.title}</h3>
+              <p className="text-sm text-slate-500 max-w-[240px] ml-auto leading-relaxed">{item.description}</p>
             </div>
           ) : (
-            <span className="text-5xl sm:text-7xl font-bold text-[#16B29D] tracking-tighter block">
+            <span className="text-4xl sm:text-5xl font-bold text-[#16B29D] tracking-tighter block leading-none">
               {item.step}
             </span>
           )}
-        </div>
-        <div className="w-1/2 pl-12 text-left">
+        </motion.div>
+
+        {/* RIGHT COMPONENT: Slides further right */}
+        <motion.div 
+          className="w-1/2 pl-10 text-left"
+          variants={{
+            hidden: { opacity: 0, x: -50 },
+            visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 100, damping: 12 } }
+          }}
+        >
           {!isEven ? (
             <div>
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-800 leading-tight mb-1">{item.title}</h3>
-              <p className="text-sm text-slate-500 max-w-[280px] leading-relaxed">{item.description}</p>
+              <h3 className="text-xl font-bold text-slate-800 leading-tight mb-1">{item.title}</h3>
+              <p className="text-sm text-slate-500 max-w-[240px] leading-relaxed">{item.description}</p>
             </div>
           ) : (
-            <span className="text-5xl sm:text-7xl font-bold text-[#16B29D] tracking-tighter block">
+            <span className="text-4xl sm:text-5xl font-bold text-[#16B29D] tracking-tighter block leading-none">
               {item.step}
             </span>
           )}
-        </div>
+        </motion.div>
       </div>
     </motion.div>
   );
 };
 
 const Timeline = () => {
+  const scrollContainerRef = useRef(null);
+
   return (
-    <section id="timeline" className="relative bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
-      {/* Static Background Layer - Spans the whole section but stays sticky */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="sticky top-0 h-screen w-full overflow-hidden">
-          <Tree />
-        </div>
-      </div>
+    <section id="timeline" className="py-12 px-4 md:px-8 bg-white relative overflow-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
+      
+      <div className="max-w-[1400px] mx-auto">
+        {/* Main Section Container with Border and Height Constraint */}
+        <div className="relative flex flex-col lg:flex-row bg-[#fdfdfd] border border-slate-200 rounded-[3rem] shadow-sm overflow-hidden h-[700px]">
+          
+          {/* Subtle decoration */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#16B29D]/[0.02] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
-      <div className="relative max-w-[1500px] mx-auto px-8 z-10">
-        <div className="flex flex-col lg:flex-row">
-
-          {/* LEFT: STATIC COLUMN (Circle) */}
-          <div className="w-full lg:w-[45%] lg:h-screen lg:sticky lg:top-0 flex justify-center items-start pt-32 lg:pt-48 py-20 lg:py-0 pr-0 lg:pr-10 relative">
-
+          {/* LEFT: STATIC HUB (Tree & Circle) */}
+          <div className="w-full lg:w-[45%] h-[300px] lg:h-full relative flex items-center justify-center p-8 bg-white/50 border-b lg:border-b-0 lg:border-r border-slate-100">
+            
+            {/* Animated Title above the tree */}
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ opacity: 0, y: -20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="absolute top-8 left-0 right-0 z-20"
+            >
+              <GradientText
+                colors={["#82C8C1", "#F5E6CC", "#82C8C1", "#F5E6CC"]}
+                animationSpeed={5}
+                className="text-4xl md:text-5xl font-black tracking-tighter"
+              >
+                Our Journey
+              </GradientText>
+            </motion.div>
+
+            {/* Tree Layer */}
+            <div className="absolute inset-0 z-0 opacity-40">
+              <Tree rootXPos={0.5} rootYPos={1.1} scale={0.7} />
+            </div>
+
+            {/* Hub Circle */}
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               animate={{
-                y: [0, -15, 0],
+                y: [0, -12, 0],
               }}
               transition={{
                 scale: { duration: 0.5 },
                 opacity: { duration: 0.5 },
                 y: {
-                  duration: 5,
+                  duration: 6,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }
               }}
               viewport={{ once: true }}
-              className="relative w-64 h-64 sm:w-[340px] sm:h-[340px] z-10"
+              className="relative w-56 h-56 sm:w-72 sm:h-72 z-10"
             >
-              <div className="absolute inset-0 rounded-full border-[12px] border-l-[#16B29D] border-t-[#16B29D] border-r-transparent border-b-transparent rotate-[-45deg] z-0 shadow-[0_0_20px_rgba(22,178,157,0.1)]" />
-              <div className="absolute inset-0 rounded-full border-[12px] border-l-transparent border-t-transparent border-r-[#F9EBD2] border-b-[#F9EBD2] rotate-[-45deg] z-0" />
+              <div className="absolute inset-0 rounded-full border-[10px] border-l-[#16B29D] border-t-[#16B29D] border-r-transparent border-b-transparent rotate-[-45deg] z-0 opacity-80" />
+              <div className="absolute inset-0 rounded-full border-[10px] border-l-transparent border-t-transparent border-r-emerald-50 border-b-emerald-50 rotate-[-45deg] z-0" />
 
-              <div className="absolute inset-4 rounded-full bg-white shadow-[0_15px_40px_-10px_rgba(0,0,0,0.15)] flex flex-col items-center justify-center p-6 text-center ring-1 ring-slate-100">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 mb-0 rounded-full flex items-center justify-center">
+              <div className="absolute inset-3 rounded-full bg-white shadow-[0_20px_50px_-20px_rgba(0,0,0,0.1)] flex flex-col items-center justify-center p-6 text-center ring-1 ring-slate-100/50 backdrop-blur-sm">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 mb-3 rounded-full flex items-center justify-center">
                   <img src="/SRL.svg" alt="SRL Logo" className="w-full h-full object-contain" />
-                </div>
-
-                <div className="overflow-hidden">
-                  <motion.h2
-                    initial={{ y: 40 }}
-                    whileInView={{ y: 0 }}
-                    transition={{ duration: 0.8, ease: "circOut" }}
-                    className="text-xl sm:text-2xl font-black text-slate-800 tracking-[0.05em] uppercase mb-1"
-                  >
-                    Our Journey
-                  </motion.h2>
                 </div>
 
                 <motion.span
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   transition={{ delay: 0.5, duration: 1 }}
-                  className="text-[#16B29D] font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-2"
+                  className="text-[#16B29D] font-bold text-[10px] sm:text-[11px] tracking-[0.25em] uppercase mb-3"
                 >
                   Students Research Lab
                 </motion.span>
 
-                <motion.div
-                  initial={{ width: 0 }}
-                  whileInView={{ width: 48 }}
-                  transition={{ delay: 0.3, duration: 0.8 }}
-                  className="h-[1px] bg-slate-200 mb-2"
-                />
+                <div className="h-[1px] w-12 bg-slate-200 mb-3" />
 
-                <motion.p
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6, duration: 0.8 }}
-                  className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-[240px] font-medium italic"
-                >
-                  "Exploring the milestones that define our path from humble beginnings to a hub of innovation."
-                </motion.p>
+                <p className="text-slate-500 text-[11px] sm:text-xs leading-relaxed max-w-[200px] font-medium italic">
+                  "Exploring milestones from humble beginnings to a hub of innovation."
+                </p>
               </div>
             </motion.div>
           </div>
 
-          {/* RIGHT: SCROLLABLE COLUMN */}
-          <div className="w-full lg:w-[55%] py-32 lg:py-[20vh] relative z-10">
-            <div className="max-w-4xl mx-auto pl-0 lg:pl-10">
+          {/* RIGHT: SCROLLABLE TIMELINE */}
+          <div 
+            ref={scrollContainerRef}
+            className="w-full lg:w-[55%] h-full overflow-y-auto overflow-x-hidden relative scroll-smooth bg-white/30 backdrop-blur-[2px]"
+            style={{ 
+              scrollbarWidth: 'thin', 
+              scrollbarColor: '#16B29D22 transparent' 
+            }}
+          >
+            {/* Custom Scrollbar Styles */}
+            <style dangerouslySetInnerHTML={{ __html: `
+              #timeline div::-webkit-scrollbar { width: 4px; }
+              #timeline div::-webkit-scrollbar-track { background: transparent; }
+              #timeline div::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+              #timeline div::-webkit-scrollbar-thumb:hover { background: #16B29D; }
+            `}} />
+
+            <div className="py-24 lg:py-32 px-4">
               {timelineSteps.map((item, index) => (
-                <TimelineItem key={index} item={item} index={index} />
+                <TimelineItem 
+                  key={index} 
+                  item={item} 
+                  index={index} 
+                  scrollRoot={scrollContainerRef}
+                />
               ))}
+              
+              <div className="h-48" />
             </div>
+
+            <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-white to-transparent pointer-events-none z-20" />
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent pointer-events-none z-20" />
           </div>
 
         </div>
