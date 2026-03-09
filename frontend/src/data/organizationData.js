@@ -17,7 +17,7 @@ export const organizationData = {
         heroImage: svkmCampus,
         website: "https://svkm.org.in/",
         description: [
-            "Sarva Vidyalaya Kelavani Mandal (SVKM) was founded in 1919 by the visionary philanthropist Pujya Chhaganbha, whose guiding philosophy, 'કર ભલા, હોગા ભલા' (Do good, and good will come), continues to inspire the institution's journey in education and service. From its humble beginning with just six students, SVKM has grown into a vast educational network, now nurturing the academic aspirations of over 54,000 students across Kadi and Gandhinagar."
+            "Sarva Vidyalaya Kelavani Mandal (SVKM) was founded in 1919 by the visionary philanthropist Pujya Chhaganbha, whose guiding philosophy, 'કર ભલા, હોગા ભલા' (Do good, and good will come), continues to inspire the institution's journey in education and service. From its humble beginning with just six students, SVKM has grown into a vast educational network, now nurturing the academic aspirations of over 54,000 students across Kadi and Gandhinagar. Sarva Vidyalaya Kelavani Mandal, with over 106 years of history, is one of India's oldest educational trusts. It operates schools across different levels and offers a wide range of programs, including CBSE and GSEB schools, as well as undergraduate, graduate, and doctoral studies in fields such as engineering, sciences, management, arts, and healthcare. Guided by core principles of innovation, entrepreneurship, academic rigor, and the humanities, SVKM focuses on fostering holistic development for students, faculty, and society."
         ],
         stats: [
             { label: "Years of Legacy", value: "100+" },
@@ -108,7 +108,7 @@ export const organizationData = {
         image: mmpsrpcLogo,
         heroImage: mmpsrpcCampus,
         description: [
-            "Established in 2024, the M. M. Patel Students Research Project Cell (MMPSRPC) was founded with the vision of fostering a strong research culture and academic excellence among students at KSV University. It was created as a dynamic platform to encourage young minds to explore research, innovation, and interdisciplinary learning while actively contributing to the academic community.Since its inception, MMPSRPC has evolved from a small group of motivated students into a vibrant and collaborative community of researchers, mentors, and faculty members. Driven by a commitment to nurturing talent and promoting meaningful research, the cell continues to empower students to think critically, innovate, and push the boundaries of knowledge."
+            "M. M. Patel Students Research Project Cell (MMPSRPC) was founded with the vision of fostering a strong research culture and academic excellence among students at KSV University. It was created as a dynamic platform to encourage young minds to explore research, innovation, and interdisciplinary learning while actively contributing to the academic community.Since its inception, MMPSRPC has evolved from a small group of motivated students into a vibrant and collaborative community of researchers, mentors, and faculty members. Driven by a commitment to nurturing talent and promoting meaningful research, the cell continues to empower students to think critically, innovate, and push the boundaries of knowledge."
         ],
         stats: [
             { label: "Ongoing Projects", value: "17+" },
