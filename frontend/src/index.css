@@ -1,7 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 @layer components {
   .neon-gradient-border {
@@ -37,6 +34,10 @@
     box-shadow: 0 8px 32px 0 #00eaff44, 0 1.5px 8px 0 #007cf044;
   }
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   html {

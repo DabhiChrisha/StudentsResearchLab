@@ -127,7 +127,7 @@ export default function JoinUs() {
             </li>
             <li className="flex items-start gap-3">
               <span className="text-[#05877a] font-bold mt-1">•</span>
-              <span><strong>This form only shows that you are interested in joining SRL.</strong> Your application will be reviewed by our team.</span>
+              <span><strong>This form only shows that you are interested in joining SRL.</strong> Your application will be reviewed by Dr. Himani Trivedi ma'am, Head Students Research Lab, MMPSRPC, KSV.</span>
             </li>
           </ul>
         </div>

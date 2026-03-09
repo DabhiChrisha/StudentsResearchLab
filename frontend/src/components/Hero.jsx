@@ -34,7 +34,7 @@ export default function Hero() {
     }, [slides.length]);
 
     return (
-        <section id="top" className="relative w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[85vh] min-h-[400px] overflow-hidden flex items-center justify-center bg-slate-900">
+        <section id="top" className="relative w-full h-[calc(100vh-72px)] lg:h-[calc(100vh-88px)] overflow-hidden flex items-center justify-center bg-slate-900">
 
             {/* ===== BACKGROUND SLIDES ===== */}
             {slides.map((slide, index) => (
@@ -42,18 +42,11 @@ export default function Hero() {
                     key={index}
                     className={`absolute inset-0 w-full h-full transition-all duration-[1200ms] ease-in-out ${index === current ? "opacity-100 z-10" : "opacity-0 z-0"}`}
                 >
-                    {/* Blurred backdrop to fill those empty gaps without cropping */}
-                    <img
-                        src={slide.image}
-                        alt=""
-                        className="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-40 select-none pointer-events-none"
-                    />
-
-                    {/* The Full Image (Nothing is cut off now) */}
+                    {/* The Full Image - covers entire screen */}
                     <img
                         src={slide.image}
                         alt="hero"
-                        className="relative w-full h-full object-contain drop-shadow-2xl"
+                        className="absolute inset-0 w-full h-full object-cover"
                     />
 
                     {/* Dark overlay for readability */}

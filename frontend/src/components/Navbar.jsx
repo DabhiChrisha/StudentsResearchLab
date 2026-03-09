@@ -94,21 +94,21 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className={`fixed 4 top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled ? 'bg-[#FAF9F6]/95 backdrop-blur-md shadow-md py-2' : 'bg-[#FAF9F6] py-3.5'}`}>
+            <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled ? 'bg-[#FAF9F6]/95 backdrop-blur-md shadow-md py-2' : 'bg-[#FAF9F6] py-3.5'}`}>
                 {/* MAIN CONTAINER */}
-                <div className="max-w-[1600px] mx-auto w-full flex items-center justify-between px-4 lg:px-8">
+                <div className="max-w-[1600px] mx-auto w-full flex items-center justify-between px-4 lg:px-6 xl:px-8">
 
                     {/* WRAPPER 1: LEFT (Logo & Site Title) */}
                     <div className="flex items-center gap-2 lg:gap-3 shrink min-w-0">
                         <Link to="/" className="flex items-center gap-2 lg:gap-3 group min-w-0">
-                            <div className="w-11 h-11 lg:w-12 lg:h-12 xl:w-14 xl:h-14 2xl:w-16 2xl:h-16 bg-white rounded-full p-0.5 lg:p-1 2xl:p-1.5 flex items-center justify-center shadow-md shrink-0 transition-transform group-hover:scale-105">
+                            <div className="w-10 h-10 lg:w-11 lg:h-11 xl:w-12 xl:h-12 2xl:w-14 2xl:h-14 bg-white rounded-full p-0.5 lg:p-1 2xl:p-1.5 flex items-center justify-center shadow-md shrink-0 transition-transform group-hover:scale-105">
                                 <img src={srlLogo} alt="SRL" className="w-full h-full object-contain" />
                             </div>
                             <div className="flex flex-col min-w-0">
-                                <h1 className="text-teal-900 font-black text-[9.5px] lg:text-[11px] xl:text-xs 2xl:text-base tracking-tight leading-none whitespace-nowrap">
+                                <h1 className="text-teal-900 font-serif font-bold text-[10px] lg:text-[11px] xl:text-[12px] 2xl:text-[14px] tracking-tight leading-none whitespace-nowrap">
                                     Students Research Lab <span className="text-teal-600">(SRL)</span>
                                 </h1>
-                                <p className="text-teal-800/80 font-bold text-[6px] lg:text-[7px] xl:text-[8px] 2xl:text-[9px] uppercase tracking-widest whitespace-nowrap">
+                                <p className="text-teal-800/80 font-sans font-semibold text-[7px] lg:text-[7px] xl:text-[8px] 2xl:text-[9px] uppercase tracking-[0.14em] whitespace-nowrap">
                                     MMPSRPC, Kadi Sarva Vishwavidyalaya
                                 </p>
                             </div>
@@ -116,14 +116,14 @@ const Navbar = () => {
                     </div>
 
                     {/* WRAPPER 2: CENTER-RIGHT (Navigation Links) */}
-                    <div className="hidden lg:flex items-center justify-end flex-1 px-2 xl:px-4 2xl:px-8">
-                        <div className="flex items-center gap-x-1 lg:gap-x-2 xl:gap-x-3 2xl:gap-x-4">
+                    <div className="hidden xl:flex items-center justify-center flex-1 min-w-0 px-3 2xl:px-6">
+                        <div className="flex items-center justify-between w-full max-w-4xl 2xl:max-w-5xl gap-x-2 xl:gap-x-3 2xl:gap-x-5">
                             {menuItems.map((item) => (
                                 <NavLink
                                     key={item.label}
                                     to={item.path}
                                     className={({ isActive }) => `
-                                    relative py-1 text-[9px] xl:text-[10px] 2xl:text-[12px] font-black transition-all duration-300 whitespace-nowrap uppercase tracking-wider
+                                    relative py-1 text-[11px] xl:text-[12px] 2xl:text-[14px] font-sans font-semibold transition-all duration-300 whitespace-nowrap tracking-[0.04em]
                                     ${isActive ? "text-teal-700" : "text-teal-900/70 hover:text-teal-900"}
                                     group/link
                                 `}
@@ -142,7 +142,7 @@ const Navbar = () => {
                             >
                                 <button
                                     onClick={() => setIsAboutClicked(!isAboutClicked)}
-                                    className={`flex items-center gap-1 py-1 text-[9px] xl:text-[10px] 2xl:text-[12px] font-black transition-all whitespace-nowrap uppercase tracking-wider relative group/aboutlink ${isAboutActive ? 'text-teal-700' : 'text-teal-900/70 hover:text-teal-900'}`}
+                                    className={`flex items-center gap-1 py-1 text-[11px] xl:text-[12px] 2xl:text-[14px] font-sans font-semibold transition-all whitespace-nowrap tracking-[0.04em] relative group/aboutlink ${isAboutActive ? 'text-teal-700' : 'text-teal-900/70 hover:text-teal-900'}`}
                                 >
                                     About Us <ChevronDown size={14} className={`transition-transform duration-300 ${aboutDropdownOpen ? 'rotate-180' : ''}`} />
                                     <span className={`absolute bottom-0 left-0 h-[3px] bg-teal-600 transition-all duration-300 ${isAboutActive ? 'w-full' : 'w-0 group-hover/aboutlink:w-full'}`}></span>
@@ -168,10 +168,10 @@ const Navbar = () => {
                         </div>
                     </div>
 
-                {/* WRAPPER 3: RIGHT (Buttons & Partner Logos) */}
-                <div className="flex items-center justify-end gap-x-2 xl:gap-x-4 shrink-0">
-                        <div className="hidden lg:flex items-center gap-x-1.5 xl:gap-x-2">
-                            <Link to="/join" className="relative px-4 py-2 bg-[#E6B800] text-white font-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.10)] uppercase tracking-wider text-[10px] xl:text-[11px] 2xl:text-[13px] whitespace-nowrap overflow-hidden group">
+                    {/* WRAPPER 3: RIGHT (Buttons & Partner Logos) */}
+                    <div className="flex items-center justify-end gap-x-2 xl:gap-x-3 shrink-0">
+                        <div className="hidden xl:flex items-center gap-x-1.5 xl:gap-x-2">
+                            <Link to="/join" className="relative px-3 py-1.5 xl:px-3.5 xl:py-1.5 2xl:px-4 2xl:py-2 bg-[#E6B800] text-white font-sans font-bold rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.10)] uppercase tracking-[0.06em] text-[10px] xl:text-[11px] 2xl:text-[12px] whitespace-nowrap overflow-hidden group">
                                 <span className="relative z-10">Join Us</span>
                                 {/* Shine Animation */}
                                 <span className="absolute left-[-75%] top-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/70 to-transparent opacity-80 animate-shine" />
@@ -186,13 +186,13 @@ const Navbar = () => {
                                     }
                                 `}</style>
                             </Link>
-                        <a href="https://appointment.mmpsrpc.in/" target="_blank" rel="noopener noreferrer" className="px-2.5 py-1.5 xl:px-3 xl:py-2 2xl:px-4 2xl:py-2.5 bg-white text-[#0D9488] border border-teal-100 shadow-sm font-black rounded-full hover:scale-105 active:scale-95 transition-all text-[8px] xl:text-[9px] 2xl:text-[11px] whitespace-nowrap uppercase tracking-wider">
-                            Appointment
-                        </a>
-                    </div>
+                            <a href="https://appointment.mmpsrpc.in/" target="_blank" rel="noopener noreferrer" className="px-2 py-1 xl:px-2.5 xl:py-1.5 2xl:px-3.5 2xl:py-2 bg-white text-[#0D9488] border border-teal-100 shadow-sm font-black rounded-full hover:scale-105 active:scale-95 transition-all text-[7px] xl:text-[8px] 2xl:text-[10px] whitespace-nowrap uppercase tracking-[0.08em]">
+                                Appointment
+                            </a>
+                        </div>
 
-                        {/* Partner logos only visible on xl+ */}
-                        <div className="hidden xl:flex items-center gap-x-2 2xl:gap-x-4 border-l border-teal-900/10 pl-3 2xl:pl-6 shrink-0">
+                        {/* Partner logos only visible on 2xl+ to keep nav breathing room on laptop widths */}
+                        <div className="hidden 2xl:flex items-center gap-x-2 2xl:gap-x-4 border-l border-teal-900/10 pl-3 2xl:pl-6 shrink-0">
                             <a href="https://www.svkm.org.in/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300">
                                 <img src={svkmLogo} alt="SVKM" className="h-8 xl:h-9 2xl:h-12 w-auto object-contain" />
                             </a>
@@ -205,7 +205,7 @@ const Navbar = () => {
                         </div>
 
                         {/* Mobile Toggle — always shows Menu icon; X is inside drawer */}
-                        <button onClick={() => setOpen(true)} className="lg:hidden text-teal-900 p-2.5 hover:bg-teal-50 rounded-lg transition-colors shrink-0 touch-target" aria-label="Open menu">
+                        <button onClick={() => setOpen(true)} className="xl:hidden text-teal-900 p-2.5 hover:bg-teal-50 rounded-lg transition-colors shrink-0 touch-target" aria-label="Open menu">
                             <Menu size={32} />
                         </button>
                     </div>
@@ -223,7 +223,7 @@ const Navbar = () => {
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.2 }}
                             onClick={closeSidebar}
-                            className="fixed inset-0 bg-black/40 z-[200] lg:hidden"
+                            className="fixed inset-0 bg-black/40 z-[200] xl:hidden"
                             aria-hidden="true"
                         />
                         {/* Drawer panel */}
@@ -232,7 +232,7 @@ const Navbar = () => {
                             animate={{ x: 0 }}
                             exit={{ x: "100%" }}
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="fixed top-0 right-0 w-[85vw] max-w-md h-[100dvh] bg-white shadow-2xl z-[210] lg:hidden flex flex-col"
+                            className="fixed top-0 right-0 w-[85vw] max-w-md h-[100dvh] bg-white shadow-2xl z-[210] xl:hidden flex flex-col"
                             role="dialog"
                             aria-modal="true"
                             aria-label="Navigation menu"

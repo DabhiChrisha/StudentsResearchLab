@@ -7,6 +7,8 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import AnimatedPreloader from './components/AnimatedPreloader';
 import ScrollToTop from './components/ScrollToTop';
+import ScrollToTopButton from './components/ScrollToTopButton';
+import MobileDock from './components/MobileDock';
 import Background from './components/Background';
 
 // Page Components
@@ -61,6 +63,9 @@ function App() {
 
               <Footer />
             </div>
+
+            <ScrollToTopButton />
+            <MobileDock />
           </>
         )}
       </div>

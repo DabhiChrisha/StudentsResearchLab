@@ -19,9 +19,29 @@ const Activities = () => {
             if (error) {
                 setError('Failed to load activities.');
                 setActivities([]);
-            } else {
-                setActivities(data || []);
+                setLoading(false);
+                return;
             }
+            // Generate signed URLs for private bucket images
+            const activitiesWithUrls = await Promise.all(
+                (data || []).map(async (act) => {
+                    if (act.Photo) {
+                        // Extract bucket and path from the Photo field if needed
+                        // Assuming Photo is the path inside the bucket, e.g. 'folder/image.jpg'
+                        // Use the correct bucket name 'Activity_images'
+                        const { data: signedUrlData, error: urlError } = await supabase
+                            .storage
+                            .from('Activity_images')
+                            .createSignedUrl(act.Photo, 60 * 60); // 1 hour expiry
+                        return {
+                            ...act,
+                            signedPhotoUrl: signedUrlData?.signedUrl || '',
+                        };
+                    }
+                    return act;
+                })
+            );
+            setActivities(activitiesWithUrls);
             setLoading(false);
         };
         fetchActivities();
@@ -48,23 +68,77 @@ const Activities = () => {
                 {/* Activities Grid */}
                 {!loading && !error && activities.length > 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-8 items-stretch">
-                        {activities.map((act, i) => (
+                        {[...activities]
+                            .sort((a, b) => {
+                                // Use 'sequence' or 'order' field; fallback to id or 0
+                                const aSeq = a.sequence ?? a.order ?? a.id ?? 0;
+                                const bSeq = b.sequence ?? b.order ?? b.id ?? 0;
+                                return aSeq - bSeq;
+                            })
+                            .map((act, i) => (
                             <div
                                 key={act.id || i}
-                                className="bg-white rounded-2xl shadow-lg transition cursor-pointer flex flex-col overflow-hidden group min-h-[170px] md:min-h-[190px] neon-gradient-border"
+                                className="bg-white rounded-2xl shadow-lg transition cursor-pointer flex flex-col overflow-hidden group min-h-[270px] md:min-h-[290px] neon-gradient-border"
                                 onClick={() => setModal(act)}
                             >
-                                {act.image && (
-                                    <div className="aspect-[4/2] w-full bg-gray-100 overflow-hidden">
-                                        <img src={act.image} alt={act.title} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300" />
-                                    </div>
-                                )}
-                                <div className="p-8 flex flex-col flex-1">
-                                    <div className="text-xs text-gray-400 font-semibold mb-2">
-                                        {act.date}
-                                    </div>
-                                    <div className="font-bold text-lg md:text-xl text-gray-900 mb-2 line-clamp-2">{act.title}</div>
-                                    <div className="text-gray-500 text-sm mb-3 line-clamp-2">
+                                {/* Always show the image at the top */}
+                                <div className="w-full bg-gray-100 overflow-hidden flex items-center justify-center aspect-[4/3]">
+                                    {(() => {
+                                        // Prefer signedPhotoUrl, fallback to public URL if not present
+                                        let url = act.signedPhotoUrl;
+                                        if (!url && act.Photo) {
+                                            if (act.Photo.startsWith('http')) {
+                                                url = act.Photo;
+                                            } else {
+                                                const cleanPhoto = act.Photo.replace(/ /g, '%20');
+                                                url = `https://npdtneznlzganiolvhmw.supabase.co/storage/v1/object/public/Activity_images/${cleanPhoto}`;
+                                            }
+                                        }
+                                        if (url) {
+                                            if (url.match(/\.(mp4|webm|ogg)(\?.*)?$/i)) {
+                                                return (
+                                                    <video
+                                                        src={url}
+                                                        className="object-contain w-full h-full mx-auto my-auto bg-black"
+                                                        controls
+                                                        autoPlay={false}
+                                                        muted
+                                                        playsInline
+                                                        preload="metadata"
+                                                        poster="/video-poster.png"
+                                                    >
+                                                        Sorry, your browser doesn't support embedded videos.
+                                                    </video>
+                                                );
+                                            } else if (url.match(/\.(jpg|jpeg|png|gif|bmp|svg|webp)(\?.*)?$/i)) {
+                                                return (
+                                                    <img
+                                                        src={url}
+                                                        alt={act.title + ' (debug: ' + url + ')'}
+                                                        className="object-contain w-full h-full mx-auto my-auto"
+                                                        style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }}
+                                                    />
+                                                );
+                                            } else {
+                                                // fallback: try to show as image if URL exists
+                                                return (
+                                                    <img
+                                                        src={url}
+                                                        alt={act.title + ' (debug: ' + url + ')'}
+                                                        className="object-contain w-full h-full mx-auto my-auto"
+                                                        style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }}
+                                                    />
+                                                );
+                                            }
+                                        }
+                                        return <div className="w-full h-full flex items-center justify-center text-gray-300 text-4xl">No Image</div>;
+                                    })()}
+                                </div>
+                                {/* Title below the image */}
+                                <div className="flex flex-col flex-1 p-5 pt-4">
+                                    <div className="font-bold text-lg md:text-xl text-gray-900 mb-2 text-center line-clamp-2">{act.title}</div>
+                                    <div className="text-xs text-gray-400 font-semibold mb-2 text-center">{act.date}</div>
+                                    <div className="text-gray-500 text-sm mb-3 line-clamp-2 text-center">
                                         {act.brief || act.description}
                                     </div>
                                 </div>
@@ -81,23 +155,60 @@ const Activities = () => {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+                            style={{ alignItems: 'flex-start', paddingTop: '5.5rem' }}
                         >
                             <motion.div
                                 initial={{ scale: 0.95, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale: 0.95, opacity: 0 }}
-                                className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full mx-4 flex flex-col md:flex-row overflow-hidden relative"
+                                className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full mx-4 flex flex-col md:flex-row overflow-hidden relative border-2 border-sky-100"
+                                style={{ minHeight: 400, maxHeight: 500 }}
                             >
                                 {/* Image */}
-                                {modal.image && (
+                                {(modal?.signedPhotoUrl || modal?.Photo) && (
                                     <div className="md:w-1/2 w-full bg-gray-100 flex items-center justify-center">
-                                        <img src={modal.image} alt={modal.title} className="object-cover w-full h-full max-h-[340px]" />
+                                        {(() => {
+                                            let url = modal.signedPhotoUrl;
+                                            if (!url && modal.Photo) {
+                                                if (modal.Photo.startsWith('http')) {
+                                                    url = modal.Photo;
+                                                } else {
+                                                    const cleanPhoto = modal.Photo.replace(/ /g, '%20');
+                                                    url = `https://npdtneznlzganiolvhmw.supabase.co/storage/v1/object/public/Activity_images/${cleanPhoto}`;
+                                                }
+                                            }
+                                            if (url && url.match(/\.(mp4|webm|ogg)(\?.*)?$/i)) {
+                                                return (
+                                                    <video
+                                                        src={url}
+                                                        className="object-contain w-full h-full max-h-[340px] mx-auto my-auto bg-black"
+                                                        controls
+                                                        autoPlay={false}
+                                                        muted
+                                                        playsInline
+                                                        preload="metadata"
+                                                        poster="/video-poster.png"
+                                                    >
+                                                        Sorry, your browser doesn't support embedded videos.
+                                                    </video>
+                                                );
+                                            } else if (url && url.match(/\.(jpg|jpeg|png|gif|bmp|svg|webp)(\?.*)?$/i)) {
+                                                return (
+                                                    <img src={url} alt={modal.title + ' (debug: ' + url + ')'} className="object-contain w-full h-full max-h-[340px] mx-auto my-auto" style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }} />
+                                                );
+                                            } else if (url) {
+                                                return (
+                                                    <img src={url} alt={modal.title + ' (debug: ' + url + ')'} className="object-contain w-full h-full max-h-[340px] mx-auto my-auto" style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }} />
+                                                );
+                                            }
+                                            return null;
+                                        })()}
                                     </div>
                                 )}
                                 {/* Details */}
-                                <div className="flex-1 p-8 flex flex-col">
+                                <div className="flex-1 p-8 flex flex-col min-w-0 justify-between">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <h2 className="text-2xl font-bold text-gray-900 flex-1">{modal.title}</h2>
+                                        <h2 className="text-2xl font-bold text-gray-900 flex-1 truncate">{modal.title}</h2>
                                         {modal.year && (
                                             <span className="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-xs font-semibold">{modal.year}</span>
                                         )}
@@ -113,11 +224,13 @@ const Activities = () => {
                                             <span>(View Post)</span>
                                         </a>
                                     )}
-                                    <div className="text-gray-700 text-base mb-4">
-                                        <span className="font-bold">Brief: </span>
-                                        {modal.brief || modal.description}
+                                    <div className="flex-1 min-h-0">
+                                        <span className="font-bold text-gray-700 text-base">Brief: </span>
+                                        <div className="overflow-y-auto pr-2 text-gray-700 text-base" style={{ maxHeight: 'calc(100% - 2rem)' }}>
+                                            {modal.brief || modal.description}
+                                        </div>
                                     </div>
-                                    <div className="text-gray-400 text-xs mt-auto">
+                                    <div className="text-gray-400 text-xs pt-2" style={{marginTop: 'auto'}}>
                                         {modal.date}
                                     </div>
                                 </div>
