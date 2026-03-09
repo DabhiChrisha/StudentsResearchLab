@@ -310,32 +310,54 @@ const Achievements = () => {
   const sectionRef = useRef(null);
   const detailRef = useRef(null);
   const remaining = data.filter((d) => d.id !== selected?.id);
-  
+
   useEffect(() => {
-  if (selected && detailRef.current) {
-    setTimeout(() => {
-      detailRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }, 300);
-  }
-}, [selected]);
+    if (selected && detailRef.current) {
+      setTimeout(() => {
+        detailRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 300);
+    }
+  }, [selected]);
 
   const handleSelect = (item) => {
-  setSelected(item);
-  fireConfetti();
-};
+    setSelected(item);
+    fireConfetti();
+  };
 
   return (
     <div
-  ref={sectionRef}
-  className="pt-6 pb-20 px-4 sm:px-6 lg:px-8 min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50"
->
-      <div className="max-w-7xl mx-auto">
+      ref={sectionRef}
+      className="relative pt-10 pb-40 px-4 sm:px-6 lg:px-8 min-h-screen bg-[#F2EFE8] overflow-hidden"
+    >
+      {/* Unique Mesh Gradient Background - Darkened */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#f8e6c1]/60 via-[#EAE4D5]/40 to-[#00887b]/20" />
+
+        {/* Animated Glow Spheres - Diagonal Orientation */}
+        <motion.div
+          animate={{ x: [0, 40, 0], y: [0, 40, 0], scale: [1, 1.1, 1] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-secondary/15 rounded-full blur-[120px] pointer-events-none"
+        />
+        <motion.div
+          animate={{ x: [0, -40, 0], y: [0, -40, 0], scale: [1, 1.2, 1] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-[-10%] right-[-10%] w-[800px] h-[800px] bg-[#E6B800]/15 rounded-full blur-[150px] pointer-events-none"
+        />
+        <div className="absolute top-[40%] right-[10%] w-[300px] h-[300px] bg-secondary/5 rounded-full blur-[80px] pointer-events-none" />
+
+
+        {/* Subtle SVG Pattern Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300887b' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4v-4H4v4H0v2h4v4h2v-4h4v-2H6zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="text-5xl lg:text-7xl font-black font-serif text-slate-900 mb-3 uppercase tracking-tight">
+          <h1 className="text-5xl lg:text-7xl font-black font-serif text-secondary-dark mb-3 uppercase tracking-tight">
             Achievements
           </h1>
           <p className="text-slate-500 text-lg max-w-xl mx-auto leading-snug">

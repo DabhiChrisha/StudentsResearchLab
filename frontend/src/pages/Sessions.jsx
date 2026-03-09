@@ -122,15 +122,34 @@ const Sessions = () => {
       : sessions.filter((s) => s.category === activeTab);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="pt-6 pb-40 px-4 sm:px-6 lg:px-8 bg-primary/20 min-h-screen"
+    <div
+      className="relative pt-10 pb-20 px-4 sm:px-6 lg:px-8 min-h-screen bg-[#F2EFE8] overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto">
+      {/* Unique Mesh Gradient Background - Enhanced Beige in Right Corner */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#f8e6c1]/40 via-[#EAE4D5]/30 to-[#f8e6c1]/60" />
+
+        {/* Animated Glow Spheres - Diagonal Orientation */}
+        <motion.div
+          animate={{ x: [0, 40, 0], y: [0, 40, 0], scale: [1, 1.1, 1] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-secondary/15 rounded-full blur-[120px] pointer-events-none"
+        />
+        <motion.div
+          animate={{ x: [0, -30, 0], y: [0, -30, 0], scale: [1, 1.3, 1] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-[-15%] right-[-15%] w-[900px] h-[900px] bg-[#E6B800]/20 rounded-full blur-[140px] pointer-events-none"
+        />
+        <div className="absolute top-[30%] left-[20%] w-[300px] h-[300px] bg-[#f8e6c1]/20 rounded-full blur-[80px] pointer-events-none" />
+
+        {/* Subtle SVG Pattern Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300887b' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4v-4H4v4H0v2h4v4h2v-4h4v-2H6zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="mb-4">
-          <h1 className="text-5xl lg:text-7xl font-black font-serif text-slate-900 mb-6">
+          <h1 className="text-5xl lg:text-7xl font-black font-serif text-secondary-dark mb-6">
             SRL Sessions
           </h1>
         </div>
@@ -211,7 +230,7 @@ const Sessions = () => {
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 };
 
