@@ -24,6 +24,14 @@
         "achievements": [
             "1st Prize in TechFest 2024",
             "Dean's List Semester 3"
+        ],
+        "ongoingProjects": [
+            "Smart Campus Energy Monitor",
+            "AI-based Attendance Tracker"
+        ],
+        "hackathons": [
+            "HackNIT 2023",
+            "CodeFest 2024"
         ]
     },
     {
@@ -51,6 +59,14 @@
         "achievements": [
             "Best Project Award 2023",
             "Hackathon Finalist"
+        ],
+        "ongoingProjects": [
+            "Low-light Face Detection",
+            "Real-time Traffic Analysis"
+        ],
+        "hackathons": [
+            "SmartCity Hack 2024",
+            "AI Innovators 2024"
         ]
     },
     {
@@ -78,6 +94,14 @@
         "achievements": [
             "Design Excellence Award",
             "Merit Scholar"
+        ],
+        "ongoingProjects": [
+            "Accessible UI Toolkit",
+            "Gesture-Based Control System"
+        ],
+        "hackathons": [
+            "UX Sprint 2024",
+            "Design Jam 2023"
         ]
     },
     {
@@ -106,6 +130,14 @@
         "achievements": [
             "RoboCon 2024 Semi-finalist",
             "Academic Excellence Award"
+        ],
+        "ongoingProjects": [
+            "Warehouse Automation Bot",
+            "Low-power Sensor Mesh"
+        ],
+        "hackathons": [
+            "RoboHack 2024",
+            "IoT Challenge 2023"
         ]
     },
     {
@@ -134,6 +166,14 @@
         "achievements": [
             "RoboCon 2024 Semi-finalist",
             "Academic Excellence Award"
+        ],
+        "ongoingProjects": [
+            "Autonomous Drone Navigation",
+            "Smart Agriculture Sensors"
+        ],
+        "hackathons": [
+            "RoboHack 2024",
+            "GreenTech Hack 2023"
         ]
     },
     {
@@ -163,6 +203,14 @@
         "achievements": [
             "Cyber Security Workshop Topper",
             "NPTEL Certified in Blockchain"
+        ],
+        "ongoingProjects": [
+            "Secure Voting DApp",
+            "Privacy-Preserving Identity System"
+        ],
+        "hackathons": [
+            "BlockHack 2024",
+            "CyberQuest 2023"
         ]
     },
     {
@@ -196,6 +244,14 @@
         "achievements": [
             "Published Paper in IEEE",
             "Best RA Award 2024"
+        ],
+        "ongoingProjects": [
+            "GAN Model for Art Generation",
+            "Real-time Neural Network Optimizer"
+        ],
+        "hackathons": [
+            "AI Conclave 2024",
+            "Deep Learning Sprint 2023"
         ]
     },
     {
@@ -229,6 +285,14 @@
         "achievements": [
             "Data Science Hackathon Winner",
             "Microsoft Certified Professional"
+        ],
+        "ongoingProjects": [
+            "Real-time Health Monitoring Pipeline",
+            "Social Media Trends Dashboard"
+        ],
+        "hackathons": [
+            "DataHack 2024",
+            "Analytics Marathon 2023"
         ]
     },
     {
@@ -258,6 +322,14 @@
         "achievements": [
             "Capture The Flag (CTF) winner",
             "Certified Ethical Hacker (CEH) trainee"
+        ],
+        "ongoingProjects": [
+            "Enterprise Network Audit Platform",
+            "Automated Phishing Simulator"
+        ],
+        "hackathons": [
+            "CyberShield 2024",
+            "CTF Challenge 2023"
         ]
     },
     {
@@ -287,6 +359,14 @@
         "achievements": [
             "Developed Multiple Web Applications",
             "Contributor to College Technical Projects"
+        ],
+        "ongoingProjects": [
+            "Research Lab Portal",
+            "Interactive Event Scheduler"
+        ],
+        "hackathons": [
+            "Webathon 2024",
+            "CodeSprint 2023"
         ]
     },
     {
@@ -316,6 +396,14 @@
         "achievements": [
             "Math Olympiad 2023 Runner-up",
             "CodeChef 4-star"
+        ],
+        "ongoingProjects": [
+            "Graph Optimization Toolkit",
+            "Algorithm Visualizer"
+        ],
+        "hackathons": [
+            "AlgoFest 2024",
+            "Code Jam 2023"
         ]
     },
     {
@@ -345,6 +433,14 @@
         "achievements": [
             "Open Source Contributor (GSoC)",
             "Tech Quiz Winner"
+        ],
+        "ongoingProjects": [
+            "RTOS Scheduler Enhancements",
+            "Compiler Optimization Suite"
+        ],
+        "hackathons": [
+            "Open Source Summit 2024",
+            "Hack the Kernel 2023"
         ]
     },
     {

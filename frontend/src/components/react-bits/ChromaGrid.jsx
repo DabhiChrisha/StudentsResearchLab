@@ -22,7 +22,7 @@ const ChromaGrid = ({ items, onImageClick }) => {
     };
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {items.map((item, index) => (
                 <div
                     key={index}
@@ -30,16 +30,23 @@ const ChromaGrid = ({ items, onImageClick }) => {
                     onClick={() => onImageClick(item)}
                 >
                     {/* Top: Image Section with Padding */}
-                    <div className="p-4">
-                        <div className="aspect-square w-full rounded-2xl overflow-hidden shadow-sm border border-black/5 bg-gray-200">
+                    <div className="p-3">
+                        <div className="relative aspect-square w-full rounded-2xl overflow-hidden shadow-sm border border-black/5 bg-gray-200">
                             {!failedImages[index] && item.image ? (
-                                <img
-                                    src={item.image}
-                                    alt={item.title}
-                                    onLoad={() => handleImageLoad(index)}
-                                    onError={() => handleImageError(index, item)}
-                                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                />
+                                <>
+                                    <img
+                                        src={item.image}
+                                        alt={item.title}
+                                        onLoad={() => handleImageLoad(index)}
+                                        onError={() => handleImageError(index, item)}
+                                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                    <div className="absolute inset-0 bg-slate-900/25 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <span className="text-sm font-bold text-white uppercase tracking-wider px-4 py-2 rounded-full bg-black/30">
+                                            View profile 
+                                        </span>
+                                    </div>
+                                </>
                             ) : (
                                 <div className="h-full w-full flex items-center justify-center bg-gray-300 text-gray-600 text-xs text-center p-2">
                                     {!item.image ? 'No photo' : 'Image not found'}
@@ -49,11 +56,11 @@ const ChromaGrid = ({ items, onImageClick }) => {
                     </div>
 
                     {/* Bottom: Info Section (Teal Background Area) */}
-                    <div className="px-5 pb-6 pt-2">
-                        <h4 className="text-lg font-black text-white mb-0.5 tracking-tight line-clamp-1">
+                    <div className="px-4 pb-5 pt-2">
+                        <h4 className="text-xl font-black text-white mb-0.5 tracking-tight line-clamp-1">
                             {item.title}
                         </h4>
-                        <p className="text-[10px] font-bold text-white/80 uppercase tracking-widest mb-4">
+                        <p className="text-xs font-bold text-white/80 uppercase tracking-widest mb-4">
                             {item.subtitle}
                         </p>
 
