@@ -12,7 +12,7 @@ const OrganizationDetails = () => {
     }
 
     return (
-        <div className="pt-6 min-h-screen relative overflow-hidden" style={{ backgroundColor: '#F5F1E8' }}>
+        <div key={orgId} className="pt-6 min-h-screen relative overflow-hidden" style={{ backgroundColor: '#F5F1E8' }}>
             {/* Subtle Ambient Depth */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
                 <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-white rounded-full blur-[150px] -mr-64 -mt-32" />
@@ -24,12 +24,16 @@ const OrganizationDetails = () => {
             <section className="relative py-16 px-6 sm:px-10 lg:px-14 overflow-hidden min-h-[40vh] flex items-center">
                 {/* Hero Background Image */}
                 {data.heroImage && (
-                    <img
-                        src={data.heroImage}
-                        alt=""
-                        className="absolute inset-0 w-full h-full object-cover z-0 filter brightness-[1.1] contrast-[1.05] saturate-[1.05]"
-                        style={{ imageRendering: '-webkit-optimize-contrast' }}
-                    />
+                    <>
+                        <img
+                            src={data.heroImage}
+                            alt=""
+                            className="absolute inset-0 w-full h-full object-cover z-0 filter brightness-100"
+                            style={{ imageRendering: '-webkit-optimize-contrast' }}
+                        />
+                        {/* Beige Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-[#F5F1E8]/80 via-[#F5F1E8]/50 to-[#F5F1E8]/90 z-0 pointer-events-none" />
+                    </>
                 )}
 
                 {/* Sparkle Pattern Overlay - Header Specific */}
@@ -68,8 +72,9 @@ const OrganizationDetails = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="text-4xl sm:text-5xl lg:text-7xl font-black text-teal-900 mb-6 tracking-tight font-serif drop-shadow-2xl"
-                        style={{ textShadow: "2px 2px 4px rgba(255,255,255,0.8)" }}
+                        className={`font-black text-slate-900 mb-6 tracking-tight font-serif drop-shadow-xl ${orgId === 'mmpsrpc' ? 'text-3xl sm:text-4xl lg:text-5xl whitespace-nowrap' : 'text-4xl sm:text-5xl lg:text-7xl'
+                            }`}
+                        style={{ textShadow: "1px 1px 3px rgba(255,255,255,0.7)" }}
                     >
                         {data.title}
                     </motion.h2>
@@ -78,7 +83,7 @@ const OrganizationDetails = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
-                        className="text-lg sm:text-xl lg:text-2xl font-bold text-teal-800/90 max-w-3xl font-serif italic drop-shadow-lg"
+                        className="text-lg sm:text-xl lg:text-2xl font-bold max-w-3xl font-serif italic drop-shadow-md text-slate-800"
                         style={{ textShadow: "1px 1px 2px rgba(255,255,255,0.8)" }}
                     >
                         “{data.subtitle}”
@@ -94,10 +99,10 @@ const OrganizationDetails = () => {
                 <div className="max-w-6xl mx-auto">
                     {/* Description Card - Glassmorphism */}
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
+                        initial={{ opacity: 0, y: 60, scale: 0.95 }}
+                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                        viewport={{ once: true, amount: 0.2 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
                         className="mb-20"
                     >
                         <div
@@ -128,11 +133,11 @@ const OrganizationDetails = () => {
                                 {data.stats.map((stat, index) => (
                                     <motion.div
                                         key={index}
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        whileInView={{ opacity: 1, scale: 1 }}
-                                        viewport={{ once: true }}
+                                        initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                                        viewport={{ once: true, amount: 0.2 }}
                                         whileHover={{ scale: 1.03 }}
-                                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                                        transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
                                         className="text-center group"
                                     >
                                         <div className="mb-4 flex justify-center text-[#00887b]/60 group-hover:text-secondary transition-colors duration-300">
@@ -268,10 +273,10 @@ const OrganizationDetails = () => {
                         <div className="grid md:grid-cols-2 gap-12 mb-32">
                             {data.mission && (
                                 <motion.div
-                                    initial={{ opacity: 0, x: -50 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
+                                    initial={{ opacity: 0, x: -60, scale: 0.95 }}
+                                    whileInView={{ opacity: 1, x: 0, scale: 1 }}
                                     viewport={{ once: true, amount: 0.2 }}
-                                    transition={{ duration: 0.8, ease: "easeOut" }}
+                                    transition={{ duration: 0.4, ease: "easeOut" }}
                                     whileHover={{ y: -10 }}
                                     className="group relative bg-[#FAF8F3]/70 backdrop-blur-md p-14 rounded-[3rem] border-l-8 border-[#00887b] border-r border-t border-b border-white shadow-xl hover:shadow-2xl transition-all duration-500"
                                 >
@@ -286,10 +291,10 @@ const OrganizationDetails = () => {
                             )}
                             {data.vision && (
                                 <motion.div
-                                    initial={{ opacity: 0, x: 50 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
+                                    initial={{ opacity: 0, x: 60, scale: 0.95 }}
+                                    whileInView={{ opacity: 1, x: 0, scale: 1 }}
                                     viewport={{ once: true, amount: 0.2 }}
-                                    transition={{ duration: 0.8, ease: "easeOut" }}
+                                    transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
                                     whileHover={{ y: -10 }}
                                     className="group relative bg-[#FAF8F3]/70 backdrop-blur-md p-14 rounded-[3rem] border-l-8 border-[#00887b] border-r border-t border-b border-white shadow-xl hover:shadow-2xl transition-all duration-500"
                                 >
@@ -324,21 +329,21 @@ const OrganizationDetails = () => {
                                 {data.objectives.map((obj, index) => (
                                     <motion.div
                                         key={index}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                                        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                                        viewport={{ once: true, amount: 0.1 }}
+                                        transition={{ duration: 0.4, delay: index * 0.08, ease: "easeOut" }}
                                         whileHover={{ y: -8, backgroundColor: "#FAF8F3" }}
                                         className="p-10 rounded-[2.5rem] bg-[#FAF8F3]/40 backdrop-blur-sm border border-white/50 shadow-md hover:shadow-2xl transition-all duration-500 group relative overflow-hidden"
                                     >
 
                                         {/* Number Badge */}
-                                        <div className="absolute top-0 right-0 p-6 font-black text-6xl font-serif text-[#00887b]/10 group-hover:scale-125 transition-transform duration-700">
+                                        <div className="absolute top-0 right-0 p-6 font-black text-6xl font-serif text-[#00887b]/30 group-hover:scale-125 transition-transform duration-700">
                                             {index + 1}
                                         </div>
 
 
-                                        <h4 className="text-2xl font-bold text-slate-800 mb-4 font-sans leading-snug group-hover:text-secondary-dark transition-colors duration-300">
+                                        <h4 className="text-2xl font-bold text-slate-800 mb-4 font-sans leading-snug group-hover:text-secondary-dark transition-colors duration-300 pr-12 relative z-10">
                                             {obj.title}
                                         </h4>
                                         <p className="text-slate-500 font-light leading-relaxed group-hover:text-slate-700 font-sans">
@@ -363,10 +368,10 @@ const OrganizationDetails = () => {
                                 {data.features.map((feature, index) => (
                                     <motion.div
                                         key={index}
-                                        initial={{ opacity: 0, x: -10 }}
-                                        whileInView={{ opacity: 1, x: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.5, delay: index * 0.05 }}
+                                        initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                                        viewport={{ once: true, amount: 0.1 }}
+                                        transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut" }}
                                         whileHover={{ x: 10, backgroundColor: "#FAF8F3" }}
                                         className="bg-[#FAF8F3]/50 backdrop-blur-sm p-8 rounded-[2rem] border border-white shadow-sm hover:shadow-xl transition-all group flex items-center gap-6"
                                     >

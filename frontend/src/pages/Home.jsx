@@ -3,7 +3,6 @@ import Hero from '../components/Hero';
 import HeadSRL from '../components/HeadSRL';
 import Objectives from '../components/Objectives';
 import Timeline from '../components/Timeline';
-import ScrollToTopButton from '../components/ScrollToTopButton';
 import SplashCursor from '../components/react-bits/SplashCursor';
 import GradientText from '../components/react-bits/GradientText';
 import Earth from '../components/react-bits/Earth';
@@ -127,9 +126,6 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-
-            {/* Scroll to Top Button */}
-            <ScrollToTopButton />
         </motion.div>
     );
 };

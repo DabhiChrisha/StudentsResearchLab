@@ -96,7 +96,7 @@ const Navbar = () => {
         <>
             <nav className={`sticky 4 top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled ? 'bg-[#FAF9F6]/95 backdrop-blur-md shadow-md py-2' : 'bg-[#FAF9F6] py-3.5'}`}>
                 {/* MAIN CONTAINER */}
-                <div className="max-w-[1600px] mx-auto w-full flex items-center justify-between px-4 lg:px-8">
+                <div className="max-w-[1600px] mx-auto w-full flex items-center justify-between px-4 lg:px-8 xl:px-10">
 
                     {/* WRAPPER 1: LEFT (Logo & Site Title) */}
                     <div className="flex items-center gap-2 lg:gap-3 shrink min-w-0">
@@ -105,10 +105,10 @@ const Navbar = () => {
                                 <img src={srlLogo} alt="SRL" className="w-full h-full object-contain" />
                             </div>
                             <div className="flex flex-col min-w-0">
-                                <h1 className="text-teal-900 font-black text-[9.5px] lg:text-[11px] xl:text-xs 2xl:text-base tracking-tight leading-none whitespace-nowrap">
+                                <h1 className="text-teal-900 font-serif font-bold text-[10px] lg:text-[12px] xl:text-[14px] 2xl:text-[16px] tracking-tight leading-none whitespace-nowrap">
                                     Students Research Lab <span className="text-teal-600">(SRL)</span>
                                 </h1>
-                                <p className="text-teal-800/80 font-bold text-[6px] lg:text-[7px] xl:text-[8px] 2xl:text-[9px] uppercase tracking-widest whitespace-nowrap">
+                                <p className="text-teal-800/80 font-sans font-semibold text-[7px] lg:text-[8px] xl:text-[9px] 2xl:text-[10px] uppercase tracking-[0.18em] whitespace-nowrap">
                                     MMPSRPC, Kadi Sarva Vishwavidyalaya
                                 </p>
                             </div>
@@ -116,14 +116,14 @@ const Navbar = () => {
                     </div>
 
                     {/* WRAPPER 2: CENTER-RIGHT (Navigation Links) */}
-                    <div className="hidden lg:flex items-center justify-end flex-1 px-2 xl:px-4 2xl:px-8">
-                        <div className="flex items-center gap-x-1 lg:gap-x-2 xl:gap-x-3 2xl:gap-x-4">
+                    <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-4 xl:px-8">
+                        <div className="flex items-center justify-between w-full max-w-5xl gap-x-3 xl:gap-x-5">
                             {menuItems.map((item) => (
                                 <NavLink
                                     key={item.label}
                                     to={item.path}
                                     className={({ isActive }) => `
-                                    relative py-1 text-[9px] xl:text-[10px] 2xl:text-[12px] font-black transition-all duration-300 whitespace-nowrap uppercase tracking-wider
+                                    relative py-1.5 text-[12px] xl:text-[13px] 2xl:text-[15px] font-sans font-semibold transition-all duration-300 whitespace-nowrap tracking-[0.08em]
                                     ${isActive ? "text-teal-700" : "text-teal-900/70 hover:text-teal-900"}
                                     group/link
                                 `}
@@ -142,7 +142,7 @@ const Navbar = () => {
                             >
                                 <button
                                     onClick={() => setIsAboutClicked(!isAboutClicked)}
-                                    className={`flex items-center gap-1 py-1 text-[9px] xl:text-[10px] 2xl:text-[12px] font-black transition-all whitespace-nowrap uppercase tracking-wider relative group/aboutlink ${isAboutActive ? 'text-teal-700' : 'text-teal-900/70 hover:text-teal-900'}`}
+                                    className={`flex items-center gap-1 py-1.5 text-[12px] xl:text-[13px] 2xl:text-[15px] font-sans font-semibold transition-all whitespace-nowrap tracking-[0.08em] relative group/aboutlink ${isAboutActive ? 'text-teal-700' : 'text-teal-900/70 hover:text-teal-900'}`}
                                 >
                                     About Us <ChevronDown size={14} className={`transition-transform duration-300 ${aboutDropdownOpen ? 'rotate-180' : ''}`} />
                                     <span className={`absolute bottom-0 left-0 h-[3px] bg-teal-600 transition-all duration-300 ${isAboutActive ? 'w-full' : 'w-0 group-hover/aboutlink:w-full'}`}></span>
@@ -171,7 +171,7 @@ const Navbar = () => {
                     {/* WRAPPER 3: RIGHT (Buttons & Partner Logos) */}
                     <div className="flex items-center justify-end gap-x-2 xl:gap-x-4 shrink-0">
                         <div className="hidden lg:flex items-center gap-x-1.5 xl:gap-x-2">
-                            <Link to="/join" className="relative px-4 py-2 bg-[#E6B800] text-white font-black rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.10)] uppercase tracking-wider text-[10px] xl:text-[11px] 2xl:text-[13px] whitespace-nowrap overflow-hidden group">
+                            <Link to="/join" className="relative px-4 py-2 bg-[#E6B800] text-white font-sans font-bold rounded-full shadow-[0_2px_8px_0_rgba(0,0,0,0.10)] uppercase tracking-[0.08em] text-[11px] xl:text-[12px] 2xl:text-[13px] whitespace-nowrap overflow-hidden group">
                                 <span className="relative z-10">Join Us</span>
                                 {/* Shine Animation */}
                                 <span className="absolute left-[-75%] top-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/70 to-transparent opacity-80 animate-shine" />
@@ -191,8 +191,8 @@ const Navbar = () => {
                             </a>
                         </div>
 
-                        {/* Partner logos only visible on xl+ */}
-                        <div className="hidden xl:flex items-center gap-x-2 2xl:gap-x-4 border-l border-teal-900/10 pl-3 2xl:pl-6 shrink-0">
+                        {/* Partner logos only visible on 2xl+ to keep nav breathing room on laptop widths */}
+                        <div className="hidden 2xl:flex items-center gap-x-2 2xl:gap-x-4 border-l border-teal-900/10 pl-3 2xl:pl-6 shrink-0">
                             <a href="https://www.svkm.org.in/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300">
                                 <img src={svkmLogo} alt="SVKM" className="h-8 xl:h-9 2xl:h-12 w-auto object-contain" />
                             </a>

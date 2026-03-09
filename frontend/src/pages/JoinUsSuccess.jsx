@@ -33,10 +33,10 @@ const JoinUsSuccess = () => {
                         Application Submitted!
                     </h1>
                     <p className="text-lg text-slate-600 mb-6">
-                        Welcome to the SRL community! 🎉
+                       You have filled the form successful
                     </p>
                     <p className="text-slate-500 max-w-lg mx-auto mb-8">
-                        Your membership application has been received successfully. Our team will review your application and get back to you soon. You'll receive an email confirmation shortly.
+                        Your membership application has been received successfully. Your application will be reviewed by Dr. Himani Trivedi ma'am, Head Students Research Lab, MMPSRPC, KSV.
                     </p>
                 </motion.div>
 

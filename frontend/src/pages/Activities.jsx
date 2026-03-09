@@ -31,7 +31,12 @@ const Activities = () => {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pt-10 pb-20 px-6 bg-gradient-to-b from-[#ecfeff] via-white to-white">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="text-center mb-10 md:mb-16"></div>
+                <div className="text-center mb-10 md:mb-16">
+                    <h1 className="text-5xl md:text-7xl font-serif font-extrabold uppercase tracking-tighter text-gray-900 mb-6 drop-shadow-lg inline-block px-8 py-2 rounded-xl transition-all duration-300 cursor-pointer">ACTIVITIES</h1>
+                    <p className="max-w-2xl mx-auto text-lg md:text-2xl text-gray-500 font-medium">
+                        Discover the various initiatives and events organized by Students Research Lab to foster a culture of innovation and excellence.
+                    </p>
+                </div>
 
                 {/* Loading */}
                 {loading && <div className="text-center text-gray-400 py-20 text-lg">Loading activities...</div>}
@@ -46,7 +51,7 @@ const Activities = () => {
                         {activities.map((act, i) => (
                             <div
                                 key={act.id || i}
-                                className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition cursor-pointer flex flex-col overflow-hidden group min-h-[170px] md:min-h-[190px]"
+                                className="bg-white rounded-2xl shadow-lg transition cursor-pointer flex flex-col overflow-hidden group min-h-[170px] md:min-h-[190px] neon-gradient-border"
                                 onClick={() => setModal(act)}
                             >
                                 {act.image && (
