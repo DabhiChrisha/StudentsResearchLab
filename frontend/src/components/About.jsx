@@ -46,22 +46,31 @@ const About = () => {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="bg-white rounded-[2rem] shadow-xl border border-teal-50 overflow-hidden hover:shadow-2xl transition-shadow duration-500"
+                        className="relative rounded-[2rem] shadow-xl border border-teal-50 overflow-hidden hover:shadow-2xl transition-shadow duration-500"
                     >
+                        {/* Background Image Layer */}
+                        {organizationData.svkm.heroImage && (
+                            <img
+                                src={organizationData.svkm.heroImage}
+                                alt=""
+                                className="absolute inset-0 w-full h-full object-cover filter brightness-[1.1] contrast-[1.05] saturate-[1.1]"
+                                style={{ imageRendering: '-webkit-optimize-contrast' }}
+                            />
+                        )}
                         <button
                             onClick={() => toggleAccordion('svkm')}
-                            className="w-full px-8 py-8 flex items-center justify-between text-left group"
+                            className="w-full px-8 py-8 flex items-center justify-between text-left group relative z-10"
                         >
                             <div className="flex items-center gap-6">
-                                <div className="w-16 h-16 bg-teal-50/50 rounded-2xl p-2 flex items-center justify-center group-hover:bg-teal-50 transition-colors">
+                                <div className="w-16 h-16 flex items-center justify-center">
                                     <img src={organizationData.svkm.image} alt="SVKM" className="h-full object-contain" />
                                 </div>
                                 <div>
-                                    <h4 className="text-xl font-bold text-teal-900 font-sans">Sarva Vidyalaya Kelavani Mandal (SVKM)</h4>
-                                    <p className="text-xs text-teal-600 font-bold uppercase tracking-[0.2em] mt-1">Our Founding Trust</p>
+                                    <h4 className="text-xl font-bold text-teal-900 font-sans drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]">Sarva Vidyalaya Kelavani Mandal (SVKM)</h4>
+                                    <p className="text-xs text-teal-800 font-black uppercase tracking-[0.2em] mt-1 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">Our Founding Trust</p>
                                 </div>
                             </div>
-                            <ChevronDown className={`w-6 h-6 text-teal-400 transition-transform duration-500 ${openAccordion === 'svkm' ? 'rotate-180' : ''}`} />
+                            <ChevronDown className={`w-6 h-6 text-teal-900 transition-transform duration-500 drop-shadow-md ${openAccordion === 'svkm' ? 'rotate-180' : ''}`} />
                         </button>
                         <AnimatePresence>
                             {openAccordion === 'svkm' && (
@@ -100,22 +109,31 @@ const About = () => {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.1 }}
-                        className="bg-white rounded-[2rem] shadow-xl border border-teal-50 overflow-hidden hover:shadow-2xl transition-shadow duration-500"
+                        className="relative rounded-[2rem] shadow-xl border border-teal-50 overflow-hidden hover:shadow-2xl transition-shadow duration-500"
                     >
+                        {/* Background Image Layer */}
+                        {organizationData.ksv.heroImage && (
+                            <img
+                                src={organizationData.ksv.heroImage}
+                                alt=""
+                                className="absolute inset-0 w-full h-full object-cover filter brightness-[1.1] contrast-[1.05] saturate-[1.1]"
+                                style={{ imageRendering: '-webkit-optimize-contrast' }}
+                            />
+                        )}
                         <button
                             onClick={() => toggleAccordion('ksv')}
-                            className="w-full px-8 py-8 flex items-center justify-between text-left group"
+                            className="w-full px-8 py-8 flex items-center justify-between text-left group relative z-10"
                         >
                             <div className="flex items-center gap-6">
-                                <div className="w-16 h-16 bg-teal-50/50 rounded-2xl p-2 flex items-center justify-center group-hover:bg-teal-50 transition-colors">
+                                <div className="w-16 h-16 flex items-center justify-center">
                                     <img src={organizationData.ksv.image} alt="KSV" className="h-full object-contain" />
                                 </div>
                                 <div>
-                                    <h4 className="text-xl font-bold text-teal-900 font-sans">Kadi Sarva Vishwavidyalaya (KSV)</h4>
-                                    <p className="text-xs text-teal-600 font-bold uppercase tracking-[0.2em] mt-1">Our University</p>
+                                    <h4 className="text-xl font-bold text-teal-900 font-sans drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]">Kadi Sarva Vishwavidyalaya (KSV)</h4>
+                                    <p className="text-xs text-teal-800 font-black uppercase tracking-[0.2em] mt-1 drop-shadow-[0_1px_2px_rgba(255,255,255,0.9)]">Our University</p>
                                 </div>
                             </div>
-                            <ChevronDown className={`w-6 h-6 text-teal-400 transition-transform duration-500 ${openAccordion === 'ksv' ? 'rotate-180' : ''}`} />
+                            <ChevronDown className={`w-6 h-6 text-teal-900 transition-transform duration-500 drop-shadow-md ${openAccordion === 'ksv' ? 'rotate-180' : ''}`} />
                         </button>
                         <AnimatePresence>
                             {openAccordion === 'ksv' && (
@@ -140,6 +158,69 @@ const About = () => {
                                         <div className="mt-8">
                                             <Link to="/organization/ksv" className="inline-flex items-center gap-2 px-6 py-3 bg-teal-900 text-white rounded-full font-bold text-sm hover:bg-teal-800 transition-all shadow-lg hover:shadow-teal-900/20">
                                                 Explore KSV University <ExternalLink size={14} />
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </motion.div>
+
+                    {/* MMPSRPC Section */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, delay: 0.2 }}
+                        className="relative rounded-[2rem] shadow-xl border border-teal-50 overflow-hidden hover:shadow-2xl transition-shadow duration-500"
+                    >
+                        {/* Background Image Layer */}
+                        {organizationData.mmpsrpc.heroImage && (
+                            <img
+                                src={organizationData.mmpsrpc.heroImage}
+                                alt=""
+                                className="absolute inset-0 w-full h-full object-cover filter brightness-[1.1] contrast-[1.05] saturate-[1.1]"
+                                style={{ imageRendering: '-webkit-optimize-contrast' }}
+                            />
+                        )}
+                        <button
+                            onClick={() => toggleAccordion('mmpsrpc')}
+                            className="w-full px-8 py-8 flex items-center justify-between text-left group relative z-10"
+                        >
+                            <div className="flex items-center gap-6">
+                                <div className="w-16 h-16 flex items-center justify-center">
+                                    <img src={organizationData.mmpsrpc.image} alt="MMPSRPC" className="h-full object-contain" />
+                                </div>
+                                <div>
+                                    <h4 className="text-xl font-bold text-teal-900 font-sans drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]">M. M. Patel Students Research Project Cell</h4>
+                                    <p className="text-xs text-teal-800 font-black uppercase tracking-[0.2em] mt-1 drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)]">Our Research Hub</p>
+                                </div>
+                            </div>
+                            <ChevronDown className={`w-6 h-6 text-teal-900 transition-transform duration-500 drop-shadow-md ${openAccordion === 'mmpsrpc' ? 'rotate-180' : ''}`} />
+                        </button>
+                        <AnimatePresence>
+                            {openAccordion === 'mmpsrpc' && (
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: "auto", opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                                >
+                                    <div className="px-8 pb-8 pt-2">
+                                        <div className="h-[1px] w-full bg-teal-50 mb-8" />
+                                        <div className="prose prose-slate max-w-none">
+                                            <p className="text-gray-600 leading-relaxed text-lg font-light text-justify italic">
+                                                “{organizationData.mmpsrpc.description[0]}”
+                                            </p>
+                                        </div>
+                                        <div className="mt-8 flex flex-wrap gap-3">
+                                            {["Innovation", "Research", "Excellence"].map((f, i) => (
+                                                <span key={i} className="px-4 py-1.5 bg-teal-50 text-[10px] font-black text-teal-700 rounded-full uppercase tracking-wider">{f}</span>
+                                            ))}
+                                        </div>
+                                        <div className="mt-8">
+                                            <Link to="/organization/mmpsrpc" className="inline-flex items-center gap-2 px-6 py-3 bg-teal-900 text-white rounded-full font-bold text-sm hover:bg-teal-800 transition-all shadow-lg hover:shadow-teal-900/20">
+                                                Explore MMPSRPC Cell <ExternalLink size={14} />
                                             </Link>
                                         </div>
                                     </div>

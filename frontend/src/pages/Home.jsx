@@ -3,6 +3,11 @@ import Hero from '../components/Hero';
 import HeadSRL from '../components/HeadSRL';
 import Objectives from '../components/Objectives';
 import Timeline from '../components/Timeline';
+import SplashCursor from '../components/react-bits/SplashCursor';
+import GradientText from '../components/react-bits/GradientText';
+import Earth from '../components/react-bits/Earth';
+import { SparklesCore } from '../components/react-bits/SparklesCore';
+import { Suspense } from 'react';
 
 const Home = () => {
     return (
@@ -16,35 +21,108 @@ const Home = () => {
             {/* 1. Hero Section */}
             <Hero />
 
-            {/* 3. Head SRL Profile */}
+            {/* 2. Head SRL Profile */}
             <HeadSRL />
 
-            {/* 4. Objectives Section */}
+            {/* 3. Objectives Section */}
             <Objectives />
 
-            {/* 5. Timeline Section */}
+            {/* 4. Timeline Section */}
             <Timeline />
 
-            {/* 6. Impact Metrics */}
-            <section id="impact" className="py-32 px-4 bg-slate-900 overflow-hidden relative">
-                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/graphy.png')` }} />
-                <div className="max-w-7xl mx-auto relative z-10">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-                        {[
-                            { label: 'Active Researchers', value: '500+' },
-                            { label: 'Papers Published', value: '120+' },
-                            { label: 'Patent Filings', value: '15' },
-                            { label: 'Awards Won', value: '45' }
-                        ].map((stat, i) => (
-                            <div key={i} className="text-center">
-                                <div className="text-7xl font-black text-secondary mb-4 font-serif leading-none tracking-tighter">
-                                    {stat.value}
+            {/* 5. Impact Metrics */}
+            <section id="impact" className="py-12 px-4 bg-white relative overflow-hidden">
+                <SplashCursor />
+                
+                <div className="max-w-7xl mx-auto">
+                    {/* Main Container matching the reference image style */}
+                    <div className="bg-[#f2f9f7] rounded-[3.5rem] p-8 md:p-16 relative overflow-hidden border border-slate-100 shadow-sm">
+                        
+                        {/* LEFT: Sparkles Background for the stats side */}
+                        <div className="absolute left-0 top-0 w-1/2 h-full pointer-events-none">
+                            <SparklesCore
+                                id="tsparticlesimpact"
+                                background="transparent"
+                                minSize={0.6}
+                                maxSize={1.4}
+                                particleDensity={100}
+                                className="w-full h-full"
+                                particleColor="#05877a"
+                            />
+                        </div>
+
+                        {/* Subtle background pattern/texture */}
+                        <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#05877a 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+                        
+                        <div className="relative z-10 flex flex-col lg:flex-row items-stretch gap-12">
+                            
+                            {/* LEFT: Impact Metrics Stats */}
+                            <div className="w-full lg:w-5/12 flex flex-col justify-center">
+                                <div className="mb-10">
+                                    <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">Impact Metrics</h2>
+                                    <p className="text-slate-500 text-lg">Measurable outcomes of our commitment to excellence.</p>
                                 </div>
-                                <div className="text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px]">
-                                    {stat.label}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {[
+                                        { icon: "👨‍🔬", label: "Active Researchers", value: "35+" },
+                                        { icon: "📄", label: "Papers Published", value: "10+" },
+                                        { icon: "⚙️", label: "Patent Filings", value: "2" },
+                                        { icon: "🏆", label: "Awards Won", value: "5+" }
+                                    ].map((stat, i) => (
+                                        <motion.div
+                                            key={i}
+                                            initial={{ opacity: 0, y: 10 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            transition={{ duration: 0.4, delay: i * 0.1 }}
+                                            viewport={{ once: true }}
+                                            className="bg-white/70 backdrop-blur-sm border border-slate-200/50 p-6 rounded-3xl flex flex-col items-start group hover:bg-white transition-colors"
+                                        >
+                                            <div className="text-3xl font-bold text-[#05877a] mb-1">
+                                                {stat.value}
+                                            </div>
+                                            <div className="text-slate-500 text-sm font-medium">
+                                                {stat.label}
+                                            </div>
+                                        </motion.div>
+                                    ))}
                                 </div>
                             </div>
-                        ))}
+
+                            {/* RIGHT: Deep Teal Globe Card exactly like the image */}
+                            <div className="w-full lg:w-7/12">
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    transition={{ duration: 0.6 }}
+                                    viewport={{ once: true }}
+                                    className="relative h-[480px] md:h-[550px] overflow-hidden rounded-[3rem] bg-[#05877a] p-8 md:p-14 text-white shadow-2xl flex flex-col justify-start"
+                                >
+                                    <h3 className="relative z-20 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1]">
+                                        Advancing <br />
+                                        knowledge <br />
+                                        through <br />
+                                        innovative <br />
+                                        research.
+                                    </h3>
+                                    
+                                    <div className="absolute -right-24 -bottom-24 z-10 w-[450px] md:w-[600px] aspect-square flex items-center justify-center pointer-events-none">
+                                        <Suspense fallback={<div className="animate-pulse bg-white/10 rounded-full w-64 h-64" />}>
+                                            <Earth
+                                                className="w-full h-full"
+                                                scale={1.2}
+                                                dark={1}
+                                                baseColor={[1, 1, 1]}
+                                                markerColor={[0.1, 0.7, 0.6]}
+                                                glowColor={[0.1, 0.8, 0.7]}
+                                            />
+                                        </Suspense>
+                                    </div>
+                                    
+                                    {/* Subtle Overlay Shine */}
+                                    <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent opacity-30" />
+                                </motion.div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

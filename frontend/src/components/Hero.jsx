@@ -12,16 +12,16 @@ export default function Hero() {
     const slides = [
         {
             image: slide1,
-            // Mobile: Center | Desktop: Top Right
-            align: "justify-center items-center text-center md:justify-start md:items-end md:text-right md:pt-24 lg:pt-32",
+            // Slide 1: Special desktop right alignment
+            align: "md:items-end md:text-right md:justify-end",
         },
         {
             image: slide2,
-            align: "items-center justify-center text-center",
+            align: "md:items-center md:text-center md:justify-center",
         },
         {
             image: slide3,
-            align: "items-center justify-center text-center",
+            align: "md:items-center md:text-center md:justify-center",
         },
     ];
 
@@ -34,27 +34,32 @@ export default function Hero() {
     }, [slides.length]);
 
     return (
-        <section id="top" className="relative h-[80vh] lg:h-[85vh] w-full overflow-hidden flex items-center justify-center bg-slate-900">
+        <section id="top" className="relative w-full h-screen overflow-hidden flex items-center justify-center bg-slate-900">
 
             {/* ===== BACKGROUND SLIDES ===== */}
             {slides.map((slide, index) => (
-                <div 
+                <div
                     key={index}
-                    className={`absolute inset-0 w-full h-full transition-all duration-[1200ms] ease-in-out ${index === current ? "opacity-100 z-10 scale-100" : "opacity-0 z-0 scale-105"}`}
+                    className={`absolute inset-0 w-full h-full transition-all duration-[1200ms] ease-in-out ${index === current ? "opacity-100 z-10" : "opacity-0 z-0"}`}
                 >
+                    {/* The Full Image - covers entire screen */}
                     <img
                         src={slide.image}
                         alt="hero"
-                        className="w-full h-full object-cover object-center"
+                        className="absolute inset-0 w-full h-full object-cover"
                     />
-                    {/* Overlay for readability */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+
+                    {/* Dark overlay for readability */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70" />
                 </div>
             ))}
 
             {/* ===== TEXT CONTAINER ===== */}
             <div
-                className={`absolute inset-0 z-20 flex flex-col px-4 sm:px-6 md:px-16 ${slides[current].align} transition-all duration-700 pointer-events-none`}
+                className={`absolute inset-0 z-20 flex flex-col px-4 sm:px-6 md:px-16 
+                items-center text-center justify-end pb-24 sm:pb-32
+                ${slides[current].align} md:pb-0
+                transition-all duration-700 pointer-events-none`}
             >
                 <div className="max-w-3xl w-full">
 
@@ -68,7 +73,7 @@ export default function Hero() {
                     )}
 
                     {/* 👉 YOUR EXACT TEXT STYLE */}
-                    <h1 className="text-white font-serif text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight drop-shadow-lg leading-tight">
+                    <h1 className="text-white font-serif text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight drop-shadow-lg leading-tight">
                         Students Research Lab
                     </h1>
 

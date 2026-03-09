@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Trophy, Medal, Star, Target, Zap, Clock, TrendingUp, Users, Award, BookOpen, Crown, Search } from "lucide-react";
 import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabaseClient';
 
 // Single source of truth for student metadata. 
 // Scores will be fetched from backend and merged into these profiles.
@@ -17,6 +18,7 @@ const STUDENT_PROFILES = [
     { name: "Yash Kumavat", enrollment: "24BECE30122", dept: "CE", semester: "4th", div: "B", batch: "2024-2028", image: encodeURI("/students/Yash Kumavat.jpeg"), attendance: 10 },
     { name: "Halvdadiya Rudr", enrollment: "24BECE30094", dept: "CE", semester: "4th", div: "B", batch: "2024-2028", image: encodeURI("/students/Halvdadiya Rudr.jpeg"), attendance: 10 },
     { name: "Gajjar Antra Ashvinkumar", enrollment: "24BECE30081", dept: "CE", semester: "4th", div: "B", batch: "2024-2028", image: encodeURI("/students/Gajjar Antra Ashvinkumar.jpeg"), attendance: 10 },
+    { name: "Jadeja Bhagyashree Vanrajsinh", enrollment: "24BECE30099", dept: "CE", semester: "4th", div: "B", batch: "2024-2028", image: encodeURI("/students/Jadeja Bhagyashree.jpeg"), attendance: 10 },
     { name: "Chavda Yashvi Surendrasinh", enrollment: "23BECE30036", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: encodeURI("/students/Chavda Yashvi Surendrasinh.jpeg"), attendance: 3 },
     { name: "Devda Rachita Bharatsinh", enrollment: "23BECE30059", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: encodeURI("/students/Devda Rachita Bharatsinh.jpeg"), attendance: 2 },
     { name: "Ghetiya Poojan Rahulbhai", enrollment: "25MECE30003", dept: "CE", semester: "1st", div: "J", batch: "2025-2027", image: encodeURI("/students/Ghetiya Poojan Rahulbhai.jpeg"), attendance: 2 },
@@ -52,24 +54,51 @@ const LeaderBoard = () => {
     useEffect(() => {
         const fetchScores = async () => {
             try {
-                // Fetch dynamic scores and attendance records from the backend
-                const [scoresResponse, attendanceResponse, srlResponse] = await Promise.all([
-                    fetch(`${API_BASE}/api/scores`),
+                // Fetch attendance records from backend; scores/names from Supabase
+                const [attendanceResponse, srlResponse] = await Promise.all([
                     fetch(`${API_BASE}/api/attendance`),
                     fetch(`${API_BASE}/api/srl_sessions`)
                 ]);
 
+<<<<<<< HEAD
                 if (!scoresResponse.ok || !attendanceResponse.ok || !srlResponse.ok) throw new Error("Failed to fetch backend data");
 
                 const scoresData = await scoresResponse.json();
+=======
+                if (!attendanceResponse.ok || !srlResponse.ok) throw new Error("Failed to fetch backend data");
+
+                const { data: debateScores, error: scoresError } = await supabase
+                    .from("debate_scores")
+                    .select("enrollment_no, total_points");
+
+                if (scoresError) {
+                    throw new Error(`Failed to fetch debate_scores: ${scoresError.message}`);
+                }
+
+                const { data: studentDetails, error: namesError } = await supabase
+                    .from("students_details")
+                    .select("enrollment_no, student_name");
+
+                if (namesError) {
+                    throw new Error(`Failed to fetch students_details: ${namesError.message}`);
+                }
+                
+>>>>>>> b045e6ddc1daf9bcdbe56885cce42e171507beef
                 const attendanceData = await attendanceResponse.json();
                 const srlData = await srlResponse.json();
 
                 // Construct a score map: { "enrollment_no": total_points }
                 const scoreMap = {};
-                scoresData.records.forEach(record => {
+                (debateScores || []).forEach(record => {
                     const normalized = String(record.enrollment_no || "").trim().toUpperCase();
-                    scoreMap[normalized] = record.total_points;
+                    scoreMap[normalized] = record.total_points || 0;
+                });
+
+                // Construct a name map from student_details
+                const nameMap = {};
+                (studentDetails || []).forEach(record => {
+                    const normalized = String(record.enrollment_no || "").trim().toUpperCase();
+                    nameMap[normalized] = record.student_name || "";
                 });
 
                 // Construct an attendance map for percentage calculation
@@ -120,6 +149,7 @@ const LeaderBoard = () => {
                     return {
                         ...student,
                         id: student.id || index + 1, // Fallback ID if not provided
+                        name: nameMap[studentEnrollment] || student.name,
                         score: score,
                         attendance: percentage, // Overwrite hardcoded static attribute
                         srlAttendance: srlPercentage // Add SRL attribute

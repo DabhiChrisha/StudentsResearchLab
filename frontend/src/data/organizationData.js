@@ -1,6 +1,9 @@
 import svkmLogo from "../assets/svkm.png";
 import ksvLogo from "../assets/KSV Logo.png";
 import mmpsrpcLogo from "../assets/MMPSRPC Logo.png";
+import ksvCampus from "../assets/ksv_campus.jpg";
+import mmpsrpcCampus from "../assets/mmpsrpc_campus.jpeg";
+import svkmCampus from "../assets/svkm_campus.jpg";
 import chhaganbhaPhoto from "../assets/pujya_chhaganbha.jpg";
 import shriManeklal from "../assets/shri_maneklal_patel.jpg";
 import chairmanPhoto from "../assets/chairman.png";
@@ -11,9 +14,10 @@ export const organizationData = {
         title: "Sarva Vidyalaya Kelavani Mandal",
         subtitle: "કર ભલા હોગા ભલા.",
         image: svkmLogo,
+        heroImage: svkmCampus,
         website: "https://svkm.org.in/",
         description: [
-            "Sarva Vidyalaya Kelavani Mandal (SVKM) was founded in 1919 by the visionary philanthropist Pujya Chhaganbha, whose guiding philosophy, 'કર ભલા, હોગા ભલા' (Do good, and good will come), continues to inspire the institution's journey in education and service. From its humble beginning with just six students, SVKM has grown into a vast educational network, now nurturing the academic aspirations of over 54,000 students across Kadi and Gandhinagar."
+            "Sarva Vidyalaya Kelavani Mandal (SVKM) was founded in 1919 by the visionary philanthropist Pujya Chhaganbha, whose guiding philosophy, 'કર ભલા, હોગા ભલા' (Do good, and good will come), continues to inspire the institution's journey in education and service. From its humble beginning with just six students, SVKM has grown into a vast educational network, now nurturing the academic aspirations of over 54,000 students across Kadi and Gandhinagar. Sarva Vidyalaya Kelavani Mandal, with over 106 years of history, is one of India's oldest educational trusts. It operates schools across different levels and offers a wide range of programs, including CBSE and GSEB schools, as well as undergraduate, graduate, and doctoral studies in fields such as engineering, sciences, management, arts, and healthcare. Guided by core principles of innovation, entrepreneurship, academic rigor, and the humanities, SVKM focuses on fostering holistic development for students, faculty, and society."
         ],
         stats: [
             { label: "Years of Legacy", value: "100+" },
@@ -58,9 +62,10 @@ export const organizationData = {
         title: "Kadi Sarva Vishwavidyalaya",
         subtitle: "કર ભલા હોગા ભલા.",
         image: ksvLogo,
+        heroImage: ksvCampus,
         website: "https://ksv.ac.in/",
         description: [
-            "Kadi Sarva Vishwavidyalaya (KSV) was established in May 2007 under the Gujarat State Government Act 21 of 2007 and is recognized by the University Grants Commission (UGC). Founded by Sarva Vidyalaya Kelavani Mandal (SVKM), a philanthropic trust with over 105 years of legacy guided by the principle 'Kar Bhala, Hoga Bhala' (Do good, and good will come), the university is dedicated to providing inclusive, value-based education to students from all sections of society.The university's growth was significantly strengthened by the visionary leadership of Late Shri Maneklal M. Patel, under whom the Gandhinagar and Kadi campuses and their constituent colleges were unified in March 2012 under the umbrella of KSV. Today, with 23+ constituent colleges and departments across its campuses, KSV offers contemporary, need-based programs while promoting research, innovation, and holistic development for societal and economic advancement."
+            "Kadi Sarva Vishwavidyalaya (KSV) was established in May 2007 under the Gujarat State Government Act 21 of 2007 and is recognized by the University Grants Commission (UGC). Founded by Sarva Vidyalaya Kelavani Mandal (SVKM), a philanthropic trust with over 106 years of legacy guided by the principle 'Kar Bhala, Hoga Bhala' (Do good, and good will come), the university is dedicated to providing inclusive, value-based education to students from all sections of society.The university's growth was significantly strengthened by the visionary leadership of Late Shri Maneklal M. Patel, under whom the Gandhinagar and Kadi campuses and their constituent colleges were unified in March 2012 under the umbrella of KSV. Today, with 23+ constituent colleges and departments across its campuses, KSV offers contemporary, need-based programs while promoting research, innovation, and holistic development for societal and economic advancement."
         ],
         stats: [
             { label: "Acre Campus", value: "100+" },
@@ -101,8 +106,9 @@ export const organizationData = {
         subtitle: "For the students, By the students, Of the students!",
         website: "https://www.mmpsrpc.in/",
         image: mmpsrpcLogo,
+        heroImage: mmpsrpcCampus,
         description: [
-            "Established in 2024, the M. M. Patel Students Research Project Cell (MMPSRPC) was founded with the vision of fostering a strong research culture and academic excellence among students at KSV University. It was created as a dynamic platform to encourage young minds to explore research, innovation, and interdisciplinary learning while actively contributing to the academic community.Since its inception, MMPSRPC has evolved from a small group of motivated students into a vibrant and collaborative community of researchers, mentors, and faculty members. Driven by a commitment to nurturing talent and promoting meaningful research, the cell continues to empower students to think critically, innovate, and push the boundaries of knowledge."
+            "M. M. Patel Students Research Project Cell (MMPSRPC) was founded with the vision of fostering a strong research culture and academic excellence among students at KSV University. It was created as a dynamic platform to encourage young minds to explore research, innovation, and interdisciplinary learning while actively contributing to the academic community.Since its inception, MMPSRPC has evolved from a small group of motivated students into a vibrant and collaborative community of researchers, mentors, and faculty members. Driven by a commitment to nurturing talent and promoting meaningful research, the cell continues to empower students to think critically, innovate, and push the boundaries of knowledge."
         ],
         stats: [
             { label: "Ongoing Projects", value: "17+" },
@@ -134,8 +140,7 @@ export const organizationData = {
                 cardQuote: "Growth comes from steady effort, continuous learning, and discipline.",
                 mainQuote: "Aspirations, curiosity, excellence, and dedication form the foundation of the Students Research Project Cell. For the students, By the students, Of the students!",
                 message: [
-                    "Aspirations, curiosity, excellence, and dedication form the foundation of SRL — a space created to nurture disciplined, research-driven minds. SRL is designed to foster academic rigor, consistency, and intellectual growth.",
-                    "Through structured mentorship and purpose-driven initiatives, students are guided toward meaningful research and long-term impact. This guidance helps students to succeed in their future careers and make valuable contribution to society."
+                    "Dedicated to fostering the growth of KSV students, the M. M. Patel Students Research Project Cell upholds a strong commitment to academic excellence. The Students Research Cell empowers skill development through meaningful activities and opportunities that strengthen knowledge and growth of students. This guidance and support helps students to succeed in their future careers and make valuable contribution to the society."
                 ]
             }
         ],

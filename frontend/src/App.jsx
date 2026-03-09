@@ -7,6 +7,8 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import AnimatedPreloader from './components/AnimatedPreloader';
 import ScrollToTop from './components/ScrollToTop';
+import ScrollToTopButton from './components/ScrollToTopButton';
+import MobileDock from './components/MobileDock';
 import Background from './components/Background';
 
 // Page Components
@@ -42,7 +44,7 @@ function App() {
             <Background />
             <Navbar />
 
-            <div id="main-content" className="flex-1 w-full h-full overflow-y-auto overflow-x-hidden relative z-10 pt-0 pb-0">
+            <div id="main-content" className="flex-1 w-full h-full overflow-y-auto overflow-x-hidden relative z-10 pt-[72px] lg:pt-[88px] pb-0">
               <AnimatePresence mode="wait">
                 <Routes>
                   <Route path="/" element={<Home />} />
@@ -61,6 +63,9 @@ function App() {
 
               <Footer />
             </div>
+
+            <ScrollToTopButton />
+            <MobileDock />
           </>
         )}
       </div>

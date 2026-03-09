@@ -11,8 +11,11 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.97.0",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.9.1",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
+    "cobe": "^0.6.5",
     "framer-motion": "^12.34.3",
     "lucide-react": "^0.575.0",
     "motion": "^12.34.3",

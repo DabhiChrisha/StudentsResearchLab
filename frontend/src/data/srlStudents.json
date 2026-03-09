@@ -109,6 +109,34 @@
         ]
     },
     {
+        "student_name": "Yajurshi Velani",
+        "enrollment_no": "24BECE30441",
+        "department": "CE",
+        "semester": "4",
+        "division": "F",
+        "batch": "2024-2028",
+        "email": "yajurshivelani@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/yajurshi-velani",
+        "photo": "/students/Yajurshi Velani.png",
+        "contact_no": "8799123685",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "Through SRL, I learned that consistent efforts and disciplined effort are key to meaningful growth.",
+        "research": [
+            "Embedded Systems",
+            "Robotics"
+        ],
+        "researchWorks": [
+            "Autonomous Warehouse Robot",
+            "Low-power Sensor Networks"
+        ],
+        "achievements": [
+            "RoboCon 2024 Semi-finalist",
+            "Academic Excellence Award"
+        ]
+    },
+    {
         "student_name": "Yash Kumavat",
         "enrollment_no": "24BECE30122",
         "department": "CE",
@@ -230,6 +258,35 @@
         "achievements": [
             "Capture The Flag (CTF) winner",
             "Certified Ethical Hacker (CEH) trainee"
+        ]
+    },
+    {
+        "student_name": "Jadeja Bhagyashree",
+        "enrollment_no": "24BECE30099",
+        "department": "CE",
+        "semester": "4",
+        "division": "B",
+        "batch": "2024-2028",
+        "email": "bhagyashreejadeja76@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/bhagyashree-jadeja-2340b2330?",
+        "photo": "/students/Jadeja Bhagyashree.jpeg",
+        "contact_no": "6356020582",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL provided an environment where questioning, experimenting, and learning from mistakes is encouraged. This experience helped me grow both academically and intellectually",
+        "research": [
+            "Full Stack Development",
+            "Web Technologies"
+        ],
+        "researchWorks": [
+            "Interactive Research Lab Website",
+            "Event Management System"
+        ],
+        "achievements": [
+            "Developed Multiple Web Applications",
+            "Contributor to College Technical Projects"
         ]
     },
     {
@@ -910,6 +967,64 @@
         "linkedin": "https://www.linkedin.com/in/jenish-sorathiya-419b042a5/",
         "photo": "/students/Jenish Sorathiya.jpeg",
         "contact_no": "9099158812",
+        "member_type": "General Members",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "SRL introduced me to a structured research culture that improved my discipline, communication skills, and ability to work in a goal-driven environment.",
+        "research": [
+            "Internet of Things",
+            "Smart Cities"
+        ],
+        "researchWorks": [
+            "IoT-based Garbage Monitoring",
+            "Smart Traffic Lights Implementation"
+        ],
+        "achievements": [
+            "Smart India Hackathon Participant",
+            "IoT Workshop Topper"
+        ]
+    },
+    {
+        "student_name": "Hemant Pande",
+        "enrollment_no": "23BECE30493",
+        "department": "CE",
+        "semester": "6",
+        "division": "P",
+        "batch": "2023-2027",
+        "email": "hp926591@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/hemant-pande926591/",
+        "photo": "/students/Pande Hemant Rameshwarkumar.jpeg",
+        "contact_no": "8780508139",
+        "member_type": "Head-Appointed",
+        "roles": [
+            "Student Member"
+        ],
+        "reflection": "The biggest change SRL brought was clarity in thinking. It taught me how to break complex research problems into manageable steps and stay consistent through uncertainty.",
+        "research": [
+            "Compiler Design",
+            "Operating Systems"
+        ],
+        "researchWorks": [
+            "Custom Language Compiler",
+            "Task Scheduling in RTOS"
+        ],
+        "achievements": [
+            "Open Source Contributor (GSoC)",
+            "Tech Quiz Winner"
+        ]
+    },
+    {
+        "student_name": "Poojan Ghetiya",
+        "enrollment_no": "-",
+        "department": "Masters in CE",
+        "semester": "1",
+        "division": "-",
+        "batch": "-",
+        "email": "ghetiyapoojan@gmail.com",
+        "linkedin": "https://www.linkedin.com/in/ghetiyapoojan/",
+        "photo": "/students/Ghetiya Poojan Rahulbhai.jpeg",
+        "contact_no": "8530088085",
         "member_type": "General Members",
         "roles": [
             "Student Member"

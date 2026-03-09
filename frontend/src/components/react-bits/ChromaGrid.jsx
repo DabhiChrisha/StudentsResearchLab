@@ -13,16 +13,16 @@ const ChromaGrid = ({ items, onImageClick }) => {
     }, [items]);
 
     const handleImageLoad = (index) => {
-        setLoadedImages(prev => ({...prev, [index]: true}));
+        setLoadedImages(prev => ({ ...prev, [index]: true }));
     };
 
     const handleImageError = (index, item) => {
         console.error(`Failed to load image for ${item.title}:`, item.image);
-        setFailedImages(prev => ({...prev, [index]: true}));
+        setFailedImages(prev => ({ ...prev, [index]: true }));
     };
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {items.map((item, index) => (
                 <div
                     key={index}

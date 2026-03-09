@@ -5,73 +5,6 @@ import studentsData from "../data/srlStudents.json";
 import ChromaGrid from "../components/react-bits/ChromaGrid";
 import GradientText from "../components/GradientText";
 
-// --- StudentReflections Component ---
-function StudentReflections() {
-    const [students, setStudents] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        // Filter only students who have reflections
-        const withReflections = studentsData.filter(
-            (student) => student.reflection && student.reflection.trim() !== ""
-        );
-        setStudents(withReflections);
-        setLoading(false);
-    }, []);
-
-    return (
-        <section className="relative py-24 bg-[#0b0f0e] text-white overflow-hidden rounded-2xl sm:rounded-[3rem] my-16 mx-4 sm:mx-8">
-            <div className="max-w-7xl mx-auto px-6">
-                {/* Header */}
-                <div className="mb-16 text-center">
-                    <h2 className="text-4xl font-semibold tracking-tight font-serif">
-                        Student Reflections
-                    </h2>
-                    <p className="mt-4 text-gray-400 max-w-2xl mx-auto font-light">
-                        How being part of SRL reshaped the way students think, research, and execute.
-                    </p>
-                </div>
-
-                {/* Animated Container */}
-                <div className="relative h-[280px] sm:h-[350px] lg:h-[400px] overflow-hidden">
-                    {loading ? (
-                        <div className="flex items-center justify-center h-full text-gray-500">
-                            Loading reflections…
-                        </div>
-                    ) : students.length === 0 ? (
-                        <div className="flex items-center justify-center h-full text-gray-500">
-                            No reflections available yet.
-                        </div>
-                    ) : (
-                        <div className="absolute inset-0 flex flex-col gap-6 animate-scroll-up hover:[animation-play-state:paused]">
-                            {[...students, ...students, ...students].map((student, index) => (
-                                <div
-                                    key={index}
-                                    className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6"
-                                >
-                                    <p className="text-gray-200 leading-relaxed italic">
-                                        “{student.reflection}”
-                                    </p>
-
-                                    <div className="mt-4">
-                                        <p className="font-medium text-secondary">{student.student_name}</p>
-                                        <p className="text-xs text-gray-400">
-                                            {student.department} · {student.semester} Semester
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Fade Effects */}
-            <div className="pointer-events-none absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#0b0f0e] to-transparent" />
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0b0f0e] to-transparent" />
-        </section>
-    );
-}
 
 // --- Main Researchers Component ---
 export default function Researchers() {
@@ -102,12 +35,12 @@ export default function Researchers() {
     const chromaItems = useMemo(() => {
         return members.map((s) => ({
             id: s.enrollment_no || s.student_name.toLowerCase().replace(/\s+/g, "-"),
+            enrollment: s.enrollment_no,
             image: s.photo || "/students/schoolstudent.png",
             title: s.student_name,
             subtitle: `${s.department} • Semester ${s.semester}`,
             email: s.email || "",
             linkedin: s.linkedin || "",
-            reflection: s.reflection || "",
             researchWorks: s.researchWorks || [],
             research: s.research || [],
             achievements: s.achievements || [],
@@ -166,6 +99,7 @@ export default function Researchers() {
                                         <button
                                             onClick={() => openModalFor({
                                                 id: ra.enrollment_no || ra.student_name.toLowerCase().replace(/\s+/g, "-"),
+                                                enrollment: ra.enrollment_no,
                                                 image: ra.photo || "/students/schoolstudent.png",
                                                 title: ra.student_name,
                                                 subtitle: ra.department + " • Semester " + ra.semester,
@@ -179,7 +113,7 @@ export default function Researchers() {
                                             className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-white shadow-xl group-hover:scale-105 transition-transform duration-500 group"
                                         >
                                             <img src={ra.photo || "/students/schoolstudent.png"} alt={ra.student_name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                                            <div className="absolute inset-0 bg-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                                            <div className="absolute inset-0 rounded-full bg-secondary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
                                                 <span className="text-[10px] text-white font-black uppercase tracking-widest bg-secondary px-3 py-1.5 rounded-full shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform">See Profile</span>
                                             </div>
                                         </button>
@@ -229,18 +163,15 @@ export default function Researchers() {
                             Student Members
                         </GradientText>
                     </div>
-                    <ChromaGrid items={chromaItems} onImageClick={(s) => s.reflection && openModalFor(s)} />
+                    <ChromaGrid items={chromaItems} onImageClick={(s) => openModalFor(s)} />
                 </div>
-
-                {/* Reflections Section */}
-                <StudentReflections />
 
             </div>
 
             {/* MODAL */}
             <AnimatePresence>
                 {activeStudent && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-[160] flex flex-col items-center justify-start p-4 md:p-20 overflow-hidden">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -253,58 +184,58 @@ export default function Researchers() {
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                            className="relative bg-white max-w-5xl w-full rounded-2xl sm:rounded-[3rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+                            className="relative mt-8 bg-white max-w-6xl w-full rounded-2xl sm:rounded-[3rem] shadow-2xl overflow-hidden max-h-[94vh] flex flex-col"
                         >
                             {/* Header Buttons */}
-                            <div className="absolute top-6 right-6 z-20 flex gap-2">
+                            <div className="absolute top-4 right-4 z-20 flex gap-2">
                                 <button
                                     onClick={closeModal}
-                                    className="p-2 rounded-full bg-slate-100 text-slate-500 hover:bg-secondary hover:text-white transition-all"
+                                    className="p-1.5 rounded-full bg-slate-100 text-slate-500 hover:bg-secondary hover:text-white transition-all"
                                 >
-                                    <X size={20} />
+                                    <X size={18} />
                                 </button>
                             </div>
 
                             <div className="flex flex-col md:flex-row h-full overflow-hidden">
                                 {/* Image Sidebar */}
-                                <div className="md:w-1/3 bg-primary/20 flex flex-col items-center justify-center p-10">
+                                <div className="md:w-[32%] bg-primary/20 flex flex-col items-center justify-center p-8 md:p-12 shrink-0">
                                     <div className="relative">
                                         <div className="absolute inset-0 bg-secondary blur-3xl opacity-20 rounded-full" />
-                                        <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-8 border-white shadow-2xl">
+                                        <div className="relative w-40 h-40 md:w-72 md:h-72 rounded-full overflow-hidden border-8 border-white shadow-2xl">
                                             <img src={activeStudent.image || "/students/schoolstudent.png"} alt={activeStudent.title} className="w-full h-full object-cover" />
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Content */}
-                                <div className="flex-1 p-10 md:p-14 overflow-y-auto">
-                                    <h3 className="text-3xl font-black text-slate-900 font-serif mb-2">{activeStudent.title}</h3>
-                                    <p className="text-secondary font-black text-xs uppercase tracking-widest mb-8">{activeStudent.subtitle}</p>
+                                <div className="flex-1 p-10 md:p-14 lg:p-16 overflow-y-auto scrollbar-none">
+                                    <h3 className="text-3xl font-black text-slate-900 font-serif mb-1.5">{activeStudent.title}</h3>
+                                    <p className="text-secondary font-black text-xs uppercase tracking-widest mb-10">{activeStudent.subtitle}</p>
 
-                                    <div className="space-y-8">
+                                    <div className="space-y-6">
                                         <div>
-                                            <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">The SRL Journey</h4>
-                                            <p className="text-xl font-serif italic text-slate-700 leading-relaxed">
+                                            <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">The SRL Journey</h4>
+                                            <p className="text-lg font-serif italic text-slate-700 leading-relaxed">
                                                 “{activeStudent.reflection}”
                                             </p>
                                         </div>
 
-                                        <div className="grid sm:grid-cols-2 gap-8">
+                                        <div className="grid sm:grid-cols-2 gap-6">
                                             <div>
-                                                <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Research Areas</h4>
-                                                <div className="flex flex-wrap gap-2">
+                                                <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Research Areas</h4>
+                                                <div className="flex flex-wrap gap-1.5">
                                                     {activeStudent.research.map((r, i) => (
-                                                        <span key={i} className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold">
+                                                        <span key={i} className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[9px] font-bold">
                                                             {r}
                                                         </span>
                                                     ))}
                                                 </div>
                                             </div>
                                             <div>
-                                                <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Achievements</h4>
-                                                <ul className="space-y-2">
+                                                <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Achievements</h4>
+                                                <ul className="space-y-1.5">
                                                     {activeStudent.achievements.map((a, i) => (
-                                                        <li key={i} className="text-sm text-slate-600 flex items-start gap-2">
+                                                        <li key={i} className="text-xs text-slate-600 flex items-start gap-2">
                                                             <div className="w-1.5 h-1.5 rounded-full bg-secondary mt-1.5 shrink-0" />
                                                             {a}
                                                         </li>
@@ -314,10 +245,10 @@ export default function Researchers() {
                                         </div>
 
                                         <div>
-                                            <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Research Works</h4>
-                                            <ul className="grid sm:grid-cols-2 gap-4">
+                                            <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Research Works</h4>
+                                            <ul className="grid sm:grid-cols-2 gap-3">
                                                 {activeStudent.researchWorks.map((w, i) => (
-                                                    <li key={i} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-sm text-slate-700 font-medium">
+                                                    <li key={i} className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-700 font-medium">
                                                         {w}
                                                     </li>
                                                 ))}
@@ -325,25 +256,25 @@ export default function Researchers() {
                                         </div>
                                     </div>
 
-                                    <div className="mt-12 pt-8 border-t border-slate-100 flex flex-wrap gap-4">
+                                    <div className="mt-10 pt-6 border-t border-slate-100 flex flex-wrap gap-3">
                                         <a
-                                            href={`/cv/${activeStudent.id}`}
+                                            href={`/cv/${activeStudent.enrollment}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-secondary text-white hover:bg-secondary-dark transition-all text-sm font-bold shadow-lg"
+                                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary text-white hover:bg-secondary-dark transition-all text-xs font-bold shadow-lg"
                                         >
-                                            <FileText size={18} />
+                                            <FileText size={16} />
                                             View Full CV
                                         </a>
                                         {activeStudent.linkedin && (
-                                            <a href={activeStudent.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-900 text-white hover:bg-secondary transition-all text-sm font-bold">
-                                                <Linkedin size={18} />
+                                            <a href={activeStudent.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 text-white hover:bg-secondary transition-all text-xs font-bold">
+                                                <Linkedin size={16} />
                                                 LinkedIn
                                             </a>
                                         )}
                                         {activeStudent.email && (
-                                            <a href={`mailto:${activeStudent.email}`} className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-100 text-slate-600 hover:bg-secondary hover:text-white transition-all text-sm font-bold">
-                                                <Mail size={18} />
+                                            <a href={`mailto:${activeStudent.email}`} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-secondary hover:text-white transition-all text-xs font-bold">
+                                                <Mail size={16} />
                                                 Email
                                             </a>
                                         )}
@@ -364,6 +295,26 @@ export default function Researchers() {
         }
         .animate-scroll-up {
           animation: scroll-up 30s linear infinite;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #0D9488;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #0b3d3a;
+        }
+        .scrollbar-none::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-none {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}} />
         </motion.div>
