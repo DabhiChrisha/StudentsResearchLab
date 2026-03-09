@@ -34,7 +34,7 @@ export default function Hero() {
     }, [slides.length]);
 
     return (
-        <section id="top" className="relative w-full h-screen overflow-hidden flex items-center justify-center bg-slate-900">
+        <section id="top" className="relative w-full h-[calc(100vh-72px)] lg:h-[calc(100vh-88px)] overflow-hidden flex items-center justify-center bg-slate-900">
 
             {/* ===== BACKGROUND SLIDES ===== */}
             {slides.map((slide, index) => (
