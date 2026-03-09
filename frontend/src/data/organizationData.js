@@ -2,7 +2,7 @@ import svkmLogo from "../assets/svkm.png";
 import ksvLogo from "../assets/KSV Logo.png";
 import mmpsrpcLogo from "../assets/MMPSRPC Logo.png";
 import ksvCampus from "../assets/ksv_campus.jpg";
-import mmpsrpcCampus from "../assets/mmpsrpc_campus.jpg";
+import mmpsrpcCampus from "../assets/mmpsrpc_campus.jpeg";
 import svkmCampus from "../assets/svkm_campus.jpg";
 import chhaganbhaPhoto from "../assets/pujya_chhaganbha.jpg";
 import shriManeklal from "../assets/shri_maneklal_patel.jpg";
