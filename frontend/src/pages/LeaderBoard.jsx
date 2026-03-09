@@ -43,7 +43,7 @@ const STUDENT_PROFILES = [
     { name: "Zenisha Devani", enrollment: "23BECE30058", dept: "CE", semester: "6th", div: "A", batch: "2023-2027", image: encodeURI("/students/Zenisha Devani.jpeg"), attendance: 3 },
 ];
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://studentsresearchlab-1.onrender.com';
 
 const LeaderBoard = () => {
     const [topPerformers, setTopPerformers] = useState([]);
