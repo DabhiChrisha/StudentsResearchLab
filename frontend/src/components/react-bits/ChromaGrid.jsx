@@ -41,9 +41,9 @@ const ChromaGrid = ({ items, onImageClick }) => {
                                         onError={() => handleImageError(index, item)}
                                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                                     />
-                                    <div className="absolute inset-0 bg-slate-900/25 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <div className="absolute inset-0 rounded-2xl bg-slate-900/25 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <span className="text-sm font-bold text-white uppercase tracking-wider px-4 py-2 rounded-full bg-black/30">
-                                            View profile 
+                                            View profile
                                         </span>
                                     </div>
                                 </>
