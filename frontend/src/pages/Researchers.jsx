@@ -45,7 +45,7 @@ export default function Researchers() {
             researchWorks: s.researchWorks || [],
             research: s.research || [],
             achievements: s.achievements || [],
-            ongoingProjects: s.ongoingProjects || s.researchWorks || [],
+            papersPublished: s.papersPublished || s.researchWorks || [],
             hackathons: s.hackathons || [],
             email: s.email || "",
             linkedin: s.linkedin || "",
@@ -67,7 +67,7 @@ export default function Researchers() {
             research: ["Research Area 1", "Research Area 2", "Research Area 3"],
             researchWorks: ["Sample Paper 1", "Sample Paper 2"],
             achievements: ["Achievement 1", "Achievement 2"],
-            ongoingProjects: ["Project A", "Project B"],
+            papersPublished: ["Project A", "Project B"],
             hackathons: [],
         };
 
@@ -237,158 +237,158 @@ export default function Researchers() {
                             </div>
 
                             <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1.2fr_1fr] gap-6 p-6 h-full overflow-hidden">
-                                    {/* Profile Card (left) */}
-                                    <div className="rounded-3xl bg-slate-50 shadow-sm p-6 flex flex-col items-center text-center">
-                                        <div className="relative mb-6">
-                                            <div className="absolute inset-0 bg-secondary blur-3xl opacity-20 rounded-full" />
-                                            <div className="relative w-36 h-36 rounded-full overflow-hidden border-8 border-white shadow-2xl">
-                                                <img
-                                                    src={activeStudent.image || "/students/schoolstudent.png"}
-                                                    alt={activeStudent.title}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="space-y-1">
-                                            <h3 className="text-3xl font-black font-serif bg-gradient-to-r from-secondary to-slate-900 bg-clip-text text-transparent">
-                                                {activeStudent.title}
-                                            </h3>
-                                            <p className="text-secondary font-black text-sm uppercase tracking-widest">
-                                                {activeStudent.subtitle}
-                                            </p>
-                                        </div>
-
-                                        <div className="mt-6 w-full">
-                                            <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
-                                                Reflection
-                                            </p>
-                                            <motion.p
-                                                initial={{ opacity: 0, y: 10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ duration: 0.4 }}
-                                                className="text-sm text-slate-700 leading-relaxed"
-                                            >
-                                                {activeStudent.reflection || "Being part of SRL has been an incredible learning journey, where collaborative research and structured mentorship made a real impact."}
-                                            </motion.p>
+                                {/* Profile Card (left) */}
+                                <div className="rounded-3xl bg-slate-50 shadow-sm p-6 flex flex-col items-center text-center">
+                                    <div className="relative mb-6">
+                                        <div className="absolute inset-0 bg-secondary blur-3xl opacity-20 rounded-full" />
+                                        <div className="relative w-36 h-36 rounded-full overflow-hidden border-8 border-white shadow-2xl">
+                                            <img
+                                                src={activeStudent.image || "/students/schoolstudent.png"}
+                                                alt={activeStudent.title}
+                                                className="w-full h-full object-cover"
+                                            />
                                         </div>
                                     </div>
+                                    <div className="space-y-1">
+                                        <h3 className="text-3xl font-black font-serif bg-gradient-to-r from-secondary to-slate-900 bg-clip-text text-transparent">
+                                            {activeStudent.title}
+                                        </h3>
+                                        <p className="text-secondary font-black text-sm uppercase tracking-widest">
+                                            {activeStudent.subtitle}
+                                        </p>
+                                    </div>
 
-                                    {/* Research Areas (middle) */}
-                                    <div className="rounded-3xl bg-slate-50 shadow-sm p-6 overflow-hidden">
-                                        <div className="flex items-center justify-between">
-                                            <h4 className="text-base font-black uppercase tracking-widest text-slate-500">
-                                                Research Areas
-                                            </h4>
-                                            <span className="text-xs font-bold text-secondary">{activeStudent.research.length} areas</span>
-                                        </div>
-
-                                        <div className="mt-5 flex flex-wrap gap-2">
-                                            {(activeStudent.research || []).map((area, idx) => (
-                                                <span key={idx} className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-600">
-                                                    {area}
-                                                </span>
-                                            ))}
-                                        </div>
-
-                                        <motion.div
+                                    <div className="mt-6 w-full">
+                                        <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
+                                            Reflection
+                                        </p>
+                                        <motion.p
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            transition={{ duration: 0.35 }}
-                                            className="mt-6 rounded-2xl bg-white border border-slate-100 p-4 shadow-sm"
+                                            transition={{ duration: 0.4 }}
+                                            className="text-sm text-slate-700 leading-relaxed"
                                         >
-                                            <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
-                                                Key Metrics
-                                            </p>
-                                            <div className="grid grid-cols-3 gap-4">
-                                                <div className="flex flex-col items-center gap-1">
-                                                    <span className="text-xs font-semibold text-slate-500">Papers</span>
-                                                    <span className="text-lg font-black text-slate-900">{(activeStudent.researchWorks || []).length}</span>
-                                                </div>
-                                                <div className="flex flex-col items-center gap-1">
-                                                    <span className="text-xs font-semibold text-slate-500">Achievements</span>
-                                                    <span className="text-lg font-black text-slate-900">{(activeStudent.achievements || []).length}</span>
-                                                </div>
-                                                <div className="flex flex-col items-center gap-1">
-                                                    <span className="text-xs font-semibold text-slate-500">Projects</span>
-                                                    <span className="text-lg font-black text-slate-900">{(activeStudent.ongoingProjects || []).length}</span>
-                                                </div>
-                                            </div>
-                                        </motion.div>
+                                            {activeStudent.reflection || "Being part of SRL has been an incredible learning journey, where collaborative research and structured mentorship made a real impact."}
+                                        </motion.p>
+                                    </div>
+                                </div>
 
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 12 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ duration: 0.35, delay: 0.1 }}
-                                            className="mt-6 rounded-2xl bg-white border border-slate-100 p-4 shadow-sm"
-                                        >
-                                            <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
-                                                Achievements
-                                            </p>
-                                            <ul className="list-disc list-inside space-y-2 text-sm text-slate-700">
-                                                {(activeStudent.achievements || []).map((achievement, idx) => (
-                                                    <li key={idx}>{achievement}</li>
-                                                ))}
-                                            </ul>
-                                        </motion.div>
+                                {/* Research Areas (middle) */}
+                                <div className="rounded-3xl bg-slate-50 shadow-sm p-6 overflow-hidden">
+                                    <div className="flex items-center justify-between">
+                                        <h4 className="text-base font-black uppercase tracking-widest text-slate-500">
+                                            Research Areas
+                                        </h4>
+                                        <span className="text-xs font-bold text-secondary">{activeStudent.research.length} areas</span>
                                     </div>
 
-                                    {/* Ongoing Projects + Hackathons (right) */}
-                                    <div className="rounded-3xl bg-slate-50 shadow-sm p-6 flex flex-col justify-between">
-                                        <div>
-                                            <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-4">
-                                                Ongoing Projects
-                                            </p>
-                                            <ul className="space-y-3">
-                                                {(activeStudent.ongoingProjects || []).map((proj, idx) => (
-                                                    <li key={idx} className="text-sm text-slate-700">
-                                                        • {proj}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
+                                    <div className="mt-5 flex flex-wrap gap-2">
+                                        {(activeStudent.research || []).map((area, idx) => (
+                                            <span key={idx} className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-600">
+                                                {area}
+                                            </span>
+                                        ))}
+                                    </div>
 
-                                        <div className="mt-6">
-                                            <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
-                                                Hackathons
-                                            </p>
-                                            <ul className="space-y-2 text-sm text-slate-700">
-                                                {(activeStudent.hackathons || []).map((hack, idx) => (
-                                                    <li key={idx}>• {hack}</li>
-                                                ))}
-                                            </ul>
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.35 }}
+                                        className="mt-6 rounded-2xl bg-white border border-slate-100 p-4 shadow-sm"
+                                    >
+                                        <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
+                                            Key Metrics
+                                        </p>
+                                        <div className="grid grid-cols-3 gap-4">
+                                            <div className="flex flex-col items-center gap-1">
+                                                <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap">Research Works</span>
+                                                <span className="text-lg font-black text-slate-900">{(activeStudent.researchWorks || []).length}</span>
+                                            </div>
+                                            <div className="flex flex-col items-center gap-1">
+                                                <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap">Achievements</span>
+                                                <span className="text-lg font-black text-slate-900">{(activeStudent.achievements || []).length}</span>
+                                            </div>
+                                            <div className="flex flex-col items-center gap-1">
+                                                <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap">Papers Published</span>
+                                                <span className="text-lg font-black text-slate-900">{(activeStudent.papersPublished || []).length}</span>
+                                            </div>
                                         </div>
+                                    </motion.div>
 
-                                        <div className="mt-6 space-y-3">
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 12 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.35, delay: 0.1 }}
+                                        className="mt-6 rounded-2xl bg-white border border-slate-100 p-4 shadow-sm"
+                                    >
+                                        <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
+                                            Achievements
+                                        </p>
+                                        <ul className="list-disc list-inside space-y-2 text-sm text-slate-700">
+                                            {(activeStudent.achievements || []).map((achievement, idx) => (
+                                                <li key={idx}>{achievement}</li>
+                                            ))}
+                                        </ul>
+                                    </motion.div>
+                                </div>
+
+                                {/* Ongoing Projects + Hackathons (right) */}
+                                <div className="rounded-3xl bg-slate-50 shadow-sm p-6 flex flex-col justify-between">
+                                    <div>
+                                        <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-4">
+                                            Papers Published
+                                        </p>
+                                        <ul className="space-y-3">
+                                            {(activeStudent.papersPublished || []).map((proj, idx) => (
+                                                <li key={idx} className="text-sm text-slate-700">
+                                                    • {proj}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+
+                                    <div className="mt-6">
+                                        <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
+                                            Hackathons
+                                        </p>
+                                        <ul className="space-y-2 text-sm text-slate-700">
+                                            {(activeStudent.hackathons || []).map((hack, idx) => (
+                                                <li key={idx}>• {hack}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+
+                                    <div className="mt-6 space-y-3">
+                                        <a
+                                            href={`/cv/${activeStudent.enrollment}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-xl bg-secondary text-white hover:bg-secondary-dark transition-all text-sm font-bold"
+                                        >
+                                            <FileText size={16} />
+                                            View Full CV
+                                        </a>
+                                        {activeStudent.linkedin && (
                                             <a
-                                                href={`/cv/${activeStudent.enrollment}`}
+                                                href={activeStudent.linkedin}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-xl bg-secondary text-white hover:bg-secondary-dark transition-all text-sm font-bold"
+                                                className="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-xl bg-slate-900 text-white hover:bg-secondary transition-all text-sm font-bold"
                                             >
-                                                <FileText size={16} />
-                                                View Full CV
+                                                <Linkedin size={16} />
+                                                LinkedIn
                                             </a>
-                                            {activeStudent.linkedin && (
-                                                <a
-                                                    href={activeStudent.linkedin}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-xl bg-slate-900 text-white hover:bg-secondary transition-all text-sm font-bold"
-                                                >
-                                                    <Linkedin size={16} />
-                                                    LinkedIn
-                                                </a>
-                                            )}
-                                            {activeStudent.email && (
-                                                <a
-                                                    href={`mailto:${activeStudent.email}`}
-                                                    className="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-secondary hover:text-white transition-all text-sm font-bold"
-                                                >
-                                                    <Mail size={16} />
-                                                    Email
-                                                </a>
-                                            )}
-                                        </div>
+                                        )}
+                                        {activeStudent.email && (
+                                            <a
+                                                href={`mailto:${activeStudent.email}`}
+                                                className="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-secondary hover:text-white transition-all text-sm font-bold"
+                                            >
+                                                <Mail size={16} />
+                                                Email
+                                            </a>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </motion.div>

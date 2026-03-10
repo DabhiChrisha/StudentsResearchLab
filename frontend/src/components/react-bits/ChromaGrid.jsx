@@ -43,7 +43,7 @@ const ChromaGrid = ({ items, onImageClick }) => {
                                     />
                                     <div className="absolute inset-0 bg-slate-900/25 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <span className="text-sm font-bold text-white uppercase tracking-wider px-4 py-2 rounded-full bg-black/30">
-                                            View profile 
+                                            View profile
                                         </span>
                                     </div>
                                 </>
@@ -60,25 +60,57 @@ const ChromaGrid = ({ items, onImageClick }) => {
                         <h4 className="text-xl font-black text-white mb-0.5 tracking-tight line-clamp-1">
                             {item.title}
                         </h4>
-                        <p className="text-xs font-bold text-white/80 uppercase tracking-widest mb-4">
+                        <p className="text-xs font-bold text-white uppercase tracking-widest mb-4">
                             {item.subtitle}
                         </p>
 
-                        <div className="flex gap-4">
-                            {item.email && (
-                                <div className="text-white/70 hover:text-white transition-colors">
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                        <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
+                        {/* Bottom Row: Icons + Metrics in one line */}
+                        <div className="mt-4 flex items-center justify-between gap-4 border-t border-white/40 pt-4">
+                            {/* Social Icons */}
+                            <div className="flex gap-3 shrink-0">
+                                {item.email && (
+                                    <a
+                                        href={`mailto:${item.email}`}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="text-white hover:text-black transition-all transform hover:scale-110 relative z-10"
+                                        title={`Email: ${item.email}`}
+                                    >
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                    </a>
+                                )}
+                                {item.linkedin && (
+                                    <a
+                                        href={item.linkedin}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="text-white hover:text-black transition-all transform hover:scale-110 relative z-10"
+                                        title="LinkedIn Profile"
+                                    >
+                                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.041 0 3.604 2.002 3.604 4.604v5.592z" />
+                                        </svg>
+                                    </a>
+                                )}
+                            </div>
+
+                            {/* Metrics Strip */}
+                            <div className="flex flex-1 items-center justify-end gap-4 text-white">
+                                <div className="flex items-center gap-1.5" title="Research Works">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                    <span className="text-base font-black">{(item.researchWorks || []).length}</span>
                                 </div>
-                            )}
-                            {item.linkedin && (
-                                <div className="text-white/70 hover:text-white transition-colors">
-                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.041 0 3.604 2.002 3.604 4.604v5.592z" />
-                                    </svg>
+                                <div className="flex items-center gap-1.5" title="Achievements">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+                                    <span className="text-base font-black">{(item.achievements || []).length}</span>
                                 </div>
-                            )}
+                                <div className="flex items-center gap-1.5" title="Papers Published">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.247 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                                    <span className="text-base font-black">{(item.papersPublished || []).length}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
