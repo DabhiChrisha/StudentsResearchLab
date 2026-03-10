@@ -112,7 +112,7 @@ export default function ScrollToTop() {
   }
 
   return (
-    <div className="fixed bottom-8 right-8 z-50">
+    <div className="fixed bottom-28 md:bottom-8 right-4 md:right-8 z-50">
       <div className="relative w-16 h-16">
 
         {/* Outer Ring */}

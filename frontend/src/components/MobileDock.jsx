@@ -23,12 +23,7 @@ export default function MobileDock() {
 
     return (
         <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-[360px] pointer-events-auto">
-            <div className="relative rounded-[28px] border border-white/70 bg-[#f3f7f8]/95 backdrop-blur-md shadow-[0_16px_36px_rgba(15,23,42,0.18)] px-4 pb-4 pt-6">
-                <div className="text-center mb-3 relative z-10">
-                    <h3 className="text-secondary-dark font-bold text-2xl leading-none">What is SRL?</h3>
-                    <p className="text-secondary/80 text-[10px] font-semibold tracking-[0.22em] uppercase mt-1">Students Research Lab</p>
-                </div>
-
+            <div className="relative rounded-[28px] border border-white/70 bg-[#f3f7f8]/95 backdrop-blur-md shadow-[0_16px_36px_rgba(15,23,42,0.18)] px-4 py-4">
                 <div className="rounded-2xl bg-[#e8f2f4] border border-white/80 p-2 grid grid-cols-4 gap-2">
                     {mobileDockItems.map((item, index) => {
                         const Icon = item.icon;

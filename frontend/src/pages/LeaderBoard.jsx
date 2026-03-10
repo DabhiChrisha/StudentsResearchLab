@@ -57,43 +57,12 @@ const LeaderBoard = () => {
                 const response = await fetch(`${API_BASE}/api/leaderboard`);
                 if (!response.ok) throw new Error("Failed to fetch leaderboard data");
 
-<<<<<<< Updated upstream
                 const { leaderboard } = await response.json();
 
                 // Merge backend data with static STUDENT_PROFILES for images/metadata
                 const profileMap = {};
                 STUDENT_PROFILES.forEach(p => {
                     profileMap[p.enrollment.trim().toUpperCase()] = p;
-=======
-                if (!attendanceResponse.ok || !srlResponse.ok) {
-                    throw new Error("Failed to fetch backend data");
-                }
-
-                const { data: debateScores, error: scoresError } = await supabase
-                    .from("debate_scores")
-                    .select("enrollment_no, total_points");
-
-                if (scoresError) {
-                    throw new Error(`Failed to fetch debate_scores: ${scoresError.message}`);
-                }
-
-                const { data: studentDetails, error: namesError } = await supabase
-                    .from("students_details")
-                    .select("enrollment_no, student_name");
-
-                if (namesError) {
-                    throw new Error(`Failed to fetch students_details: ${namesError.message}`);
-                }
-
-                const attendanceData = await attendanceResponse.json();
-                const srlData = await srlResponse.json();
-
-                // Construct a score map: { "enrollment_no": total_points }
-                const scoreMap = {};
-                (debateScores || []).forEach(record => {
-                    const normalized = String(record.enrollment_no || "").trim().toUpperCase();
-                    scoreMap[normalized] = record.total_points || 0;
->>>>>>> Stashed changes
                 });
 
                 const mergedStudents = leaderboard.map((student, index) => {
