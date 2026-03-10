@@ -72,6 +72,7 @@ const Objectives = () => {
 
     const [cursor, setCursor] = useState({ x: 0, y: 0 });
     const [lines, setLines] = useState([]);
+    const [isMobile, setIsMobile] = useState(false);
 
     const cardRefs = useRef([]);
     const circleRef = useRef(null);
@@ -79,6 +80,24 @@ const Objectives = () => {
     const sectionRef = useRef(null);
 
     const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+
+    /* Detect screen size */
+    useEffect(() => {
+        const resize = () => setIsMobile(window.innerWidth < 768);
+        resize();
+        window.addEventListener("resize", resize);
+        return () => window.removeEventListener("resize", resize);
+    }, []);
+
+    /* Mobile positions - zigzag layout */
+    const mobilePositions = objectives.map((_, i) => {
+        const gap = 70;
+        const top = 180 + i * gap;
+        const left = i % 2 === 0 ? 15 : window.innerWidth / 1.45 - 100;
+        return { top, left };
+    });
+
+    const finalPositions = isMobile ? mobilePositions : positions;
 
     useEffect(() => {
 
@@ -89,7 +108,7 @@ const Objectives = () => {
         const circleCenterY = circle.top - container.top + circle.height / 2;
         const radius = circle.width / 2;
 
-        const newLines = cardRefs.current.map(card => {
+        const newLines = cardRefs.current.map((card, index) => {
 
             if (!card) return null;
 
@@ -98,28 +117,58 @@ const Objectives = () => {
             const cardCenterX = rect.left - container.left + rect.width / 2;
             const cardCenterY = rect.top - container.top + rect.height / 2;
 
-            const angle = Math.atan2(
-                cardCenterY - circleCenterY,
-                cardCenterX - circleCenterX
-            );
-
-            const offset = 3.3;
-
-            const startX = circleCenterX + (radius - offset) * Math.cos(angle);
-            const startY = circleCenterY + (radius - offset) * Math.sin(angle);
-
-            return {
-                x1: startX,
-                y1: startY,
-                x2: cardCenterX,
-                y2: cardCenterY
-            };
+            /* MOBILE: first two cards connect to circle, rest connect to previous card */
+            if (isMobile) {
+                if (index === 0 || index === 1) {
+                    /* Connect to circle */
+                    const angle = Math.atan2(
+                        cardCenterY - circleCenterY,
+                        cardCenterX - circleCenterX
+                    );
+                    const startX = circleCenterX + radius * Math.cos(angle);
+                    const startY = circleCenterY + radius * Math.sin(angle);
+                    return {
+                        x1: startX,
+                        y1: startY,
+                        x2: cardCenterX,
+                        y2: cardCenterY
+                    };
+                } else {
+                    /* Connect to previous card */
+                    const prevCard = cardRefs.current[index - 1];
+                    if (!prevCard) return null;
+                    const prevRect = prevCard.getBoundingClientRect();
+                    const prevCardCenterX = prevRect.left - container.left + prevRect.width / 2;
+                    const prevCardCenterY = prevRect.top - container.top + prevRect.height / 2;
+                    return {
+                        x1: prevCardCenterX,
+                        y1: prevCardCenterY,
+                        x2: cardCenterX,
+                        y2: cardCenterY
+                    };
+                }
+            } else {
+                /* DESKTOP: all cards connect to circle */
+                const angle = Math.atan2(
+                    cardCenterY - circleCenterY,
+                    cardCenterX - circleCenterX
+                );
+                const offset = 3.3;
+                const startX = circleCenterX + (radius - offset) * Math.cos(angle);
+                const startY = circleCenterY + (radius - offset) * Math.sin(angle);
+                return {
+                    x1: startX,
+                    y1: startY,
+                    x2: cardCenterX,
+                    y2: cardCenterY
+                };
+            }
 
         });
 
         setLines(newLines);
 
-    }, []);
+    }, [isMobile]);
 
     const handleMouseMove = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -161,11 +210,12 @@ const Objectives = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
-                        className="text-5xl font-black font-serif inline-block"
+                        className="text-5xl font-black font-serif inline-block pb-2"
                         style={{
                             background: "linear-gradient(90deg,#0f766e,#10b981,#2dd4bf,#FFD700)",
                             WebkitBackgroundClip: "text",
                             WebkitTextFillColor: "transparent"
+                            
                         }}
                     >
                         Objectives of SRL
@@ -179,7 +229,7 @@ const Objectives = () => {
 
                 </p>
 
-                <div ref={containerRef} className="relative h-[700px]">
+                <div ref={containerRef} className={`relative ${isMobile ? "h-[1050px]" : "h-[700px]"}`}>
 
                     {/* Animated Lines */}
 
@@ -228,23 +278,21 @@ const Objectives = () => {
 
                     <motion.div
                         ref={circleRef}
-                        className="absolute left-[-130px] top-[290px] w-[200px] h-[200px] rounded-full border-[7px] border-[#0f766e] bg-white flex items-center justify-center shadow-xl z-10"
+                        className={isMobile ? "absolute left-[31.5%] top-[20px] -translate-x-1/2 w-[140px] h-[140px] rounded-full border-[7px] border-[#0f766e] bg-white flex items-center justify-center z-10" : "absolute left-[-130px] top-[290px] w-[200px] h-[200px] rounded-full border-[7px] border-[#0f766e] bg-white flex items-center justify-center shadow-xl z-10"}
                         animate={{ rotate: 360 }}
                         transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                        style={{
-                            boxShadow: `
+                        style={isMobile ? { display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 8px #44af8bff, 0 0 18px #61c8a5ff, 0 0 30px #f1f7f555" } : { boxShadow: `
 0 0 8px #10b981,
 0 0 18px #10b981,
 0 0 40px #10b98155,
 inset 0 0 10px #10b98144
-`
-                        }}
+` }}
                     >
 
                         <img
                             src="/innovation1.jpg"
                             alt="innovation"
-                            className="w-[145px] h-[145px] object-contain"
+                            className={isMobile ? "w-[90px] object-contain" : "w-[145px] h-[145px] object-contain"}
                         />
 
                     </motion.div>
@@ -253,7 +301,7 @@ inset 0 0 10px #10b98144
 
                     {objectives.map((obj, index) => {
 
-                        const pos = positions[index];
+                        const pos = finalPositions[index];
 
                         return (
 
@@ -267,11 +315,11 @@ inset 0 0 10px #10b98144
 
                                 transition={{
                                     duration: 0.35,
-                                    delay: (index * 0.7) + 0.75,
+                                    delay: isMobile ? (index * 0.7 + 0.7) : ((index * 0.7) + 0.75),
                                     ease: "easeOut"
                                 }}
 
-                                className="absolute w-[260px] h-[140px] rounded-[80px] flex flex-col items-center justify-center text-center px-6 bg-[#0f766e] overflow-hidden group"
+                                className={`absolute ${isMobile ? "w-[150px] h-[90px]" : "w-[260px] h-[140px]"} rounded-[80px] flex flex-col items-center justify-center text-center px-6 bg-[#0f766e] overflow-hidden group`}
 
                                 style={{
                                     top: pos.top,
@@ -280,7 +328,8 @@ inset 0 0 10px #10b98144
 0 0 8px #44af8bff,
 0 0 18px #61c8a5ff,
 0 0 30px #f1f7f555
-`
+`,
+                                    padding: isMobile ? "8px" : undefined
                                 }}
                             >
 
@@ -298,11 +347,11 @@ inset 0 0 10px #10b98144
                                     }}
                                 />
 
-                                <h3 className="text-lg font-bold text-white font-serif leading-snug">
+                                <h3 className={`${isMobile ? "text-[10px]" : "text-lg"} font-bold text-white font-serif leading-snug`}>
                                     {obj.title}
                                 </h3>
 
-                                <p className="text-sm text-white/85 leading-relaxed mt-1">
+                                <p className={`${isMobile ? "text-[9px]" : "text-sm"} text-white/85 leading-relaxed mt-1`}>
                                     {obj.description}
                                 </p>
 
