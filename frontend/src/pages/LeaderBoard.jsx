@@ -57,12 +57,43 @@ const LeaderBoard = () => {
                 const response = await fetch(`${API_BASE}/api/leaderboard`);
                 if (!response.ok) throw new Error("Failed to fetch leaderboard data");
 
+<<<<<<< Updated upstream
                 const { leaderboard } = await response.json();
 
                 // Merge backend data with static STUDENT_PROFILES for images/metadata
                 const profileMap = {};
                 STUDENT_PROFILES.forEach(p => {
                     profileMap[p.enrollment.trim().toUpperCase()] = p;
+=======
+                if (!attendanceResponse.ok || !srlResponse.ok) {
+                    throw new Error("Failed to fetch backend data");
+                }
+
+                const { data: debateScores, error: scoresError } = await supabase
+                    .from("debate_scores")
+                    .select("enrollment_no, total_points");
+
+                if (scoresError) {
+                    throw new Error(`Failed to fetch debate_scores: ${scoresError.message}`);
+                }
+
+                const { data: studentDetails, error: namesError } = await supabase
+                    .from("students_details")
+                    .select("enrollment_no, student_name");
+
+                if (namesError) {
+                    throw new Error(`Failed to fetch students_details: ${namesError.message}`);
+                }
+
+                const attendanceData = await attendanceResponse.json();
+                const srlData = await srlResponse.json();
+
+                // Construct a score map: { "enrollment_no": total_points }
+                const scoreMap = {};
+                (debateScores || []).forEach(record => {
+                    const normalized = String(record.enrollment_no || "").trim().toUpperCase();
+                    scoreMap[normalized] = record.total_points || 0;
+>>>>>>> Stashed changes
                 });
 
                 const mergedStudents = leaderboard.map((student, index) => {
@@ -465,76 +496,48 @@ const LeaderBoard = () => {
                                                     initial={{ opacity: 0, y: 15 }}
                                                     animate={{ opacity: 1, y: 0 }}
                                                     transition={{ delay: 0.1 + (idx * 0.05) }}
-                                                    className={`${displayClass} flex-col sm:flex-row items-start sm:items-center justify-between px-5 py-4 sm:p-6 lg:px-5 lg:py-4 bg-white/85 hover:bg-gradient-to-r hover:from-white/90 hover:to-amber-50/90 border border-gray-100/80 rounded-2xl transition-all duration-400 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 group relative overflow-hidden backdrop-blur-sm`}
+                                                    className={`${displayClass} flex-row items-center justify-between px-5 py-4 sm:p-6 lg:px-5 lg:py-4 bg-white/85 hover:bg-gradient-to-r hover:from-white/90 hover:to-amber-50/90 border border-gray-100/80 rounded-2xl transition-all duration-400 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 group relative overflow-hidden backdrop-blur-sm`}
                                                 >
-
-
-                                                    {/* Shiny effect on hover for the list items */}
-                                                    <div className="absolute top-0 bottom-0 left-[-100%] w-[100%] bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-[10deg] transition-all duration-700 ease-in-out group-hover:left-[200%] z-0 pointer-events-none"></div>
-
-                                                    <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-7 lg:gap-5 relative z-10 w-full">
-                                                        <div className="flex items-center gap-3 sm:gap-5 lg:gap-4 w-full sm:w-auto flex-1">
-                                                            <div className="w-[36px] sm:w-[48px] text-center font-black text-gray-400 group-hover:text-amber-500 transition-colors text-base sm:text-xl">
-                                                                #{student.rank}
+                                                    {/* Student Photo */}
+                                                    <div className="w-14 h-14 sm:w-20 sm:h-20 lg:w-16 lg:h-16 rounded-2xl overflow-hidden border-2 border-white ring-2 ring-white shadow-md bg-gray-100 flex-shrink-0 group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
+                                                        <img src={student.image} alt={student.name} className="w-full h-full object-cover" />
+                                                    </div>
+                                                    {/* Student Info */}
+                                                    <div className="flex flex-col flex-1 min-w-0 ml-4">
+                                                        {/* Name */}
+                                                        <div className="font-bold text-base sm:text-lg text-gray-900 truncate">
+                                                            {student.name.split('\n').join(' ')}
+                                                        </div>
+                                                        {/* Year/Batch */}
+                                                        <div className="mt-0.5">
+                                                            <span className="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-0.5 rounded">
+                                                                {student.batch}
+                                                            </span>
+                                                        </div>
+                                                        {/* Enrollment, Dept, Semester */}
+                                                        <div className="mt-0.5 text-gray-500 text-sm flex flex-wrap items-center gap-2">
+                                                            <span className="font-mono tracking-tight">{student.enrollment}</span>
+                                                            <span className="">•</span>
+                                                            <span className="uppercase font-semibold">{student.dept}</span>
+                                                            <span className="">•</span>
+                                                            <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs font-bold">{student.semester} Sem</span>
+                                                        </div>
+                                                    </div>
+                                                    {/* Attendance/Points Section (right side) */}
+                                                    <div className="flex flex-col items-end min-w-[90px] ml-4">
+                                                        <div className="flex flex-row gap-4 mb-1">
+                                                            <div className="flex flex-col items-center">
+                                                                <span className="text-blue-500 font-bold text-base">{student.srlAttendance}%</span>
+                                                                <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-widest">SRL SESSIONS</span>
                                                             </div>
-
-                                                            <div className="w-14 h-14 sm:w-20 sm:h-20 lg:w-16 lg:h-16 rounded-2xl overflow-hidden border-2 border-white ring-2 ring-white shadow-md bg-gray-100 flex-shrink-0 group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
-                                                                <img src={student.image} alt={student.name} className="w-full h-full object-cover" />
-                                                            </div>
-
-                                                            <div className="flex flex-col flex-1 min-w-0 gap-0.5 sm:gap-1">
-                                                                <div className="flex flex-wrap items-center gap-2 mb-0">
-                                                                    <h4 className="text-sm sm:text-lg lg:text-[17px] font-bold text-gray-800 group-hover:text-amber-900 transition-colors line-clamp-2">{student.name}</h4>
-                                                                    <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-amber-100/50 text-amber-700 text-[10px] font-black uppercase tracking-wider whitespace-nowrap">{student.batch}</span>
-                                                                </div>
-                                                                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                                                                    <span className="text-xs sm:text-[13px] font-medium text-gray-500 group-hover:text-gray-600">
-                                                                        {student.enrollment} • {student.dept}
-                                                                    </span>
-                                                                    <span className="text-[11px] sm:text-xs bg-gray-100 group-hover:bg-amber-100/50 group-hover:text-amber-700 text-gray-500 px-2.5 sm:px-3 py-0.5 rounded-lg font-bold transition-colors">
-                                                                        {student.semester} Sem
-                                                                    </span>
-                                                                </div>
+                                                            <div className="flex flex-col items-center">
+                                                                <span className="text-emerald-500 font-bold text-base">{student.attendance}%</span>
+                                                                <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-widest">HOURS DEDICATED</span>
                                                             </div>
                                                         </div>
-
-                                                        <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-7 w-full sm:w-auto px-0 sm:px-0 pr-1 sm:pr-4 shrink-0 mt-2.5 sm:mt-0 border-t border-gray-100/50 sm:border-0 pt-2.5 sm:pt-0">
-                                                            {/* New Attendance Column at the marked blue dot position */}
-                                                            <div className="flex flex-col items-center justify-center min-w-[70px] sm:min-w-[80px] gap-1">
-                                                                <div className="flex flex-row items-center justify-center gap-3 sm:gap-7 lg:gap-5">
-                                                                    {/* SRL Attendance (Left) */}
-                                                                    <div className="flex flex-col items-center">
-                                                                        <div className="flex items-center gap-1 sm:gap-1.5">
-                                                                            <Award size={14} className="text-blue-500 fill-blue-500 opacity-90 sm:w-5 sm:h-5 lg:w-[18px] lg:h-[18px] w-3.5 h-3.5" />
-                                                                            <span className="text-sm sm:text-xl lg:text-[19px] font-black text-blue-600 drop-shadow-sm">
-                                                                                {student.srlAttendance}%
-                                                                            </span>
-                                                                        </div>
-                                                                        <div className="text-[9px] sm:text-[10px] font-bold text-gray-400 tracking-widest mt-0.5 whitespace-nowrap">SRL SESSIONS</div>
-                                                                    </div>
-
-                                                                    <div className="h-6 sm:h-9 lg:h-8 w-px bg-gray-200/60 block"></div>
-
-                                                                    {/* Overall Attendance (Right) */}
-                                                                    <div className="flex flex-col items-center">
-                                                                        <div className="flex items-center gap-1 sm:gap-1.5">
-                                                                            <Clock size={14} className="text-emerald-500 opacity-90 sm:w-5 sm:h-5 lg:w-[18px] lg:h-[18px] w-3.5 h-3.5" />
-                                                                            <span className="text-sm sm:text-xl lg:text-[19px] font-black text-emerald-600 drop-shadow-sm">
-                                                                                {student.attendance}%
-                                                                            </span>
-                                                                        </div>
-                                                                        <div className="text-[9px] sm:text-[10px] font-bold text-gray-400 tracking-widest mt-0.5">HOURS DEDICATED</div>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="text-[9px] sm:text-[11px] font-bold text-gray-500 tracking-widest uppercase mt-1 sm:mt-1.5">Attendance</div>
-                                                            </div>
-
-                                                            <div className="text-right border-l border-gray-100/80 pl-3 sm:pl-7 lg:pl-5">
-                                                                <div className="text-base sm:text-2xl lg:text-[22px] font-black text-gray-800 transition-all duration-300 group-hover:scale-110 group-hover:text-amber-500 drop-shadow-sm">
-                                                                    {student.score}
-                                                                </div>
-                                                                <div className="text-[8px] sm:text-[10px] font-bold text-gray-400 tracking-widest mt-0.5">PTS</div>
-                                                            </div>
+                                                        <div className="flex flex-row items-center gap-1 mt-1">
+                                                            <span className="text-gray-800 font-black text-lg">{student.score}</span>
+                                                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">PTS</span>
                                                         </div>
                                                     </div>
                                                 </motion.div>
