@@ -12,16 +12,18 @@ export default function Hero() {
     const slides = [
         {
             image: slide1,
-            // Slide 1: Special desktop right alignment
-            align: "md:items-end md:text-right md:justify-end",
+            // Slide 1: Original desktop right alignment
+            align: "items-center text-center justify-end pb-24 md:items-end md:text-right md:justify-end md:pb-12",
         },
         {
             image: slide2,
-            align: "md:items-center md:text-center md:justify-center",
+            // Slide 2 & 3: Strictly Top-center
+            align: "items-center text-center justify-start pt-10 md:pt-8",
         },
         {
             image: slide3,
-            align: "md:items-center md:text-center md:justify-center",
+            // Slide 2 & 3: Strictly Top-center
+            align: "items-center text-center justify-start pt-10 md:pt-8",
         },
     ];
 
@@ -56,31 +58,44 @@ export default function Hero() {
 
             {/* ===== TEXT CONTAINER ===== */}
             <div
-                className={`absolute inset-0 z-20 flex flex-col px-4 sm:px-6 md:px-16 
-                items-center text-center justify-end pb-24 sm:pb-32
-                ${slides[current].align} md:pb-0
+                className={`absolute inset-0 z-20 flex flex-col px-4 sm:px-6 md:px-12 
+                ${slides[current].align}
                 transition-all duration-700 pointer-events-none`}
             >
-                <div className="max-w-3xl w-full">
+                <div className="w-full flex items-center justify-center">
 
-                    {/* LOGO on subsequent slides (index > 0) */}
-                    {current > 0 && (
-                        <img
-                            src={srlLogo}
-                            alt="SRL Logo"
-                            className="w-16 md:w-24 mx-auto mb-4 drop-shadow-lg animate-fade-up"
-                        />
+                    {current === 0 ? (
+                        /* SLIDE 1: Original Style */
+                        <div className="max-w-3xl ml-auto text-right self-end mt-auto mb-24 md:mb-0">
+                            <h1 className="text-white font-serif text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight drop-shadow-lg leading-tight">
+                                Students Research Lab
+                            </h1>
+                            <p className="text-white/90 font-serif text-lg md:text-2xl drop-shadow mt-4 md:mt-6 leading-relaxed font-medium">
+                                Fostering a disciplined research culture, consistency in academic
+                                practice, and excellence through collaborative scholarly engagement.
+                            </p>
+                        </div>
+                    ) : (
+                        /* SLIDE 2 & 3: PERFECTLY CENTERED TOP LAYOUT */
+                        <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 animate-fade-up w-full max-w-7xl mx-auto px-4">
+                            {/* Logo */}
+                            <img
+                                src={srlLogo}
+                                alt="SRL Logo"
+                                className="w-12 h-12 sm:w-16 sm:h-16 md:w-24 md:h-24 lg:w-28 lg:h-28 drop-shadow-lg object-contain shrink-0 transition-all duration-700"
+                            />
+
+                            {/* Text Container - Same Size for Slide 2 & 3 */}
+                            <div className="flex flex-col justify-center text-center transition-all duration-700">
+                                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl text-white font-serif font-bold tracking-tight drop-shadow-lg leading-none">
+                                    Students Research Lab (SRL)
+                                </h1>
+                                <p className="text-[10px] sm:text-sm md:text-base lg:text-xl text-white/90 font-serif drop-shadow-md mt-2 italic font-medium leading-tight max-w-4xl mx-auto">
+                                    "Fostering a disciplined research culture, consistency in academic practice, and excellence through collaborative scholarly engagement."
+                                </p>
+                            </div>
+                        </div>
                     )}
-
-                    {/* 👉 YOUR EXACT TEXT STYLE */}
-                    <h1 className="text-white font-serif text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight drop-shadow-lg leading-tight">
-                        Students Research Lab
-                    </h1>
-
-                    <p className="text-white/90 font-serif text-base md:text-xl drop-shadow mt-4 md:mt-6 leading-relaxed">
-                        Fostering a disciplined research culture, consistency in academic
-                        practice, and excellence through collaborative scholarly engagement.
-                    </p>
 
                 </div>
             </div>
