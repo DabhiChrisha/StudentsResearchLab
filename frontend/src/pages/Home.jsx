@@ -59,7 +59,7 @@ const Home = () => {
                             {/* LEFT: Impact Metrics Stats */}
                             <div className="w-full lg:w-5/12 flex flex-col justify-center">
                                 <div className="mb-10">
-                                    <h2 className="text-4xl md:text-5xl font-bold font-display bg-gradient-to-r from-[#05877a] via-[#3ec5b8] to-[#05877a] bg-clip-text text-transparent animate-gradient-slow mb-4">Impact Metrics</h2>
+                                    <h2 className="text-5xl md:text-7xl font-bold font-display bg-gradient-to-r from-slate-900 via-slate-600 to-black bg-clip-text text-transparent animate-gradient-slow mb-6">Impact Metrics</h2>
                                     <p className="text-slate-500 text-lg">Measurable outcomes of our commitment to excellence.</p>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
