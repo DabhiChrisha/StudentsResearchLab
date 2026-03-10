@@ -9,10 +9,7 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL('./src', import.meta.url)),
     },
-<<<<<<< Updated upstream
   },
-=======
->>>>>>> Stashed changes
   build: {
     rollupOptions: {
       output: {
