@@ -117,110 +117,107 @@ const Timeline = () => {
     <section id="timeline" className="py-12 px-4 md:px-8 bg-white relative overflow-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
       
       <div className="max-w-[1400px] mx-auto">
-        <div className="relative flex flex-col lg:flex-row bg-white border border-slate-200 rounded-[3rem] shadow-sm overflow-hidden h-[900px] lg:h-[700px] z-10">
+        <div className="relative bg-white border border-slate-200 rounded-[3rem] shadow-sm overflow-hidden h-[900px] lg:h-[700px] z-10">
           
-          {/* Tree Layer - Now spans the entire container background */}
+          {/* Tree Layer - Remains fixed in the background */}
           <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
             <Tree rootXPos={0.25} rootYPos={1.1} scale={0.8} />
           </div>
 
-          {/* LEFT: STATIC HUB (Central Hub) */}
-          <div className="w-full lg:w-[42%] h-[400px] lg:h-full relative flex flex-col items-center justify-center p-6 lg:p-8 z-10 bg-transparent">
-            
-            {/* Animated Title */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="relative lg:absolute lg:top-8 left-0 right-0 z-20 mb-6 lg:mb-0"
-            >
-              <GradientText
-                colors={["#16B29D", "#FFD700", "#16B29D", "#FFD700"]}
-                animationSpeed={4}
-                className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter drop-shadow-sm"
-              >
-                Our Journey
-              </GradientText>
-            </motion.div>
-
-            {/* Hub Circle */}
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              animate={{
-                y: [0, -12, 0],
-              }}
-              transition={{
-                scale: { duration: 0.5 },
-                opacity: { duration: 0.5 },
-                y: {
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }
-              }}
-              viewport={{ once: true }}
-              className="relative w-56 h-56 sm:w-72 sm:h-72 z-10"
-            >
-              <div className="absolute inset-0 rounded-full border-[10px] border-l-[#16B29D] border-t-[#16B29D] border-r-transparent border-b-transparent rotate-[-45deg] z-0 opacity-80" />
-              <div className="absolute inset-0 rounded-full border-[10px] border-l-transparent border-t-transparent border-r-emerald-50 border-b-emerald-50 rotate-[-45deg] z-0" />
-
-              <div className="absolute inset-3 rounded-full bg-white shadow-[0_20px_50px_-20px_rgba(0,0,0,0.1)] flex flex-col items-center justify-center p-6 text-center ring-1 ring-slate-100/50 backdrop-blur-sm">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 mb-3 rounded-full flex items-center justify-center">
-                  <img src="/SRL.svg" alt="SRL Logo" className="w-full h-full object-contain" />
-                </div>
-
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ delay: 0.5, duration: 1 }}
-                  className="text-[#16B29D] font-bold text-[10px] sm:text-[11px] tracking-[0.25em] uppercase mb-3"
-                >
-                  Students Research Lab
-                </motion.span>
-
-                <div className="h-[1px] w-12 bg-slate-200 mb-3" />
-
-                <p className="text-slate-500 text-[11px] sm:text-xs leading-relaxed max-w-[200px] font-medium italic">
-                  "Exploring milestones from humble beginnings to a hub of innovation."
-                </p>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* RIGHT: SCROLLABLE TIMELINE */}
+          {/* Wrapper for scrollable content */}
           <div 
             ref={scrollContainerRef}
-            className="w-full lg:w-[58%] h-full overflow-y-auto overflow-x-hidden relative scroll-smooth bg-transparent z-10"
-            style={{ 
-              scrollbarWidth: 'thin', 
-              scrollbarColor: '#16B29D22 transparent' 
-            }}
+            className="absolute inset-0 flex flex-col lg:flex-row overflow-y-auto overflow-x-hidden z-10 scroll-smooth timeline-container"
           >
-            {/* Custom Scrollbar Styles */}
+            {/* Hide scrollbars for the whole container */}
             <style dangerouslySetInnerHTML={{ __html: `
-              #timeline div::-webkit-scrollbar { width: 4px; }
-              #timeline div::-webkit-scrollbar-track { background: transparent; }
-              #timeline div::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-              #timeline div::-webkit-scrollbar-thumb:hover { background: #16B29D; }
+              .timeline-container::-webkit-scrollbar { display: none; }
+              .timeline-container { -ms-overflow-style: none; scrollbar-width: none; }
             `}} />
 
-            <div className="pt-24 lg:pt-32 pb-0 px-4">
-              {timelineSteps.map((item, index) => (
-                <TimelineItem 
-                  key={index} 
-                  item={item} 
-                  index={index} 
-                  scrollRoot={scrollContainerRef}
-                  isLast={index === timelineSteps.length - 1}
-                />
-              ))}
+            {/* LEFT: STATIC HUB (Central Hub) - Sticky on Desktop */}
+            <div className="w-full lg:w-[42%] lg:sticky lg:top-0 h-[400px] lg:h-full relative flex flex-col items-center justify-center p-6 lg:p-8 z-10 bg-transparent flex-shrink-0">
+              
+              {/* Animated Title */}
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="relative lg:absolute lg:top-8 left-0 right-0 z-20 mb-6 lg:mb-0"
+              >
+                <GradientText
+                  colors={["#16B29D", "#FFD700", "#16B29D", "#FFD700"]}
+                  animationSpeed={4}
+                  className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter drop-shadow-sm"
+                >
+                  Our Journey
+                </GradientText>
+              </motion.div>
+
+              {/* Hub Circle */}
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                animate={{
+                  y: [0, -12, 0],
+                }}
+                transition={{
+                  scale: { duration: 0.5 },
+                  opacity: { duration: 0.5 },
+                  y: {
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }
+                }}
+                viewport={{ once: true }}
+                className="relative w-56 h-56 sm:w-72 sm:h-72 z-10"
+              >
+                <div className="absolute inset-0 rounded-full border-[10px] border-l-[#16B29D] border-t-[#16B29D] border-r-transparent border-b-transparent rotate-[-45deg] z-0 opacity-80" />
+                <div className="absolute inset-0 rounded-full border-[10px] border-l-transparent border-t-transparent border-r-emerald-50 border-b-emerald-50 rotate-[-45deg] z-0" />
+
+                <div className="absolute inset-3 rounded-full bg-white shadow-[0_20px_50px_-20px_rgba(0,0,0,0.1)] flex flex-col items-center justify-center p-6 text-center ring-1 ring-slate-100/50 backdrop-blur-sm">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 mb-3 rounded-full flex items-center justify-center">
+                    <img src="/SRL.svg" alt="SRL Logo" className="w-full h-full object-contain" />
+                  </div>
+
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: 0.5, duration: 1 }}
+                    className="text-[#16B29D] font-bold text-[10px] sm:text-[11px] tracking-[0.25em] uppercase mb-3"
+                  >
+                    Students Research Lab
+                  </motion.span>
+
+                  <div className="h-[1px] w-12 bg-slate-200 mb-3" />
+
+                  <p className="text-slate-500 text-[11px] sm:text-xs leading-relaxed max-w-[200px] font-medium italic">
+                    "Exploring milestones from humble beginnings to a hub of innovation."
+                  </p>
+                </div>
+              </motion.div>
             </div>
 
-            <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-white via-white/80 to-transparent pointer-events-none z-20" />
-            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-20" />
+            {/* RIGHT: TIMELINE (Items container) */}
+            <div className="w-full lg:w-[58%] h-auto relative bg-transparent z-10 flex flex-col justify-start">
+              <div className="pt-8 lg:pt-32 pb-0 px-4">
+                {timelineSteps.map((item, index) => (
+                  <TimelineItem 
+                    key={index} 
+                    item={item} 
+                    index={index} 
+                    scrollRoot={scrollContainerRef}
+                    isLast={index === timelineSteps.length - 1}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
 
+          {/* Gradients to signify scroll depth */}
+          <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-white via-white/80 to-transparent pointer-events-none z-20" />
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-20" />
         </div>
       </div>
     </section>

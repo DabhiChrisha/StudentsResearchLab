@@ -123,7 +123,7 @@ const Sessions = () => {
 
   return (
     <div
-      className="relative pt-10 pb-20 px-4 sm:px-6 lg:px-8 min-h-screen bg-[#F2EFE8] overflow-hidden"
+      className="relative pt-[112px] lg:pt-[128px] pb-20 px-4 sm:px-6 lg:px-8 min-h-screen bg-[#F2EFE8] overflow-hidden"
     >
       {/* Unique Mesh Gradient Background - Enhanced Beige in Right Corner */}
       <div className="absolute inset-0 z-0">

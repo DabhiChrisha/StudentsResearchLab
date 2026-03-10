@@ -94,7 +94,7 @@ export default function Researchers() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="py-12 min-h-screen bg-white"
+            className="pt-[120px] lg:pt-[136px] pb-12 min-h-screen bg-white"
         >
             <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}

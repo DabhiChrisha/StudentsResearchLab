@@ -97,7 +97,7 @@ export default function JoinUs() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 pt-24 pb-12">
+    <div className="max-w-4xl mx-auto px-4 pt-[168px] lg:pt-[184px] pb-12">
       <div className="bg-white rounded-2xl shadow-lg p-5 sm:p-8 md:p-12 relative">
         {/* Close Button */}
         <button
