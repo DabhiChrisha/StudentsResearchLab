@@ -11,13 +11,8 @@ import { Suspense } from 'react';
 
 const Home = () => {
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col"
-        >
+        <div className="flex flex-col">
+
             {/* 1. Hero Section */}
             <Hero />
 
@@ -36,7 +31,7 @@ const Home = () => {
 
                 <div className="max-w-7xl mx-auto">
                     {/* Main Container matching the reference image style */}
-                    <div className="bg-[#f2f9f7] rounded-[3.5rem] p-8 md:p-16 relative overflow-hidden border border-slate-100 shadow-sm">
+                    <div className="bg-[#f2f9f7] rounded-[2rem] lg:rounded-[3rem] 2xl:rounded-[3.5rem] p-6 md:p-10 lg:p-12 2xl:p-16 relative overflow-hidden border border-slate-100 shadow-sm">
 
                         {/* LEFT: Sparkles Background for the stats side */}
                         <div className="absolute left-0 top-0 w-1/2 h-full pointer-events-none">
@@ -45,7 +40,7 @@ const Home = () => {
                                 background="transparent"
                                 minSize={0.6}
                                 maxSize={1.4}
-                                particleDensity={100}
+                                particleDensity={60}
                                 className="w-full h-full"
                                 particleColor="#05877a"
                             />
@@ -59,7 +54,7 @@ const Home = () => {
                             {/* LEFT: Impact Metrics Stats */}
                             <div className="w-full lg:w-5/12 flex flex-col justify-center">
                                 <div className="mb-10">
-                                    <h2 className="text-5xl md:text-7xl font-bold font-display bg-gradient-to-r from-slate-900 via-slate-600 to-black bg-clip-text text-transparent animate-gradient-slow mb-6">Impact Metrics</h2>
+                                    <h2 className="text-4xl md:text-5xl lg:text-5xl 2xl:text-7xl font-bold font-display bg-gradient-to-r from-slate-900 via-slate-600 to-black bg-clip-text text-transparent animate-gradient-slow mb-6">Impact Metrics</h2>
                                     <p className="text-slate-500 text-lg">Measurable outcomes of our commitment to excellence.</p>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -95,9 +90,9 @@ const Home = () => {
                                     whileInView={{ opacity: 1, scale: 1 }}
                                     transition={{ duration: 0.6 }}
                                     viewport={{ once: true }}
-                                    className="relative h-[480px] md:h-[550px] overflow-hidden rounded-[3rem] bg-gradient-to-br from-[#cef0ea] via-[#f2e4b3] to-white p-8 md:p-14 text-slate-800 shadow-xl border border-white/50 flex flex-col justify-start"
+                                    className="relative h-[380px] md:h-[450px] 2xl:h-[550px] overflow-hidden rounded-[2rem] 2xl:rounded-[3rem] bg-gradient-to-br from-[#cef0ea] via-[#f2e4b3] to-white p-6 md:p-10 2xl:p-14 text-slate-800 shadow-xl border border-white/50 flex flex-col justify-start"
                                 >
-                                    <h3 className="relative z-20 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] text-slate-800">
+                                    <h3 className="relative z-20 text-3xl md:text-4xl lg:text-4xl 2xl:text-6xl font-bold tracking-tight leading-[1.1] text-slate-800">
                                         Advancing <br />
                                         knowledge <br />
                                         through <br />
@@ -105,7 +100,7 @@ const Home = () => {
                                         research.
                                     </h3>
 
-                                    <div className="absolute -right-20 -bottom-20 z-10 w-[500px] md:w-[650px] aspect-square flex items-center justify-center pointer-events-auto">
+                                    <div className="absolute -right-20 -bottom-20 z-10 w-[400px] md:w-[500px] 2xl:w-[650px] aspect-square flex items-center justify-center pointer-events-auto">
                                         <Suspense fallback={<div className="animate-pulse bg-white/10 rounded-full w-64 h-64" />}>
                                             <Earth
                                                 className="w-full h-full"
@@ -123,7 +118,7 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-        </motion.div>
+        </div>
     );
 };
 

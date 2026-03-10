@@ -169,10 +169,11 @@ const LeaderBoard = () => {
     // No longer strictly needed for mobile flow, but kept as a reference 
 
     return (
+        <div className="bg-white min-h-screen">
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="pt-6 pb-16 px-4 sm:px-6 lg:px-8 bg-[#fafafa] min-h-screen relative overflow-hidden font-sans max-w-screen-2xl mx-auto hide-cursor"
+            className="pt-[96px] lg:pt-[112px] pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden font-sans max-w-screen-2xl mx-auto hide-cursor"
         >
             {/* Elegant Background Accents */}
             <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-amber-500/5 to-transparent pointer-events-none z-0"></div>
@@ -520,6 +521,7 @@ const LeaderBoard = () => {
                 </div>
             )}
         </motion.div >
+        </div>
     );
 };
 

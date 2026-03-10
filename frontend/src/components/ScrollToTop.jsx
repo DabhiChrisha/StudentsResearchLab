@@ -1,10 +1,22 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 export default function ScrollToTop() {
   const [progress, setProgress] = useState(0);
   const [displayProgress, setDisplayProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const displayProgressRef = useRef(0);
+  const location = useLocation();
+
+  // Scroll to top on route change
+  useEffect(() => {
+    const mainContent = document.getElementById("main-content");
+    if (mainContent) {
+      mainContent.scrollTo({ top: 0, behavior: "instant" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const getScrollTarget = () => {

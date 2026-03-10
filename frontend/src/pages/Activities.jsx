@@ -51,7 +51,7 @@ const Activities = () => {
     return (
         <div
             ref={sectionRef}
-            className="relative pt-10 pb-20 px-6 min-h-screen bg-[#F2EFE8] overflow-hidden"
+            className="relative pt-[112px] lg:pt-[128px] pb-20 px-6 min-h-screen bg-[#F2EFE8] overflow-hidden"
         >
             {/* Unique Mesh Gradient Background - Minimal Dark Teal & Enhanced Beige */}
             <div className="absolute inset-0 z-0">

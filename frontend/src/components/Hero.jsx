@@ -34,7 +34,7 @@ export default function Hero() {
     }, [slides.length]);
 
     return (
-        <section id="top" className="relative w-full h-[calc(100vh-72px)] lg:h-[calc(100vh-88px)] overflow-hidden flex items-center justify-center bg-slate-900">
+        <section id="top" className="relative w-full h-screen overflow-hidden flex items-center justify-center bg-slate-900">
 
             {/* ===== BACKGROUND SLIDES ===== */}
             {slides.map((slide, index) => (
@@ -56,7 +56,7 @@ export default function Hero() {
 
             {/* ===== TEXT CONTAINER ===== */}
             <div
-                className={`absolute inset-0 z-20 flex flex-col px-4 sm:px-6 md:px-16 
+                className={`absolute inset-0 z-20 flex flex-col px-4 sm:px-6 md:px-16 pt-[72px] lg:pt-[88px]
                 items-center text-center justify-end pb-24 sm:pb-32
                 ${slides[current].align} md:pb-0
                 transition-all duration-700 pointer-events-none`}

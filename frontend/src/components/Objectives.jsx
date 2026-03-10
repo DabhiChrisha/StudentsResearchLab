@@ -46,20 +46,20 @@ const objectives = [
 ];
 
 const positions = [
-    { top: 55, left: 220 },
-    { top: 30, left: 1000 },
+    { top: 55, left: "17%" },
+    { top: 30, left: "76%" },
 
-    { top: 200, left: 440 },
-    { top: 90, left: 720 },
+    { top: 200, left: "34%" },
+    { top: 90, left: "55%" },
 
-    { top: 390, left: 320 },
-    { top: 280, left: 860 },
+    { top: 390, left: "24%" },
+    { top: 280, left: "66%" },
 
-    { top: 400, left: 640 },
-    { top: 400, left: 1100 },
+    { top: 400, left: "49%" },
+    { top: 400, left: "84%" },
 
-    { top: 570, left: 520 },
-    { top: 540, left: 920 }
+    { top: 570, left: "40%" },
+    { top: 540, left: "71%" }
 ];
 
 const colors = [
@@ -319,7 +319,7 @@ inset 0 0 10px #10b98144
                                     ease: "easeOut"
                                 }}
 
-                                className={`absolute ${isMobile ? "w-[150px] h-[90px]" : "w-[260px] h-[140px]"} rounded-[80px] flex flex-col items-center justify-center text-center px-6 bg-[#0f766e] overflow-hidden group`}
+                                className={`absolute ${isMobile ? "w-[150px] h-[90px]" : "w-[200px] h-[110px] xl:w-[220px] xl:h-[120px] 2xl:w-[260px] 2xl:h-[140px]"} rounded-[80px] flex flex-col items-center justify-center text-center px-6 bg-[#0f766e] overflow-hidden group`}
 
                                 style={{
                                     top: pos.top,
@@ -347,11 +347,11 @@ inset 0 0 10px #10b98144
                                     }}
                                 />
 
-                                <h3 className={`${isMobile ? "text-[10px]" : "text-lg"} font-bold text-white font-serif leading-snug`}>
+                                <h3 className={`${isMobile ? "text-[10px]" : "text-sm 2xl:text-lg"} font-bold text-white font-serif leading-snug`}>
                                     {obj.title}
                                 </h3>
 
-                                <p className={`${isMobile ? "text-[9px]" : "text-sm"} text-white/85 leading-relaxed mt-1`}>
+                                <p className={`${isMobile ? "text-[9px]" : "text-xs 2xl:text-sm"} text-white/85 leading-relaxed mt-1`}>
                                     {obj.description}
                                 </p>
 

@@ -1,26 +1,77 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const FloatingLines = ({
     enabledWaves = ["top", "middle", "bottom"],
-    lineCount = [2, 2, 2],
-    lineDistance = [8, 16, 14],
-    amplitude = 80.00,       // wave height
+    lineCount = [1, 1, 1],
+    lineDistance = [12, 18, 16],
+    amplitude = 60.00,       // wave height
     frequency = 0.05,      // wave density
     speed = 0.0005,        // animation speed
 }) => {
-    const [time, setTime] = useState(0);
     const rafRef = useRef(null);
+    const pathRefs = useRef([]);
 
     useEffect(() => {
+        let time = 0;
+        
         const animate = () => {
-            setTime((t) => t + 1);
+            time += 1;
+            
+            // Update each path directly via DOM mutation to avoid React renders
+            let pathIndex = 0;
+            const waves = ["top", "middle", "bottom"];
+            
+            waves.forEach((wave, waveIndex) => {
+                if (!enabledWaves.includes(wave)) return;
+
+                const count = Array.isArray(lineCount)
+                    ? lineCount[waveIndex]
+                    : lineCount;
+
+                const distance = Array.isArray(lineDistance)
+                    ? lineDistance[waveIndex]
+                    : lineDistance;
+
+                for (let i = 0; i < count; i++) {
+                    const baseY =
+                        wave === "top"
+                            ? 12 + i * distance
+                            : wave === "middle"
+                                ? 45 + i * distance
+                                : 78 + i * distance;
+
+                    const phase = time * speed + i * 0.6 + waveIndex * 1.5;
+
+                    const y1 = baseY + Math.sin(phase) * amplitude;
+                    const y2 = baseY + Math.sin(phase + frequency * 10) * amplitude;
+                    const y3 = baseY + Math.sin(phase + frequency * 20) * amplitude;
+
+                    const d = `
+                        M 0 ${y1}
+                        C 25 ${y2},
+                          50 ${y3},
+                          75 ${y2}
+                        S 100 ${y1},
+                          120 ${y3}
+                    `;
+                    
+                    const pathEl = pathRefs.current[pathIndex];
+                    if (pathEl) {
+                        pathEl.setAttribute("d", d);
+                    }
+                    pathIndex++;
+                }
+            });
+
             rafRef.current = requestAnimationFrame(animate);
         };
+        
         rafRef.current = requestAnimationFrame(animate);
         return () => cancelAnimationFrame(rafRef.current);
-    }, []);
+    }, [enabledWaves, lineCount, lineDistance, amplitude, frequency, speed]);
 
     const waves = ["top", "middle", "bottom"];
+    let renderIndex = 0;
 
     return (
         <svg
@@ -35,36 +86,12 @@ const FloatingLines = ({
                     ? lineCount[waveIndex]
                     : lineCount;
 
-                const distance = Array.isArray(lineDistance)
-                    ? lineDistance[waveIndex]
-                    : lineDistance;
-
                 return Array.from({ length: count }).map((_, i) => {
-                    const baseY =
-                        wave === "top"
-                            ? 12 + i * distance
-                            : wave === "middle"
-                                ? 45 + i * distance
-                                : 78 + i * distance;
-
-                    // 🌊 true wave motion
-                    const phase = time * speed + i * 0.6 + waveIndex * 1.5;
-
-                    const y1 = baseY + Math.sin(phase) * amplitude;
-                    const y2 = baseY + Math.sin(phase + frequency * 10) * amplitude;
-                    const y3 = baseY + Math.sin(phase + frequency * 20) * amplitude;
-
+                    const currentIndex = renderIndex++;
                     return (
                         <path
                             key={`${wave}-${i}`}
-                            d={`
-                M 0 ${y1}
-                C 25 ${y2},
-                  50 ${y3},
-                  75 ${y2}
-                S 100 ${y1},
-                  120 ${y3}
-              `}
+                            ref={el => pathRefs.current[currentIndex] = el}
                             fill="none"
                             stroke="rgba(19, 78, 74, 0.16)"
                             strokeWidth="0.45"
