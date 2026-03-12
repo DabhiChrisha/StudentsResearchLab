@@ -8,7 +8,7 @@ import Footer from './components/Footer';
 import AnimatedPreloader from './components/AnimatedPreloader';
 import ScrollToTop from './components/ScrollToTop';
 import MobileDock from './components/MobileDock';
-import Background from './components/Background';
+
 
 // Page Components (Lazy Loaded for Performance)
 const Home = lazy(() => import('./pages/Home'));
@@ -52,7 +52,7 @@ function AppContent({ loading, setLoading }) {
       <div className={`h-screen w-full flex flex-col overflow-hidden bg-primary relative transition-opacity duration-1000 ${loading ? 'opacity-0' : 'opacity-100'}`}>
         {!loading && (
           <>
-            <Background />
+
             <Navbar />
 
             <div id="main-content" className="flex-1 w-full h-full overflow-y-auto overflow-x-hidden relative z-10 pb-0">

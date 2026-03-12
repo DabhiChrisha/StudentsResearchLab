@@ -183,24 +183,12 @@ const Objectives = () => {
         <section
             ref={sectionRef}
             id="objectives"
-            className="py-24 bg-slate-50 relative overflow-hidden"
+            className="py-24 bg-white relative overflow-hidden"
         >
 
             <SplashCursorCard />
 
             <div className="max-w-7xl mx-auto px-6 relative">
-
-                {/* Mission Badge */}
-
-                <div className="flex justify-center mb-6">
-
-                    <div className="px-8 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold shadow-lg text-sm tracking-wide">
-
-                        Our Mission & Goals
-
-                    </div>
-
-                </div>
 
                 {/* Title */}
 
