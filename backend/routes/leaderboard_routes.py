@@ -12,6 +12,17 @@ MONTH_NAMES = [
     "July", "August", "September", "October", "November", "December"
 ]
 
+@router.get("/attendance_debug")
+async def get_attendance_debug():
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        att_req = client.get(
+            f"{SUPABASE_URL}/rest/v1/attendance?select=enrollment_no,date,hours",
+            headers=HEADERS
+        )
+        res = await att_req
+        res.raise_for_status()
+        return res.json()
+
 
 @router.get("/leaderboard")
 async def get_leaderboard():
@@ -38,7 +49,7 @@ async def get_leaderboard():
                 headers=HEADERS
             )
             details_req = client.get(
-                f"{SUPABASE_URL}/rest/v1/students_details?select=enrollment_no,student_name",
+                f"{SUPABASE_URL}/rest/v1/students_details?select=*",
                 headers=HEADERS
             )
 
@@ -65,12 +76,15 @@ async def get_leaderboard():
             points = rec.get("points", 0) or 0
             score_map[en] = score_map.get(en, 0) + points
 
-        # Name map from students_details
+        # Name and Image map from students_details
         name_map = {}
+        image_map = {}
         for rec in detail_records:
             en = str(rec.get("enrollment_no", "")).strip().upper()
             if rec.get("student_name"):
                 name_map[en] = rec["student_name"]
+            if rec.get("profile_image"):
+                image_map[en] = rec["profile_image"]
 
         # Attendance map: { "ENROLLMENT_NO": { date: total_hours } }
         attendance_map = {}
@@ -86,8 +100,16 @@ async def get_leaderboard():
         # SRL session dates set
         srl_dates = {r.get("session_date") for r in srl_records if r.get("session_date")}
 
+        # --- Compute total distinct recorded days in attendance globally ---
+        distinct_attendance_dates = {rec.get("date") for rec in attendance_records if rec.get("date")}
+        total_recorded_days = len(distinct_attendance_dates)
+
+        # Build prefix strictly for current calendar month
+        now = datetime.now()
+        current_month_prefix = f"{now.year:04d}-{now.month:02d}"
+
         # --- Compute per-student metrics ---
-        all_enrollments = set(score_map.keys())
+        all_enrollments = set(score_map.keys()) | set(name_map.keys()) | set(attendance_map.keys())
 
         students = []
         for en in all_enrollments:
@@ -97,14 +119,17 @@ async def get_leaderboard():
             # Attendance and SRL metrics
             attendance_pct = 0
             srl_pct = 0
-            total_hours = 0
+            current_month_hours = 0
+
             daily = attendance_map.get(en, {})
             if daily:
-                total_hours = round(sum(daily.values()), 2)
-                total_days = len(daily)
+                # Current month hours
+                current_month_hours = round(sum(h for d, h in daily.items() if d.startswith(current_month_prefix)), 2)
+                
+                # Attendance Percentage
                 present_days = sum(1 for h in daily.values() if h > 0)
-                if total_days > 0:
-                    attendance_pct = round((present_days / total_days) * 100)
+                if total_recorded_days > 0:
+                    attendance_pct = round((present_days / total_recorded_days) * 100)
 
                 srl_valid = {d: h for d, h in daily.items() if d in srl_dates}
                 total_srl = len(srl_valid)
@@ -115,10 +140,11 @@ async def get_leaderboard():
             students.append({
                 "enrollment_no": en,
                 "name": name,
+                "image": image_map.get(en, None),
                 "score": total_points,
                 "attendance": attendance_pct,
                 "srlAttendance": srl_pct,
-                "totalHours": total_hours,
+                "totalHours": current_month_hours,
             })
 
         # Sort by total points desc, then attendance desc
@@ -133,6 +159,74 @@ async def get_leaderboard():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@router.get("/leaderboard/top-hours")
+async def get_top_hours_leaderboard():
+    """
+    Returns exactly the top 5 students by hours dedicated in February 2026.
+    """
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            # Fetch attendance strictly between 2026-02-01 and 2026-02-28
+            att_req = client.get(
+                f"{SUPABASE_URL}/rest/v1/attendance?select=enrollment_no,date,hours&date=gte.2026-02-01&date=lte.2026-02-28",
+                headers=HEADERS
+            )
+            details_req = client.get(
+                f"{SUPABASE_URL}/rest/v1/students_details?select=*",
+                headers=HEADERS
+            )
+            att_res, details_res = await asyncio.gather(att_req, details_req)
+            att_res.raise_for_status()
+            details_res.raise_for_status()
+
+            attendance_records = att_res.json()
+            detail_records = details_res.json()
+
+        # Build name & image maps
+        name_map = {}
+        image_map = {}
+        for rec in detail_records:
+            en = str(rec.get("enrollment_no", "")).strip().upper()
+            if rec.get("student_name"):
+                name_map[en] = rec["student_name"]
+            if rec.get("profile_image"):
+                image_map[en] = rec["profile_image"]
+
+        # Aggregate hours for the month
+        monthly_hours_map = {}
+        for rec in attendance_records:
+            en = str(rec.get("enrollment_no", "")).strip().upper()
+            hours = float(rec.get("hours") or 0)
+            if en:
+                monthly_hours_map[en] = monthly_hours_map.get(en, 0) + hours
+
+        # Build result list
+        students = []
+        for en, total_hrs in monthly_hours_map.items():
+            students.append({
+                "enrollment_no": en,
+                "name": name_map.get(en, "Unknown Student"),
+                "image": image_map.get(en, None),
+                "totalHours": round(total_hrs, 2),
+                # Safe defaults for podium usage
+                "score": 0, "attendance": 0, "srlAttendance": 0
+            })
+
+        # Sort by totalHours DESC
+        students.sort(key=lambda s: s["totalHours"], reverse=True)
+
+        # Apply LIMIT 5
+        top_5 = students[:5]
+
+        # Assign ranks
+        for idx, student in enumerate(top_5):
+            student["rank"] = idx + 1
+
+        return {"leaderboard": top_5}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/leaderboard/monthly")
 async def get_monthly_leaderboard(year: int = None, month: int = None):
@@ -157,8 +251,8 @@ async def get_monthly_leaderboard(year: int = None, month: int = None):
                 f"&month=eq.{month_name}&year=eq.{year}",
                 headers=HEADERS
             )
-            # Fetch attendance filtered to this month for hours
-            date_prefix = f"{year:04d}-{month:02d}"
+            # Fetch attendance filtered strictly to this month
+            current_date_prefix = f"{year:04d}-{month:02d}"
             att_req = client.get(
                 f"{SUPABASE_URL}/rest/v1/attendance?select=enrollment_no,date,hours",
                 headers=HEADERS
@@ -168,7 +262,7 @@ async def get_monthly_leaderboard(year: int = None, month: int = None):
                 headers=HEADERS
             )
             details_req = client.get(
-                f"{SUPABASE_URL}/rest/v1/students_details?select=enrollment_no,student_name",
+                f"{SUPABASE_URL}/rest/v1/students_details?select=*",
                 headers=HEADERS
             )
 
@@ -206,7 +300,8 @@ async def get_monthly_leaderboard(year: int = None, month: int = None):
                 actual_month = prev_month
                 actual_year = prev_year
                 actual_month_name = prev_month_name
-                date_prefix = f"{prev_year:04d}-{prev_month:02d}"
+                # Note: We purposely do NOT update current_date_prefix here 
+                # because attendance hours should ALWAYS strictly be current month
 
         # Score map for the month (each student should have one row per month)
         score_map = {}
@@ -215,32 +310,38 @@ async def get_monthly_leaderboard(year: int = None, month: int = None):
             points = rec.get("points", 0) or 0
             score_map[en] = score_map.get(en, 0) + points
 
-        # Name map
+        # Name and Image map
         name_map = {}
+        image_map = {}
         for rec in detail_records:
             en = str(rec.get("enrollment_no", "")).strip().upper()
             if rec.get("student_name"):
                 name_map[en] = rec["student_name"]
+            if rec.get("profile_image"):
+                image_map[en] = rec["profile_image"]
 
-        # Attendance map filtered to the target month
+        # Attendance map filtered exclusively to the current strictly requested month
         attendance_map = {}
         for rec in attendance_records:
             en = str(rec.get("enrollment_no", "")).strip().upper()
             date = rec.get("date")
             hours = float(rec.get("hours") or 0)
-            if en and date and date.startswith(date_prefix):
+            if en and date and date.startswith(current_date_prefix):
                 if en not in attendance_map:
                     attendance_map[en] = {}
                 attendance_map[en][date] = attendance_map[en].get(date, 0) + hours
 
-        # SRL session dates filtered to the target month
+        # SRL session dates filtered to the strictly requested month
         srl_dates = {
             r.get("session_date") for r in srl_records
-            if r.get("session_date") and r["session_date"].startswith(date_prefix)
+            if r.get("session_date") and r["session_date"].startswith(current_date_prefix)
         }
+        # Compute total distinct recorded days in the MONTH's attendance
+        distinct_attendance_dates = {rec.get("date") for rec in attendance_records if rec.get("date") and rec["date"].startswith(current_date_prefix)}
+        total_recorded_days = len(distinct_attendance_dates)
 
         # Compute per-student metrics
-        all_enrollments = set(score_map.keys())
+        all_enrollments = set(score_map.keys()) | set(name_map.keys()) | set(attendance_map.keys())
         students = []
         for en in all_enrollments:
             points = score_map.get(en, 0)
@@ -248,14 +349,13 @@ async def get_monthly_leaderboard(year: int = None, month: int = None):
 
             attendance_pct = 0
             srl_pct = 0
-            total_hours = 0
+            current_month_hours = 0
             daily = attendance_map.get(en, {})
             if daily:
-                total_hours = round(sum(daily.values()), 2)
-                total_days = len(daily)
+                current_month_hours = round(sum(daily.values()), 2)
                 present_days = sum(1 for h in daily.values() if h > 0)
-                if total_days > 0:
-                    attendance_pct = round((present_days / total_days) * 100)
+                if total_recorded_days > 0:
+                    attendance_pct = round((present_days / total_recorded_days) * 100)
 
                 srl_valid = {d: h for d, h in daily.items() if d in srl_dates}
                 total_srl = len(srl_valid)
@@ -266,10 +366,11 @@ async def get_monthly_leaderboard(year: int = None, month: int = None):
             students.append({
                 "enrollment_no": en,
                 "name": name,
+                "image": image_map.get(en, None),
                 "score": points,
                 "attendance": attendance_pct,
                 "srlAttendance": srl_pct,
-                "totalHours": total_hours,
+                "totalHours": current_month_hours,
             })
 
         # Sort by points desc, then attendance desc

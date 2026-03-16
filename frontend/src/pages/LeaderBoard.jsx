@@ -61,6 +61,7 @@ const mergeProfiles = (leaderboard) => {
             id: index + 1,
             enrollment: student.enrollment_no,
             name: student.name || profile.name || "Unknown Student",
+            image: student.image || profile.image || "/SRL.svg",
             score: student.score || 0,
             attendance: student.attendance || 0,
             srlAttendance: student.srlAttendance || 0,
@@ -73,15 +74,17 @@ const mergeProfiles = (leaderboard) => {
 const LeaderBoard = () => {
     const [allStudents, setAllStudents] = useState([]);
     const [monthlyStudents, setMonthlyStudents] = useState([]);
+    const [top5ByHours, setTop5ByHours] = useState([]);
     const [monthLabel, setMonthLabel] = useState('');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
-                const [overallRes, monthlyRes] = await Promise.all([
+                const [overallRes, monthlyRes, hoursRes] = await Promise.all([
                     fetch(`${API_BASE}/api/leaderboard`),
                     fetch(`${API_BASE}/api/leaderboard/monthly`),
+                    fetch(`${API_BASE}/api/leaderboard/top-hours`),
                 ]);
 
                 if (!overallRes.ok) throw new Error("Failed to fetch overall leaderboard");
@@ -101,12 +104,20 @@ const LeaderBoard = () => {
                     setMonthLabel(MONTH_NAMES[new Date().getMonth()] + ' ' + new Date().getFullYear());
                 }
 
+                if (hoursRes.ok) {
+                    const hoursJson = await hoursRes.json();
+                    setTop5ByHours(mergeProfiles(hoursJson.leaderboard));
+                } else {
+                    setTop5ByHours([]);
+                }
+
                 setLoading(false);
             } catch (error) {
                 console.error("Error building leaderboard:", error);
                 const fallbackStudents = STUDENT_PROFILES.map((s, i) => ({ ...s, id: i + 1, score: 0, rank: i + 1, attendance: 0, srlAttendance: 0, totalHours: 0 }));
                 setAllStudents(fallbackStudents);
                 setMonthlyStudents(fallbackStudents);
+                setTop5ByHours(fallbackStudents.slice(0, 5));
                 setMonthLabel(MONTH_NAMES[new Date().getMonth()] + ' ' + new Date().getFullYear());
                 setLoading(false);
             }
@@ -118,8 +129,6 @@ const LeaderBoard = () => {
     const top5ByPoints = allStudents.slice(0, 5);
     // Top 5 monthly
     const top5Monthly = monthlyStudents.slice(0, 5);
-    // Top 5 by hours dedicated (sort by totalHours desc)
-    const top5ByHours = [...allStudents].sort((a, b) => b.totalHours - a.totalHours).slice(0, 5);
 
 
     // Reusable podium section with all 5 members in a horizontal row
@@ -144,11 +153,11 @@ const LeaderBoard = () => {
                 : students.map((_, i) => i + 1);
 
         const podiumConfig = {
-            1: { podiumH: 'h-[180px]', avatarSize: 'w-[70px] h-[70px]', ringColor: 'ring-yellow-400', gradient: 'from-yellow-100 via-amber-50 to-yellow-200', border: 'border-yellow-300', textColor: 'text-yellow-700', scoreSize: 'text-base', rankBg: 'bg-yellow-400', rankText: 'text-white' },
-            2: { podiumH: 'h-[150px]', avatarSize: 'w-[58px] h-[58px]', ringColor: 'ring-slate-300', gradient: 'from-slate-100 via-gray-50 to-slate-200', border: 'border-slate-300', textColor: 'text-slate-600', scoreSize: 'text-sm', rankBg: 'bg-slate-400', rankText: 'text-white' },
-            3: { podiumH: 'h-[130px]', avatarSize: 'w-[54px] h-[54px]', ringColor: 'ring-orange-300', gradient: 'from-orange-100 via-amber-50 to-orange-200', border: 'border-orange-300', textColor: 'text-orange-700', scoreSize: 'text-sm', rankBg: 'bg-orange-400', rankText: 'text-white' },
-            4: { podiumH: 'h-[110px]', avatarSize: 'w-[48px] h-[48px]', ringColor: 'ring-gray-200', gradient: 'from-gray-50 to-gray-100', border: 'border-gray-200', textColor: 'text-gray-500', scoreSize: 'text-xs', rankBg: 'bg-gray-300', rankText: 'text-gray-600' },
-            5: { podiumH: 'h-[110px]', avatarSize: 'w-[44px] h-[44px]', ringColor: 'ring-gray-200', gradient: 'from-gray-50 to-gray-100', border: 'border-gray-200', textColor: 'text-gray-500', scoreSize: 'text-xs', rankBg: 'bg-gray-300', rankText: 'text-gray-600' },
+            1: { podiumH: 'h-[220px]', avatarSize: 'w-[70px] h-[70px]', ringColor: 'ring-yellow-400', gradient: 'from-yellow-100 via-amber-50 to-yellow-200', border: 'border-yellow-300', textColor: 'text-yellow-700', scoreSize: 'text-base', rankBg: 'bg-yellow-400', rankText: 'text-white' },
+            2: { podiumH: 'h-[190px]', avatarSize: 'w-[58px] h-[58px]', ringColor: 'ring-slate-300', gradient: 'from-slate-100 via-gray-50 to-slate-200', border: 'border-slate-300', textColor: 'text-slate-600', scoreSize: 'text-sm', rankBg: 'bg-slate-400', rankText: 'text-white' },
+            3: { podiumH: 'h-[170px]', avatarSize: 'w-[54px] h-[54px]', ringColor: 'ring-orange-300', gradient: 'from-orange-100 via-amber-50 to-orange-200', border: 'border-orange-300', textColor: 'text-orange-700', scoreSize: 'text-sm', rankBg: 'bg-orange-400', rankText: 'text-white' },
+            4: { podiumH: 'h-[150px]', avatarSize: 'w-[48px] h-[48px]', ringColor: 'ring-gray-200', gradient: 'from-gray-50 to-gray-100', border: 'border-gray-200', textColor: 'text-gray-500', scoreSize: 'text-xs', rankBg: 'bg-gray-300', rankText: 'text-gray-600' },
+            5: { podiumH: 'h-[150px]', avatarSize: 'w-[44px] h-[44px]', ringColor: 'ring-gray-200', gradient: 'from-gray-50 to-gray-100', border: 'border-gray-200', textColor: 'text-gray-500', scoreSize: 'text-xs', rankBg: 'bg-gray-300', rankText: 'text-gray-600' },
         };
 
         return (
@@ -207,18 +216,24 @@ const LeaderBoard = () => {
                                         className={`w-full ${cfg.podiumH} bg-gradient-to-b ${cfg.gradient} rounded-xl border ${cfg.border} flex flex-col items-center justify-end pb-2 pt-8 px-1 shadow-sm group-hover:shadow-md transition-all duration-300 cursor-default`}
                                     >
                                         {/* Rank Number */}
-                                        <div className={`${cfg.rankBg} ${cfg.rankText} w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black mb-1 shadow-sm`}>
+                                        <div className={`${cfg.rankBg} ${cfg.rankText} w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black mb-1 shadow-sm shrink-0`}>
                                             {rank}
                                         </div>
+                                        {/* Name */}
+                                        <div className="w-full px-0.5 mb-0.5 flex items-center justify-center flex-1">
+                                            <p className={`font-bold text-gray-800 text-center leading-[1.1] line-clamp-2 break-words ${rank === 1 ? 'text-[11px] sm:text-[12px]' : 'text-[9px] sm:text-[10px]'}`} title={displayName}>
+                                                {displayName}
+                                            </p>
+                                        </div>
                                         {/* Enrollment */}
-                                        <p className="text-[7px] text-gray-400 font-semibold truncate w-full text-center leading-tight">
+                                        <p className="text-[7px] text-gray-500 font-semibold truncate w-full text-center leading-none mb-1 shrink-0">
                                             {student.enrollment}
                                         </p>
                                         {/* Score */}
                                         <span className={`${cfg.scoreSize} font-black ${cfg.textColor} leading-tight`}>
                                             {getValue(student)}
                                         </span>
-                                        <span className="text-[6px] font-bold text-gray-400 uppercase">{valueLabel}</span>
+                                        <span className="text-[6px] font-bold text-gray-400 uppercase text-center whitespace-pre-line">{valueLabel}</span>
                                     </motion.div>
                                 </motion.div>
                             );
@@ -262,13 +277,65 @@ const LeaderBoard = () => {
                 />
 
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center min-h-[60vh] relative z-10">
-                        <div className="relative w-20 h-20">
-                            <div className="absolute inset-0 border-4 border-amber-100 rounded-full"></div>
-                            <div className="absolute inset-0 border-4 border-amber-500 rounded-full border-t-transparent animate-spin"></div>
-                            <Trophy className="absolute inset-0 m-auto text-amber-500" size={24} />
+                    <div className="max-w-7xl mx-auto relative z-10">
+                        {/* Header Skeleton */}
+                        <div className="flex flex-col items-center justify-center gap-4 mb-8 text-center animate-pulse">
+                            <div className="w-32 h-8 bg-white/60 rounded-full border border-gray-200 mb-2"></div>
+                            <div className="w-3/4 max-w-lg h-12 sm:h-16 bg-gray-200/60 rounded-xl"></div>
+                            <div className="w-2/3 max-w-sm h-4 bg-gray-200/60 rounded-md mt-2"></div>
                         </div>
-                        <p className="mt-6 text-gray-600 font-semibold tracking-wide animate-pulse uppercase text-sm">Computing Rankings...</p>
+
+                        {/* Two-Column Dashboard Layout Skeleton */}
+                        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-6 lg:items-stretch">
+                            {/* LEFT COLUMN: Three Podium Sections Skeletons */}
+                            <div className="flex flex-col gap-5">
+                                {[...Array(3)].map((_, i) => (
+                                    <div key={i} className="bg-white/60 rounded-2xl border border-gray-100 shadow-sm overflow-hidden animate-pulse">
+                                        <div className="flex items-center gap-2 px-4 py-3 bg-gray-50/50 border-b border-gray-100">
+                                            <div className="w-5 h-5 bg-gray-200/80 rounded-full"></div>
+                                            <div className="w-32 h-4 bg-gray-200/80 rounded-md"></div>
+                                        </div>
+                                        <div className="px-3 pt-14 pb-4">
+                                            <div className="flex items-end justify-center gap-1.5 sm:gap-2">
+                                                {[110, 150, 180, 130, 110].map((h, j) => (
+                                                    <div key={j} className="flex-1 flex flex-col items-center">
+                                                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200/80 rounded-full mb-[-15px] relative z-10 border-[3px] border-white"></div>
+                                                        <div className={`w-full bg-gray-100/80 rounded-xl`} style={{ height: `${h}px` }}></div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* RIGHT COLUMN: Full Member Rankings Skeleton */}
+                            <div className="relative h-[600px] lg:h-auto lg:min-h-0">
+                                <div className="lg:absolute lg:inset-0 w-full h-full bg-white/60 rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col min-h-0 animate-pulse">
+                                    <div className="flex items-center gap-2 px-4 py-3 bg-gray-50/50 border-b border-gray-100 shrink-0">
+                                        <div className="w-5 h-5 bg-gray-200/80 rounded-full"></div>
+                                        <div className="w-40 h-4 bg-gray-200/80 rounded-md"></div>
+                                    </div>
+                                    <div className="flex-1 overflow-hidden p-3 space-y-2">
+                                        {[...Array(6)].map((_, i) => (
+                                            <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white border border-gray-100/50">
+                                                <div className="w-4 h-5 bg-gray-200/60 rounded-md shrink-0"></div>
+                                                <div className="w-10 h-10 bg-gray-200/60 rounded-xl shrink-0"></div>
+                                                <div className="flex-1 space-y-2">
+                                                    <div className="h-4 bg-gray-200/60 rounded-md w-1/3"></div>
+                                                    <div className="h-3 bg-gray-200/60 rounded-md w-1/2"></div>
+                                                </div>
+                                                <div className="hidden sm:flex gap-4 shrink-0 px-2">
+                                                    <div className="flex flex-col items-center gap-1"><div className="w-6 h-4 bg-gray-200/60 rounded"></div><div className="w-8 h-2 bg-gray-200/60 rounded"></div></div>
+                                                    <div className="flex flex-col items-center gap-1"><div className="w-6 h-4 bg-gray-200/60 rounded"></div><div className="w-8 h-2 bg-gray-200/60 rounded"></div></div>
+                                                    <div className="flex flex-col items-center gap-1"><div className="w-6 h-4 bg-gray-200/60 rounded"></div><div className="w-8 h-2 bg-gray-200/60 rounded"></div></div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 ) : (
                     <div className="max-w-7xl mx-auto relative z-10">
@@ -313,11 +380,11 @@ const LeaderBoard = () => {
                                     accentColor="bg-teal-50 text-teal-800"
                                 />
                                 <PodiumSection
-                                    title="Top 5 by Hours Dedicated"
+                                    title="Top 5 by Hours — February 2026"
                                     icon={Timer}
                                     students={top5ByHours}
                                     valueKey="totalHours"
-                                    valueLabel="HRS"
+                                    valueLabel={"Hours\nDedicated"}
                                     accentColor="bg-violet-50 text-violet-800"
                                 />
                             </div>
@@ -372,12 +439,12 @@ const LeaderBoard = () => {
                                                 <div className="hidden sm:flex items-center gap-3 shrink-0">
                                                     <div className="text-center">
                                                         <p className="text-xs font-black text-blue-500">{student.srlAttendance}%</p>
-                                                        <p className="text-[8px] font-bold text-gray-400 uppercase tracking-wider">SRL</p>
+                                                        <p className="text-[8px] font-bold text-gray-400 uppercase tracking-wider text-center">SRL<br/>Sessions</p>
                                                     </div>
                                                     <div className="w-px h-6 bg-gray-100"></div>
                                                     <div className="text-center">
                                                         <p className="text-xs font-black text-emerald-500">{student.attendance}%</p>
-                                                        <p className="text-[8px] font-bold text-gray-400 uppercase tracking-wider">Hours</p>
+                                                        <p className="text-[8px] font-bold text-gray-400 uppercase tracking-wider text-center">Hours<br/>Dedicated</p>
                                                     </div>
                                                     <div className="w-px h-6 bg-gray-100"></div>
                                                     <div className="text-center min-w-[36px]">
@@ -388,8 +455,8 @@ const LeaderBoard = () => {
                                                 {/* Mobile stats (compact) */}
                                                 <div className="flex sm:hidden flex-col items-end shrink-0">
                                                     <span className="text-sm font-black text-gray-800">{student.score} <span className="text-[8px] text-gray-400">PTS</span></span>
-                                                    <span className="text-[10px] text-blue-500 font-bold">{student.srlAttendance}% SRL</span>
-                                                    <span className="text-[10px] text-emerald-500 font-bold">{student.attendance}% Hrs</span>
+                                                    <span className="text-[10px] text-blue-500 font-bold">SRL Sessions: {student.srlAttendance}%</span>
+                                                    <span className="text-[10px] text-emerald-500 font-bold">Hours Dedicated: {student.attendance}%</span>
                                                 </div>
                                             </motion.div>
                                         );

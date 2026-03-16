@@ -56,7 +56,15 @@ function AppContent({ loading, setLoading }) {
             <Navbar />
 
             <div id="main-content" className="flex-1 w-full h-full overflow-y-auto overflow-x-hidden relative z-10 pb-0">
-              <Suspense fallback={<div className="w-full h-full flex items-center justify-center">Loading...</div>}>
+              <Suspense fallback={
+                <div className="w-full h-[60vh] flex items-center justify-center">
+                  <div className="flex gap-2">
+                    <div className="w-2.5 h-2.5 bg-amber-500/80 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                    <div className="w-2.5 h-2.5 bg-amber-500/80 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="w-2.5 h-2.5 bg-amber-500/80 rounded-full animate-bounce"></div>
+                  </div>
+                </div>
+              }>
                 <AnimatePresence mode="wait">
                   <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<PageTransitionWrapper><Home /></PageTransitionWrapper>} />
