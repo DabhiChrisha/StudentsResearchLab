@@ -98,26 +98,26 @@ const Navbar = () => {
         <>
             <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled ? 'bg-[#FAF9F6]/95 backdrop-blur-md shadow-md py-2' : 'bg-[#FAF9F6] py-3.5'}`}>
                 {/* MAIN CONTAINER */}
-                <div className="max-w-[1600px] mx-auto w-full flex items-center justify-between px-4 lg:px-6 xl:px-8">
+                <div className="max-w-[1700px] mx-auto w-full flex items-center justify-between px-3 md:px-6 lg:px-8">
 
                     {/* WRAPPER 1: LEFT (Logo & Site Title) */}
-                    <Link to="/" className="flex items-center gap-2 lg:gap-3 group shrink min-w-0">
-                        <div className="w-[52px] h-[52px] lg:w-[56px] lg:h-[56px] xl:w-[70px] xl:h-[70px] -my-[6px] lg:-my-[8px] xl:-my-[11px] bg-white rounded-full p-1 lg:p-1.5 flex items-center justify-center shadow-md shrink-0 transition-transform group-hover:scale-105">
+                    <Link to="/" className="flex items-center gap-1.5 md:gap-3 group shrink min-w-0">
+                        <div className="w-[48px] h-[48px] md:w-[52px] md:h-[52px] lg:w-[62px] lg:h-[62px] xl:w-[72px] xl:h-[72px] -my-[6px] md:-my-[8px] xl:-my-[11px] bg-white rounded-full p-0.5 md:p-1 flex items-center justify-center shadow-[0_0_15px_rgba(255,230,150,0.5)] lg:shadow-[0_0_22px_rgba(255,235,160,0.45)] shrink-0 transition-all duration-500 group-hover:scale-105 group-hover:shadow-[0_0_28px_rgba(255,215,100,0.65)]">
                             <img src={srlLogo} alt="SRL" className="w-full h-full object-contain" />
                         </div>
                         <div className="flex flex-col justify-center min-w-0">
-                            <h1 className="text-teal-900 font-serif font-bold text-[12px] md:text-[14px] lg:text-[13px] xl:text-[16px] tracking-tight leading-tight whitespace-nowrap m-0">
+                            <h1 className="text-teal-900 font-serif font-bold text-[10px] sm:text-[11px] md:text-[14px] lg:text-[15px] xl:text-[17px] tracking-tight leading-tight whitespace-nowrap m-0 transition-all">
                                 Students Research Lab <span className="text-teal-600">(SRL)</span>
                             </h1>
-                            <p className="text-teal-800/80 font-sans font-semibold text-[8px] md:text-[9px] lg:text-[8px] xl:text-[10px] uppercase tracking-[0.14em] whitespace-nowrap leading-tight m-0">
+                            <p className="text-teal-800/80 font-sans font-semibold text-[7px] sm:text-[8px] md:text-[9px] lg:text-[10px] xl:text-[11px] uppercase tracking-[0.14em] whitespace-nowrap leading-tight m-0 opacity-90">
                                 MMPSRPC, KSV
                             </p>
                         </div>
                     </Link>
 
                     {/* WRAPPER 2: CENTER-RIGHT (Navigation Links) */}
-                    <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-1 xl:px-2">
-                        <div className="flex items-center justify-center w-full max-w-[800px] gap-x-1.5 xl:gap-x-3 2xl:gap-x-4">
+                    <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-2 xl:px-4">
+                        <div className="flex items-center justify-center w-full max-w-[850px] gap-x-2 xl:gap-x-4 2xl:gap-x-6">
                             {menuItems.map((item) => (
                                 <NavLink
                                     key={item.label}
@@ -143,7 +143,7 @@ const Navbar = () => {
                                     className={`flex items-center gap-0.5 py-1 text-[10px] xl:text-[11px] 2xl:text-[13px] font-sans font-semibold transition-all whitespace-nowrap tracking-[0.01em] xl:tracking-[0.03em] relative group/aboutlink ${isAboutActive || isAboutClicked ? 'text-teal-700' : 'text-teal-900/70 hover:text-teal-900'}`}
                                 >
                                     About Us <ChevronDown size={14} className={`transition-transform duration-300 ${aboutDropdownOpen ? 'rotate-180' : ''}`} />
-                                    <span className={`absolute bottom-0 left-0 h-[3px] bg-teal-600 transition-all duration-300 ${isAboutActive || isAboutClicked ? 'w-full' : 'w-0 group-hover/aboutlink:w-full'}`}></span>
+                                    <span className={`absolute bottom-[-2px] left-0 h-[3px] bg-teal-600 transition-all duration-300 ${isAboutActive || isAboutClicked ? 'w-full' : 'w-0 group-hover/aboutlink:w-full'}`}></span>
                                 </button>
                                 <AnimatePresence>
                                     {aboutDropdownOpen && (
