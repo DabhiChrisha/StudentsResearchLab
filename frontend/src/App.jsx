@@ -55,9 +55,10 @@ function AppContent({ loading, setLoading }) {
 
             <Navbar />
 
-            <div id="main-content" className="flex-1 w-full h-full overflow-y-auto overflow-x-hidden relative z-10 pb-0">
+            <div id="main-content" className="flex-1 w-full h-full overflow-y-scroll overflow-x-hidden relative z-10 pb-0 flex flex-col justify-between">
+              <div className="flex-1 w-full flex flex-col">
               <Suspense fallback={
-                <div className="w-full h-[60vh] flex items-center justify-center">
+                <div className="w-full flex-1 flex items-center justify-center">
                   <div className="flex gap-2">
                     <div className="w-2.5 h-2.5 bg-amber-500/80 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                     <div className="w-2.5 h-2.5 bg-amber-500/80 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
@@ -81,8 +82,11 @@ function AppContent({ loading, setLoading }) {
                   </Routes>
                 </AnimatePresence>
               </Suspense>
+              </div>
 
-              <Footer />
+              <div className="mt-auto w-full">
+                <Footer />
+              </div>
             </div>
 
             <MobileDock />

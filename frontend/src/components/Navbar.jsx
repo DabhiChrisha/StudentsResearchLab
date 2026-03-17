@@ -76,12 +76,13 @@ const Navbar = () => {
 
     const closeSidebar = useCallback(() => setOpen(false), []);
 
-    // Exact Sequence: 1. Home | 2. SRL Sessions | 3. Achievements | 4. Activities | 5. Researchers | 6. Leaderboard | 7. About Us
+    // Exact Sequence: 1. Home | 2. SRL Sessions | 3. Achievements | 4. Activities | 5. Publications | 6. Researchers | 7. Leaderboard | 8. About Us
     const menuItems = [
         { label: "Home", path: "/" },
         { label: "SRL Sessions", path: "/sessions" },
         { label: "Achievements", path: "/achievements" },
         { label: "Activities", path: "/activities" },
+        { label: "Publications", path: "/publications" },
         { label: "Researchers", path: "/researchers" },
         { label: "Leaderboard", path: "/leaderboard" },
     ];
@@ -221,7 +222,7 @@ const Navbar = () => {
 
             {/* MOBILE DRAWER */}
             {/* MOBILE DRAWER (Always mounted for 60fps hardware accelerated sliding) */}
-            <div 
+            <div
                 className={`fixed inset-0 z-[200] xl:hidden transition-opacity duration-500 ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
                 aria-hidden={!open}
             >
@@ -230,7 +231,7 @@ const Navbar = () => {
                     onClick={closeSidebar}
                     className={`absolute inset-0 bg-black/40 transition-opacity duration-500 ease-out ${open ? 'opacity-100' : 'opacity-0'}`}
                 />
-                
+
                 {/* Drawer panel */}
                 <div
                     className={`absolute top-0 right-0 w-[85vw] max-w-sm h-full bg-white shadow-2xl flex flex-col pointer-events-auto transform transition-transform duration-500 ease-out ${open ? 'translate-x-0' : 'translate-x-full'}`}
@@ -247,7 +248,7 @@ const Navbar = () => {
                             <X size={24} />
                         </button>
                     </div>
-                    
+
                     <div className="flex-1 overflow-y-auto py-4 px-4 space-y-1">
                         {menuItems.map((item) => (
                             <NavLink key={item.label} to={item.path} onClick={closeSidebar} className={({ isActive }) => `block px-4 py-3 rounded-xl font-semibold text-[15px] transition-colors ${isActive ? 'bg-teal-50 text-teal-700' : 'text-gray-700 hover:bg-gray-50'}`}>
