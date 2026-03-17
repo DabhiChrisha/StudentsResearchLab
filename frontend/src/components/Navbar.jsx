@@ -110,7 +110,7 @@ const Navbar = () => {
                                 Students Research Lab <span className="text-teal-600">(SRL)</span>
                             </h1>
                             <p className="text-teal-800/80 font-sans font-semibold text-[8px] md:text-[9px] lg:text-[8px] xl:text-[10px] uppercase tracking-[0.14em] whitespace-nowrap leading-tight m-0">
-                                MMPSRPC, Kadi Sarva Vishwavidyalaya
+                                MMPSRPC, KSV
                             </p>
                         </div>
                     </Link>
@@ -201,15 +201,15 @@ const Navbar = () => {
                         </div>
 
                         {/* Partner logos visible from xl+ */}
-                        <div className="hidden xl:flex items-center gap-x-2 2xl:gap-x-4 border-l border-teal-900/10 pl-2 2xl:pl-4 shrink-0">
+                        <div className="hidden xl:flex items-center gap-x-3 2xl:gap-x-5 border-l border-teal-900/10 pl-3 2xl:pl-5 shrink-0">
                             <a href="https://www.svkm.org.in/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300">
-                                <img src={svkmLogo} alt="SVKM" className="h-6 2xl:h-8 w-auto object-contain" />
+                                <img src={svkmLogo} alt="SVKM" className="h-9 2xl:h-12 w-auto object-contain" />
                             </a>
                             <a href="https://www.ksv.ac.in/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300">
-                                <img src={ksvLogo} alt="KSV" className="h-6 2xl:h-8 w-auto object-contain" />
+                                <img src={ksvLogo} alt="KSV" className="h-9 2xl:h-12 w-auto object-contain" />
                             </a>
                             <a href="https://www.mmpsrpc.in/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300">
-                                <img src={mmpsrpcLogo} alt="MMPSRPC" className="h-6 2xl:h-8 w-auto object-contain" />
+                                <img src={mmpsrpcLogo} alt="MMPSRPC" className="h-9 2xl:h-12 w-auto object-contain" />
                             </a>
                         </div>
 
@@ -273,10 +273,10 @@ const Navbar = () => {
                         <a href="https://appointment.mmpsrpc.in/" target="_blank" rel="noopener noreferrer" className="flex justify-center w-full py-3 bg-white text-teal-700 border border-teal-200 font-bold rounded-xl shadow-sm uppercase text-[13px] tracking-wide active:bg-gray-50 focus:outline-none">
                             Appointment
                         </a>
-                        <div className="flex justify-center items-center gap-4 pt-3 pb-1">
-                            <img src={svkmLogo} className="h-8 w-auto object-contain opacity-80" alt="SVKM" />
-                            <img src={ksvLogo} className="h-8 w-auto object-contain opacity-80" alt="KSV" />
-                            <img src={mmpsrpcLogo} className="h-8 w-auto object-contain opacity-80" alt="MMPSRPC" />
+                        <div className="flex justify-center items-center gap-6 pt-4 pb-2">
+                            <img src={svkmLogo} className="h-10 w-auto object-contain opacity-90" alt="SVKM" />
+                            <img src={ksvLogo} className="h-10 w-auto object-contain opacity-90" alt="KSV" />
+                            <img src={mmpsrpcLogo} className="h-10 w-auto object-contain opacity-90" alt="MMPSRPC" />
                         </div>
                     </div>
                 </div>
