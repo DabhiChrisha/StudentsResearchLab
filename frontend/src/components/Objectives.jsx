@@ -46,20 +46,19 @@ const objectives = [
 ];
 
 const positions = [
-    { top: 55, left: "17%" },
-    { top: 30, left: "76%" },
+    { top: 50, left: "12%" },   // 360° Development
+    { top: 25, left: "42%" },   // Collaborative Learning
+    { top: 55, left: "70%" },   // Hands-on Experience
 
-    { top: 200, left: "34%" },
-    { top: 90, left: "55%" },
+    { top: 195, left: "28%" },  // Interdisciplinary Research
+    { top: 170, left: "58%" },  // Bridging Theory & Practice
+    { top: 210, left: "81%" },  // Guided Mentorship
 
-    { top: 390, left: "24%" },
-    { top: 280, left: "66%" },
+    { top: 380, left: "20%" },  // Applied Innovation
+    { top: 350, left: "55%" },  // Professional Excellence
+    { top: 390, left: "75%" },  // Global Recognition
 
-    { top: 400, left: "49%" },
-    { top: 400, left: "84%" },
-
-    { top: 570, left: "40%" },
-    { top: 540, left: "71%" }
+    { top: 520, left: "40%" }   // Industry Readiness
 ];
 
 const colors = [
@@ -217,7 +216,7 @@ const Objectives = () => {
 
                 </p>
 
-                <div ref={containerRef} className={`relative ${isMobile ? "h-[1050px]" : "h-[700px]"}`}>
+                <div ref={containerRef} className={`relative ${isMobile ? "h-[1050px]" : "h-[650px]"}`}>
 
                     {/* Animated Lines */}
 
@@ -308,7 +307,7 @@ inset 0 0 10px #10b98144
                                     ease: "easeOut"
                                 }}
 
-                                className={`absolute ${isMobile ? "w-[165px] h-[95px]" : "w-[200px] h-[110px] xl:w-[220px] xl:h-[120px] 2xl:w-[260px] 2xl:h-[140px]"} rounded-[80px] flex flex-col items-center justify-center text-center px-4 bg-[#0f766e] overflow-hidden group`}
+                                className={`absolute ${isMobile ? "w-[165px] h-[95px]" : "w-[210px] h-[115px] xl:w-[230px] xl:h-[125px] 2xl:w-[260px] 2xl:h-[140px]"} rounded-[80px] flex flex-col items-center justify-center text-center px-4 bg-[#0f766e] overflow-hidden group`}
 
                                 style={{
                                     top: pos.top,
