@@ -4,26 +4,26 @@ import mamPhoto from "../assets/Ma'am Photo.png";
 
 export default function HeadSRL() {
     return (
-        <section className="relative pt-12 pb-52 overflow-hidden bg-[#f0f9f6]">
-            
+        <section className="relative pt-12 pb-24 overflow-hidden bg-[#f0f9f6]">
+
             {/* Background Aesthetic Shapes */}
             <div className="absolute inset-0 pointer-events-none">
                 {/* Large Beige Petal/Shape on the right */}
-                <div 
-                    className="absolute top-[-5%] right-[-10%] w-[70%] h-[120%] bg-[#f8e6c1]/60 rounded-full blur-[80px] animate-float-slow" 
+                <div
+                    className="absolute top-[-5%] right-[-10%] w-[70%] h-[120%] bg-[#f8e6c1]/60 rounded-full blur-[80px] animate-float-slow"
                     style={{ borderRadius: '40% 60% 70% 30% / 40% 50% 60% 70%' }}
                 />
-                
+
                 {/* Additional Decorative Animated Circles */}
                 <div className="absolute top-[10%] left-[5%] w-64 h-64 bg-[#05877a]/5 rounded-full blur-[60px] animate-float-slower" />
                 <div className="absolute bottom-[20%] right-[15%] w-96 h-96 bg-[#05877a]/10 rounded-full blur-[100px] animate-float-slow" />
                 <div className="absolute top-[40%] left-[-5%] w-48 h-48 bg-[#f8e6c1]/40 rounded-full blur-[50px] animate-float-slower" />
-                
+
                 {/* Bottom Curved Transition to White */}
                 <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]">
-                    <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-[120%] h-48 md:h-64 lg:h-80 -ml-[10%]">
-                        <path 
-                            d="M0,0 C300,40 600,100 1200,20 L1200,120 L0,120 Z" 
+                    <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-[120%] h-20 md:h-32 lg:h-40 -ml-[10%]">
+                        <path
+                            d="M0,0 C300,40 600,100 1200,20 L1200,120 L0,120 Z"
                             fill="white"
                         />
                     </svg>
@@ -32,9 +32,9 @@ export default function HeadSRL() {
 
 
 
-            <div className="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 z-20 pb-16">
+            <div className="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 z-20 pb-4">
                 {/* Heading positioned with enough top space to avoid overlap */}
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -48,15 +48,15 @@ export default function HeadSRL() {
                     </div>
 
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 leading-[1.2] font-serif max-w-5xl">
-                        M. M. Patel Students Research Project Cell, <br className="hidden lg:block"/>
+                        M. M. Patel Students Research Project Cell, <br className="hidden lg:block" />
                         Kadi Sarva Vishwavidyalaya
                     </h2>
                 </motion.div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-                    
+
                     {/* LEFT CONTENT */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: -30 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
@@ -70,7 +70,7 @@ export default function HeadSRL() {
                                     “
                                 </span>
                             </div>
-                            
+
                             <blockquote className="text-lg md:text-xl text-slate-800 font-serif leading-relaxed italic relative">
                                 Aspirations, curiosity, excellence, and dedication form the
                                 foundation of SRL — a space created to nurture disciplined,
@@ -113,7 +113,7 @@ export default function HeadSRL() {
 
 
                         {/* Profile Image with centered placement */}
-                        <motion.div 
+                        <motion.div
                             initial={{ scale: 0.8, opacity: 0 }}
                             whileInView={{ scale: 1, opacity: 1 }}
                             transition={{ duration: 1 }}
@@ -128,7 +128,7 @@ export default function HeadSRL() {
                             </div>
 
                             {/* Pill Badge Highlighted Overlay */}
-                            <motion.div 
+                            <motion.div
                                 initial={{ x: 20, opacity: 0 }}
                                 whileInView={{ x: 0, opacity: 1 }}
                                 transition={{ delay: 1, duration: 0.5 }}

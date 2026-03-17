@@ -46,19 +46,19 @@ const objectives = [
 ];
 
 const positions = [
-    { top: 50, left: "12%" },   // 360° Development
-    { top: 25, left: "42%" },   // Collaborative Learning
-    { top: 55, left: "70%" },   // Hands-on Experience
+    { top: 30, left: "12%" },    // 360° Development
+    { top: 15, left: "45%" },    // Collaborative Learning
+    { top: 40, left: "78%" },    // Hands-on Experience
 
-    { top: 195, left: "28%" },  // Interdisciplinary Research
-    { top: 170, left: "58%" },  // Bridging Theory & Practice
-    { top: 210, left: "81%" },  // Guided Mentorship
+    { top: 175, left: "28%" },   // Interdisciplinary Research
+    { top: 150, left: "60%" },   // Bridging Theory & Practice
+    { top: 195, left: "84%" },   // Guided Mentorship
 
-    { top: 380, left: "20%" },  // Applied Innovation
-    { top: 350, left: "55%" },  // Professional Excellence
-    { top: 390, left: "75%" },  // Global Recognition
+    { top: 335, left: "15%" },   // Applied Innovation
+    { top: 305, left: "52%" },   // Professional Excellence
+    { top: 345, left: "78%" },   // Global Recognition
 
-    { top: 520, left: "40%" }   // Industry Readiness
+    { top: 465, left: "40%" }    // Industry Readiness
 ];
 
 const colors = [
@@ -90,9 +90,9 @@ const Objectives = () => {
 
     /* Mobile positions - zigzag layout */
     const mobilePositions = objectives.map((_, i) => {
-        const gap = 70;
-        const top = 180 + i * gap;
-        const left = i % 2 === 0 ? 15 : window.innerWidth / 1.45 - 100;
+        const gap = 90;
+        const top = 150 + i * gap;
+        const left = i % 2 === 0 ? 10 : window.innerWidth / 1.45 - 90;
         return { top, left };
     });
 
@@ -182,7 +182,7 @@ const Objectives = () => {
         <section
             ref={sectionRef}
             id="objectives"
-            className="py-24 bg-white relative overflow-hidden"
+            className="pt-0 pb-24 bg-white relative overflow-hidden"
         >
 
             <SplashCursorCard />
@@ -197,7 +197,7 @@ const Objectives = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
-                        className="text-5xl font-black font-serif inline-block pb-2"
+                        className="text-4xl font-black font-serif inline-block pb-2"
                         style={{
                             background: "linear-gradient(90deg,#0f766e,#10b981,#2dd4bf,#FFD700)",
                             WebkitBackgroundClip: "text",
@@ -210,13 +210,9 @@ const Objectives = () => {
 
                 </div>
 
-                <p className="text-center text-slate-600 text-lg max-w-3xl mx-auto mb-1 leading-relaxed">
 
-                    Pioneering excellence through a structured mission focused on innovation, growth, and empowerment within the research ecosystem.
 
-                </p>
-
-                <div ref={containerRef} className={`relative ${isMobile ? "h-[1050px]" : "h-[650px]"}`}>
+                <div ref={containerRef} className={`relative ${isMobile ? "h-[1100px]" : "h-[620px]"}`}>
 
                     {/* Animated Lines */}
 
@@ -261,29 +257,30 @@ const Objectives = () => {
 
                     </svg>
 
-                    {/* Center Circle */}
-
-                    <motion.div
+                    {/* Center Circle Wrapper for Stable Ref */}
+                    <div
                         ref={circleRef}
-                        className={isMobile ? "absolute left-[31.5%] top-[20px] -translate-x-1/2 w-[140px] h-[140px] rounded-full border-[7px] border-[#0f766e] bg-white flex items-center justify-center z-10" : "absolute left-[-130px] top-[290px] w-[200px] h-[200px] rounded-full border-[7px] border-[#0f766e] bg-white flex items-center justify-center shadow-xl z-10"}
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                        style={isMobile ? { display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 8px #44af8bff, 0 0 18px #61c8a5ff, 0 0 30px #f1f7f555" } : {
-                            boxShadow: `
+                        className={isMobile ? "absolute left-[29%] top-[20px] -translate-x-1/2 w-[110px] h-[110px] z-10" : "absolute left-[-110px] top-[240px] w-[170px] h-[170px] z-10"}
+                    >
+                        <motion.div
+                            className="w-full h-full rounded-full border-[7px] border-[#0f766e] bg-white flex items-center justify-center shadow-xl"
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                            style={isMobile ? { display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 0 8px #44af8bff, 0 0 18px #61c8a5ff, 0 0 30px #f1f7f555" } : {
+                                boxShadow: `
 0 0 8px #10b981,
 0 0 18px #10b981,
 0 0 40px #10b98155,
 inset 0 0 10px #10b98144
 ` }}
-                    >
-
-                        <img
-                            src="/innovation1.jpg"
-                            alt="innovation"
-                            className={isMobile ? "w-[90px] object-contain" : "w-[145px] h-[145px] object-contain"}
-                        />
-
-                    </motion.div>
+                        >
+                            <img
+                                src="/innovation1.jpg"
+                                alt="innovation"
+                                className={isMobile ? "w-[75px] object-contain" : "w-[125px] h-[125px] object-contain"}
+                            />
+                        </motion.div>
+                    </div>
 
                     {/* Ovals */}
 
@@ -307,7 +304,7 @@ inset 0 0 10px #10b98144
                                     ease: "easeOut"
                                 }}
 
-                                className={`absolute ${isMobile ? "w-[165px] h-[95px]" : "w-[210px] h-[115px] xl:w-[230px] xl:h-[125px] 2xl:w-[260px] 2xl:h-[140px]"} rounded-[80px] flex flex-col items-center justify-center text-center px-4 bg-[#0f766e] overflow-hidden group`}
+                                className={`absolute ${isMobile ? "w-[155px] h-[85px]" : "w-[185px] h-[105px] xl:w-[200px] xl:h-[115px] 2xl:w-[230px] 2xl:h-[130px]"} rounded-[80px] flex flex-col items-center justify-center text-center px-4 bg-[#0f766e] overflow-hidden group`}
 
                                 style={{
                                     top: pos.top,
@@ -335,11 +332,11 @@ inset 0 0 10px #10b98144
                                     }}
                                 />
 
-                                <h3 className={`${isMobile ? "text-[11px]" : "text-sm 2xl:text-lg"} font-bold text-white font-serif leading-tight break-words max-w-full`}>
+                                <h3 className={`${isMobile ? "text-[10px]" : "text-[13px] 2xl:text-base"} font-bold text-white font-serif leading-tight break-words max-w-full`}>
                                     {obj.title}
                                 </h3>
 
-                                <p className={`${isMobile ? "text-[9.5px]" : "text-xs 2xl:text-sm"} text-white/85 leading-snug mt-1`}>
+                                <p className={`${isMobile ? "text-[9px]" : "text-[11px] 2xl:text-xs"} text-white/85 leading-snug mt-1`}>
                                     {obj.description}
                                 </p>
 
