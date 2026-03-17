@@ -286,9 +286,9 @@ const About = () => {
                                             ))}
                                         </div>
                                         <div className="mt-8">
-                                            <a href={organizationData.ieee?.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 bg-teal-900 text-white rounded-full font-bold text-sm hover:bg-teal-800 transition-all shadow-lg hover:shadow-teal-900/20">
+                                            <Link to="/organization/ieee" className="inline-flex items-center gap-2 px-6 py-3 bg-teal-900 text-white rounded-full font-bold text-sm hover:bg-teal-800 transition-all shadow-lg hover:shadow-teal-900/20">
                                                 Explore IEEE KSV SB <ExternalLink size={14} />
-                                            </a>
+                                            </Link>
                                         </div>
                                     </div>
                                 </motion.div>

@@ -182,7 +182,6 @@ export const organizationData = {
     "ieee": {
         title: "IEEE KSV Student Branch",
         subtitle: "Advancing Technology for Humanity",
-        website: "https://ieee-ksv.vercel.app/",
         image: "https://ieee-ksv-sb.mmpsrpc.in/Pasted-Graphic.svg", // Using the icon from the site
         heroImage: ksvCampus, // Placeholder to match KSV theme
         description: [
