@@ -91,33 +91,32 @@ const Navbar = () => {
         { label: "SVKM", path: "/organization/svkm", isExternal: false },
         { label: "KSV", path: "/organization/ksv", isExternal: false },
         { label: "MMPSRPC", path: "/organization/mmpsrpc", isExternal: false },
-        { label: "IEEE KSV SB", path: "https://ieee-ksv.vercel.app/", isExternal: true },
     ];
 
     return (
         <>
             <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled ? 'bg-[#FAF9F6]/95 backdrop-blur-md shadow-md py-2' : 'bg-[#FAF9F6] py-3.5'}`}>
                 {/* MAIN CONTAINER */}
-                <div className="max-w-[1700px] mx-auto w-full flex items-center justify-between px-3 md:px-6 lg:px-8">
+                <div className="max-w-[1600px] mx-auto w-full flex items-center justify-between px-4 lg:px-6 xl:px-8">
 
                     {/* WRAPPER 1: LEFT (Logo & Site Title) */}
-                    <Link to="/" className="flex items-center gap-1.5 md:gap-3 group shrink min-w-0">
-                        <div className="w-[48px] h-[48px] md:w-[52px] md:h-[52px] lg:w-[62px] lg:h-[62px] xl:w-[72px] xl:h-[72px] -my-[6px] md:-my-[8px] xl:-my-[11px] bg-white rounded-full p-0.5 md:p-1 flex items-center justify-center shadow-[0_0_15px_rgba(255,230,150,0.5)] lg:shadow-[0_0_22px_rgba(255,235,160,0.45)] shrink-0 transition-all duration-500 group-hover:scale-105 group-hover:shadow-[0_0_28px_rgba(255,215,100,0.65)]">
+                    <Link to="/" className="flex items-center gap-2 lg:gap-3 group shrink min-w-0">
+                        <div className="w-[52px] h-[52px] lg:w-[56px] lg:h-[56px] xl:w-[70px] xl:h-[70px] -my-[6px] lg:-my-[8px] xl:-my-[11px] bg-white rounded-full p-0.5 lg:p-1 flex items-center justify-center shadow-[0_0_15px_rgba(255,230,100,0.4)] lg:shadow-[0_0_20px_rgba(255,230,100,0.3)] shrink-0 transition-all duration-500 group-hover:scale-105 group-hover:shadow-[0_0_25px_rgba(255,210,100,0.5)]">
                             <img src={srlLogo} alt="SRL" className="w-full h-full object-contain" />
                         </div>
                         <div className="flex flex-col justify-center min-w-0">
-                            <h1 className="text-teal-900 font-serif font-bold text-[10px] sm:text-[11px] md:text-[14px] lg:text-[15px] xl:text-[17px] tracking-tight leading-tight whitespace-nowrap m-0 transition-all">
+                            <h1 className="text-teal-900 font-serif font-bold text-[12px] md:text-[14px] lg:text-[13px] xl:text-[16px] tracking-tight leading-tight whitespace-nowrap m-0">
                                 Students Research Lab <span className="text-teal-600">(SRL)</span>
                             </h1>
-                            <p className="text-teal-800/80 font-sans font-semibold text-[7px] sm:text-[8px] md:text-[9px] lg:text-[10px] xl:text-[11px] uppercase tracking-[0.14em] whitespace-nowrap leading-tight m-0 opacity-90">
+                            <p className="text-teal-800/80 font-sans font-semibold text-[8px] md:text-[9px] lg:text-[8px] xl:text-[10px] uppercase tracking-[0.14em] whitespace-nowrap leading-tight m-0">
                                 MMPSRPC, KSV
                             </p>
                         </div>
                     </Link>
 
                     {/* WRAPPER 2: CENTER-RIGHT (Navigation Links) */}
-                    <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-2 xl:px-4">
-                        <div className="flex items-center justify-center w-full max-w-[850px] gap-x-2 xl:gap-x-4 2xl:gap-x-6">
+                    <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-1 xl:px-2">
+                        <div className="flex items-center justify-center w-full max-w-[800px] gap-x-1.5 xl:gap-x-3 2xl:gap-x-4">
                             {menuItems.map((item) => (
                                 <NavLink
                                     key={item.label}
@@ -143,7 +142,7 @@ const Navbar = () => {
                                     className={`flex items-center gap-0.5 py-1 text-[10px] xl:text-[11px] 2xl:text-[13px] font-sans font-semibold transition-all whitespace-nowrap tracking-[0.01em] xl:tracking-[0.03em] relative group/aboutlink ${isAboutActive || isAboutClicked ? 'text-teal-700' : 'text-teal-900/70 hover:text-teal-900'}`}
                                 >
                                     About Us <ChevronDown size={14} className={`transition-transform duration-300 ${aboutDropdownOpen ? 'rotate-180' : ''}`} />
-                                    <span className={`absolute bottom-[-2px] left-0 h-[3px] bg-teal-600 transition-all duration-300 ${isAboutActive || isAboutClicked ? 'w-full' : 'w-0 group-hover/aboutlink:w-full'}`}></span>
+                                    <span className={`absolute bottom-0 left-0 h-[3px] bg-teal-600 transition-all duration-300 ${isAboutActive || isAboutClicked ? 'w-full' : 'w-0 group-hover/aboutlink:w-full'}`}></span>
                                 </button>
                                 <AnimatePresence>
                                     {aboutDropdownOpen && (
@@ -201,15 +200,15 @@ const Navbar = () => {
                         </div>
 
                         {/* Partner logos visible from xl+ */}
-                        <div className="hidden xl:flex items-center gap-x-3 2xl:gap-x-5 border-l border-teal-900/10 pl-3 2xl:pl-5 shrink-0">
+                        <div className="hidden xl:flex items-center gap-x-4 2xl:gap-x-6 border-l border-teal-900/10 pl-4 2xl:pl-6 shrink-0">
                             <a href="https://www.svkm.org.in/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300">
-                                <img src={svkmLogo} alt="SVKM" className="h-9 2xl:h-12 w-auto object-contain" />
+                                <img src={svkmLogo} alt="SVKM" className="h-11 2xl:h-14 w-auto object-contain" />
                             </a>
                             <a href="https://www.ksv.ac.in/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300">
-                                <img src={ksvLogo} alt="KSV" className="h-9 2xl:h-12 w-auto object-contain" />
+                                <img src={ksvLogo} alt="KSV" className="h-11 2xl:h-14 w-auto object-contain" />
                             </a>
                             <a href="https://www.mmpsrpc.in/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300">
-                                <img src={mmpsrpcLogo} alt="MMPSRPC" className="h-9 2xl:h-12 w-auto object-contain" />
+                                <img src={mmpsrpcLogo} alt="MMPSRPC" className="h-11 2xl:h-14 w-auto object-contain" />
                             </a>
                         </div>
 
@@ -273,10 +272,10 @@ const Navbar = () => {
                         <a href="https://appointment.mmpsrpc.in/" target="_blank" rel="noopener noreferrer" className="flex justify-center w-full py-3 bg-white text-teal-700 border border-teal-200 font-bold rounded-xl shadow-sm uppercase text-[13px] tracking-wide active:bg-gray-50 focus:outline-none">
                             Appointment
                         </a>
-                        <div className="flex justify-center items-center gap-6 pt-4 pb-2">
-                            <img src={svkmLogo} className="h-10 w-auto object-contain opacity-90" alt="SVKM" />
-                            <img src={ksvLogo} className="h-10 w-auto object-contain opacity-90" alt="KSV" />
-                            <img src={mmpsrpcLogo} className="h-10 w-auto object-contain opacity-90" alt="MMPSRPC" />
+                        <div className="flex justify-center items-center gap-4 pt-3 pb-1">
+                            <img src={svkmLogo} className="h-8 w-auto object-contain opacity-80" alt="SVKM" />
+                            <img src={ksvLogo} className="h-8 w-auto object-contain opacity-80" alt="KSV" />
+                            <img src={mmpsrpcLogo} className="h-8 w-auto object-contain opacity-80" alt="MMPSRPC" />
                         </div>
                     </div>
                 </div>
