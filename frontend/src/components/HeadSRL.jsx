@@ -99,7 +99,7 @@ export default function HeadSRL() {
                         <div className="space-y-4">
                             <div className="flex items-center gap-3 text-slate-700 hover:text-[#05877a] transition-colors group">
                                 <Mail className="w-5 h-5 text-[#05877a]" />
-                                <a href="mailto:mmpsrc.ksv@gmail.com" className="font-medium underline decoration-[#05877a]/30 hover:decoration-[#05877a]">mmpsrc.ksv@gmail.com</a>
+                                <a href="mailto:mmpsrpc@ksv.ac.in" className="font-medium underline decoration-[#05877a]/30 hover:decoration-[#05877a]">mmpsrpc@ksv.ac.in</a>
                             </div>
                             <div className="flex items-center gap-3 text-slate-700">
                                 <MapPin className="w-5 h-5 text-[#05877a]" />

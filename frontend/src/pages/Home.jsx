@@ -59,7 +59,7 @@ const Home = () => {
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     {[
-                                        { icon: "👨‍🔬", label: "Active Researchers", value: "35+" },
+                                        { icon: "📄", label: "Publications", value: "15+" },
                                         { icon: "📄", label: "Papers Published", value: "10+" },
                                         { icon: "⚙️", label: "Patent Filings", value: "2" },
                                         { icon: "🏆", label: "Awards Won", value: "5+" }

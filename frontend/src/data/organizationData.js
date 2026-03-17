@@ -174,7 +174,7 @@ export const organizationData = {
         ],
         contact: {
             address: "LDRP Campus, Sector-15, KH-5, Gandhinagar - 382015, Gujarat, India",
-            email: "mmpsrc.ksv@gmail.com",
+            email: "mmpsrpc@ksv.ac.in",
             mapEmbed: "https://maps.google.com/maps?q=LDRP+Institute+of+Technology+and+Research+Gandhinagar&t=&z=15&ie=UTF8&iwloc=&output=embed"
         }
     },
