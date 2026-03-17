@@ -91,6 +91,7 @@ const Navbar = () => {
         { label: "SVKM", path: "/organization/svkm", isExternal: false },
         { label: "KSV", path: "/organization/ksv", isExternal: false },
         { label: "MMPSRPC", path: "/organization/mmpsrpc", isExternal: false },
+        { label: "IEEE KSV SB", path: "https://ieee-ksv.vercel.app/", isExternal: true },
     ];
 
     return (

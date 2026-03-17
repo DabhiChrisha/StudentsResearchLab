@@ -230,6 +230,40 @@ const About = () => {
                     </motion.div>
                 </div>
 
+                {/* IEEE KSV Section Header Link */}
+                <div className="max-w-4xl mx-auto mb-28 flex justify-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                        className="relative w-full rounded-[2rem] shadow-xl border border-teal-50 overflow-hidden hover:shadow-2xl transition-shadow duration-500 bg-white"
+                    >
+                         <button
+                            onClick={() => window.open('https://ieee-ksv.vercel.app/', '_blank', 'noopener,noreferrer')}
+                            className="w-full px-8 py-8 flex items-center justify-between text-left group relative z-10 hover:bg-teal-50/50 transition-colors"
+                        >
+                            <div className="flex items-center gap-6">
+                                <div className="w-16 h-16 flex items-center justify-center">
+                                    <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center text-teal-800 font-bold text-xl">
+                                        IEEE
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 className="text-xl font-bold text-teal-900 font-sans group-hover:text-teal-700 transition-colors">IEEE KSV Student Branch</h4>
+                                    <p className="text-xs text-teal-800 font-black uppercase tracking-[0.2em] mt-1">Our Student Branch</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="text-sm font-bold text-teal-700 opacity-0 transform translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                    Visit Website
+                                </span>
+                                <ExternalLink className="w-6 h-6 text-teal-900 group-hover:text-teal-700 transition-colors" />
+                            </div>
+                        </button>
+                    </motion.div>
+                </div>
+
                 {/* FOUNDERS SECTION */}
                 <div className="pt-20 border-t border-teal-50">
                     <motion.h3
