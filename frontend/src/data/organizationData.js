@@ -189,12 +189,68 @@ export const organizationData = {
             "Through collaborative initiatives, we connect academic learning with real-world applications, nurturing an environment where future leaders can develop their technical prowess and network with industry experts."
         ],
         stats: [
-            { label: "Active Members", value: "100+" },
-            { label: "Events Conducted", value: "30+" },
-            { label: "Technical Workshops", value: "15+" }
+            { label: "Active Members", value: "120+" },
+            { label: "Events Conducted", value: "45+" },
+            { label: "Technical Workshops", value: "20+" }
         ],
-        mission: "To inspire, educate, and empower students to become leaders in the engineering and technology sectors by providing them a global platform of resources and networking.",
-        vision: "To be a premier student branch that champions innovation and technological advancement within and beyond the university campus.",
+        mission: "To inspire, educate, and empower university students to become outstanding leaders in the global engineering and technology sectors by providing robust networking and resource platforms.",
+        vision: "To champion technological advancement and groundbreaking innovation across the academic campus and build an internationally recognized student branch.",
+        leadership: [
+            {
+                role: "Branch Counselor",
+                header: "Message from Branch Counselor",
+                name: "Dr. Faculty Name",
+                designation: "Branch Counselor, IEEE KSV Student Branch",
+                image: chairmanPhoto, // Placeholder image matching existing theme
+                cardQuote: "Innovation distinguishes between a leader and a follower.",
+                mainQuote: "Fostering an environment of technological brilliance and collaborative growth for every engineering mind.",
+                message: [
+                    "The IEEE KSV Student Branch stands as a beacon for aspiring engineers to transcend traditional academic boundaries. We are committed to nurturing technical excellence, cultivating profound leadership skills, and offering unparalleled global exposure to our student community.",
+                    "Through rigorous workshops, dynamic seminars, and collaborative projects, we empower students to not only understand emerging technologies but to become the pioneers who will shape the future."
+                ]
+            },
+            {
+                role: "Branch Chair",
+                header: "Message from Branch Chair",
+                name: "Student Leader Name",
+                designation: "Chairperson, IEEE KSV Student Branch",
+                image: mamPhoto, // Placeholder image matching existing theme
+                cardQuote: "Driven by passion, united by technology.",
+                mainQuote: "A vibrant community where academic knowledge seamlessly transitions into real-world technological solutions.",
+                message: [
+                    "Leading the IEEE KSV Student Branch is an extraordinary privilege. Our branch is built by the students, for the students, creating a thriving ecosystem of learning, networking, and innovation.",
+                    "We continuously strive to host impactful events that bridge the gap between academia and industry, ensuring our members are well-prepared for the evolving demands of the global engineering landscape."
+                ]
+            }
+        ],
+        objectivesTitle: "Core Objectives",
+        objectivesSubtitle: "Empowering students through technical excellence and leadership development.",
+        objectives: [
+            {
+                title: "Technical Skill Enhancement",
+                description: "Organize intensive workshops, coding bootcamps, and technical seminars to build proficiency in cutting-edge technologies."
+            },
+            {
+                title: "Global Networking",
+                description: "Facilitate connections with industry professionals, researchers, and fellow students across the global IEEE network."
+            },
+            {
+                title: "Research and Innovation",
+                description: "Encourage and support student-led research papers, technical projects, and participation in international conferences."
+            },
+            {
+                title: "Professional Development",
+                description: "Offer career guidance, resume building workshops, and leadership training to prepare students for corporate environments."
+            },
+            {
+                title: "Community Outreach",
+                description: "Conduct community-driven technological initiatives to apply engineering solutions for local societal challenges."
+            },
+            {
+                title: "Hackathons and Competitions",
+                description: "Regularly host and participate in national and international coding and engineering competitions."
+            }
+        ],
         features: [
             "Technical Workshops & Seminars",
             "Global Networking Opportunities",
