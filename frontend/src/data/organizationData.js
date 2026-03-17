@@ -178,5 +178,36 @@ export const organizationData = {
             phone: "+91 079-232-44690",
             mapEmbed: "https://maps.google.com/maps?q=LDRP+Institute+of+Technology+and+Research+Gandhinagar&t=&z=15&ie=UTF8&iwloc=&output=embed"
         }
+    },
+    "ieee": {
+        title: "IEEE KSV Student Branch",
+        subtitle: "Advancing Technology for Humanity",
+        website: "https://ieee-ksv.vercel.app/",
+        image: "https://ieee-ksv-sb.mmpsrpc.in/Pasted-Graphic.svg", // Using the icon from the site
+        heroImage: ksvCampus, // Placeholder to match KSV theme
+        description: [
+            "The IEEE KSV Student Branch is a vibrant community of passionate engineering students and professionals dedicated to advancing technological innovation and excellence for the benefit of humanity. Under the umbrella of the global IEEE network, our branch actively provides students with opportunities to engage in cutting-edge projects, attend technical conferences, and participate in skill-building workshops.",
+            "Through collaborative initiatives, we connect academic learning with real-world applications, nurturing an environment where future leaders can develop their technical prowess and network with industry experts."
+        ],
+        stats: [
+            { label: "Active Members", value: "100+" },
+            { label: "Events Conducted", value: "30+" },
+            { label: "Technical Workshops", value: "15+" }
+        ],
+        mission: "To inspire, educate, and empower students to become leaders in the engineering and technology sectors by providing them a global platform of resources and networking.",
+        vision: "To be a premier student branch that champions innovation and technological advancement within and beyond the university campus.",
+        features: [
+            "Technical Workshops & Seminars",
+            "Global Networking Opportunities",
+            "Skill Development Programs",
+            "Innovation & Research Focus",
+            "Leadership Building"
+        ],
+        contact: {
+            address: "LDRP Campus, Sector-15, KH-5, Gandhinagar - 382015, Gujarat, India",
+            email: "ieee@ksv.ac.in",
+            phone: "+91 079-232-44690",
+            mapEmbed: "https://maps.google.com/maps?q=LDRP+Institute+of+Technology+and+Research+Gandhinagar&t=&z=15&ie=UTF8&iwloc=&output=embed"
+        }
     }
 };

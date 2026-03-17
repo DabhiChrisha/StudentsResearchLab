@@ -230,37 +230,70 @@ const About = () => {
                     </motion.div>
                 </div>
 
-                {/* IEEE KSV Section Header Link */}
-                <div className="max-w-4xl mx-auto mb-28 flex justify-center">
+                {/* IEEE KSV Section */}
+                <div className="max-w-4xl mx-auto mb-28">
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                        className="relative w-full rounded-[2rem] shadow-xl border border-teal-50 overflow-hidden hover:shadow-2xl transition-shadow duration-500 bg-white"
+                        transition={{ duration: 0.6, delay: 0.3 }}
+                        className="relative rounded-[2rem] shadow-xl border border-teal-50 overflow-hidden hover:shadow-2xl transition-shadow duration-500"
                     >
-                         <button
-                            onClick={() => window.open('https://ieee-ksv.vercel.app/', '_blank', 'noopener,noreferrer')}
-                            className="w-full px-8 py-8 flex items-center justify-between text-left group relative z-10 hover:bg-teal-50/50 transition-colors"
+                        {/* Background Image Layer */}
+                        {organizationData.ieee?.heroImage && (
+                            <img
+                                src={organizationData.ieee.heroImage}
+                                alt=""
+                                className="absolute inset-0 w-full h-full object-cover filter brightness-[1.1] contrast-[1.05] saturate-[1.1]"
+                                style={{ imageRendering: '-webkit-optimize-contrast' }}
+                            />
+                        )}
+                        <button
+                            onClick={() => toggleAccordion('ieee')}
+                            className="w-full px-8 py-8 flex items-center justify-between text-left group relative z-10"
                         >
                             <div className="flex items-center gap-6">
                                 <div className="w-16 h-16 flex items-center justify-center">
-                                    <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center text-teal-800 font-bold text-xl">
-                                        IEEE
-                                    </div>
+                                    <img src={organizationData.ieee?.image} alt="IEEE KSV" className="h-full object-contain" />
                                 </div>
                                 <div>
-                                    <h4 className="text-xl font-bold text-teal-900 font-sans group-hover:text-teal-700 transition-colors">IEEE KSV Student Branch</h4>
-                                    <p className="text-xs text-teal-800 font-black uppercase tracking-[0.2em] mt-1">Our Student Branch</p>
+                                    <h4 className="text-xl font-bold text-teal-900 font-sans drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]">{organizationData.ieee?.title}</h4>
+                                    <p className="text-xs text-teal-800 font-black uppercase tracking-[0.2em] mt-1 drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)]">Our Student Branch</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <span className="text-sm font-bold text-teal-700 opacity-0 transform translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-                                    Visit Website
-                                </span>
-                                <ExternalLink className="w-6 h-6 text-teal-900 group-hover:text-teal-700 transition-colors" />
-                            </div>
+                            <ChevronDown className={`w-6 h-6 text-teal-900 transition-transform duration-500 drop-shadow-md ${openAccordion === 'ieee' ? 'rotate-180' : ''}`} />
                         </button>
+                        <AnimatePresence>
+                            {openAccordion === 'ieee' && (
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: "auto", opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                                >
+                                    <div className="px-8 pb-8 pt-2">
+                                        <div className="h-[1px] w-full bg-teal-50 mb-8" />
+                                        <div className="w-full space-y-4">
+                                            {organizationData.ieee?.description?.map((para, i) => (
+                                                <p key={i} className="text-gray-800 leading-[1.7] text-[15px] font-normal text-justify">
+                                                    {para}
+                                                </p>
+                                            ))}
+                                        </div>
+                                        <div className="mt-8 flex flex-wrap gap-3">
+                                            {organizationData.ieee?.features?.map((f, i) => (
+                                                <span key={i} className="px-4 py-1.5 bg-teal-50 text-[10px] font-black text-teal-700 rounded-full uppercase tracking-wider">{f}</span>
+                                            ))}
+                                        </div>
+                                        <div className="mt-8">
+                                            <a href={organizationData.ieee?.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 bg-teal-900 text-white rounded-full font-bold text-sm hover:bg-teal-800 transition-all shadow-lg hover:shadow-teal-900/20">
+                                                Explore IEEE KSV SB <ExternalLink size={14} />
+                                            </a>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </motion.div>
                 </div>
 
