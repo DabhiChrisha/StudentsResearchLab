@@ -106,7 +106,7 @@ const Activities = () => {
 
                 {/* Activities Grid */}
                 {!loading && !error && activities.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-8 items-stretch">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-8 items-stretch">
                         {[...activities]
                             .sort((a, b) => {
                                 // Use 'sequence' or 'order' field; fallback to id or 0
@@ -177,9 +177,6 @@ const Activities = () => {
                                     <div className="flex flex-col flex-1 p-5 pt-4">
                                         <div className="font-bold text-lg md:text-xl text-gray-900 mb-2 text-center line-clamp-2">{act.title}</div>
                                         <div className="text-xs text-gray-400 font-semibold mb-2 text-center">{act.date}</div>
-                                        <div className="text-gray-500 text-sm mb-3 line-clamp-2 text-center">
-                                            {act.brief || act.description}
-                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -247,7 +244,7 @@ const Activities = () => {
                                 {/* Details */}
                                 <div className="flex-1 p-8 flex flex-col min-w-0 justify-between">
                                     <div className="flex items-center gap-3 mb-2">
-                                        <h2 className="text-2xl font-bold text-gray-900 flex-1 truncate">{modal.title}</h2>
+                                        <h2 className="text-2xl font-bold text-gray-900 flex-1">{modal.title}</h2>
                                         {modal.year && (
                                             <span className="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-xs font-semibold">{modal.year}</span>
                                         )}
