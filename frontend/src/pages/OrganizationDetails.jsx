@@ -59,7 +59,8 @@ const OrganizationDetails = () => {
                             <img
                                 src={data.image}
                                 alt={data.title}
-                                className="h-full w-auto object-contain drop-shadow-md"
+                                className={`h-full w-auto object-contain drop-shadow-md transition-all duration-500 ${orgId === 'ieee' ? 'brightness-[0.8] contrast-[1.2] saturate-[1.2]' : ''
+                                    }`}
                             />
                             {/* Floating redirect icon */}
                             <div className="absolute -top-3 -right-3 w-10 h-10 bg-[#00887b] text-white rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -72,8 +73,10 @@ const OrganizationDetails = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className={`font-black text-slate-900 mb-6 tracking-tight font-serif drop-shadow-xl ${orgId === 'mmpsrpc' ? 'text-3xl sm:text-4xl lg:text-5xl whitespace-nowrap' : 'text-4xl sm:text-5xl lg:text-7xl'
-                            }`}
+                        className={`font-black mb-6 tracking-tight font-serif drop-shadow-xl ${orgId === 'mmpsrpc'
+                            ? 'text-3xl sm:text-4xl lg:text-5xl whitespace-nowrap'
+                            : 'text-4xl sm:text-5xl lg:text-7xl'
+                            } ${orgId === 'ieee' ? 'text-[#002147]' : 'text-slate-900'}`}
                         style={{ textShadow: "1px 1px 3px rgba(255,255,255,0.7)" }}
                     >
                         {data.title}
@@ -83,7 +86,8 @@ const OrganizationDetails = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
-                        className="text-lg sm:text-xl lg:text-2xl font-bold max-w-3xl font-serif italic drop-shadow-md text-slate-800"
+                        className={`text-lg sm:text-xl lg:text-2xl font-bold max-w-3xl font-serif italic drop-shadow-md ${orgId === 'ieee' ? 'text-[#002147]' : 'text-slate-800'
+                            }`}
                         style={{ textShadow: "1px 1px 2px rgba(255,255,255,0.8)" }}
                     >
                         “{data.subtitle}”
@@ -355,33 +359,47 @@ const OrganizationDetails = () => {
                         </div>
                     )}
 
-                    {/* CORE PRINCIPLES / FEATURES SECTION */}
-                    {data.features && (
+                    {/* CORE PRINCIPLES / FEATURES / ADVANTAGES SECTION */}
+                    {(data.features || data.advantages) && (
                         <div className="mb-32">
                             {orgId !== 'svkm' && orgId !== 'ksv' && (
                                 <div className="flex items-center gap-6 mb-16">
-                                    <h3 className="text-3xl font-black text-slate-900 font-sans whitespace-nowrap tracking-tight">Features</h3>
+                                    <h3 className="text-3xl font-black text-slate-900 font-sans whitespace-nowrap tracking-tight">
+                                        {orgId === 'ieee' ? 'Advantages of IEEE' : 'Features'}
+                                    </h3>
                                     <div className="h-[1px] flex-grow bg-[#00887b]/20" />
                                 </div>
                             )}
                             <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ${(orgId === 'svkm' || orgId === 'ksv') ? 'mt-8' : ''}`}>
-                                {data.features.map((feature, index) => (
-                                    <motion.div
-                                        key={index}
-                                        initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                                        viewport={{ once: true, amount: 0.1 }}
-                                        transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut" }}
-                                        whileHover={{ x: 10, backgroundColor: "#FAF8F3" }}
-                                        className="bg-[#FAF8F3]/50 backdrop-blur-sm p-8 rounded-[2rem] border border-white shadow-sm hover:shadow-xl transition-all group flex items-center gap-6"
-                                    >
-                                        <div className="w-3 h-3 rounded-full bg-[#00887b] shadow-[0_0_10px_rgba(0,136,123,0.4)] group-hover:scale-150 transition-transform duration-500" />
-                                        <span className="font-bold text-slate-700 uppercase tracking-[0.2em] text-[11px] font-sans leading-none">{feature}</span>
-                                    </motion.div>
-                                ))}
+                                {(data.features || data.advantages).map((item, index) => {
+                                    const isObject = typeof item === 'object' && item !== null;
+                                    const title = isObject ? item.title : item;
+                                    const description = isObject ? item.description : null;
+
+                                    return (
+                                        <motion.div
+                                            key={index}
+                                            initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                                            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                                            viewport={{ once: true, amount: 0.1 }}
+                                            transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut" }}
+                                            whileHover={{ x: 10, backgroundColor: "#FAF8F3" }}
+                                            className="bg-[#FAF8F3]/50 backdrop-blur-sm p-8 rounded-[2rem] border border-white shadow-sm hover:shadow-xl transition-all group flex items-start gap-6"
+                                        >
+                                            <div className="w-3 h-3 rounded-full bg-[#00887b] shadow-[0_0_10px_rgba(0,136,123,0.4)] group-hover:scale-150 transition-transform duration-500 mt-2 shrink-0" />
+                                            <div>
+                                                <span className="font-bold text-slate-900 uppercase tracking-[0.2em] text-[11px] font-sans leading-none block mb-2">{title}</span>
+                                                {description && (
+                                                    <p className="text-slate-600 text-[13px] leading-relaxed font-sans">{description}</p>
+                                                )}
+                                            </div>
+                                        </motion.div>
+                                    );
+                                })}
                             </div>
                         </div>
                     )}
+
 
                     {/* CONTACT & LOCATION SECTION */}
                     {data.contact && (
@@ -442,22 +460,16 @@ const OrganizationDetails = () => {
                                     <div className="mt-12 pt-8 border-t border-[#00887b]/10">
                                         <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#00887b]/60 mb-6">Social Connect</p>
                                         <div className="flex gap-4">
-                                            <a
-                                                href="https://www.linkedin.com/company/mmpsrpc"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-10 h-10 rounded-full bg-[#134E4A]/5 flex items-center justify-center text-[#134E4A] hover:bg-[#134E4A] hover:text-white transition-all duration-300 shadow-sm"
-                                            >
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.041 0 3.604 2.002 3.604 4.604v5.592z" /></svg>
-                                            </a>
-                                            <a
-                                                href="https://www.linkedin.com/school/kadi-sarva-vishwavidyalaya-gandihnagar/"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-10 h-10 rounded-full bg-[#134E4A]/5 flex items-center justify-center text-[#134E4A] hover:bg-[#134E4A] hover:text-white transition-all duration-300 shadow-sm"
-                                            >
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.041 0 3.604 2.002 3.604 4.604v5.592z" /></svg>
-                                            </a>
+                                            {data.contact.linkedin && (
+                                                <a
+                                                    href={data.contact.linkedin}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="w-10 h-10 rounded-full bg-[#134E4A]/5 flex items-center justify-center text-[#134E4A] hover:bg-[#134E4A] hover:text-white transition-all duration-300 shadow-sm"
+                                                >
+                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.041 0 3.604 2.002 3.604 4.604v5.592z" /></svg>
+                                                </a>
+                                            )}
                                             <a
                                                 href={data.website}
                                                 target="_blank"
