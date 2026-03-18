@@ -23,6 +23,7 @@ const JoinUsSuccess = lazy(() => import('./pages/JoinUsSuccess'));
 const Appointment = lazy(() => import('./pages/Appointment'));
 const OrganizationDetails = lazy(() => import('./pages/OrganizationDetails'));
 const StudentCV = lazy(() => import('./pages/StudentCV'));
+const AddPublication = lazy(() => import('./pages/AddPublication'));
 import PageTransitionWrapper from './components/PageTransitionWrapper';
 
 function App() {
@@ -81,6 +82,7 @@ function AppContent({ loading, setLoading }) {
                     <Route path="/appointment" element={<PageTransitionWrapper><Appointment /></PageTransitionWrapper>} />
                     <Route path="/organization/:orgId" element={<PageTransitionWrapper><OrganizationDetails /></PageTransitionWrapper>} />
                     <Route path="/cv/:studentId" element={<PageTransitionWrapper><StudentCV /></PageTransitionWrapper>} />
+                    <Route path="/add-publication" element={<PageTransitionWrapper><AddPublication /></PageTransitionWrapper>} />
                   </Routes>
                 </AnimatePresence>
               </Suspense>

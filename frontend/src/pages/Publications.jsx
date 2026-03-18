@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Calendar, ExternalLink, Download, Search, Users, ShieldCheck, FileText, Bookmark } from "lucide-react";
+import { Link } from "react-router-dom";
+import { BookOpen, Calendar, ExternalLink, Download, Search, Users, ShieldCheck, FileText, Bookmark, PlusCircle } from "lucide-react";
 
 /* ================= DATA ================= */
 const publicationsData = [
@@ -236,6 +237,17 @@ const Publications = () => {
           >
             Explore our latest research papers, journals, and book chapters driving innovation forward.
           </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mt-6 flex justify-center"
+          >
+            <Link to="/add-publication" className="bg-teal-600 text-white px-6 py-3 rounded-full font-bold shadow-md hover:bg-teal-700 transition-colors inline-flex items-center gap-2">
+              <PlusCircle size={20} />
+              Add Publications
+            </Link>
+          </motion.div>
         </div>
 
         {/* Filters and Search Hub */}
