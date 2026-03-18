@@ -98,32 +98,32 @@ const Navbar = () => {
         <>
             <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled ? 'bg-[#FAF9F6]/95 backdrop-blur-md shadow-md py-2' : 'bg-[#FAF9F6] py-3.5'}`}>
                 {/* MAIN CONTAINER */}
-                <div className="max-w-[1700px] mx-auto w-full flex items-center justify-between px-3 md:px-6 lg:px-8">
+                <div className="max-w-[1700px] mx-auto w-full flex items-center justify-between px-3 md:px-6 lg:px-2 xl:px-4 2xl:px-8">
 
                     {/* WRAPPER 1: LEFT (Logo & Site Title) */}
-                    <Link to="/" className="flex items-center gap-1.5 md:gap-3 group shrink-0 min-w-0">
-                        <div className="w-[48px] h-[48px] md:w-[52px] md:h-[52px] lg:w-[60px] lg:h-[60px] xl:w-[70px] xl:h-[70px] -my-[6px] md:-my-[8px] xl:-my-[11px] bg-white rounded-full p-0.5 lg:p-1 flex items-center justify-center shadow-[0_0_15px_rgba(255,230,100,0.4)] lg:shadow-[0_0_20px_rgba(255,230,100,0.3)] shrink-0 transition-all duration-500 group-hover:scale-105 group-hover:shadow-[0_0_25px_rgba(255,210,100,0.5)]">
+                    <Link to="/" className="flex items-center gap-1.5 md:gap-3 lg:gap-2 xl:gap-3 group shrink-0 min-w-0">
+                        <div className="w-[48px] h-[48px] md:w-[52px] md:h-[52px] lg:w-[46px] lg:h-[46px] xl:w-[54px] xl:h-[54px] 2xl:w-[70px] 2xl:h-[70px] -my-[6px] md:-my-[8px] lg:-my-[6px] xl:-my-[8px] 2xl:-my-[11px] bg-white rounded-full p-0.5 lg:p-1 flex items-center justify-center shadow-[0_0_15px_rgba(255,230,100,0.4)] lg:shadow-[0_0_20px_rgba(255,230,100,0.3)] shrink-0 transition-all duration-500 group-hover:scale-105 group-hover:shadow-[0_0_25px_rgba(255,210,100,0.5)]">
                             <img src={srlLogo} alt="SRL" className="w-full h-full object-contain" />
                         </div>
                         <div className="flex flex-col justify-center min-w-0">
-                            <h1 className="text-teal-900 font-serif font-bold text-[10px] md:text-[14px] lg:text-[13px] xl:text-[16px] tracking-tight leading-tight whitespace-nowrap m-0">
+                            <h1 className="text-teal-900 font-serif font-bold text-[10px] md:text-[14px] lg:text-[11px] xl:text-[13px] 2xl:text-[16px] tracking-tight leading-tight whitespace-nowrap m-0">
                                 Students Research Lab <span className="text-teal-600">(SRL)</span>
                             </h1>
-                            <p className="text-teal-800/80 font-sans font-semibold text-[7px] md:text-[9px] lg:text-[8px] xl:text-[10px] uppercase tracking-[0.14em] whitespace-nowrap leading-tight m-0">
+                            <p className="text-teal-800/80 font-sans font-semibold text-[7px] md:text-[9px] lg:text-[7px] xl:text-[8px] 2xl:text-[10px] uppercase tracking-[0.14em] whitespace-nowrap leading-tight m-0">
                                 MMPSRPC, KSV
                             </p>
                         </div>
                     </Link>
 
                     {/* WRAPPER 2: CENTER-RIGHT (Navigation Links) */}
-                    <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-2 xl:px-4">
-                        <div className="flex items-center justify-center w-full max-w-[850px] gap-x-1 sm:gap-x-2 xl:gap-x-4 2xl:gap-x-6">
+                    <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-1 lg:px-2 xl:px-3">
+                        <div className="flex items-center justify-center w-full max-w-[850px] gap-x-1 sm:gap-x-2 lg:gap-x-1.5 xl:gap-x-3 2xl:gap-x-6">
                             {menuItems.map((item) => (
                                 <NavLink
                                     key={item.label}
                                     to={item.path}
                                     className={({ isActive }) => `
-                                    nav-link text-[10px] xl:text-[11px] 2xl:text-[13px] font-semibold whitespace-nowrap tracking-[0.01em] xl:tracking-[0.03em]
+                                    nav-link text-[10px] lg:text-[10px] xl:text-[11px] 2xl:text-[13px] font-semibold whitespace-nowrap tracking-[0.01em] lg:tracking-[0.01em] xl:tracking-[0.02em] 2xl:tracking-[0.03em]
                                     ${isActive ? "text-teal-700 active" : "text-teal-900/70 hover:text-teal-900"}
                                 `}
                                 >
@@ -140,7 +140,7 @@ const Navbar = () => {
                             >
                                 <button
                                     onClick={() => setIsAboutClicked(!isAboutClicked)}
-                                    className={`flex items-center gap-0.5 py-1 text-[10px] xl:text-[11px] 2xl:text-[13px] font-sans font-semibold transition-all whitespace-nowrap tracking-[0.01em] xl:tracking-[0.03em] relative group/aboutlink ${isAboutActive || isAboutClicked ? 'text-teal-700' : 'text-teal-900/70 hover:text-teal-900'}`}
+                                    className={`flex items-center gap-0.5 py-1 text-[10px] lg:text-[10px] xl:text-[11px] 2xl:text-[13px] font-sans font-semibold transition-all whitespace-nowrap tracking-[0.01em] lg:tracking-[0.01em] xl:tracking-[0.02em] 2xl:tracking-[0.03em] relative group/aboutlink ${isAboutActive || isAboutClicked ? 'text-teal-700' : 'text-teal-900/70 hover:text-teal-900'}`}
                                 >
                                     About Us <ChevronDown size={14} className={`transition-transform duration-300 ${aboutDropdownOpen ? 'rotate-180' : ''}`} />
                                     <span className={`absolute bottom-[-2px] left-0 h-[3px] bg-teal-600 transition-all duration-300 ${isAboutActive || isAboutClicked ? 'w-full' : 'w-0 group-hover/aboutlink:w-full'}`}></span>
@@ -172,9 +172,9 @@ const Navbar = () => {
                     </div>
 
                     {/* WRAPPER 3: RIGHT (Buttons & Partner Logos) */}
-                    <div className="flex items-center justify-end gap-x-2 xl:gap-x-3 shrink-0">
-                        <div className="hidden lg:flex items-center gap-x-2 xl:gap-x-3">
-                            <Link to="/join" className="relative bg-[#F5F2E1] text-[#134E4A] hover:bg-[#E8E4D0] transition-colors rounded-full shadow-md py-1.5 lg:py-2 px-3 xl:px-5 text-[10px] xl:text-[12px] uppercase tracking-wider font-bold overflow-hidden group">
+                    <div className="flex items-center justify-end gap-x-2 lg:gap-x-1.5 xl:gap-x-2 2xl:gap-x-3 shrink-0">
+                        <div className="hidden lg:flex items-center gap-x-2 lg:gap-x-1.5 xl:gap-x-2 2xl:gap-x-3">
+                            <Link to="/join" className="relative bg-[#F5F2E1] text-[#134E4A] hover:bg-[#E8E4D0] transition-colors rounded-full shadow-md py-1.5 lg:py-1 xl:py-1.5 2xl:py-2 px-3 lg:px-3 xl:px-4 2xl:px-5 text-[10px] lg:text-[9px] xl:text-[10px] 2xl:text-[12px] uppercase tracking-wider font-bold overflow-hidden group">
                                 <span className="relative z-10">Join Us</span>
                                 {/* Shine Animation */}
                                 <span className="absolute left-[-75%] top-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/70 to-transparent opacity-80 animate-shine-join" />
@@ -194,22 +194,22 @@ const Navbar = () => {
                                     }
                                 `}</style>
                             </Link>
-                            <a href="https://appointment.mmpsrpc.in/" target="_blank" rel="noopener noreferrer" className="relative bg-[#E0F2F1] text-[#0D9488] border border-teal-100 hover:bg-[#B2DFDB] transition-colors shadow-sm rounded-full py-1.5 lg:py-2 px-3 xl:px-5 text-[10px] xl:text-[12px] uppercase tracking-wider font-bold overflow-hidden group">
+                            <a href="https://appointment.mmpsrpc.in/" target="_blank" rel="noopener noreferrer" className="relative bg-[#E0F2F1] text-[#0D9488] border border-teal-100 hover:bg-[#B2DFDB] transition-colors shadow-sm rounded-full py-1.5 lg:py-1 xl:py-1.5 2xl:py-2 px-3 lg:px-3 xl:px-4 2xl:px-5 text-[10px] lg:text-[9px] xl:text-[10px] 2xl:text-[12px] uppercase tracking-wider font-bold overflow-hidden group">
                                 <span className="relative z-10">Appointment</span>
                                 <span className="absolute left-[-75%] top-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/70 to-transparent opacity-80 animate-shine-appoint" />
                             </a>
                         </div>
 
-                        {/* Partner logos visible from xl+ */}
-                        <div className="hidden xl:flex items-center gap-x-2.5 2xl:gap-x-6 border-l border-teal-900/10 pl-2.5 2xl:pl-6 shrink-0">
+                        {/* Partner logos visible from lg+ */}
+                        <div className="hidden lg:flex items-center gap-x-2.5 lg:gap-x-1.5 xl:gap-x-2 2xl:gap-x-6 border-l border-teal-900/10 pl-2.5 lg:pl-1.5 xl:pl-2 2xl:pl-6 shrink-0">
                             <a href="https://www.svkm.org.in/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300">
-                                <img src={svkmLogo} alt="SVKM" className="h-8 xl:h-10 2xl:h-14 w-auto object-contain" />
+                                <img src={svkmLogo} alt="SVKM" className="h-8 lg:h-6 xl:h-8 2xl:h-14 w-auto object-contain" />
                             </a>
                             <a href="https://www.ksv.ac.in/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300">
-                                <img src={ksvLogo} alt="KSV" className="h-8 xl:h-10 2xl:h-14 w-auto object-contain" />
+                                <img src={ksvLogo} alt="KSV" className="h-8 lg:h-6 xl:h-8 2xl:h-14 w-auto object-contain" />
                             </a>
                             <a href="https://www.mmpsrpc.in/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300">
-                                <img src={mmpsrpcLogo} alt="MMPSRPC" className="h-8 xl:h-10 2xl:h-14 w-auto object-contain" />
+                                <img src={mmpsrpcLogo} alt="MMPSRPC" className="h-8 lg:h-6 xl:h-8 2xl:h-14 w-auto object-contain" />
                             </a>
                         </div>
 
