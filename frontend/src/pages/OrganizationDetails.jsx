@@ -1,11 +1,13 @@
+import React, { useState } from "react";
 import { useParams, Navigate, Link } from "react-router-dom";
 import { organizationData } from "../data/organizationData";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, ArrowLeft, Globe, Mail, Phone, MapPin } from "lucide-react";
+import { ExternalLink, ArrowLeft, Globe, Mail, Phone, MapPin, Linkedin } from "lucide-react";
 
 const OrganizationDetails = () => {
     const { orgId } = useParams();
     const data = organizationData[orgId];
+    const [execomFilter, setExecomFilter] = React.useState("All");
 
     if (!data) {
         return <Navigate to="/" replace />;
@@ -59,7 +61,7 @@ const OrganizationDetails = () => {
                             <img
                                 src={data.image}
                                 alt={data.title}
-                                className={`h-full w-auto object-contain drop-shadow-md transition-all duration-500 ${orgId === 'ieee' ? 'brightness-[0.8] contrast-[1.2] saturate-[1.2]' : ''
+                                className={`h-full w-auto object-contain drop-shadow-md transition-all duration-500 ${orgId === 'ieee' ? '[filter:brightness(0)_saturate(100%)_invert(7%)_sepia(88%)_saturate(4600%)_hue-rotate(213deg)_brightness(93%)_contrast(113%)]' : ''
                                     }`}
                             />
                             {/* Floating redirect icon */}
@@ -73,7 +75,7 @@ const OrganizationDetails = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className={`font-black mb-6 tracking-tight font-serif drop-shadow-xl ${orgId === 'mmpsrpc'
+                        className={`font-black mb-6 tracking-tight font-serif drop-shadow-xl whitespace-pre-line ${orgId === 'mmpsrpc'
                             ? 'text-3xl sm:text-4xl lg:text-5xl whitespace-nowrap'
                             : 'text-4xl sm:text-5xl lg:text-7xl'
                             } ${orgId === 'ieee' ? 'text-[#002147]' : 'text-slate-900'}`}
@@ -401,7 +403,99 @@ const OrganizationDetails = () => {
                     )}
 
 
-                    {/* CONTACT & LOCATION SECTION */}
+                    {/* EXECUTIVE COMMITTEE SECTION */}
+                    {data.execom && (
+                        <div className="mb-32">
+                            <div className="flex flex-col items-center mb-16 px-4">
+                                <h3 className="text-4xl md:text-5xl font-black text-slate-900 text-center font-sans tracking-tight mb-4">
+                                    {data.execomTitle || "Executive Committee"}
+                                </h3>
+                                {data.execomSubtitle && (
+                                    <p className="text-slate-600 font-sans text-lg lg:text-xl text-center max-w-3xl leading-relaxed">
+                                        {data.execomSubtitle}
+                                    </p>
+                                )}
+                                <div className="mt-8 h-[2px] w-48 bg-gradient-to-r from-transparent via-[#00887b]/30 to-transparent" />
+                            </div>
+
+                            {/* Filter Buttons */}
+                            <div className="flex flex-wrap justify-center gap-3 mb-12">
+                                {["All", "IEEE KSV SB", "IEEE KSV SPS", "IEEE KSV WIE"].map((filter) => (
+                                    <button
+                                        key={filter}
+                                        onClick={() => setExecomFilter(filter)}
+                                        className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
+                                            execomFilter === filter
+                                                ? "bg-teal-900 text-white shadow-lg scale-105"
+                                                : "bg-white text-teal-900 border border-teal-100 hover:bg-teal-50"
+                                        }`}
+                                    >
+                                        {filter}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Members Grid */}
+                            <motion.div 
+                                layout
+                                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+                            >
+                                <AnimatePresence mode='popLayout'>
+                                    {data.execom
+                                        .filter(member => execomFilter === "All" || member.group === execomFilter)
+                                        .map((member, index) => (
+                                            <motion.div
+                                                key={member.name}
+                                                layout
+                                                initial={{ opacity: 0, scale: 0.9 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                exit={{ opacity: 0, scale: 0.9 }}
+                                                transition={{ duration: 0.3 }}
+                                                whileHover={{ y: -8 }}
+                                                className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl border border-white/50 shadow-md hover:shadow-xl transition-all duration-300 group flex flex-col items-center text-center relative overflow-hidden"
+                                            >
+                                                {/* Group Badge */}
+                                                <div className="absolute top-0 right-0 px-3 py-1 bg-teal-50 text-[8px] font-black text-teal-700 rounded-bl-xl uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    {member.group.replace("IEEE KSV ", "")}
+                                                </div>
+
+                                                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-teal-50 to-teal-100 flex items-center justify-center mb-4 border-2 border-white shadow-inner group-hover:scale-110 transition-transform duration-500 overflow-hidden">
+                                                    {member.image ? (
+                                                        <img 
+                                                            src={member.image} 
+                                                            alt={member.name} 
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <span className="text-2xl font-black text-teal-800 font-serif">
+                                                            {member.name.charAt(0)}
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                <h4 className="text-base font-bold text-slate-900 mb-1 font-sans leading-tight">
+                                                    {member.name}
+                                                </h4>
+                                                <p className="text-[11px] text-teal-700 font-black uppercase tracking-widest mb-4">
+                                                    {member.role}
+                                                </p>
+
+                                                {member.linkedin && (
+                                                    <a
+                                                        href={member.linkedin}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="mt-auto p-2 bg-teal-50 text-teal-700 rounded-full hover:bg-teal-900 hover:text-white transition-all duration-300"
+                                                    >
+                                                        <Linkedin size={14} />
+                                                    </a>
+                                                )}
+                                            </motion.div>
+                                        ))}
+                                </AnimatePresence>
+                            </motion.div>
+                        </div>
+                    )}
                     {data.contact && (
                         <motion.div
                             initial={{ opacity: 0, y: 30 }}

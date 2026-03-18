@@ -234,7 +234,7 @@ const About = () => {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.3 }}
-                        className="relative rounded-[2rem] shadow-xl border border-blue-50 overflow-hidden hover:shadow-2xl transition-shadow duration-500"
+                        className="relative rounded-[2rem] shadow-xl border border-teal-50 overflow-hidden hover:shadow-2xl transition-shadow duration-500"
                     >
                         {/* Background Image Layer */}
                         {organizationData.ieee?.heroImage && (
@@ -254,11 +254,11 @@ const About = () => {
                                     <img src={organizationData.ieee?.image} alt="IEEE KSV" className="h-full object-contain" />
                                 </div>
                                 <div>
-                                    <h4 className="text-xl font-bold text-blue-900 font-sans drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]">{organizationData.ieee?.title}</h4>
-                                    <p className="text-xs text-blue-700 font-black uppercase tracking-[0.2em] mt-1 drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)]">Our Student Branch</p>
+                                    <h4 className="text-xl font-bold text-teal-900 font-sans drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]">{organizationData.ieee?.title}</h4>
+                                    <p className="text-xs text-teal-800 font-black uppercase tracking-[0.2em] mt-1 drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)]">Our Student Branch</p>
                                 </div>
                             </div>
-                            <ChevronDown className={`w-6 h-6 text-blue-900 transition-transform duration-500 drop-shadow-md ${openAccordion === 'ieee' ? 'rotate-180' : ''}`} />
+                            <ChevronDown className={`w-6 h-6 text-teal-900 transition-transform duration-500 drop-shadow-md ${openAccordion === 'ieee' ? 'rotate-180' : ''}`} />
                         </button>
                         <AnimatePresence>
                             {openAccordion === 'ieee' && (
@@ -269,11 +269,11 @@ const About = () => {
                                     transition={{ duration: 0.5, ease: "easeInOut" }}
                                 >
                                     <div className="px-8 pb-8 pt-2">
-                                        <div className="h-[1px] w-full bg-blue-50 mb-8" />
+                                        <div className="h-[1px] w-full bg-teal-50 mb-8" />
                                         
                                         <div className="grid gap-6">
                                             {/* Intro Card */}
-                                            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl border border-blue-100/30">
+                                            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl border border-teal-100/30">
                                                 {organizationData.ieee?.sections?.intro?.map((para, i) => (
                                                     <p key={i} className="text-gray-800 leading-[1.7] text-[15px] font-normal text-justify mb-4 last:mb-0">
                                                         {para}
@@ -282,9 +282,9 @@ const About = () => {
                                             </div>
 
                                             {/* Mission Card */}
-                                            <div className="bg-blue-50/40 p-6 rounded-2xl border border-blue-100/50">
-                                                <h5 className="text-blue-900 font-bold mb-3 flex items-center gap-2">
-                                                    <span className="w-1.5 h-6 bg-blue-600 rounded-full" />
+                                            <div className="bg-teal-50/40 p-6 rounded-2xl border border-teal-100/50">
+                                                <h5 className="text-teal-900 font-bold mb-3 flex items-center gap-2 font-sans">
+                                                    <span className="w-1.5 h-6 bg-teal-600 rounded-full" />
                                                     Mission
                                                 </h5>
                                                 {organizationData.ieee?.sections?.mission?.map((para, i) => (
@@ -295,9 +295,9 @@ const About = () => {
                                             </div>
 
                                             {/* Activities Card */}
-                                            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl border border-blue-100/30">
-                                                <h5 className="text-blue-900 font-bold mb-3 flex items-center gap-2">
-                                                    <span className="w-1.5 h-6 bg-blue-600 rounded-full" />
+                                            <div className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl border border-teal-100/30">
+                                                <h5 className="text-teal-900 font-bold mb-3 flex items-center gap-2 font-sans">
+                                                    <span className="w-1.5 h-6 bg-teal-600 rounded-full" />
                                                     Activities & Events
                                                 </h5>
                                                 {organizationData.ieee?.sections?.activities?.map((para, i) => (
@@ -308,9 +308,9 @@ const About = () => {
                                             </div>
 
                                             {/* Initiatives Card */}
-                                            <div className="bg-blue-50/40 p-6 rounded-2xl border border-blue-100/50">
-                                                <h5 className="text-blue-900 font-bold mb-3 flex items-center gap-2">
-                                                    <span className="w-1.5 h-6 bg-blue-600 rounded-full" />
+                                            <div className="bg-teal-50/40 p-6 rounded-2xl border border-teal-100/50">
+                                                <h5 className="text-teal-900 font-bold mb-3 flex items-center gap-2 font-sans">
+                                                    <span className="w-1.5 h-6 bg-teal-600 rounded-full" />
                                                     Initiatives & Impact
                                                 </h5>
                                                 {organizationData.ieee?.sections?.impact?.map((para, i) => (
@@ -322,12 +322,12 @@ const About = () => {
 
                                             {/* ExeCom Photo Card */}
                                             {organizationData.ieee?.execomPhoto && (
-                                                <div className="mt-4 p-6 bg-white/60 backdrop-blur-sm rounded-2xl border border-blue-100/30">
-                                                    <h5 className="text-blue-900 font-bold mb-4 flex items-center gap-2">
-                                                        <span className="w-1.5 h-6 bg-blue-600 rounded-full" />
+                                                <div className="mt-4 p-6 bg-white/60 backdrop-blur-sm rounded-2xl border border-teal-100/30">
+                                                    <h5 className="text-teal-900 font-bold mb-4 flex items-center gap-2 font-sans">
+                                                        <span className="w-1.5 h-6 bg-teal-600 rounded-full" />
                                                         ExeCom'26 - Executive Committee
                                                     </h5>
-                                                    <div className="rounded-xl overflow-hidden shadow-lg border border-blue-50">
+                                                    <div className="rounded-xl overflow-hidden shadow-lg border border-teal-50">
                                                         <img 
                                                             src={organizationData.ieee.execomPhoto} 
                                                             alt="IEEE KSV ExeCom 2026" 
@@ -340,15 +340,15 @@ const About = () => {
 
                                         <div className="mt-8 flex flex-wrap gap-3">
                                             {organizationData.ieee?.features?.map((f, i) => (
-                                                <span key={i} className="px-4 py-1.5 bg-blue-50 text-[10px] font-black text-blue-700 rounded-full uppercase tracking-wider">{f}</span>
+                                                <span key={i} className="px-4 py-1.5 bg-teal-50 text-[10px] font-black text-teal-700 rounded-full uppercase tracking-wider">{f}</span>
                                             ))}
                                         </div>
 
                                         <div className="mt-8 flex flex-wrap gap-4">
-                                            <Link to="/organization/ieee" className="inline-flex items-center gap-2 px-6 py-3 bg-blue-900 text-white rounded-full font-bold text-sm hover:bg-blue-800 transition-all shadow-lg hover:shadow-blue-900/20">
+                                            <Link to="/organization/ieee" className="inline-flex items-center gap-2 px-6 py-3 bg-teal-900 text-white rounded-full font-bold text-sm hover:bg-teal-800 transition-all shadow-lg hover:shadow-teal-900/20">
                                                 Explore IEEE KSV SB <ExternalLink size={14} />
                                             </Link>
-                                            <a href="https://ieee-ksv-sb.mmpsrpc.in/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 border-2 border-blue-900 text-blue-900 rounded-full font-bold text-sm hover:bg-blue-900 hover:text-white transition-all shadow-lg">
+                                            <a href="https://ieee-ksv-sb.mmpsrpc.in/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 border-2 border-teal-900 text-teal-900 rounded-full font-bold text-sm hover:bg-teal-900 hover:text-white transition-all shadow-lg">
                                                 Visit Website <ExternalLink size={14} />
                                             </a>
                                         </div>
