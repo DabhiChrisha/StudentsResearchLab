@@ -5,13 +5,27 @@ from config import SUPABASE_URL, HEADERS
 router = APIRouter(prefix="/api")
 
 
+async def fetch_all_records(client, url: str):
+    all_chunks = []
+    offset = 0
+    limit = 1000
+    while True:
+        req_url = f"{url}{'&' if '?' in url else '?'}offset={offset}&limit={limit}"
+        res = await client.get(req_url, headers=HEADERS)
+        res.raise_for_status()
+        chunk = res.json()
+        all_chunks.extend(chunk)
+        if len(chunk) < limit:
+            break
+        offset += limit
+    return all_chunks
+
 @router.get("/attendance")
 async def get_all_attendance():
     try:
         async with httpx.AsyncClient() as client:
-            res = await client.get(f"{SUPABASE_URL}/rest/v1/attendance?select=*", headers=HEADERS)
-            res.raise_for_status()
-            return {"records": res.json()}
+            records = await fetch_all_records(client, f"{SUPABASE_URL}/rest/v1/attendance?select=*")
+            return {"records": records}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -91,7 +105,7 @@ async def get_student_srl_attendance_percentage(enrollment_no: str):
                     hours = r.get("hours") or 0
                     daily_hours[date] = daily_hours.get(date, 0) + float(hours)
 
-            total_recorded_srl_sessions = len(daily_hours)
+            total_recorded_srl_sessions = len(srl_dates)
             if total_recorded_srl_sessions == 0:
                 return {"srl_attendance_percentage": 0.0}
 

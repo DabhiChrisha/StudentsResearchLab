@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { BookOpen, Calendar, ExternalLink, Download, Search, Users, ShieldCheck, FileText, Bookmark, PlusCircle, X } from "lucide-react";
@@ -369,6 +369,12 @@ const Publications = () => {
 
   // Extract all unique years from data (2020 to current year)
   const allYears = Array.from({ length: new Date().getFullYear() - 2019 }, (_, i) => 2020 + i).reverse();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 600);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredPublications = publicationsData.filter((pub) => {
     const matchesCat = activeCategory === "All" || pub.category === activeCategory;
@@ -595,7 +601,37 @@ const Publications = () => {
         {/* Publications Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           <AnimatePresence mode="popLayout">
-            {filteredPublications.length > 0 ? (
+            {loading ? (
+              [...Array(6)].map((_, index) => (
+                <div key={index} className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col h-[350px] animate-pulse">
+                  <div className="flex justify-between items-start mb-5">
+                    <div className="h-6 w-24 bg-teal-50 rounded-full"></div>
+                    <div className="h-4 w-16 bg-gray-200 rounded"></div>
+                  </div>
+                  <div className="h-6 md:h-8 w-3/4 bg-gray-200 rounded-md mb-4"></div>
+                  <div className="h-4 w-full bg-gray-200 rounded-md mb-2"></div>
+                  <div className="h-4 w-5/6 bg-gray-200 rounded-md mb-6"></div>
+                  
+                  <div className="flex items-start gap-3 mb-6">
+                    <div className="w-4 h-4 rounded bg-gray-200 mt-1 shrink-0"></div>
+                    <div className="h-4 w-1/2 bg-gray-200 rounded"></div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3 mb-6">
+                    <div className="w-4 h-4 rounded bg-gray-200 mt-1 shrink-0"></div>
+                    <div className="h-4 w-2/3 bg-gray-200 rounded"></div>
+                  </div>
+                  
+                  <div className="mt-auto border-t border-slate-100 pt-5 flex justify-between items-center">
+                    <div className="flex gap-2">
+                       <div className="h-5 w-16 bg-gray-200 rounded-md"></div>
+                       <div className="h-5 w-12 bg-gray-200 rounded-md"></div>
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-slate-100"></div>
+                  </div>
+                </div>
+              ))
+            ) : filteredPublications.length > 0 ? (
               filteredPublications.map((pub, index) => (
                 <PublicationCard key={pub.id} pub={pub} index={index} />
               ))

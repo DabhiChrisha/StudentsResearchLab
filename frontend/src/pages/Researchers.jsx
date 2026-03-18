@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Linkedin, X, FileText, Eye, Star } from "lucide-react";
 import studentsData from "../data/srlStudents.json";
+import { supabase } from "../lib/supabaseClient";
 import ChromaGrid from "../components/react-bits/ChromaGrid";
 import GradientText from "../components/GradientText";
 
@@ -9,15 +10,61 @@ import GradientText from "../components/GradientText";
 // --- Main Researchers Component ---
 export default function Researchers() {
     const [activeStudent, setActiveStudent] = useState(null);
+    const [batchMap, setBatchMap] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Prepare sorted students: group by semester (numeric ascending), within each semester sort by name
+    // Fetch batch data from Supabase students_details table
+    useEffect(() => {
+        const fetchBatches = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from("students_details")
+                    .select("enrollment_no, batch");
+                if (error) {
+                    console.error("Error fetching batch data:", error);
+                    return;
+                }
+                const map = {};
+                (data || []).forEach((row) => {
+                    if (row.enrollment_no && row.batch) {
+                        map[row.enrollment_no.trim().toUpperCase()] = row.batch;
+                    }
+                });
+                setBatchMap(map);
+            } catch (err) {
+                console.error("Failed to fetch batch data:", err);
+            }
+        };
+        fetchBatches();
+    }, []);
+
+    // Minimal artificial loading to show the skeleton transition smoothly 
+    // without blocking on the heavy Supabase network call above.
+    useEffect(() => {
+        const timer = setTimeout(() => setIsLoading(false), 500);
+        return () => clearTimeout(timer);
+    }, []);
+
+    // Sort students: semester ascending (1→8), then first name alphabetical (A→Z)
+    // Exception: Poojan Ghetiya is always placed at the very bottom
     const sortedStudents = useMemo(() => {
+        const getFirstName = (name) => (name || "").split(" ")[0].toLowerCase();
+
         const copy = [...studentsData];
         copy.sort((a, b) => {
+            // Exception: Poojan Ghetiya always goes to the bottom
+            const aIsPoojan = (a.student_name || "").toLowerCase().startsWith("poojan");
+            const bIsPoojan = (b.student_name || "").toLowerCase().startsWith("poojan");
+            if (aIsPoojan && !bIsPoojan) return 1;
+            if (!aIsPoojan && bIsPoojan) return -1;
+
+            // Primary: semester ascending
             const sa = Number(a.semester) || 0;
             const sb = Number(b.semester) || 0;
             if (sa !== sb) return sa - sb;
-            return (a.student_name || "").localeCompare(b.student_name || "");
+
+            // Secondary: first name alphabetical (A→Z)
+            return getFirstName(a.student_name).localeCompare(getFirstName(b.student_name));
         });
         return copy;
     }, []);
@@ -33,25 +80,30 @@ export default function Researchers() {
     }, [sortedStudents]);
 
     const chromaItems = useMemo(() => {
-        return members.map((s) => ({
-            id: s.enrollment_no || s.student_name.toLowerCase().replace(/\s+/g, "-"),
-            enrollment: s.enrollment_no,
-            image: s.photo || "/students/schoolstudent.png",
-            title: s.student_name,
-            subtitle: `${s.department} • Semester ${s.semester}`,
-            department: s.department,
-            semester: s.semester,
-            reflection: s.reflection || "",
-            researchWorks: s.researchWorks || [],
-            research: s.research || [],
-            achievements: s.achievements || [],
-            papersPublished: s.papersPublished || s.researchWorks || [],
-            hackathons: s.hackathons || [],
-            email: s.email || "",
-            linkedin: s.linkedin || "",
-            gradient: "linear-gradient(160deg,#fbe8c1,#167d8d)",
-        }));
-    }, [members]);
+        return members.map((s) => {
+            const enrollKey = (s.enrollment_no || "").trim().toUpperCase();
+            const batch = batchMap[enrollKey] || s.batch || null;
+            return {
+                id: s.enrollment_no || s.student_name.toLowerCase().replace(/\s+/g, "-"),
+                enrollment: s.enrollment_no,
+                image: s.photo || "/students/schoolstudent.png",
+                title: s.student_name,
+                subtitle: `${s.department} • Semester ${s.semester}`,
+                batch,
+                department: s.department,
+                semester: s.semester,
+                reflection: s.reflection || "",
+                researchWorks: s.researchWorks || [],
+                research: s.research || [],
+                achievements: s.achievements || [],
+                papersPublished: s.papersPublished || s.researchWorks || [],
+                hackathons: s.hackathons || [],
+                email: s.email || "",
+                linkedin: s.linkedin || "",
+                gradient: "linear-gradient(160deg,#fbe8c1,#167d8d)",
+            };
+        });
+    }, [members, batchMap]);
 
     const openModalFor = (s) => {
         const hackathonPool = [
@@ -71,11 +123,14 @@ export default function Researchers() {
             hackathons: [],
         };
 
+        const enrollKey = (s.enrollment_no || s.enrollment || "").trim().toUpperCase();
+        const batch = batchMap[enrollKey] || s.batch || null;
         const student = {
             ...defaults,
             ...s,
             title: s.student_name || s.title,
             subtitle: s.subtitle || `${s.department} • Semester ${s.semester}`,
+            batch,
         };
 
         // Ensure every profile has some hackathon sample data even if the source provided none
@@ -88,6 +143,17 @@ export default function Researchers() {
         setActiveStudent(student);
     };
     const closeModal = () => setActiveStudent(null);
+
+    // Close modal on ESC key
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === "Escape" && activeStudent) {
+                closeModal();
+            }
+        };
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [activeStudent]);
 
     return (
         <motion.div
@@ -126,7 +192,31 @@ export default function Researchers() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
-                            {researchAssistants.map((ra) => (
+                            {isLoading ? (
+                                [...Array(2)].map((_, idx) => (
+                                    <div key={idx} className="group relative overflow-hidden rounded-[2.5rem] bg-gray-200/50 p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6 border border-gray-100 animate-pulse">
+                                        <div className="relative shrink-0 w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gray-300 flex items-center justify-center"></div>
+                                        <div className="flex-1 text-center sm:text-left w-full flex flex-col gap-3">
+                                            <div className="h-8 bg-gray-300 rounded-md w-3/4 mx-auto sm:mx-0"></div>
+                                            <div className="h-4 bg-gray-300 rounded-md w-1/2 mx-auto sm:mx-0 mb-2"></div>
+                                            <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+                                                <div className="w-16 h-6 bg-gray-300 rounded-full"></div>
+                                                <div className="w-16 h-6 bg-gray-300 rounded-full"></div>
+                                                <div className="w-16 h-6 bg-gray-300 rounded-full"></div>
+                                            </div>
+                                            <div className="flex items-center justify-center sm:justify-start gap-4 mt-2">
+                                                <div className="w-10 h-10 bg-gray-300 rounded-xl"></div>
+                                                <div className="w-10 h-10 bg-gray-300 rounded-xl"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                researchAssistants.map((ra) => {
+                                    const enrollKey = (ra.enrollment_no || "").trim().toUpperCase();
+                                const batch = batchMap[enrollKey] || ra.batch || null;
+                                
+                                return (
                                 <motion.article
                                     key={ra.enrollment_no || ra.student_name}
                                     whileHover={{ y: -8, scale: 1.02 }}
@@ -141,6 +231,7 @@ export default function Researchers() {
                                                 image: ra.photo || "/students/schoolstudent.png",
                                                 title: ra.student_name,
                                                 subtitle: ra.department + " • Semester " + ra.semester,
+                                                batch: batch,
                                                 reflection: ra.reflection || "",
                                                 email: ra.email || "",
                                                 linkedin: ra.linkedin || "",
@@ -161,7 +252,9 @@ export default function Researchers() {
                                         <h3 className="text-3xl font-black font-serif mb-1 bg-gradient-to-r from-secondary to-slate-900 bg-clip-text text-transparent group-hover:text-secondary transition-colors">
                                             {ra.student_name}
                                         </h3>
-                                        <div className="text-xs font-black uppercase tracking-[0.2em] text-secondary mb-4">Research Assistant • {ra.department}</div>
+                                        <div className="text-xs font-black uppercase tracking-[0.2em] text-secondary mb-4">
+                                            Research Assistant • {ra.department}
+                                        </div>
 
                                         <div className="flex flex-wrap gap-2 mb-6 justify-center sm:justify-start">
                                             {ra.research.slice(0, 3).map((domain, i) => (
@@ -185,7 +278,9 @@ export default function Researchers() {
                                         </div>
                                     </div>
                                 </motion.article>
-                            ))}
+                                );
+                            })
+                        )}
                         </div>
                     </div>
                 )}
@@ -203,7 +298,7 @@ export default function Researchers() {
                             Student Members
                         </GradientText>
                     </div>
-                    <ChromaGrid items={chromaItems} onImageClick={(s) => openModalFor(s)} />
+                    <ChromaGrid items={chromaItems} onImageClick={(s) => openModalFor(s)} isLoading={isLoading} />
                 </div>
 
             </div>
@@ -256,6 +351,11 @@ export default function Researchers() {
                                         <p className="text-secondary font-black text-sm uppercase tracking-widest">
                                             {activeStudent.subtitle}
                                         </p>
+                                        {activeStudent.batch && (
+                                            <p className="text-slate-500 font-bold text-xs uppercase tracking-widest mt-1">
+                                                Batch: {activeStudent.batch}
+                                            </p>
+                                        )}
                                     </div>
 
                                     <div className="mt-6 w-full">

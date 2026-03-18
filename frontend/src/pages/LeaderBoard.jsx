@@ -1,6 +1,28 @@
 import { motion } from 'framer-motion';
 import { Trophy, Medal, Star, Target, Zap, Clock, TrendingUp, Users, Award, BookOpen, Crown, Search, Calendar, Timer } from "lucide-react";
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("ErrorBoundary caught an error", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <div className="p-10 text-red-500 font-bold"><h1>Something went wrong.</h1><pre>{this.state.error.toString()}</pre></div>;
+    }
+    return this.props.children; 
+  }
+}
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://studentsresearchlab-1.onrender.com';
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -47,16 +69,19 @@ const IMAGE_MAP = {
 
 const parseBackendStudent = (student, index) => {
     const en = student.enrollment_no ? student.enrollment_no.trim().toUpperCase() : "";
+    const rawAtt = student.attendance_percentage || "0%";
+    const numAtt = parseFloat(rawAtt) || 0;
+
     return {
         ...student,
         id: index + 1,
         enrollment: student.enrollment_no,
         name: student.name || "Unknown Student",
         image: student.image || IMAGE_MAP[en] || "/SRL.svg",
-        score: student.score || 0,
-        attendance: student.attendance || 0,
-        srlAttendance: student.srlAttendance || 0,
-        totalHours: student.totalHours || 0,
+        score: student.total_score || 0,
+        srlAttendance: rawAtt,
+        srlAttendanceNum: numAtt,
+        totalHours: student.total_hours || "0 Hrs",
         rank: student.rank,
         dept: student.dept || "CE",
         semester: student.semester || "6th",
@@ -128,7 +153,7 @@ const LeaderBoard = () => {
         currentLeaderboard = monthlyStudents;
     } else if (activeTab === 'hours') {
         currentLeaderboard = top5ByHours;
-        mainMetricLabel = "hrs";
+        mainMetricLabel = "";
         mainMetricKey = "totalHours";
     }
 
@@ -141,8 +166,8 @@ const LeaderBoard = () => {
         { student: currentLeaderboard[4] || null, expectedRank: 5 }
     ];
 
-    // Safely grab the rest of the members for the table avoiding missing players when ties happen
-    const remainingStudents = currentLeaderboard.slice(5);
+    // Show ALL members in the rankings table (top 5 will be highlighted)
+    const allRankedStudents = currentLeaderboard;
 
     const PodiumCard = ({ item, extraClasses = "" }) => {
         const { student, expectedRank } = item;
@@ -323,14 +348,95 @@ const LeaderBoard = () => {
     };
 
     return (
-        <div className="bg-[#fdf9ee] min-h-screen pt-[100px] lg:pt-[120px] pb-24 px-4 md:px-8 font-sans overflow-x-hidden relative">
+        <div className="bg-[#fdf9ee] min-h-screen pt-[100px] lg:pt-[120px] pb-24 px-4 md:px-8 font-sans overflow-hidden relative">
+            {/* Rotating watermark backgrounds — fixed, partial arc from corners */}
+            <style>{`
+                @keyframes rotateClockwise { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+                @keyframes rotateAntiClockwise { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+            `}</style>
+            <img
+                src="/watermark.svg"
+                alt=""
+                className="fixed w-[600px] md:w-[780px] pointer-events-none select-none"
+                style={{ opacity: 0.15, zIndex: 0, top: '-120px', left: '-220px', animation: 'rotateClockwise 30s linear infinite' }}
+            />
+            <img
+                src="/watermark.svg"
+                alt=""
+                className="fixed w-[600px] md:w-[780px] pointer-events-none select-none"
+                style={{ opacity: 0.15, zIndex: 0, bottom: '-200px', right: '-200px', animation: 'rotateAntiClockwise 30s linear infinite' }}
+            />
+
             {/* Soft decorative blur */}
             <div className="absolute top-0 w-full h-96 bg-gradient-to-b from-[#fdf0cf]/60 to-transparent pointer-events-none left-0 right-0 z-0"></div>
 
             <div className="max-w-[1100px] mx-auto relative z-10">
                 {loading ? (
-                    <div className="flex justify-center items-center h-[60vh]">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
+                    <div className="animate-pulse w-full">
+                        {/* Header Skeleton */}
+                        <div className="flex flex-col items-center justify-center mb-4 md:mb-6 gap-4">
+                            <div className="flex flex-row items-center justify-center gap-3 md:gap-4 w-full flex-wrap md:flex-nowrap">
+                                <div className="h-10 md:h-11 bg-amber-100 rounded-full w-48 border-2 border-amber-200/60"></div>
+                                <div className="h-10 md:h-11 bg-amber-100 rounded-full w-40 border-2 border-amber-200/60"></div>
+                                <div className="h-10 md:h-11 bg-amber-100 rounded-full w-44 border-2 border-amber-200/60"></div>
+                            </div>
+                            <div className="h-10 md:h-14 bg-gray-200 rounded-lg w-3/4 max-w-md mt-2"></div>
+                        </div>
+
+                        {/* Podium Skeleton */}
+                        <div className="relative mt-2 md:mt-4 mb-8">
+                            <div className="flex flex-row items-end justify-center gap-2 sm:gap-4 md:gap-6 min-h-[220px] md:min-h-[320px] pb-4 md:pb-6 pt-6 md:pt-10 relative z-10 px-2 lg:px-8">
+                                {[
+                                    { height: 'h-[40px] md:h-[54px]', avatar: 'w-12 h-12 md:w-16 md:h-16', marginBottom: 'mb-0', width: 'w-[60px] md:w-32' },
+                                    { height: 'h-[45px] md:h-[64px]', avatar: 'w-14 h-14 md:w-20 md:h-20', marginBottom: 'mb-4 md:mb-10', width: 'w-[70px] md:w-36' },
+                                    { height: 'h-[50px] md:h-[80px]', avatar: 'w-16 h-16 md:w-24 md:h-24', marginBottom: 'mb-8 md:mb-16', width: 'w-20 md:w-44' },
+                                    { height: 'h-[45px] md:h-[64px]', avatar: 'w-14 h-14 md:w-20 md:h-20', marginBottom: 'mb-4 md:mb-10', width: 'w-[70px] md:w-36' },
+                                    { height: 'h-[40px] md:h-[54px]', avatar: 'w-12 h-12 md:w-16 md:h-16', marginBottom: 'mb-0', width: 'w-[60px] md:w-32' }
+                                ].map((p, i) => (
+                                    <div key={i} className={`flex flex-col items-center justify-end relative h-[180px] md:h-[300px] shrink-0 ${p.width} ${p.marginBottom}`}>
+                                        <div className={`mb-2 md:mb-3 rounded-full bg-gray-300 border-2 md:border-4 border-gray-200 ${p.avatar}`}></div>
+                                        <div className="h-3 md:h-4 bg-gray-300 rounded w-3/4 mb-5 md:mb-8"></div>
+                                        <div className={`w-full ${p.height} rounded-lg md:rounded-xl shadow-lg bg-gray-200 border border-t-0 border-white/30`} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* List Skeleton */}
+                        <div className="mt-16 sm:mt-24">
+                            <div className="h-4 bg-gray-300 w-64 mx-auto mb-6 rounded"></div>
+                            <div className="bg-gradient-to-b from-[#f6ead0]/50 to-white/50 p-2 md:p-3 rounded-2xl md:rounded-[32px] border border-[#e8dcb8]/50">
+                                <div className="bg-white rounded-xl md:rounded-[24px] overflow-hidden">
+                                    <div className="flex items-center bg-[#faeed1]/50 px-4 md:px-6 py-4 border-b border-[#ebdcae]/50">
+                                        <div className="h-4 bg-gray-200 w-full rounded"></div>
+                                    </div>
+                                    <div className="divide-y divide-gray-100 bg-white">
+                                        {[...Array(5)].map((_, i) => (
+                                            <div key={i} className="flex items-center px-4 md:px-6 py-3">
+                                                <div className="w-12 md:w-16 h-6 bg-gray-200 rounded shrink-0 flex flex-col items-center"></div>
+                                                <div className="w-16 md:w-20 justify-center shrink-0 hidden sm:flex">
+                                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gray-200"></div>
+                                                </div>
+                                                <div className="flex-1 ml-2 md:ml-4 flex flex-col gap-2 min-w-0 pr-2 md:pr-4">
+                                                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                                                    <div className="h-3 bg-gray-200 rounded w-1/3"></div>
+                                                </div>
+                                                <div className="hidden lg:flex w-48 justify-center items-center gap-2">
+                                                    <div className="w-6 h-6 rounded-full bg-gray-200 shrink-0"></div>
+                                                    <div className="h-4 w-12 bg-gray-200 rounded shrink-0"></div>
+                                                </div>
+                                                <div className="hidden md:flex w-40 justify-center items-center gap-2">
+                                                    <div className="h-8 w-24 bg-gray-200 rounded-full"></div>
+                                                </div>
+                                                <div className="w-20 md:w-28 flex flex-col items-center justify-center shrink-0">
+                                                    <div className="h-6 w-10 bg-gray-200 rounded"></div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 ) : (
                     <>
@@ -383,7 +489,7 @@ const LeaderBoard = () => {
                         </div>
 
                         {/* All Member Rankings Table */}
-                        {remainingStudents.length > 0 && (
+                        {allRankedStudents.length > 0 && (
                             <motion.div 
                                 initial={{ y: 30, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
@@ -391,7 +497,7 @@ const LeaderBoard = () => {
                                 className="mt-16 sm:mt-24"
                             >
                                 <h3 className="text-center text-sm md:text-base font-black tracking-widest uppercase text-gray-800 mb-6">
-                                    ALL MEMBER RANKINGS (6th - {currentLeaderboard.length}th)
+                                    ALL MEMBER RANKINGS (1st - {currentLeaderboard.length}th)
                                 </h3>
 
                                 <div className="bg-gradient-to-b from-[#f6ead0] to-[#fcfaf5] p-2 md:p-3 rounded-2xl md:rounded-[32px] border border-[#e8dcb8] shadow-xl">
@@ -407,11 +513,12 @@ const LeaderBoard = () => {
                                             <div className="w-20 md:w-28 text-center shrink-0">Total Score</div>
                                         </div>
 
-                                        {/* Table Rows */}
-                                        <div className="divide-y divide-gray-100 bg-white">
-                                            {remainingStudents.map((st, idx) => {
+                                        {/* Table Rows — scrollable container */}
+                                        <div className="divide-y divide-gray-100 bg-white max-h-[600px] overflow-y-auto">
+                                            {allRankedStudents.map((st, idx) => {
                                                 const displayName = (st.name || '').split('\n').map(l => l.trim()).join(' ');
                                                 const val = st[mainMetricKey] || 0;
+                                                const isTop5 = st.rank >= 1 && st.rank <= 5;
                                                 return (
                                                     <motion.div 
                                                         initial={{ opacity: 0, y: 10 }}
@@ -419,11 +526,41 @@ const LeaderBoard = () => {
                                                         viewport={{ once: true, margin: "-50px" }}
                                                         transition={{ delay: Math.min(idx * 0.03, 0.3) }}
                                                         key={st.enrollment} 
-                                                        className="flex items-center px-4 md:px-6 py-3 hover:bg-[#faf8f2] transition-colors group"
+                                                        className={`flex items-center px-4 md:px-6 py-3 transition-colors group ${
+                                                            isTop5
+                                                                ? 'bg-gradient-to-r from-amber-50 via-yellow-50/60 to-white border-l-4 border-l-amber-400 hover:from-amber-100/80 hover:via-yellow-50 hover:to-white'
+                                                                : 'hover:bg-[#faf8f2]'
+                                                        }`}
                                                     >
                                                         {/* Rank */}
-                                                        <div className="w-12 md:w-16 text-center font-bold text-lg md:text-xl text-gray-700 shrink-0">
+                                                        <div className={`w-12 md:w-16 text-center font-bold text-lg md:text-xl shrink-0 flex flex-col items-center gap-0.5 ${
+                                                            isTop5 ? 'text-amber-700' : 'text-gray-700'
+                                                        }`}>
                                                             {st.rank}
+                                                            {isTop5 && (() => {
+                                                                const crownColors = {
+                                                                    1: { from: '#b8860b', mid: '#ffd700', to: '#b8860b', glow: 'drop-shadow(0 0 4px rgba(255,215,0,0.6))' },
+                                                                    2: { from: '#a0a0a0', mid: '#e0e0e0', to: '#a0a0a0', glow: 'drop-shadow(0 0 4px rgba(192,192,192,0.6))' },
+                                                                    3: { from: '#8d5524', mid: '#cd7f32', to: '#8d5524', glow: 'drop-shadow(0 0 4px rgba(205,127,50,0.6))' },
+                                                                    4: { from: '#d84315', mid: '#ff6d00', to: '#d84315', glow: 'drop-shadow(0 0 4px rgba(255,109,0,0.6))' },
+                                                                    5: { from: '#0d47a1', mid: '#2962ff', to: '#0d47a1', glow: 'drop-shadow(0 0 4px rgba(41,98,255,0.6))' },
+                                                                };
+                                                                const cc = crownColors[st.rank] || crownColors[5];
+                                                                const gradId = `table-crown-${st.rank}`;
+                                                                return (
+                                                                    <svg className="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{ filter: cc.glow }}>
+                                                                        <defs>
+                                                                            <linearGradient id={gradId} x1="0%" y1="100%" x2="100%" y2="0%">
+                                                                                <stop offset="0%" stopColor={cc.from} />
+                                                                                <stop offset="50%" stopColor={cc.mid} />
+                                                                                <stop offset="100%" stopColor={cc.to} />
+                                                                            </linearGradient>
+                                                                        </defs>
+                                                                        <path d="M2 21h20v-2H2v2zm19-15l-4.5 4L12 3 7.5 10 3 6l2 11h14l2-11z" fill={`url(#${gradId})`} />
+                                                                        <path d="M12 5l1 2h-2z M6 8l1 1H5z M18 8l1 1h-2z" fill="#ffffff" opacity="0.8"/>
+                                                                    </svg>
+                                                                );
+                                                            })()}
                                                         </div>
                                                         
                                                         {/* Profile Image - hidden on small mobile */}
@@ -445,13 +582,15 @@ const LeaderBoard = () => {
                                                         
                                                         {/* Desktop Stats columns */}
                                                         <div className="hidden lg:flex w-48 justify-center items-center gap-2">
-                                                            <CircularProgress percentage={st.srlAttendance || 0} />
-                                                            <span className="text-sm font-extrabold text-[#d97706] whitespace-nowrap">{st.srlAttendance || 0}%</span>
+                                                            <CircularProgress percentage={st.srlAttendanceNum || 0} />
+                                                            <span className="text-sm font-extrabold text-[#d97706] whitespace-nowrap">{st.srlAttendance}</span>
                                                         </div>
                                                         <div className="hidden md:flex w-40 justify-center items-center gap-2">
                                                             <div className="flex items-center gap-1.5 bg-amber-100/50 px-3 py-1.5 rounded-full border border-amber-200">
                                                                 <Clock className="w-3.5 h-3.5 text-amber-600" />
-                                                                <span className="text-[13px] font-extrabold text-amber-700 whitespace-nowrap">{st.totalHours || 0} Hrs</span>
+                                                                <span className="text-[13px] font-extrabold text-amber-700 whitespace-nowrap">
+                                                                    {st.totalHours}
+                                                                </span>
                                                             </div>
                                                         </div>
                                                         
@@ -461,9 +600,9 @@ const LeaderBoard = () => {
                                                             
                                                             {/* Mobile-only stats layout */}
                                                             <div className="flex flex-col text-[9px] font-bold text-gray-500 md:hidden pb-1 text-center">
-                                                                <span className="text-amber-600">SRL: {st.srlAttendance || 0}%</span>
-                                                                <span className="text-emerald-600">Hrs: {st.attendance || 0}%</span>
-                                                            </div>
+                                                            <span className="text-amber-600">SRL: {st.srlAttendance}</span>
+                                                            <span className="text-emerald-600">{st.totalHours}</span>
+                                                        </div>
                                                         </div>
                                                         
                                                     </motion.div>
@@ -481,4 +620,10 @@ const LeaderBoard = () => {
     );
 };
 
-export default LeaderBoard;
+export default function LeaderBoardWithErrorBoundary(props) {
+    return (
+        <ErrorBoundary>
+            <LeaderBoard {...props} />
+        </ErrorBoundary>
+    );
+}
