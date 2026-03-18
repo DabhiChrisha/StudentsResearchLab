@@ -15,6 +15,7 @@ const Home = lazy(() => import('./pages/Home'));
 const Sessions = lazy(() => import('./pages/Sessions'));
 const Achievements = lazy(() => import('./pages/Achievements'));
 const Activities = lazy(() => import('./pages/Activities'));
+const Publications = lazy(() => import('./pages/Publications'));
 const Researchers = lazy(() => import('./pages/Researchers'));
 const LeaderBoard = lazy(() => import('./pages/LeaderBoard'));
 const JoinUs = lazy(() => import('./pages/JoinUs'));
@@ -72,6 +73,7 @@ function AppContent({ loading, setLoading }) {
                     <Route path="/sessions" element={<PageTransitionWrapper><Sessions /></PageTransitionWrapper>} />
                     <Route path="/achievements" element={<PageTransitionWrapper><Achievements /></PageTransitionWrapper>} />
                     <Route path="/activities" element={<PageTransitionWrapper><Activities /></PageTransitionWrapper>} />
+                    <Route path="/publications" element={<PageTransitionWrapper><Publications /></PageTransitionWrapper>} />
                     <Route path="/researchers" element={<PageTransitionWrapper><Researchers /></PageTransitionWrapper>} />
                     <Route path="/leaderboard" element={<PageTransitionWrapper><LeaderBoard /></PageTransitionWrapper>} />
                     <Route path="/join" element={<PageTransitionWrapper><JoinUs /></PageTransitionWrapper>} />
