@@ -58,7 +58,7 @@ export default function Hero() {
 
             {/* ===== TEXT CONTAINER ===== */}
             <div
-                className={`absolute inset-0 z-20 flex flex-col px-4 sm:px-6 md:px-16 pt-[72px] lg:pt-[88px]
+                className={`absolute inset-0 z-20 flex flex-col px-4 sm:px-6 md:px-16 pt-8
                 ${slides[current].align}
                 transition-all duration-700 pointer-events-none`}
             >

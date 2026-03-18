@@ -16,33 +16,17 @@ const Activities = () => {
         const fetchActivities = async () => {
             setLoading(true);
             setError(null);
-            const { data, error } = await supabase.from('activities').select('*');
-            if (error) {
+            try {
+                const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+                const res = await fetch(`${backendUrl}/api/activities`);
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                const json = await res.json();
+                setActivities(json.data || []);
+            } catch (err) {
+                console.error("Activities fetch error:", err);
                 setError('Failed to load activities.');
                 setActivities([]);
-                setLoading(false);
-                return;
             }
-            // Generate signed URLs for private bucket images
-            const activitiesWithUrls = await Promise.all(
-                (data || []).map(async (act) => {
-                    if (act.Photo) {
-                        // Extract bucket and path from the Photo field if needed
-                        // Assuming Photo is the path inside the bucket, e.g. 'folder/image.jpg'
-                        // Use the correct bucket name 'Activity_images'
-                        const { data: signedUrlData, error: urlError } = await supabase
-                            .storage
-                            .from('Activity_images')
-                            .createSignedUrl(act.Photo, 60 * 60); // 1 hour expiry
-                        return {
-                            ...act,
-                            signedPhotoUrl: signedUrlData?.signedUrl || '',
-                        };
-                    }
-                    return act;
-                })
-            );
-            setActivities(activitiesWithUrls);
             setLoading(false);
         };
         fetchActivities();
@@ -51,7 +35,7 @@ const Activities = () => {
     return (
         <div
             ref={sectionRef}
-            className="relative pt-[112px] lg:pt-[128px] pb-20 px-6 min-h-screen bg-[#F2EFE8] overflow-hidden"
+            className="relative pt-8 lg:pt-12 pb-20 px-6 min-h-screen bg-[#F2EFE8] overflow-hidden"
         >
             {/* Unique Mesh Gradient Background - Minimal Dark Teal & Enhanced Beige */}
             <div className="absolute inset-0 z-0">

@@ -92,6 +92,49 @@ const TimelineItem = ({ item, index, scrollRoot, isLast }) => {
   );
 };
 
+const TimelineSkeleton = () => {
+  return (
+    <div className="w-full flex flex-col relative animate-pulse">
+      {[1, 2, 3].map((_, index) => {
+        const isEven = index % 2 === 0;
+        const isLast = index === 2;
+        return (
+          <div key={index} className={`relative flex items-center justify-center w-full group px-2 sm:px-6 ${isLast ? 'mb-24' : 'mb-32'}`}>
+            <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center top-0 bottom-[-150%]">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-200 z-10 border-4 border-white shadow-sm"></div>
+              {!isLast && <div className="w-[2px] h-full bg-slate-200/50 flex-1" />}
+            </div>
+            <div className="flex w-full items-center">
+              <div className="w-1/2 pr-4 sm:pr-8 md:pr-10 flex flex-col items-end">
+                {isEven ? (
+                  <>
+                    <div className="h-6 sm:h-7 bg-slate-200 rounded-md w-3/4 mb-3"></div>
+                    <div className="h-3 sm:h-4 bg-slate-200 rounded-md w-full max-w-[240px] mb-2"></div>
+                    <div className="h-3 sm:h-4 bg-slate-200 rounded-md w-5/6 max-w-[200px]"></div>
+                  </>
+                ) : (
+                  <div className="h-10 sm:h-12 bg-slate-200 rounded-md w-24 sm:w-32"></div>
+                )}
+              </div>
+              <div className="w-1/2 pl-4 sm:pl-8 md:pl-10 flex flex-col items-start">
+                {!isEven ? (
+                  <>
+                    <div className="h-6 sm:h-7 bg-slate-200 rounded-md w-3/4 mb-3"></div>
+                    <div className="h-3 sm:h-4 bg-slate-200 rounded-md w-full max-w-[240px] mb-2"></div>
+                    <div className="h-3 sm:h-4 bg-slate-200 rounded-md w-5/6 max-w-[200px]"></div>
+                  </>
+                ) : (
+                  <div className="h-10 sm:h-12 bg-slate-200 rounded-md w-24 sm:w-32"></div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 function Timeline() {
   const scrollContainerRef = useRef(null);
   const [timelineSteps, setTimelineSteps] = useState([]);
@@ -102,16 +145,17 @@ function Timeline() {
     const fetchTimeline = async () => {
       setLoading(true);
       setError(null);
-      const { data, error } = await supabase
-        .from('timeline_entries')
-        .select('*')
-        .eq('is_active', true)
-        .order('display_order', { ascending: true });
-      if (error) {
-        setError(error.message);
+      try {
+        const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+        const res = await fetch(`${backendUrl}/api/timeline`);
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        
+        const json = await res.json();
+        setTimelineSteps(json.data || []);
+      } catch (err) {
+        console.error("Timeline fetch error:", err);
+        setError(err.message);
         setTimelineSteps([]);
-      } else {
-        setTimelineSteps(data || []);
       }
       setLoading(false);
     };
@@ -186,7 +230,7 @@ function Timeline() {
             {/* RIGHT: TIMELINE (Items container) */}
             <div className="w-full lg:w-[58%] h-auto relative bg-transparent z-10 flex flex-col justify-start">
               <div className="pt-8 lg:pt-32 pb-0 px-4">
-                {loading && <div className="text-center text-slate-500 py-8">Loading timeline...</div>}
+                {loading && <TimelineSkeleton />}
                 {error && <div className="text-center text-red-500 py-8">Error: {error}</div>}
                 {!loading && !error && timelineSteps.length === 0 && (<div className="text-center text-slate-500 py-8">No timeline data found.</div>)}
                 {!loading && !error && timelineSteps.map((item, index) => (

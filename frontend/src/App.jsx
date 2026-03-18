@@ -57,7 +57,7 @@ function AppContent({ loading, setLoading }) {
 
             <Navbar />
 
-            <div id="main-content" className="flex-1 w-full h-full overflow-y-scroll overflow-x-hidden relative z-10 pb-0 flex flex-col justify-between">
+            <div id="main-content" className="flex-1 w-full h-full overflow-y-scroll overflow-x-hidden relative z-10 pb-0 flex flex-col justify-between" style={{ paddingTop: 'var(--navbar-height, 80px)' }}>
               <div className="flex-1 w-full flex flex-col">
               <Suspense fallback={
                 <div className="w-full flex-1 flex items-center justify-center">

@@ -51,7 +51,7 @@ export default function StudentCV() {
                 </div>
             </nav>
 
-            <div className="max-w-3xl mx-auto px-6 pt-32 pb-24">
+            <div className="max-w-3xl mx-auto px-6 pt-10 pb-24">
                 {/* Header Information */}
                 <header className="mb-16">
                     <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tighter text-slate-900">

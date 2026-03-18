@@ -7,7 +7,7 @@ const Appointment = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="pt-[200px] lg:pt-[216px] pb-20 px-4 sm:px-6 lg:px-8 bg-white min-h-screen"
+            className="pt-20 lg:pt-24 pb-20 px-4 sm:px-6 lg:px-8 bg-white min-h-screen"
         >
             <div className="max-w-screen-2xl mx-auto">
                 <div className="grid lg:grid-cols-2 gap-16 items-center">

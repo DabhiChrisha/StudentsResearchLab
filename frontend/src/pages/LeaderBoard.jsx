@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Medal, Star, Target, Zap, Clock, TrendingUp, Users, Award, BookOpen, Crown, Search, Calendar, Timer } from "lucide-react";
 import React, { useState, useEffect } from 'react';
 
@@ -96,30 +96,39 @@ const LeaderBoard = () => {
     const [top5ByHours, setTop5ByHours] = useState([]);
     const [monthLabel, setMonthLabel] = useState('');
     const [loading, setLoading] = useState(true);
-
+    const [loadingMessage, setLoadingMessage] = useState("");
     const [activeTab, setActiveTab] = useState('overall'); // 'overall', 'monthly', 'hours'
 
     useEffect(() => {
+        let retryCount = 0;
+        let isActive = true;
+
         const fetchLeaderboard = async () => {
             try {
+                if (retryCount > 0 && isActive) {
+                    setLoadingMessage("Waking up server...");
+                }
+
                 const [overallRes, monthlyRes, hoursRes] = await Promise.all([
                     fetch(`${API_BASE}/api/leaderboard`),
                     fetch(`${API_BASE}/api/leaderboard/monthly`),
                     fetch(`${API_BASE}/api/leaderboard/top-hours`),
                 ]);
 
-                if (!overallRes.ok) throw new Error("Failed to fetch overall leaderboard");
+                if (!overallRes.ok) throw new Error("Backend not ready or failed to fetch");
 
                 const { leaderboard: overallData } = await overallRes.json();
                 const parsedOverall = overallData.map(parseBackendStudent);
-                setAllStudents(parsedOverall);
+                if (isActive) setAllStudents(parsedOverall);
 
                 if (monthlyRes.ok) {
                     const monthlyJson = await monthlyRes.json();
                     const parsedMonthly = monthlyJson.leaderboard.map(parseBackendStudent);
-                    setMonthlyStudents(parsedMonthly);
-                    setMonthLabel((monthlyJson.monthName || MONTH_NAMES[(monthlyJson.month || 1) - 1]) + ' ' + monthlyJson.year);
-                } else {
+                    if (isActive) {
+                        setMonthlyStudents(parsedMonthly);
+                        setMonthLabel((monthlyJson.monthName || MONTH_NAMES[(monthlyJson.month || 1) - 1]) + ' ' + monthlyJson.year);
+                    }
+                } else if (isActive) {
                     // Fallback: use overall data for monthly
                     setMonthlyStudents(parsedOverall);
                     setMonthLabel(MONTH_NAMES[new Date().getMonth()] + ' ' + new Date().getFullYear());
@@ -127,22 +136,37 @@ const LeaderBoard = () => {
 
                 if (hoursRes.ok) {
                     const hoursJson = await hoursRes.json();
-                    setTop5ByHours(hoursJson.leaderboard.map(parseBackendStudent));
-                } else {
+                    if (isActive) setTop5ByHours(hoursJson.leaderboard.map(parseBackendStudent));
+                } else if (isActive) {
                     setTop5ByHours([]);
                 }
 
-                setLoading(false);
+                if (isActive) {
+                    setLoading(false);
+                    setLoadingMessage("");
+                }
             } catch (error) {
-                console.error("Error building leaderboard:", error);
-                setAllStudents([]);
-                setMonthlyStudents([]);
-                setTop5ByHours([]);
-                setMonthLabel(MONTH_NAMES[new Date().getMonth()] + ' ' + new Date().getFullYear());
-                setLoading(false);
+                console.warn("Backend unavailable, retrying...", error);
+                retryCount++;
+                
+                if (retryCount >= 5) {
+                    if (isActive) {
+                        setLoadingMessage("Taking longer than expected... Reloading");
+                        setTimeout(() => {
+                            if (isActive) window.location.reload();
+                        }, 2000);
+                    }
+                } else {
+                    if (isActive) {
+                        setTimeout(fetchLeaderboard, 3000); // Retry every 3 seconds
+                    }
+                }
             }
         };
+
         fetchLeaderboard();
+
+        return () => { isActive = false; };
     }, []);
 
     // Determine current leaderboard array
@@ -348,7 +372,7 @@ const LeaderBoard = () => {
     };
 
     return (
-        <div className="bg-[#fdf9ee] min-h-screen pt-[100px] lg:pt-[120px] pb-24 px-4 md:px-8 font-sans overflow-hidden relative">
+        <div className="bg-[#fdf9ee] min-h-screen pt-6 lg:pt-10 pb-24 px-4 md:px-8 font-sans overflow-hidden relative">
             {/* Rotating watermark backgrounds — fixed, partial arc from corners */}
             <style>{`
                 @keyframes rotateClockwise { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -373,6 +397,21 @@ const LeaderBoard = () => {
             <div className="max-w-[1100px] mx-auto relative z-10">
                 {loading ? (
                     <div className="animate-pulse w-full">
+                        {/* Waking Up Message */}
+                        <AnimatePresence>
+                            {loadingMessage && (
+                                <motion.div 
+                                    initial={{ opacity: 0, y: -10 }} 
+                                    animate={{ opacity: 1, y: 0 }} 
+                                    exit={{ opacity: 0, y: -10 }}
+                                    className="text-center mb-6 text-amber-600 font-semibold text-sm flex items-center justify-center gap-2"
+                                >
+                                    <div className="w-4 h-4 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" />
+                                    {loadingMessage}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
                         {/* Header Skeleton */}
                         <div className="flex flex-col items-center justify-center mb-4 md:mb-6 gap-4">
                             <div className="flex flex-row items-center justify-center gap-3 md:gap-4 w-full flex-wrap md:flex-nowrap">

@@ -330,7 +330,7 @@ const Achievements = () => {
   return (
     <div
       ref={sectionRef}
-      className="relative pt-[112px] lg:pt-[128px] pb-40 px-4 sm:px-6 lg:px-8 min-h-screen bg-[#F2EFE8] overflow-hidden"
+      className="relative pt-8 lg:pt-12 pb-40 px-4 sm:px-6 lg:px-8 min-h-screen bg-[#F2EFE8] overflow-hidden"
     >
       {/* Unique Mesh Gradient Background - Darkened */}
       <div className="absolute inset-0 z-0">

@@ -53,6 +53,33 @@ const Navbar = () => {
         return () => scrollContainer.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Global variable for Navbar Height Offset calculations
+    useEffect(() => {
+        const updateNavbarHeight = () => {
+            const nav = document.getElementById('main-navbar');
+            if (nav) {
+                document.documentElement.style.setProperty('--navbar-height', `${nav.getBoundingClientRect().height}px`);
+            }
+        };
+        
+        // Initial setup
+        updateNavbarHeight();
+        
+        // Listen to resizes
+        window.addEventListener('resize', updateNavbarHeight);
+        
+        // Listen to scroll to adjust smoothly because padding changes on scroll
+        const scrollContainer = document.getElementById('main-content');
+        if (scrollContainer) {
+            scrollContainer.addEventListener('scroll', updateNavbarHeight, { passive: true });
+        }
+        
+        return () => {
+            window.removeEventListener('resize', updateNavbarHeight);
+            if (scrollContainer) scrollContainer.removeEventListener('scroll', updateNavbarHeight);
+        };
+    }, []);
+
     // Body scroll lock: prevent background scroll & compensate scrollbar width
     useEffect(() => {
         if (open) {
@@ -96,7 +123,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled ? 'bg-[#FAF9F6]/95 backdrop-blur-md shadow-md py-2' : 'bg-[#FAF9F6] py-3.5'}`}>
+            <nav id="main-navbar" className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled ? 'bg-[#FAF9F6]/95 backdrop-blur-md shadow-md py-2' : 'bg-[#FAF9F6] py-3.5'}`}>
                 {/* MAIN CONTAINER */}
                 <div className="max-w-[1700px] mx-auto w-full flex items-center justify-between px-2 sm:px-4 lg:px-2 xl:px-4 2xl:px-4 gap-x-1 md:gap-x-3">
 

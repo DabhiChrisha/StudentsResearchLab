@@ -14,7 +14,7 @@ const OrganizationDetails = () => {
     }
 
     return (
-        <div key={orgId} className="pt-[96px] lg:pt-[112px] min-h-screen relative overflow-hidden" style={{ backgroundColor: '#F5F1E8' }}>
+        <div key={orgId} className="pt-6 lg:pt-8 min-h-screen relative overflow-hidden" style={{ backgroundColor: '#F5F1E8' }}>
             {/* Subtle Ambient Depth */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
                 <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-white rounded-full blur-[150px] -mr-64 -mt-32" />
