@@ -79,12 +79,20 @@ async def get_leaderboard():
         # Name and Image map from students_details
         name_map = {}
         image_map = {}
+        info_map = {}
         for rec in detail_records:
             en = str(rec.get("enrollment_no", "")).strip().upper()
             if rec.get("student_name"):
                 name_map[en] = rec["student_name"]
             if rec.get("profile_image"):
                 image_map[en] = rec["profile_image"]
+            
+            info_map[en] = {
+                "dept": rec.get("department") or rec.get("dept") or "CE",
+                "semester": rec.get("semester") or rec.get("sem") or "6th",
+                "div": rec.get("division") or rec.get("div") or "-",
+                "batch": rec.get("batch") or "2023-2027",
+            }
 
         # Attendance map: { "ENROLLMENT_NO": { date: total_hours } }
         attendance_map = {}
@@ -119,12 +127,12 @@ async def get_leaderboard():
             # Attendance and SRL metrics
             attendance_pct = 0
             srl_pct = 0
-            current_month_hours = 0
+            total_hours = 0
 
             daily = attendance_map.get(en, {})
             if daily:
-                # Current month hours
-                current_month_hours = round(sum(h for d, h in daily.items() if d.startswith(current_month_prefix)), 2)
+                # All-time dedicated hours
+                total_hours = round(sum(daily.values()), 2)
                 
                 # Attendance Percentage
                 present_days = sum(1 for h in daily.values() if h > 0)
@@ -137,6 +145,7 @@ async def get_leaderboard():
                     present_srl = sum(1 for h in srl_valid.values() if h > 0)
                     srl_pct = round((present_srl / total_srl) * 100)
 
+            info = info_map.get(en, {})
             students.append({
                 "enrollment_no": en,
                 "name": name,
@@ -144,7 +153,11 @@ async def get_leaderboard():
                 "score": total_points,
                 "attendance": attendance_pct,
                 "srlAttendance": srl_pct,
-                "totalHours": current_month_hours,
+                "totalHours": total_hours,
+                "dept": info.get("dept", "CE"),
+                "semester": info.get("semester", "6th"),
+                "div": info.get("div", "-"),
+                "batch": info.get("batch", "2023-2027"),
             })
 
         # Sort by total points desc, then attendance desc
@@ -186,12 +199,20 @@ async def get_top_hours_leaderboard():
         # Build name & image maps
         name_map = {}
         image_map = {}
+        info_map = {}
         for rec in detail_records:
             en = str(rec.get("enrollment_no", "")).strip().upper()
             if rec.get("student_name"):
                 name_map[en] = rec["student_name"]
             if rec.get("profile_image"):
                 image_map[en] = rec["profile_image"]
+            
+            info_map[en] = {
+                "dept": rec.get("department") or rec.get("dept") or "CE",
+                "semester": rec.get("semester") or rec.get("sem") or "6th",
+                "div": rec.get("division") or rec.get("div") or "-",
+                "batch": rec.get("batch") or "2023-2027",
+            }
 
         # Aggregate hours for the month
         monthly_hours_map = {}
@@ -204,26 +225,28 @@ async def get_top_hours_leaderboard():
         # Build result list
         students = []
         for en, total_hrs in monthly_hours_map.items():
+            info = info_map.get(en, {})
             students.append({
                 "enrollment_no": en,
                 "name": name_map.get(en, "Unknown Student"),
                 "image": image_map.get(en, None),
                 "totalHours": round(total_hrs, 2),
                 # Safe defaults for podium usage
-                "score": 0, "attendance": 0, "srlAttendance": 0
+                "score": 0, "attendance": 0, "srlAttendance": 0,
+                "dept": info.get("dept", "CE"),
+                "semester": info.get("semester", "6th"),
+                "div": info.get("div", "-"),
+                "batch": info.get("batch", "2023-2027"),
             })
 
         # Sort by totalHours DESC
         students.sort(key=lambda s: s["totalHours"], reverse=True)
 
-        # Apply LIMIT 5
-        top_5 = students[:5]
-
         # Assign ranks
-        for idx, student in enumerate(top_5):
+        for idx, student in enumerate(students):
             student["rank"] = idx + 1
 
-        return {"leaderboard": top_5}
+        return {"leaderboard": students}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -313,12 +336,20 @@ async def get_monthly_leaderboard(year: int = None, month: int = None):
         # Name and Image map
         name_map = {}
         image_map = {}
+        info_map = {}
         for rec in detail_records:
             en = str(rec.get("enrollment_no", "")).strip().upper()
             if rec.get("student_name"):
                 name_map[en] = rec["student_name"]
             if rec.get("profile_image"):
                 image_map[en] = rec["profile_image"]
+            
+            info_map[en] = {
+                "dept": rec.get("department") or rec.get("dept") or "CE",
+                "semester": rec.get("semester") or rec.get("sem") or "6th",
+                "div": rec.get("division") or rec.get("div") or "-",
+                "batch": rec.get("batch") or "2023-2027",
+            }
 
         # Attendance map filtered exclusively to the current strictly requested month
         attendance_map = {}
@@ -363,6 +394,7 @@ async def get_monthly_leaderboard(year: int = None, month: int = None):
                     present_srl = sum(1 for h in srl_valid.values() if h > 0)
                     srl_pct = round((present_srl / total_srl) * 100)
 
+            info = info_map.get(en, {})
             students.append({
                 "enrollment_no": en,
                 "name": name,
@@ -371,6 +403,10 @@ async def get_monthly_leaderboard(year: int = None, month: int = None):
                 "attendance": attendance_pct,
                 "srlAttendance": srl_pct,
                 "totalHours": current_month_hours,
+                "dept": info.get("dept", "CE"),
+                "semester": info.get("semester", "6th"),
+                "div": info.get("div", "-"),
+                "batch": info.get("batch", "2023-2027"),
             })
 
         # Sort by points desc, then attendance desc

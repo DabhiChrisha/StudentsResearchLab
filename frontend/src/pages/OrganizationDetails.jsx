@@ -424,17 +424,19 @@ const OrganizationDetails = () => {
                                             </div>
                                         </div>
 
-                                        <div className="flex items-start gap-6 group">
-                                            <div className="shrink-0 w-12 h-12 rounded-2xl bg-[#F5F1E8] border border-[#00887b]/10 flex items-center justify-center group-hover:bg-[#00887b] group-hover:text-white transition-all duration-500">
-                                                <svg className="w-5 h-5 text-[#00887b] group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                                        {data.contact.phone && (
+                                            <div className="flex items-start gap-6 group">
+                                                <div className="shrink-0 w-12 h-12 rounded-2xl bg-[#F5F1E8] border border-[#00887b]/10 flex items-center justify-center group-hover:bg-[#00887b] group-hover:text-white transition-all duration-500">
+                                                    <svg className="w-5 h-5 text-[#00887b] group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#00887b]/60 mb-2">Contact Us</p>
+                                                    <a href={`tel:${data.contact.phone.replace(/[^0-9+]/g, '')}`} className="text-xl font-sans text-secondary-dark hover:text-secondary hover:underline transition-all">
+                                                        {data.contact.phone}
+                                                    </a>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#00887b]/60 mb-2">Contact Us</p>
-                                                <a href={`tel:${data.contact.phone.replace(/[^0-9+]/g, '')}`} className="text-xl font-sans text-secondary-dark hover:text-secondary hover:underline transition-all">
-                                                    {data.contact.phone}
-                                                </a>
-                                            </div>
-                                        </div>
+                                        )}
                                     </div>
 
                                     <div className="mt-12 pt-8 border-t border-[#00887b]/10">
