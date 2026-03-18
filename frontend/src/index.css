@@ -62,21 +62,23 @@
   .neon-gradient-border::before {
     content: '';
     position: absolute;
-    inset: 0;
+      inset: -4px;
     z-index: -1;
-    border-radius: 1rem;
+    border-radius: 1.5rem;
     pointer-events: none;
-    background: linear-gradient(90deg, #00eaff, #0fffc1, #007cf0, #00eaff 100%);
+    background: none;
     opacity: 0;
     transition: opacity 0.3s ease;
-    border: 3px solid transparent;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+    border: 3px solid #00eaff;
   }
 
   .neon-gradient-border:hover::before {
     opacity: 1;
+    background: none;
+    box-shadow:
+      0 0 24px 6px rgba(0,191,255,0.35),
+      0 0 40px 12px rgba(0,191,255,0.35),
+      0 0 60px 20px rgba(0,124,240,0.35);
   }
 
   @media (min-width: 1024px) {

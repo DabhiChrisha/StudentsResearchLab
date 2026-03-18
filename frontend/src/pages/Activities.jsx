@@ -117,7 +117,7 @@ const Activities = () => {
                             .map((act, i) => (
                                 <div
                                     key={act.id || i}
-                                    className="bg-white rounded-2xl shadow-lg transition cursor-pointer flex flex-col overflow-hidden group min-h-[270px] md:min-h-[290px] neon-gradient-border"
+                                    className="bg-white rounded-2xl shadow-lg transition cursor-pointer flex flex-col group min-h-[270px] md:min-h-[290px] neon-gradient-border"
                                     onClick={() => setModal(act)}
                                 >
                                     {/* Always show the image at the top */}
@@ -197,7 +197,7 @@ const Activities = () => {
                                 initial={{ scale: 0.95, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale: 0.95, opacity: 0 }}
-                                className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full mx-4 flex flex-col md:flex-row overflow-hidden relative border-2 border-sky-100"
+                                className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full mx-4 flex flex-col md:flex-row gap-6 relative border-2 border-sky-100 neon-gradient-border"
                                 style={{ minHeight: 400, maxHeight: 500 }}
                             >
                                 {/* Image */}
@@ -242,7 +242,7 @@ const Activities = () => {
                                     </div>
                                 )}
                                 {/* Details */}
-                                <div className="flex-1 p-8 flex flex-col min-w-0 justify-between">
+                                    <div className="flex-1 flex flex-col min-w-0 justify-between">
                                     <div className="flex items-center gap-3 mb-2">
                                         <h2 className="text-2xl font-bold text-gray-900 flex-1">{modal.title}</h2>
                                         {modal.year && (
