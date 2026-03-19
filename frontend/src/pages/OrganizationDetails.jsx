@@ -7,7 +7,29 @@ import { ExternalLink, ArrowLeft, Globe, Mail, Phone, MapPin, Linkedin } from "l
 const OrganizationDetails = () => {
     const { orgId } = useParams();
     const data = organizationData[orgId];
-    const [execomFilter, setExecomFilter] = React.useState("All");
+    const [execomFilter, setExecomFilter] = React.useState("IEEE KSV SB");
+    
+    // Auto-switch filters every 3 seconds for IEEE
+    React.useEffect(() => {
+        if (orgId !== 'ieee' || !data.execom) return;
+        
+        const filters = ["IEEE KSV SB", "IEEE KSV SPS", "IEEE KSV WIE"];
+        const interval = setInterval(() => {
+            setExecomFilter(prev => {
+                const currentIndex = filters.indexOf(prev);
+                const nextIndex = (currentIndex + 1) % filters.length;
+                return filters[nextIndex];
+            });
+        }, 3000);
+        
+        return () => clearInterval(interval);
+    }, [orgId, data.execom]);
+
+    // Memoized filtered members to maintain original sequence
+    const filteredMembers = React.useMemo(() => {
+        if (!data.execom) return [];
+        return data.execom.filter(member => member.group === execomFilter);
+    }, [data.execom, execomFilter]);
 
     if (!data) {
         return <Navigate to="/" replace />;
@@ -420,13 +442,13 @@ const OrganizationDetails = () => {
 
                             {/* Filter Buttons */}
                             <div className="flex flex-wrap justify-center gap-3 mb-12">
-                                {["All", "IEEE KSV SB", "IEEE KSV SPS", "IEEE KSV WIE"].map((filter) => (
+                                {["IEEE KSV SB", "IEEE KSV SPS", "IEEE KSV WIE"].map((filter) => (
                                     <button
                                         key={filter}
                                         onClick={() => setExecomFilter(filter)}
                                         className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${execomFilter === filter
-                                                ? "bg-teal-900 text-white shadow-lg scale-105"
-                                                : "bg-white text-teal-900 border border-teal-100 hover:bg-teal-50"
+                                            ? "bg-teal-900 text-white shadow-lg scale-105"
+                                            : "bg-white text-teal-900 border border-teal-100 hover:bg-teal-50"
                                             }`}
                                     >
                                         {filter}
@@ -442,18 +464,18 @@ const OrganizationDetails = () => {
                                         hidden: { opacity: 0 },
                                         show: {
                                             opacity: 1,
-                                            transition: { staggerChildren: 0.05 }
+                                            scale: 1,
+                                            y: 0,
+                                            transition: { staggerChildren: 0.05, duration: 0.5, ease: "easeOut" }
                                         },
-                                        exit: { opacity: 0, y: 10, transition: { duration: 0.2 } }
+                                        exit: { opacity: 0, scale: 0.95, y: -10, transition: { duration: 0.3, ease: "easeIn" } }
                                     }}
                                     initial="hidden"
                                     animate="show"
                                     exit="exit"
                                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6"
                                 >
-                                    {data.execom
-                                        .filter(member => execomFilter === "All" || member.group === execomFilter)
-                                        .map((member) => (
+                                    {filteredMembers.map((member) => (
                                             <motion.div
                                                 key={member.name}
                                                 variants={{
