@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { BookOpen, Calendar, ExternalLink, Download, Search, Users, ShieldCheck, FileText, Bookmark, PlusCircle, X } from "lucide-react";
+import { BookOpen, Calendar, ExternalLink, Download, Search, Users, ShieldCheck, FileText, Bookmark, PlusCircle, X, FileDown } from "lucide-react";
+import * as XLSX from 'xlsx';
 
 /* ================= DATA ================= */
 const publicationsData = [
@@ -15,6 +16,7 @@ const publicationsData = [
     description: "Featured among the prestigious 23 global research works published in the Casebook on AI and Gender Empowerment. The research focuses on inclusive AI innovation and empowerment.",
     link: "https://www.linkedin.com/posts/mmpsrpc_svkm-ksv-mmpsrpc-activity-7429466085311098880-XDnV",
     tags: ["AI", "Gender Empowerment", "UN Women"],
+    publishers: [{name: "UN Women", logo: "/UN Women.png"}, {name: "MeitY", logo: "/MeitY.png"}],
   },
   {
     id: 2,
@@ -26,6 +28,7 @@ const publicationsData = [
     description: "This paper proposes a novel adapted hybrid UNet using EfficientNetB3 to perform robust urban scene segmentation by selectively attending to salient spatial features.",
     link: "https://www.linkedin.com/posts/mmpsrpc_ksv-ldrpitr-mmpsrpc-activity-7413814908217344000-JmvS",
     tags: ["Computer Vision", "Segmentation", "IEEE Xplore"],
+    publishers: [{name: "IEEE Xplore", logo: "/Xplore.png"}],
   },
   {
     id: 3,
@@ -37,6 +40,7 @@ const publicationsData = [
     description: "An analysis of how generative AI paradigms can be adopted to personalize learning paths, scale assessment models, and bridge educational disparities in India.",
     link: "https://www.linkedin.com/posts/mmpsrpc_ksv-researchexcellence-studentachievement-activity-7412352256806920192-MoVv",
     tags: ["Generative AI", "EdTech", "Springer"],
+    publishers: [{name: "Springer", logo: "/springer.png"}],
   },
   {
     id: 4,
@@ -48,6 +52,7 @@ const publicationsData = [
     description: "Utilizes interpretable multi-modal learning approaches wrapped with SHAP values for explaining and predicting the outbreak probabilities of specific waterborne diseases.",
     link: "https://www.linkedin.com/posts/mmpsrpc_ksv-svkm-mmpsrpc-activity-7407377566589759488-qigD",
     tags: ["Healthcare", "XAI", "Forecasting"],
+    publishers: [{name: "NASCENT MR", logo: "/Vmrfsalem.png"}],
   },
   {
     id: 5,
@@ -59,6 +64,7 @@ const publicationsData = [
     description: "Focuses on advanced data mining strategies to uncover hidden health risk variables from unstructured clinical datasets representing underserved demographics.",
     link: "https://www.linkedin.com/posts/mmpsrpc_ksv-svkm-mmpsrpc-activity-7407377566589759488-qigD",
     tags: ["Data Mining", "Healthcare", "Analytics"],
+    publishers: [{name: "NASCENT MR", logo: "/Vmrfsalem.png"}],
   },
   {
     id: 6,
@@ -70,6 +76,7 @@ const publicationsData = [
     description: "An empirical study evaluating how Explainable AI interfaces shape human decision-making processes, cognitive dependency, and productivity in complex task environments.",
     link: "https://www.linkedin.com/posts/mmpsrpc_ksv-svkm-mmpsrpc-activity-7398590758359912448-l4bb",
     tags: ["XAI", "Cognitive Computing", "IEEE Xplore"],
+    publishers: [{name: "IEEE Xplore", logo: "/Xplore.png"}],
   },
   {
     id: 7,
@@ -81,6 +88,7 @@ const publicationsData = [
     description: "A deep learning framework to optimize traffic flow operations dynamically, detecting congestion points and redirecting flows intelligently to minimize overall latency.",
     link: "https://www.linkedin.com/posts/mmpsrpc_ksv-mmpsrpc-researchexcellence-activity-7389603335164743680-rS1B",
     tags: ["Deep Learning", "Smart City", "IEEE Xplore"],
+    publishers: [{name: "IEEE Xplore", logo: "/Xplore.png"}],
   },
   {
     id: 8,
@@ -92,6 +100,23 @@ const publicationsData = [
     description: "Proposed automated mechanisms using edge computing architectures integrated with urban traffic signal networks to improve pedestrian safety conditions and automate crosswalk law enforcement.",
     link: "https://www.linkedin.com/posts/mmpsrpc_springer-researchpublication-datascience-activity-7368163507625746434-vjXc",
     tags: ["Smart City", "Edge Computing", "Springer"],
+    publishers: [{name: "Springer", logo: "/springer.png"}],
+  },
+  {
+    id: 9,
+    title: "AI-Driven Healthcare Analytics System",
+    authors: ["Nancy Patel", "Kandarp Gajjar", "Patel Ridham", "Patel Krutika"],
+    venue: "Patent Application",
+    date: "Mar 2026",
+    category: "Patents",
+    description: "Complete Patent: AI-Driven Healthcare Analytics System - An innovative system for analyzing healthcare data using advanced machine learning algorithms.",
+    link: "#",
+    tags: ["Healthcare", "AI", "Analytics"],
+    status: "Under Examination",
+    inventors: ["Nancy Patel", "Kandarp Gajjar", "Patel Ridham", "Patel Krutika"],
+    logoInfo: "/KSV Logo.png",
+    supportedBy: [{name: "KSV", logo: "/ksv.png"}, {name: "MMPSRPC", logo: "/mm.png"}],
+    ipo: {name: "IPO", logo: "/IPO.jpeg"}
   }
 ];
 
@@ -99,7 +124,7 @@ const categories = ["All", "Conference", "Journal", "Book Chapter", "Patents"];
 
 /* ================= COMPONENTS ================= */
 
-const PublicationCard = ({ pub, index }) => {
+const PublicationCard = ({ pub, index, exportToExcel }) => {
   const [linkedinImage, setLinkedinImage] = useState(null);
 
   // Premium green theme gradients
@@ -129,14 +154,6 @@ const PublicationCard = ({ pub, index }) => {
   ];
 
   const borderColor = borderColors[index % borderColors.length];
-
-  // Playful rotation transforms for outer card
-  const transforms = [
-    "-rotate-3 translate-y-1",
-    "rotate-2 -translate-y-2",
-    "-rotate-2 translate-y-3",
-    "rotate-3 -translate-y-1",
-  ];
 
   // Varying card heights for visual interest - tall and thin
   const cardHeights = [
@@ -176,9 +193,9 @@ const PublicationCard = ({ pub, index }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={`${cardHeight} ${transforms[index % transforms.length]} hover:rotate-0 hover:translate-y-0 transition-all duration-500`}
+      className={`${cardHeight} hover:rotate-0 hover:translate-y-0 transition-all duration-500`}
     >
-      {/* OUTER CARD WITH THICK BORDER */}
+      {/* OUTER CARD WITH THICK BORDER - BIG CARD */}
       <div className={`h-full relative rounded-2xl sm:rounded-3xl overflow-visible bg-white shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col border-5 sm:border-6 md:border-8 ${borderColor}`}>
 
         {/* TOP GRADIENT SECTION WITH BACKGROUND IMAGE - CLICKABLE */}
@@ -188,18 +205,14 @@ const PublicationCard = ({ pub, index }) => {
           rel="noopener noreferrer"
           className={`relative bg-gradient-to-br ${bgClass} p-4 sm:p-5 md:p-6 flex-none min-h-32 sm:min-h-40 md:min-h-44 flex flex-col justify-between rounded-t-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity duration-300`}
           style={{
-            backgroundImage: linkedinImage ? `url(${linkedinImage})` : undefined,
+            backgroundImage: pub.category === "Patents" ? "url(/inn.png)" : (linkedinImage ? `url(${linkedinImage})` : undefined),
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
           {/* Overlay to ensure badges are readable */}
           {linkedinImage && (
-            <div className="absolute inset-0 bg-gradient-to-br opacity-60 pointer-events-none rounded-t-lg" 
-              style={{
-                backgroundImage: `linear-gradient(135deg, rgba(20, 184, 166, 0.7), rgba(34, 197, 94, 0.7))`,
-              }}
-            />
+            <div className="absolute inset-0 bg-black/40 opacity-60 pointer-events-none rounded-t-lg" />
           )}
 
           {/* Badges - positioned absolutely to appear above image */}
@@ -217,61 +230,117 @@ const PublicationCard = ({ pub, index }) => {
           </div>
         </a>
 
-        {/* INNER TILTED CARD - White content card with FULL details */}
-        <div className="flex-1 p-2 sm:p-3 md:p-4 flex items-center justify-center">
-          <motion.div
-            initial={{ rotateZ: 0 }}
-            whileInView={{ rotateZ: -2 }}
-            transition={{ duration: 0.6 }}
-            className="w-full h-full bg-white rounded-lg sm:rounded-xl border-2 sm:border-3 border-slate-200 shadow-md p-2 sm:p-3 md:p-4 flex flex-col overflow-y-auto"
-          >
+        {/* SMALL INNER CARD - White content card with SIMPLIFIED design */}
+        <div className="flex-1 p-1.5 sm:p-2 md:p-3 flex items-center justify-center">
+          <div className="w-full h-full bg-white rounded-lg sm:rounded-xl border-2 sm:border-3 border-slate-200 shadow-md p-2.5 sm:p-3 md:p-4 flex flex-col overflow-y-auto">
             {/* Inner Card Content */}
-            <h3 className="text-xs sm:text-sm md:text-base font-bold font-serif text-slate-800 mb-2 line-clamp-2 leading-tight">
-              {pub.title}
-            </h3>
+            {pub.category === "Patents" ? (
+              <>
+                {/* Patent Card Layout */}
+                <h3 className="text-sm sm:text-base md:text-base font-bold font-serif text-slate-900 mb-1.5 leading-tight">
+                  Filed for complete Patent
+                </h3>
 
-            <p className="text-[10px] sm:text-xs text-slate-600 mb-2 line-clamp-2 leading-snug">
-              {pub.description}
-            </p>
+                <div className="mb-1.5 flex items-center gap-2">
+                  <span className="text-xs sm:text-sm font-semibold text-slate-600">Status:</span>
+                  <span className="text-xs sm:text-sm font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
+                    Under Examination
+                  </span>
+                </div>
 
-            {/* Authors with icon */}
-            <div className="mb-2 flex items-start gap-1.5">
-              <FileText size={12} className="text-slate-400 shrink-0 mt-0.5" />
-              <div className="text-[9px] sm:text-[10px] font-medium text-slate-700 leading-snug">
-                {pub.authors.join(", ")}
+                {pub.supportedBy && (
+                  <div className="mb-1.5 flex flex-col gap-1.5">
+                    <div className="text-xs sm:text-sm text-slate-600 font-semibold">Supported by:</div>
+                    <div className="flex items-center gap-2">
+                      {pub.supportedBy.map((sup, idx) => (
+                        <img key={idx} src={sup.logo} alt={sup.name} className="h-8 sm:h-10 object-contain" />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {pub.ipo && (
+                  <div className="mb-1.5 flex items-center gap-2">
+                    <span className="text-xs sm:text-sm text-slate-600 font-semibold">IPO:</span>
+                    <img src={pub.ipo.logo} alt={pub.ipo.name} className="h-8 sm:h-10 object-contain" />
+                  </div>
+                )}
+
+                <div className="text-xs sm:text-sm font-bold text-white bg-teal-600 px-2 py-0.5 rounded leading-snug">
+                  <span>Inventors: {pub.authors.join(", ")}</span>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Regular Publication Card Layout - MATCHING IMAGE DESIGN */}
+                {/* Title */}
+                <h3 className="text-sm sm:text-base md:text-base font-bold font-serif text-slate-900 mb-1.5 line-clamp-2 leading-tight">
+                  {pub.title}
+                </h3>
+
+                {/* Authors section */}
+                <div className="mb-1.5 flex items-center gap-2 flex-wrap">
+                  <span className="text-xs sm:text-sm font-bold text-slate-800">Authors:</span>
+                  <span className="text-[10px] sm:text-xs font-semibold text-slate-700 bg-amber-50 px-2 py-0.5 rounded-full">
+                    {pub.authors.join(", ")}
+                  </span>
+                </div>
+
+                {/* Description */}
+                <p className="text-xs sm:text-sm text-slate-700 mb-1.5 line-clamp-2 leading-relaxed">
+                  {pub.description}
+                </p>
+
+                {/* Published in - italicized */}
+                <div className="mb-1.5 text-xs sm:text-sm text-slate-600 leading-snug italic font-normal">
+                  Published in: {pub.venue}
+                </div>
+
+                {/* Tags */}
+                <div className="mb-1.5 flex flex-wrap gap-1">
+                  {pub.tags.map((tag, i) => (
+                    <span key={i} className="text-[9px] sm:text-[10px] font-bold text-slate-700 bg-amber-50 px-1.5 py-0.5 rounded">
+                      {tag.toUpperCase()}
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Footer with Action Buttons and Publisher */}
+            <div className="mt-auto pt-1.5 sm:pt-2 border-t border-slate-200 flex flex-col gap-1.5">
+              {/* Action Button - Paper only */}
+              <div className="flex justify-between items-center">
+                <a
+                  href={pub.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-700 hover:text-teal-600 transition-colors"
+                >
+                  <FileText size={13} />
+                  Paper
+                </a>
               </div>
-            </div>
 
-            {/* Venue with icon */}
-            <div className="mb-2 flex items-start gap-1.5">
-              <ShieldCheck size={12} className="text-teal-500 shrink-0 mt-0.5" />
-              <div className="text-[9px] sm:text-[10px] text-slate-600 leading-snug font-serif italic">
-                {pub.venue}
-              </div>
+              {/* Publisher Section - unchanged */}
+              {pub.publishers && pub.publishers.length > 0 && (
+                <div className="flex items-center gap-2 pt-1 border-t border-slate-200">
+                  <span className="text-xs sm:text-sm font-semibold text-slate-600">Publisher:</span>
+                  <div className="flex gap-1.5 items-center">
+                    {pub.publishers.map((publisherItem, idx) => (
+                      <img 
+                        key={idx} 
+                        src={publisherItem.logo} 
+                        alt={publisherItem.name} 
+                        className={`object-contain ${publisherItem.name === "Springer" ? "h-6" : publisherItem.name === "NASCENT MR" ? "h-14" : "h-6"}`}
+                        title={publisherItem.name} 
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-
-            {/* All tags */}
-            <div className="mb-3 flex flex-wrap gap-1">
-              {pub.tags.map((tag, i) => (
-                <span key={i} className="text-[8px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
-                  #{tag}
-                </span>
-              ))}
-            </div>
-
-            {/* Footer with button */}
-            <div className="mt-auto pt-2 border-t border-slate-100 flex justify-end">
-              <a
-                href={pub.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-slate-100 text-teal-600 hover:bg-teal-600 hover:text-white transition-all duration-300 shadow-sm"
-                title="View Publication"
-              >
-                <ExternalLink size={14} />
-              </a>
-            </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* BOTTOM SOLID BAR */}
@@ -395,6 +464,54 @@ const Publications = () => {
     return matchesCat && matchesQuery && matchesYear;
   });
 
+  // Export to Excel function with multiple sheets (Conference as main sheet)
+  const exportToExcel = (data) => {
+    if (data.length === 0) {
+      alert("No publications to export");
+      return;
+    }
+
+    const headers = ["ID", "Title", "Authors", "Venue", "Date", "Category", "Description", "Tags", "Status", "Inventors"];
+    const workbook = XLSX.utils.book_new();
+    
+    // Group data by category
+    const categoryList = ["Conference", "Journal", "Book Chapter", "Patents"];
+    const groupedData = {};
+    
+    categoryList.forEach(cat => {
+      groupedData[cat] = data.filter(pub => pub.category === cat);
+    });
+
+    // Add sheets in order - Conference first as main sheet
+    categoryList.forEach((category) => {
+      const items = groupedData[category];
+      if (items.length > 0) {
+        // Prepare rows with headers
+        const rows = items.map(pub => ([
+          pub.id,
+          pub.title,
+          pub.authors.join("; "),
+          pub.venue,
+          pub.date,
+          pub.category,
+          pub.description,
+          pub.tags.join("; "),
+          pub.status || "-",
+          pub.inventors ? pub.inventors.join("; ") : "-"
+        ]));
+
+        // Create worksheet
+        const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+        
+        // Add worksheet to workbook
+        XLSX.utils.book_append_sheet(workbook, ws, category);
+      }
+    });
+
+    // Generate Excel file
+    XLSX.writeFile(workbook, `publications_${new Date().toISOString().split('T')[0]}.xlsx`);
+  };
+
   return (
     <div className="relative pt-8 lg:pt-12 pb-40 px-4 sm:px-6 lg:px-8 min-h-screen bg-[#F2EFE8] overflow-hidden">
       {/* Unique Mesh Gradient Background - Darkened */}
@@ -500,7 +617,15 @@ const Publications = () => {
                 <Calendar size={18} />
                 <span className="hidden sm:inline">{selectedYear || "Year"}</span>
               </button>
-            </div>
+              {/* Export to Excel Button */}
+              <button
+                onClick={() => exportToExcel(filteredPublications)}
+                title="Export to Excel"
+                className="shrink-0 h-[44px] px-3 sm:px-4 rounded-full font-bold text-sm transition-all duration-300 flex items-center gap-2 bg-white text-slate-600 border border-slate-200 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-600"
+              >
+                <FileDown size={18} />
+                <span className="hidden sm:inline">Export</span>
+              </button>            </div>
           </div>
 
           {/* Active Filters Display */}
@@ -633,7 +758,7 @@ const Publications = () => {
               ))
             ) : filteredPublications.length > 0 ? (
               filteredPublications.map((pub, index) => (
-                <PublicationCard key={pub.id} pub={pub} index={index} />
+                <PublicationCard key={pub.id} pub={pub} index={index} exportToExcel={exportToExcel} />
               ))
             ) : (
               <motion.div 

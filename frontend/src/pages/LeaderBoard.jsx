@@ -382,13 +382,13 @@ const LeaderBoard = () => {
                 src="/watermark.svg"
                 alt=""
                 className="fixed w-[600px] md:w-[780px] pointer-events-none select-none"
-                style={{ opacity: 0.15, zIndex: 0, top: '-120px', left: '-220px', animation: 'rotateClockwise 30s linear infinite' }}
+                style={{ opacity: 0.15, zIndex: 0, top: '-230px', left: '-300px', animation: 'rotateClockwise 30s linear infinite' }}
             />
             <img
                 src="/watermark.svg"
                 alt=""
                 className="fixed w-[600px] md:w-[780px] pointer-events-none select-none"
-                style={{ opacity: 0.15, zIndex: 0, bottom: '-200px', right: '-200px', animation: 'rotateAntiClockwise 30s linear infinite' }}
+                style={{ opacity: 0.15, zIndex: 0, bottom: '-230px', right: '-300px', animation: 'rotateAntiClockwise 30s linear infinite' }}
             />
 
             {/* Soft decorative blur */}
