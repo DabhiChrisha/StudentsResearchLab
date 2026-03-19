@@ -103,7 +103,7 @@ const Activities = () => {
                                     onClick={() => setModal(act)}
                                 >
                                     {/* Always show the image at the top */}
-                                    <div className="w-full bg-gray-100 overflow-hidden flex items-center justify-center aspect-[4/3]">
+                                    <div className="w-full bg-gray-100 overflow-hidden rounded-2xl flex items-center justify-center aspect-[4/3]">
                                         {(() => {
                                             // Prefer signedPhotoUrl, fallback to public URL if not present
                                             let url = act.signedPhotoUrl;
@@ -136,7 +136,7 @@ const Activities = () => {
                                                         <img
                                                             src={url}
                                                             alt={act.title + ' (debug: ' + url + ')'}
-                                                            className="object-contain w-full h-full mx-auto my-auto"
+                                                            className="object-contain w-full h-full mx-auto my-auto rounded-2xl"
                                                             style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }}
                                                         />
                                                     );
@@ -179,12 +179,12 @@ const Activities = () => {
                                 initial={{ scale: 0.95, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale: 0.95, opacity: 0 }}
-                                className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full mx-4 flex flex-col md:flex-row gap-6 relative border-2 border-sky-100 neon-gradient-border"
+                                className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full mx-4 flex flex-col md:flex-row gap-6 relative border-2 border-sky-100 modal-neon-border"
                                 style={{ minHeight: 400, maxHeight: 500 }}
                             >
                                 {/* Image */}
                                 {(modal?.signedPhotoUrl || modal?.Photo) && (
-                                    <div className="md:w-1/2 w-full bg-gray-100 flex items-center justify-center">
+                                    <div className="md:w-1/2 w-full bg-gray-100 flex items-center justify-center rounded-3xl overflow-hidden">
                                         {(() => {
                                             let url = modal.signedPhotoUrl;
                                             if (!url && modal.Photo) {
@@ -212,11 +212,11 @@ const Activities = () => {
                                                 );
                                             } else if (url && url.match(/\.(jpg|jpeg|png|gif|bmp|svg|webp)(\?.*)?$/i)) {
                                                 return (
-                                                    <img src={url} alt={modal.title + ' (debug: ' + url + ')'} className="object-contain w-full h-full max-h-[340px] mx-auto my-auto" style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }} />
+                                                    <img src={url} alt={modal.title + ' (debug: ' + url + ')'} className="object-contain w-full h-full max-h-[340px] mx-auto my-auto rounded-3xl" style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }} />
                                                 );
                                             } else if (url) {
                                                 return (
-                                                    <img src={url} alt={modal.title + ' (debug: ' + url + ')'} className="object-contain w-full h-full max-h-[340px] mx-auto my-auto" style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }} />
+                                                    <img src={url} alt={modal.title + ' (debug: ' + url + ')'} className="object-contain w-full h-full max-h-[340px] mx-auto my-auto rounded-3xl" style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }} />
                                                 );
                                             }
                                             return null;
