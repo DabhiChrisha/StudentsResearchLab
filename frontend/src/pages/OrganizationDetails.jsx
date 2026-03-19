@@ -14,7 +14,7 @@ const OrganizationDetails = () => {
     }
 
     return (
-        <div key={orgId} className="pt-6 lg:pt-8 min-h-screen relative overflow-hidden" style={{ backgroundColor: '#F5F1E8' }}>
+        <div key={orgId} className="pt-0 min-h-screen relative overflow-hidden" style={{ backgroundColor: '#F5F1E8' }}>
             {/* Subtle Ambient Depth */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
                 <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-white rounded-full blur-[150px] -mr-64 -mt-32" />
@@ -424,11 +424,10 @@ const OrganizationDetails = () => {
                                     <button
                                         key={filter}
                                         onClick={() => setExecomFilter(filter)}
-                                        className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
-                                            execomFilter === filter
+                                        className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${execomFilter === filter
                                                 ? "bg-teal-900 text-white shadow-lg scale-105"
                                                 : "bg-white text-teal-900 border border-teal-100 hover:bg-teal-50"
-                                        }`}
+                                            }`}
                                     >
                                         {filter}
                                     </button>
@@ -436,23 +435,33 @@ const OrganizationDetails = () => {
                             </div>
 
                             {/* Members Grid */}
-                            <motion.div 
-                                layout
-                                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6"
-                            >
-                                <AnimatePresence mode='popLayout'>
+                            <AnimatePresence mode='wait'>
+                                <motion.div
+                                    key={execomFilter}
+                                    variants={{
+                                        hidden: { opacity: 0 },
+                                        show: {
+                                            opacity: 1,
+                                            transition: { staggerChildren: 0.05 }
+                                        },
+                                        exit: { opacity: 0, y: 10, transition: { duration: 0.2 } }
+                                    }}
+                                    initial="hidden"
+                                    animate="show"
+                                    exit="exit"
+                                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+                                >
                                     {data.execom
                                         .filter(member => execomFilter === "All" || member.group === execomFilter)
-                                        .map((member, index) => (
+                                        .map((member) => (
                                             <motion.div
                                                 key={member.name}
-                                                layout
-                                                initial={{ opacity: 0, scale: 0.9 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                exit={{ opacity: 0, scale: 0.9 }}
-                                                transition={{ duration: 0.3 }}
-                                                whileHover={{ y: -8 }}
-                                                className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl border border-white/50 shadow-md hover:shadow-xl transition-all duration-300 group flex flex-col items-center text-center relative overflow-hidden"
+                                                variants={{
+                                                    hidden: { opacity: 0, y: 20 },
+                                                    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+                                                }}
+                                                whileHover={{ y: -5, scale: 1.02 }}
+                                                className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl border border-white/50 shadow-md hover:shadow-xl transition-all duration-300 group flex flex-col items-center text-center relative overflow-hidden h-full"
                                             >
                                                 {/* Group Badge */}
                                                 <div className="absolute top-0 right-0 px-3 py-1 bg-teal-50 text-[8px] font-black text-teal-700 rounded-bl-xl uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
@@ -461,9 +470,9 @@ const OrganizationDetails = () => {
 
                                                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-teal-50 to-teal-100 flex items-center justify-center mb-4 border-2 border-white shadow-inner group-hover:scale-110 transition-transform duration-500 overflow-hidden">
                                                     {member.image ? (
-                                                        <img 
-                                                            src={member.image} 
-                                                            alt={member.name} 
+                                                        <img
+                                                            src={member.image}
+                                                            alt={member.name}
                                                             className="w-full h-full object-cover"
                                                         />
                                                     ) : (
@@ -480,20 +489,31 @@ const OrganizationDetails = () => {
                                                     {member.role}
                                                 </p>
 
-                                                {member.linkedin && (
-                                                    <a
-                                                        href={member.linkedin}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="mt-auto p-2 bg-teal-50 text-teal-700 rounded-full hover:bg-teal-900 hover:text-white transition-all duration-300"
-                                                    >
-                                                        <Linkedin size={14} />
-                                                    </a>
-                                                )}
+                                                <div className="mt-auto flex gap-2">
+                                                    {member.linkedin && (
+                                                        <a
+                                                            href={member.linkedin}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="p-2 bg-teal-50 text-teal-700 rounded-full hover:bg-teal-900 hover:text-white transition-all duration-300"
+                                                        >
+                                                            <Linkedin size={14} />
+                                                        </a>
+                                                    )}
+                                                    {member.email && (
+                                                        <a
+                                                            href={`mailto:${member.email}`}
+                                                            className="p-2 bg-teal-50 text-teal-700 rounded-full hover:bg-teal-900 hover:text-white transition-all duration-300"
+                                                            title={member.email}
+                                                        >
+                                                            <Mail size={14} />
+                                                        </a>
+                                                    )}
+                                                </div>
                                             </motion.div>
                                         ))}
-                                </AnimatePresence>
-                            </motion.div>
+                                </motion.div>
+                            </AnimatePresence>
                         </div>
                     )}
                     {data.contact && (
