@@ -16,7 +16,7 @@ const publicationsData = [
     description: "Featured among the prestigious 23 global research works published in the Casebook on AI and Gender Empowerment. The research focuses on inclusive AI innovation and empowerment.",
     link: "https://www.linkedin.com/posts/mmpsrpc_svkm-ksv-mmpsrpc-activity-7429466085311098880-XDnV",
     tags: ["AI", "Gender Empowerment", "UN Women"],
-    publishers: [{name: "UN Women", logo: "/UN Women.png"}, {name: "MeitY", logo: "/MeitY.png"}],
+    publishers: [{name: "UN Women", logo: "/UN%20Women.png"}, {name: "MeitY", logo: "/MeitY.png"}],
   },
   {
     id: 2,
@@ -114,7 +114,7 @@ const publicationsData = [
     tags: ["Healthcare", "AI", "Analytics"],
     status: "Under Examination",
     inventors: ["Nancy Patel", "Kandarp Gajjar", "Patel Ridham", "Patel Krutika"],
-    logoInfo: "/KSV Logo.png",
+    logoInfo: "/ksv.png",
     supportedBy: [{name: "KSV", logo: "/ksv.png"}, {name: "MMPSRPC", logo: "/mm.png"}],
     ipo: {name: "IPO", logo: "/IPO.jpeg"}
   }
@@ -203,15 +203,19 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
           href={pub.link}
           target="_blank"
           rel="noopener noreferrer"
-          className={`relative bg-gradient-to-br ${bgClass} p-4 sm:p-5 md:p-6 flex-none min-h-32 sm:min-h-40 md:min-h-44 flex flex-col justify-between rounded-t-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity duration-300`}
+          className={`relative bg-gradient-to-br ${bgClass} p-4 sm:p-5 md:p-6 flex-none min-h-32 sm:min-h-40 md:min-h-44 flex flex-col justify-between rounded-t-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity duration-300 bg-cover bg-center`}
           style={{
-            backgroundImage: pub.category === "Patents" ? "url(/inn.png)" : (linkedinImage ? `url(${linkedinImage})` : undefined),
+            backgroundImage: pub.category === "Patents" 
+              ? "url('/inn.png')" 
+              : linkedinImage 
+                ? `url('${linkedinImage}')`
+                : `linear-gradient(to bottom right, var(--tw-gradient-stops))`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
           {/* Overlay to ensure badges are readable */}
-          {linkedinImage && (
+          {(linkedinImage || pub.category === "Patents") && (
             <div className="absolute inset-0 bg-black/40 opacity-60 pointer-events-none rounded-t-lg" />
           )}
 
