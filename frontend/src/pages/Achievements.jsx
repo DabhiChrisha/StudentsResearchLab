@@ -11,7 +11,7 @@ import "swiper/css/pagination";
 const data = [
   {
     id: 1,
-    title: "Student Research Excellence 🏆",
+    title: "OSMAR Project Shines with Second Prize at Gujarat Innovation Showcase",
     type: "image",
     media: [
       "/Achievements/Achievement-Henit-Zenisha-Hetvi/img-1.jpg",
@@ -28,7 +28,7 @@ const data = [
   },
   {
     id: 2,
-    title: "🌍 Day 2 | KSV at IndiaAI Impact Summit 2026 ✨",
+    title: "KSV Researchers’ Case Study Selected for International AI Casebook at IndiaAI Impact Summit 2026",
     type: "image",
     media: [
       "/Achievements/IndiaAI-Impact-Summit-Day2/img-1.jpg",
@@ -49,7 +49,7 @@ const data = [
   },
   {
     id: 3,
-    title: "KSV at IndiaAI Impact Summit 2026 🌍✨",
+    title: "KSV Students Selected for International AI & Gender Empowerment Casebook at IndiaAI Impact Summit 2026",
     type: "image",
     media: [
       "/Achievements/IndiaAI-Impact-Summit/img-1.jpg",
@@ -68,7 +68,7 @@ const data = [
   },
   {
     id: 4,
-    title: "🚀 KSV at National PAG Meet ✨",
+    title: "KSV Student Teams Showcase Projects at National-Level DST–TEC PAG Meeting 2026",
     type: "image",
     media: [
       "/Achievements/Achievement-Henit-Hetvi-Mihir/img-1.jpg",
@@ -85,7 +85,7 @@ const data = [
   },
   {
     id: 5,
-    title: "🏆 Team BlackBox Achievement 🌟",
+    title: "Team BlackBox Secures 4th Runner-Up Position at National-Level INNOVAITION Hackathon",
     type: "image",
     media: [
       "/Achievements/DAU-InnovAItion-Hackathon/img-1.jpg",
@@ -98,7 +98,7 @@ const data = [
   },
   {
     id: 6,
-    title: "7 Teams from the Students Research Lab Shortlisted at INNOVAITION National Hackathon",
+    title: "7 KSV Teams Shortlisted Among Top 75 at National-Level INNOVAITION Hackathon",
     type: "image",
     media: [
       "/Achievements/DAU-InnovAItion-Hackathon-7-teams/img-1.jpg",
@@ -117,7 +117,7 @@ const data = [
   },
   {
     id: 7,
-    title: "Congratulations to Our Bright Minds 🎉",
+    title: "KSV Students Receive Conference Grant for IEEE Paper Presentation at ISED 2025",
     type: "image",
     media: [
       "/Achievements/Paper-Presentation-Ayushi-Manasvi-Swayam/img-1.jpg",
@@ -130,7 +130,7 @@ const data = [
   },
   {
     id: 8,
-    title: "Congratulations to Our Bright Minds 🎉",
+    title: "KSV Students Receive Conference Grant for Presenting AI Research at AAMLAD-2025",
     type: "image",
     media: [
       "/Achievements/Paper-Presentation-Henit-Hetvi-Heny/img-1.jpg",
@@ -143,7 +143,7 @@ const data = [
   },
   {
     id: 9,
-    title: "National Research Representation 🌟",
+    title: "KSV Students Present Research Papers at NASCENT MR 2025 National Conference",
     type: "image",
     media: [
       "/Achievements/Conference-Krish-Jenish-Hemant-Honey/img-1.jpg",
@@ -163,7 +163,7 @@ const data = [
   },
   {
     id: 10,
-    title: "Students Research Lab Researchers Publish AI Study at International Conference",
+    title: "KSV Students Publish AI Research in IEEE Xplore at AISTS 2025 International Conference",
     type: "image",
     media: [
       "/Achievements/Research-Paper-Publication-18-11-25/img-1.jpg",
@@ -176,7 +176,7 @@ const data = [
   },
   {
     id: 11,
-    title: "Research Paper Published in IEEE Xplore by Students Research Lab Researchers",
+    title: "KSV Students Publish ‘TrafficEye’ Research in IEEE Xplore at AIMV-2025",
     type: "image",
     media: [
       "/Achievements/Research-Paper-Publication-21-10-25/img-1.jpg",
@@ -189,7 +189,7 @@ const data = [
   },
   {
     id: 12,
-    title: "Global Research Presentation at the 9th NYC Green School Conference 2025",
+    title: "KSV Researchers Present Sustainability and AI Research at 9th NYC Green School Conference 2025",
     type: "image",
     media: [
       "/Achievements/Global-Recognition-9th-NYC/img-1.jpg",
@@ -207,7 +207,7 @@ const data = [
   },
   {
     id: 13,
-    title: "Research Posters from Students Research Lab Selected for GTU National Finale",
+    title: "KSV Student Teams Selected for Finale of National AI Poster Competition by GTU",
     type: "image",
     media: [
       "/Achievements/Research-Posters-19&20-9-25/img-1.jpg",
@@ -223,7 +223,7 @@ const data = [
   },
   {
     id: 14,
-    title: "Research Paper Publication Achievement: Students Publish Paper in Springer Book Series",
+    title: "KSV Students Publish Research in Springer LNNS Series at International Conference on Data Science and Security",
     type: "image",
     media: [
       "/Achievements/Research-Posters-8&9-11-24/img-1.jpg",
@@ -308,17 +308,32 @@ const Card = ({ item, onClick }) => (
 const Achievements = () => {
   const [selected, setSelected] = useState(null);
   const sectionRef = useRef(null);
+  const headerRef = useRef(null);
   const detailRef = useRef(null);
+  const hadSelectionRef = useRef(false);
   const remaining = data.filter((d) => d.id !== selected?.id);
 
   useEffect(() => {
-    if (selected && detailRef.current) {
+    if (selected) {
+      hadSelectionRef.current = true;
       setTimeout(() => {
-        detailRef.current.scrollIntoView({
+        (headerRef.current || detailRef.current)?.scrollIntoView({
           behavior: "smooth",
           block: "start",
         });
-      }, 300);
+      }, 280);
+      return;
+    }
+
+    if (!selected && hadSelectionRef.current) {
+      setTimeout(() => {
+        (headerRef.current || sectionRef.current)?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 120);
+
+      hadSelectionRef.current = false;
     }
   }, [selected]);
 
@@ -356,7 +371,11 @@ const Achievements = () => {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center mb-10">
+        <div
+          ref={headerRef}
+          style={{ scrollMarginTop: "calc(var(--navbar-height, 80px) + 12px)" }}
+          className="text-center mb-10"
+        >
           <h1 className="text-5xl lg:text-7xl font-black font-serif text-secondary-dark mb-3 uppercase tracking-tight">
             Achievements
           </h1>
@@ -419,6 +438,7 @@ const Achievements = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 120, damping: 18 }}
+              style={{ scrollMarginTop: "calc(var(--navbar-height, 80px) + 12px)" }}
               className="scroll-mt-28 w-full bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-200 order-first lg:order-last"            >
               <div className="aspect-[4/3] bg-white flex items-center justify-center overflow-hidden">
                 {selected.type === "image" ? (
