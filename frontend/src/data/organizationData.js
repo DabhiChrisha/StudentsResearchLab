@@ -189,7 +189,7 @@ export const organizationData = {
         },
         description: [
             "The IEEE KSV Student Branch, established under the esteemed guidance of Kadi Sarva Vishwavidyalaya (KSV), stands as a premier epicenter for technological innovation, professional development, and scholarly research. Serving a diverse academic community across more than 25 constituent colleges under the expansive KSV umbrella, the branch was founded with a strategic vision to cultivate a robust culture of interdisciplinary research and creative collaboration. Since its inception, it has rapidly evolved into an indispensable component of the university’s broader commitment to excellence in engineering and technological education. By fostering an environment where academic theory and practical innovation converge, the branch empowers the next generation of engineers to push the boundaries of modern science and contribute meaningfully to the global research landscape.",
-            "Guided by the fundamental global principle of 'Advancing Technology for Humanity, '' the IEEE KSV Student Branch aligns seamlessly with the core ethos of Kadi Sarva Vishwavidyalaya (KSV). This synergy is characterized by a shared commitment to providing need-based, high-impact education and curating contemporary curricula designed to address the complexities of an ever-evolving technological landscape. By integrating these international standards into the local academic framework, the branch serves as a critical bridge between scholarly theory and industrial demand. This ensures that the student community is not only technically proficient but also strategically positioned to navigate and lead within the dynamic frontiers of modern engineering and transformative research."
+            "Guided by the fundamental global principle of 'Advancing Technology for Humanity' the IEEE KSV Student Branch aligns seamlessly with the core ethos of Kadi Sarva Vishwavidyalaya (KSV). This synergy is characterized by a shared commitment to providing need-based, high-impact education and curating contemporary curricula designed to address the complexities of an ever-evolving technological landscape. By integrating these international standards into the local academic framework, the branch serves as a critical bridge between scholarly theory and industrial demand. This ensures that the student community is not only technically proficient but also strategically positioned to navigate and lead within the dynamic frontiers of modern engineering and transformative research."
         ],
         stats: [
             { label: "Past Events", value: "32+" },
@@ -197,7 +197,7 @@ export const organizationData = {
             { label: "Upcoming Events", value: "2+" }
         ],
         mission: "IEEE is committed to advancing technology for the benefit of humanity by fostering innovation and excellence in engineering and applied sciences. Through collaboration, education, and research, it empowers individuals to push technological boundaries while upholding strong ethical standards. The KSV IEEE Student Branch supports this mission by creating opportunities for student growth, leadership, and innovation.",
-        vision: "To create a future where students harness technology, research, and innovation to drive societal progress, promote sustainable development, and enhance quality of life through impactful engineering solutions.",
+        vision: "To create a future where students harness technology, research and innovation to drive societal progress, promote sustainable development and enhance quality of life through impactful engineering solutions.",
         objectivesTitle: "Objectives of IEEE-KSV SB",
         // objectivesSubtitle: "Dedicated to advancing technology and fostering a global community of technical professionals.",
         objectives: [
@@ -211,23 +211,23 @@ export const organizationData = {
             { title: "Research & Development", description: "Initiate projects that enhance technological advancements through dedicated research and development." },
             { title: "Networking & Connectivity", description: "Enable collaboration and knowledge exchange within the technical community." }
         ],
-        features: [
-            "Humanitarian Technology",
-            "Professional Networking",
-            "Skill Development",
-            "Research Publications",
-            "Global Collaboration"
-        ],
+        // features: [
+        //     "Humanitarian Technology",
+        //     "Professional Networking",
+        //     "Skill Development",
+        //     "Research Publications",
+        //     "Global Collaboration"
+        // ],
         advantages: [
             { title: "Global Network", description: "Connect with a diverse community of over 400,000 members spanning 160 countries." },
-            { title: "Knowledge Exchange", description: "Access a wealth of cutting-edge research, publications, and conferences." },
+            { title: "Knowledge Exchange", description: "Access a wealth of cutting-edge research, publications and conferences." },
             { title: "Professional Development", description: "Benefit from a wide array of continuing education programs and workshops." },
             { title: "Industry Standards", description: "Contribute to and stay updated on internationally recognized technical standards." },
             { title: "Innovation Hub", description: "Engage in collaborative projects and initiatives that shape the future of technology." },
             { title: "Ethical Leadership", description: "Promote responsible technological advancement and professional integrity." },
             { title: "Resource Access", description: "Utilize an extensive digital library containing millions of technical documents." },
-            { title: "Recognition", description: "Gain prestige through IEEE's renowned awards, fellowships, and certifications." },
-            { title: "Networking Opportunities", description: "Participate in local and international events, conferences, and symposia." }
+            { title: "Recognition", description: "Gain prestige through IEEE's renowned awards, fellowships and certifications." },
+            { title: "Networking Opportunities", description: "Participate in local and international events, conferences and symposia." }
         ],
         execomTitle: "Executive Committee – IEEE KSV",
         execomSubtitle: "Meet the student leaders driving innovation and collaboration across IEEE chapters.",
