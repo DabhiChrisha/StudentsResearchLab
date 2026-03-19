@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Linkedin, X, FileText, Eye, Star } from "lucide-react";
 import studentsData from "../data/srlStudents.json";
@@ -12,6 +12,11 @@ export default function Researchers() {
     const [activeStudent, setActiveStudent] = useState(null);
     const [batchMap, setBatchMap] = useState({});
     const [isLoading, setIsLoading] = useState(true);
+    const [paperTitles, setPaperTitles] = useState([]);
+    const [papersLoading, setPapersLoading] = useState(false);
+    const [metrics, setMetrics] = useState(null);
+    const [metricsLoading, setMetricsLoading] = useState(false);
+    const retryRef = useRef(null);
 
     // Fetch batch data from Supabase students_details table
     useEffect(() => {
@@ -93,11 +98,6 @@ export default function Researchers() {
                 department: s.department,
                 semester: s.semester,
                 reflection: s.reflection || "",
-                researchWorks: s.researchWorks || [],
-                research: s.research || [],
-                achievements: s.achievements || [],
-                papersPublished: s.papersPublished || s.researchWorks || [],
-                hackathons: s.hackathons || [],
                 email: s.email || "",
                 linkedin: s.linkedin || "",
                 gradient: "linear-gradient(160deg,#fbe8c1,#167d8d)",
@@ -106,43 +106,86 @@ export default function Researchers() {
     }, [members, batchMap]);
 
     const openModalFor = (s) => {
-        const hackathonPool = [
-            "AI Jam 2025",
-            "DataSprint Challenge",
-            "Hack the Climate",
-            "Quantum Code Quest",
-            "UI/UX Hackathon",
-            "Open Source Sprint",
-        ];
-
-        const defaults = {
-            research: ["Research Area 1", "Research Area 2", "Research Area 3"],
-            researchWorks: ["Sample Paper 1", "Sample Paper 2"],
-            achievements: ["Achievement 1", "Achievement 2"],
-            papersPublished: ["Project A", "Project B"],
-            hackathons: [],
-        };
-
         const enrollKey = (s.enrollment_no || s.enrollment || "").trim().toUpperCase();
         const batch = batchMap[enrollKey] || s.batch || null;
         const student = {
-            ...defaults,
             ...s,
             title: s.student_name || s.title,
             subtitle: s.subtitle || `${s.department} • Semester ${s.semester}`,
             batch,
         };
 
-        // Ensure every profile has some hackathon sample data even if the source provided none
-        if (!Array.isArray(s.hackathons) || s.hackathons.length === 0) {
-            student.hackathons = [...hackathonPool]
-                .sort(() => 0.5 - Math.random())
-                .slice(0, 2);
-        }
-
         setActiveStudent(student);
     };
-    const closeModal = () => setActiveStudent(null);
+    const closeModal = () => {
+        setActiveStudent(null);
+        setPaperTitles([]);
+        setPapersLoading(false);
+        setMetrics(null);
+        setMetricsLoading(false);
+        if (retryRef.current) {
+            clearTimeout(retryRef.current);
+            retryRef.current = null;
+        }
+    };
+
+    // Fetch papers + metrics when modal opens
+    useEffect(() => {
+        if (!activeStudent) return;
+
+        const enrollmentNo = activeStudent.enrollment || "";
+        if (!enrollmentNo.trim()) {
+            setPaperTitles([]);
+            setMetrics(null);
+            return;
+        }
+
+        let cancelled = false;
+        let attempt = 0;
+        const maxRetries = 3;
+        const retryDelay = 3000;
+        const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+        const encodedEnroll = encodeURIComponent(enrollmentNo.trim().toUpperCase());
+        const encodedName = encodeURIComponent((activeStudent.title || activeStudent.student_name || "").trim());
+
+        const fetchUnifiedData = async () => {
+            setPapersLoading(true);
+            setMetricsLoading(true);
+            try {
+                const res = await fetch(`${backendUrl}/api/papers/${encodedName}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+
+                if (!cancelled) {
+                    setPaperTitles(data?.papers || []);
+                    setMetrics(data || null); // The unified response IS the metrics object
+                    setPapersLoading(false);
+                    setMetricsLoading(false);
+                }
+            } catch (err) {
+                console.error(`Failed to fetch modal data (attempt ${attempt + 1}):`, err);
+                attempt++;
+                if (!cancelled && attempt < maxRetries) {
+                    retryRef.current = setTimeout(fetchUnifiedData, retryDelay);
+                } else if (!cancelled) {
+                    setPaperTitles([]);
+                    setMetrics(null);
+                    setPapersLoading(false);
+                    setMetricsLoading(false);
+                }
+            }
+        };
+
+        fetchUnifiedData();
+
+        return () => {
+            cancelled = true;
+            if (retryRef.current) {
+                clearTimeout(retryRef.current);
+                retryRef.current = null;
+            }
+        };
+    }, [activeStudent]);
 
     // Close modal on ESC key
     useEffect(() => {
@@ -235,9 +278,6 @@ export default function Researchers() {
                                                 reflection: ra.reflection || "",
                                                 email: ra.email || "",
                                                 linkedin: ra.linkedin || "",
-                                                researchWorks: ra.researchWorks || [],
-                                                research: ra.research || [],
-                                                achievements: ra.achievements || [],
                                             })}
                                             className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-white shadow-xl group-hover:scale-105 transition-transform duration-500 group"
                                         >
@@ -257,11 +297,15 @@ export default function Researchers() {
                                         </div>
 
                                         <div className="flex flex-wrap gap-2 mb-6 justify-center sm:justify-start">
-                                            {ra.research.slice(0, 3).map((domain, i) => (
-                                                <span key={i} className="px-3 py-1 rounded-full bg-white/50 border border-secondary/10 text-slate-600 text-xs font-bold">
-                                                    {domain}
-                                                </span>
-                                            ))}
+                                            {(ra.research || []).length > 0 ? (
+                                                ra.research.slice(0, 3).map((domain, i) => (
+                                                    <span key={i} className="px-3 py-1 rounded-full bg-white/50 border border-secondary/10 text-slate-600 text-xs font-bold">
+                                                        {domain}
+                                                    </span>
+                                                ))
+                                            ) : (
+                                                <span className="text-sm text-slate-400">-</span>
+                                            )}
                                         </div>
 
                                         <div className="flex items-center justify-center sm:justify-start gap-4">
@@ -368,7 +412,7 @@ export default function Researchers() {
                                             transition={{ duration: 0.4 }}
                                             className="text-sm text-slate-700 leading-relaxed"
                                         >
-                                            {activeStudent.reflection || "Being part of SRL has been an incredible learning journey, where collaborative research and structured mentorship made a real impact."}
+                                            {activeStudent.reflection || "-"}
                                         </motion.p>
                                     </div>
                                 </div>
@@ -379,15 +423,24 @@ export default function Researchers() {
                                         <h4 className="text-base font-black uppercase tracking-widest text-slate-500">
                                             Research Areas
                                         </h4>
-                                        <span className="text-xs font-bold text-secondary">{activeStudent.research.length} areas</span>
+                                        <span className="text-xs font-bold text-secondary">{metricsLoading ? "…" : (metrics?.research_areas || []).length} areas</span>
                                     </div>
 
                                     <div className="mt-5 flex flex-wrap gap-2">
-                                        {(activeStudent.research || []).map((area, idx) => (
-                                            <span key={idx} className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-600">
-                                                {area}
-                                            </span>
-                                        ))}
+                                        {metricsLoading ? (
+                                            <div className="flex gap-2 animate-pulse">
+                                                <div className="h-6 w-24 bg-gray-200 rounded-full"></div>
+                                                <div className="h-6 w-20 bg-gray-200 rounded-full"></div>
+                                            </div>
+                                        ) : (metrics?.research_areas || []).length > 0 ? (
+                                            (metrics.research_areas).map((area, idx) => (
+                                                <span key={idx} className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-600">
+                                                    {area}
+                                                </span>
+                                            ))
+                                        ) : (
+                                            <p className="text-sm text-slate-400">-</p>
+                                        )}
                                     </div>
 
                                     <motion.div
@@ -402,15 +455,15 @@ export default function Researchers() {
                                         <div className="grid grid-cols-3 gap-4">
                                             <div className="flex flex-col items-center gap-1">
                                                 <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap">Research Works</span>
-                                                <span className="text-lg font-black text-slate-900">{(activeStudent.researchWorks || []).length}</span>
+                                                <span className="text-lg font-black text-slate-900">{metricsLoading ? "…" : (metrics?.research_works_count ?? 0)}</span>
                                             </div>
                                             <div className="flex flex-col items-center gap-1">
-                                                <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap">Achievements</span>
-                                                <span className="text-lg font-black text-slate-900">{(activeStudent.achievements || []).length}</span>
+                                                <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap">Hackathons</span>
+                                                <span className="text-lg font-black text-slate-900">{metricsLoading ? "…" : (metrics?.hackathons_count ?? 0)}</span>
                                             </div>
                                             <div className="flex flex-col items-center gap-1">
                                                 <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap">Papers Published</span>
-                                                <span className="text-lg font-black text-slate-900">{(activeStudent.papersPublished || []).length}</span>
+                                                <span className="text-lg font-black text-slate-900">{papersLoading ? "…" : (metrics?.papers_published_count ?? 0)}</span>
                                             </div>
                                         </div>
                                     </motion.div>
@@ -422,13 +475,22 @@ export default function Researchers() {
                                         className="mt-6 rounded-2xl bg-white border border-slate-100 p-4 shadow-sm"
                                     >
                                         <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
-                                            Achievements
+                                            Hackathons
                                         </p>
-                                        <ul className="list-disc list-inside space-y-2 text-sm text-slate-700">
-                                            {(activeStudent.achievements || []).map((achievement, idx) => (
-                                                <li key={idx}>{achievement}</li>
-                                            ))}
-                                        </ul>
+                                        {metricsLoading ? (
+                                            <div className="space-y-2 animate-pulse">
+                                                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                                                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                                            </div>
+                                        ) : (metrics?.hackathons || []).length > 0 ? (
+                                            <ul className="list-disc list-inside space-y-2 text-sm text-slate-700">
+                                                {(metrics.hackathons).map((hack, idx) => (
+                                                    <li key={idx}>{hack}</li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p className="text-sm text-slate-400">-</p>
+                                        )}
                                     </motion.div>
                                 </div>
 
@@ -438,24 +500,42 @@ export default function Researchers() {
                                         <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-4">
                                             Papers Published
                                         </p>
-                                        <ul className="space-y-3">
-                                            {(activeStudent.papersPublished || []).map((proj, idx) => (
-                                                <li key={idx} className="text-sm text-slate-700">
-                                                    • {proj}
-                                                </li>
-                                            ))}
-                                        </ul>
+                                        {papersLoading ? (
+                                            <div className="space-y-3 animate-pulse">
+                                                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                                                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                                            </div>
+                                        ) : paperTitles.length > 0 ? (
+                                            <ul className="space-y-3">
+                                                {paperTitles.map((title, idx) => (
+                                                    <li key={idx} className="text-sm text-slate-700">
+                                                        • {title}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p className="text-sm text-slate-400">-</p>
+                                        )}
                                     </div>
 
                                     <div className="mt-6">
                                         <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
                                             Hackathons
                                         </p>
-                                        <ul className="space-y-2 text-sm text-slate-700">
-                                            {(activeStudent.hackathons || []).map((hack, idx) => (
-                                                <li key={idx}>• {hack}</li>
-                                            ))}
-                                        </ul>
+                                        {metricsLoading ? (
+                                            <div className="space-y-2 animate-pulse">
+                                                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                                                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                                            </div>
+                                        ) : (metrics?.hackathons || []).length > 0 ? (
+                                            <ul className="space-y-2 text-sm text-slate-700">
+                                                {(metrics.hackathons).map((hack, idx) => (
+                                                    <li key={idx}>• {hack}</li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <p className="text-sm text-slate-400">-</p>
+                                        )}
                                     </div>
 
                                     <div className="mt-6 space-y-3">

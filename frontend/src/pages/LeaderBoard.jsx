@@ -118,12 +118,12 @@ const LeaderBoard = () => {
                 if (!overallRes.ok) throw new Error("Backend not ready or failed to fetch");
 
                 const { leaderboard: overallData } = await overallRes.json();
-                const parsedOverall = overallData.map(parseBackendStudent);
+                const parsedOverall = overallData.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin');
                 if (isActive) setAllStudents(parsedOverall);
 
                 if (monthlyRes.ok) {
                     const monthlyJson = await monthlyRes.json();
-                    const parsedMonthly = monthlyJson.leaderboard.map(parseBackendStudent);
+                    const parsedMonthly = monthlyJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin');
                     if (isActive) {
                         setMonthlyStudents(parsedMonthly);
                         setMonthLabel((monthlyJson.monthName || MONTH_NAMES[(monthlyJson.month || 1) - 1]) + ' ' + monthlyJson.year);
@@ -136,7 +136,7 @@ const LeaderBoard = () => {
 
                 if (hoursRes.ok) {
                     const hoursJson = await hoursRes.json();
-                    if (isActive) setTop5ByHours(hoursJson.leaderboard.map(parseBackendStudent));
+                    if (isActive) setTop5ByHours(hoursJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin'));
                 } else if (isActive) {
                     setTop5ByHours([]);
                 }
@@ -368,7 +368,7 @@ const LeaderBoard = () => {
     const getTitle = () => {
         if (activeTab === 'overall') return "Cumulative Top Researchers";
         if (activeTab === 'monthly') return `Monthly Top Scores: ${monthLabel}`;
-        return `Top Hours Dedicated: February 2026`;
+        return `Top Hours Dedicated: March 2026`;
     };
 
     return (

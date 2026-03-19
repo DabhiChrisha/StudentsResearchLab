@@ -123,13 +123,13 @@ const Navbar = () => {
 
     return (
         <>
-            <nav id="main-navbar" className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled ? 'bg-[#FAF9F6]/95 backdrop-blur-md shadow-md py-2' : 'bg-[#FAF9F6] py-3.5'}`}>
+            <nav id="main-navbar" className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled ? 'bg-[#FAF9F6]/95 backdrop-blur-md shadow-md py-1.5' : 'bg-[#FAF9F6] py-2.5'}`}>
                 {/* MAIN CONTAINER */}
                 <div className="max-w-[1700px] mx-auto w-full flex items-center justify-between px-2 sm:px-4 lg:px-2 xl:px-4 2xl:px-4 gap-x-1 md:gap-x-3">
 
                     {/* WRAPPER 1: LEFT (Logo & Site Title) */}
                     <Link to="/" className="flex items-center gap-1.5 md:gap-2 lg:gap-1.5 xl:gap-2 2xl:gap-3 group shrink-0 min-w-0">
-                        <div className="w-[50px] h-[50px] sm:w-[56px] sm:h-[56px] md:w-[60px] md:h-[60px] lg:w-[52px] lg:h-[52px] xl:w-[64px] xl:h-[64px] 2xl:w-[72px] 2xl:h-[72px] -my-[6px] md:-my-[10px] lg:-my-[8px] xl:-my-[10px] 2xl:-my-[12px] bg-white rounded-full p-0.5 lg:p-1 flex items-center justify-center shadow-[0_0_15px_rgba(255,230,100,0.4)] lg:shadow-[0_0_20px_rgba(255,230,100,0.3)] shrink-0 transition-all duration-500 group-hover:scale-105 group-hover:shadow-[0_0_25px_rgba(255,210,100,0.5)]">
+                        <div className="w-[42px] h-[42px] sm:w-[46px] sm:h-[46px] md:w-[50px] md:h-[50px] lg:w-[44px] lg:h-[44px] xl:w-[52px] xl:h-[52px] 2xl:w-[60px] 2xl:h-[60px] -my-[4px] md:-my-[6px] lg:-my-[4px] xl:-my-[6px] 2xl:-my-[8px] bg-white rounded-full p-0.5 lg:p-1 flex items-center justify-center shadow-[0_0_15px_rgba(255,230,100,0.4)] lg:shadow-[0_0_20px_rgba(255,230,100,0.3)] shrink-0 transition-all duration-500 group-hover:scale-105 group-hover:shadow-[0_0_25px_rgba(255,210,100,0.5)]">
                             <img src={srlLogo} alt="SRL" className="w-full h-full object-contain" />
                         </div>
                         <div className="flex flex-col justify-center min-w-0">
@@ -215,13 +215,13 @@ const Navbar = () => {
                         {/* Partner logos visible from xl+ (Hidden on lg to prevent overlap) */}
                         <div className="hidden xl:flex items-center gap-x-2 xl:gap-x-2 2xl:gap-x-3 border-l border-teal-900/10 pl-2 xl:pl-3 2xl:pl-3 shrink-0">
                             <a href="https://www.svkm.org.in/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300">
-                                <img src={svkmLogo} alt="SVKM" className="h-10 xl:h-12 2xl:h-14 w-auto object-contain" />
+                                <img src={svkmLogo} alt="SVKM" className="h-8 xl:h-10 2xl:h-11 w-auto object-contain" />
                             </a>
                             <a href="https://www.ksv.ac.in/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300">
-                                <img src={ksvLogo} alt="KSV" className="h-10 xl:h-12 2xl:h-14 w-auto object-contain" />
+                                <img src={ksvLogo} alt="KSV" className="h-8 xl:h-10 2xl:h-11 w-auto object-contain" />
                             </a>
                             <a href="https://www.mmpsrpc.in/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300">
-                                <img src={mmpsrpcLogo} alt="MMPSRPC" className="h-10 xl:h-12 2xl:h-14 w-auto object-contain" />
+                                <img src={mmpsrpcLogo} alt="MMPSRPC" className="h-8 xl:h-10 2xl:h-11 w-auto object-contain" />
                             </a>
                         </div>
 

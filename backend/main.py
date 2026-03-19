@@ -14,6 +14,9 @@ from routes.timeline_routes import router as timeline_router
 from routes.activities_routes import router as activities_router
 from routes.join_us_routes import router as join_us_router
 from routes.publications_routes import router as publications_router
+from routes.cv_routes import router as cv_router
+from routes.papers_routes import router as papers_router
+from routes.metrics_routes import router as metrics_router
 
 app = FastAPI()
 
@@ -35,6 +38,9 @@ app.include_router(timeline_router)
 app.include_router(activities_router)
 app.include_router(join_us_router)
 app.include_router(publications_router)
+app.include_router(cv_router)
+app.include_router(papers_router)
+app.include_router(metrics_router)
 
 
 @app.get("/")
