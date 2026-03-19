@@ -8,6 +8,8 @@ import chhaganbhaPhoto from "../assets/pujya_chhaganbha.jpg";
 import shriManeklal from "../assets/shri_maneklal_patel.jpg";
 import chairmanPhoto from "../assets/chairman.png";
 import mamPhoto from "../assets/Dr.Himani Trivedi Ma'am.png";
+import ieeeBackground from "../assets/IEEE KSV.jpeg";
+// import ieeeExecomPhoto from "../assets/ExeCom'26.png";
 
 export const organizationData = {
     "svkm": {
@@ -49,7 +51,7 @@ export const organizationData = {
         contact: {
             address: "Sarva Vidyalaya Campus, Behind Railway Station, Kadi - 382715, Gujarat, India",
             email: "info@svkm.org.in",
-            phone: "+91 2764 242996",
+            // phone: "+91 2764 242996",
             mapEmbed: "https://maps.google.com/maps?q=Sarva+Vidyalaya+Campus+Kadi&t=&z=15&ie=UTF8&iwloc=&output=embed"
         }
     },
@@ -80,7 +82,7 @@ export const organizationData = {
         contact: {
             address: "Sector-15, Gandhinagar - 382015, Gujarat, India.",
             email: "info@ksv.ac.in",
-            phone: "+91 94090 35835",
+            // phone: "+91 94090 35835",
             linkedin: "https://www.linkedin.com/school/kadi-sarva-vishwavidyalaya-gandihnagar/",
             mapEmbed: "https://maps.google.com/maps?q=Kadi+Sarva+Vishwavidyalaya+Kadi+Campus&t=&z=15&ie=UTF8&iwloc=&output=embed"
         }
@@ -166,12 +168,12 @@ export const organizationData = {
         title: "IEEE Student Branch\nKadi Sarva Vishwavidyalaya",
         subtitle: "Empowering Students through Innovation and Leadership",
         image: "https://ieee-ksv-sb.mmpsrpc.in/Pasted-Graphic.svg",
-        heroImage: ksvCampus,
+        heroImage: ieeeBackground,
         website: "https://ieee-ksv-sb.mmpsrpc.in/",
         sections: {
             intro: [
                 "The KSV IEEE Student Branch, established under the esteemed guidance of Kadi Sarva Vishwavidyalaya (KSV), has emerged as a premier hub for technological innovation, professional growth, and cutting-edge research. Serving a diverse community of students across more than 25 colleges under the KSV umbrella, the branch was founded to cultivate a vibrant culture of research, creativity, and interdisciplinary collaboration. Since its inception, it has evolved into an essential pillar of the university’s mission, driving excellence in engineering and technology education. By bridging the gap between academic theory and industry practice, the KSV IEEE Student Branch empowers the next generation of engineers to become global innovators and leaders in an ever-evolving digital landscape.",
-                "Guided by the core global principle of 'Advancing Technology for Humanity,' the KSV IEEE Student Branch aligns seamlessly with the university's ethos of delivering purposeful, need-based education. By offering contemporary courses and hands-on technical opportunities, the branch bridges the gap between traditional learning and the demands of an ever-changing technological landscape. This synergy ensures that students are not only academically proficient but also equipped with the innovative mindset required to solve real-world challenges. As a vital extension of KSV’s mission, the IEEE Student Branch remains committed to empowering future professionals who are ready to lead and contribute to the global advancement of technology."
+                "Guided by the core global principle of 'Advancing Technology for Humanity,'the KSV IEEE Student Branch aligns seamlessly with the university's ethos of delivering purposeful, need-based education. By offering contemporary courses and hands-on technical opportunities, the branch bridges the gap between traditional learning and the demands of an ever-changing technological landscape. This synergy ensures that students are not only academically proficient but also equipped with the innovative mindset required to solve real-world challenges. As a vital extension of KSV’s mission, the IEEE Student Branch remains committed to empowering future professionals who are ready to lead and contribute to the global advancement of technology."
             ],
             mission: [
                 "The Institute of Electrical and Electronics Engineers (IEEE) is dedicated to advancing technology for the benefit of humanity, serving as a global catalyst for innovation and excellence in engineering and applied sciences. The organization’s vision is to foster a world where technology acts as a primary driver for societal progress, promoting sustainable development and significantly enhancing the quality of life for people worldwide. By upholding the highest standards of academic and professional rigor, IEEE inspires a global community of thinkers and doers to collaborate on solutions that address the world’s most pressing challenges, ensuring that technical advancement always aligns with the greater good of society.",
@@ -209,6 +211,13 @@ export const organizationData = {
             { title: "Research & Development", description: "Initiate projects that enhance technological advancements through dedicated research and development." },
             { title: "Networking & Connectivity", description: "Enable collaboration and knowledge exchange within the technical community." }
         ],
+        features: [
+            "Humanitarian Technology",
+            "Professional Networking",
+            "Skill Development",
+            "Research Publications",
+            "Global Collaboration"
+        ],
         advantages: [
             { title: "Global Network", description: "Connect with a diverse community of over 400,000 members spanning 160 countries." },
             { title: "Knowledge Exchange", description: "Access a wealth of cutting-edge research, publications, and conferences." },
@@ -239,10 +248,11 @@ export const organizationData = {
             { name: "Banshari Patel", role: "Treasurer", group: "IEEE KSV WIE", image: "/students/Patel Banshari Rahulkumar.jpg" },
             { name: "Mahi Parmar", role: "Webmaster", group: "IEEE KSV WIE", image: "/students/Parmar Mahi Nitinchandra.jpeg" }
         ],
+        // execomPhoto: ieeeExecomPhoto,
         contact: {
             address: "LDRP-ITR Campus, Kadi Sarva Vishwavidyalaya, Sector-15, KH-5, Gandhinagar-382015, Gujarat, India",
             email: "ieeeksv@ksv.ac.in",
-            phone: "+91 9408801690",
+            // phone: "+91 9408801690",
             linkedin: "https://www.linkedin.com/company/ieee-student-branch-ksv/posts/?feedView=all",
             mapEmbed: "https://maps.google.com/maps?q=LDRP+Institute+of+Technology+and+Research+Gandhinagar&t=&z=15&ie=UTF8&iwloc=&output=embed"
         }
