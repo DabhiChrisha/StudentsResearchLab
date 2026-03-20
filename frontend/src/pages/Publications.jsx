@@ -1,15 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-<<<<<<< HEAD
-import { BookOpen, Calendar, ExternalLink, Download, Search, Users, ShieldCheck, FileText, Bookmark, PlusCircle, X } from "lucide-react";
-import { supabase } from "../lib/supabaseClient";
-
-/* ================= DATA ================= */
-// Dynamic publications data from Supabase
-const categories = ["All", "Conference", "Journal", "Book Chapter", "Patents"];
-
-=======
 import { BookOpen, Calendar, ExternalLink, Download, Search, Users, ShieldCheck, FileText, Bookmark, PlusCircle, X, FileDown } from "lucide-react";
 import * as XLSX from 'xlsx';
 
@@ -442,31 +433,12 @@ const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, b
 };
 
 /* ================= MAIN ================= */
->>>>>>> 85d09a203dca2ddbdcffc3c02348b94f66cf38c8
 const Publications = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedYear, setSelectedYear] = useState(null);
   const [showYearPicker, setShowYearPicker] = useState(false);
   const yearButtonRef = useRef(null);
-  const [publicationsData, setPublicationsData] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Fetch publications from Supabase
-  useEffect(() => {
-    const fetchPublications = async () => {
-      setLoading(true);
-      const { data, error } = await supabase.from("publications").select("*");
-      if (error) {
-        console.error("Error fetching publications:", error);
-        setPublicationsData([]);
-      } else {
-        setPublicationsData(Array.isArray(data) ? data : []);
-      }
-      setLoading(false);
-    };
-    fetchPublications();
-  }, []);
 
   // Extract all unique years from data (2020 to current year)
   const allYears = Array.from({ length: new Date().getFullYear() - 2019 }, (_, i) => 2020 + i).reverse();
@@ -774,11 +746,6 @@ const Publications = () => {
         {/* Publications Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           <AnimatePresence mode="popLayout">
-<<<<<<< HEAD
-            {filteredPublications.length > 0 && !loading ? (
-              filteredPublications.map((pub, index) => (
-                <PublicationCard key={pub.id || index} pub={pub} index={index} />
-=======
             {loading ? (
               [...Array(6)].map((_, index) => (
                 <div key={index} className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col h-[350px] animate-pulse">
@@ -812,7 +779,6 @@ const Publications = () => {
             ) : filteredPublications.length > 0 ? (
               filteredPublications.map((pub, index) => (
                 <PublicationCard key={pub.id} pub={pub} index={index} exportToExcel={exportToExcel} />
->>>>>>> 85d09a203dca2ddbdcffc3c02348b94f66cf38c8
               ))
             ) : loading ? null : (
               <motion.div
