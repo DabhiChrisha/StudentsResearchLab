@@ -59,34 +59,33 @@ const Footer = () => {
                                     Home
                                 </Link>
 
-                                <a href="#about" className="hover:underline">
-                                    About
-                                </a>
-
                                 <Link to="/sessions" onClick={scrollToTop} className="hover:underline">
-                                    Research
+                                    SRL Sessions
                                 </Link>
 
                                 <Link to="/achievements" onClick={scrollToTop} className="hover:underline">
+                                    Achievements
+                                </Link>
+
+                                <Link to="/activities" onClick={scrollToTop} className="hover:underline">
                                     Activities
+                                </Link>
+
+                                <Link to="/publications" onClick={scrollToTop} className="hover:underline">
+                                    Publications
                                 </Link>
 
                                 <Link to="/researchers" onClick={scrollToTop} className="hover:underline">
                                     Researchers
                                 </Link>
 
-                                {/* <a href="#join" className="hover:underline">
-                                    Join Us
-                                </a> */}
+                                <Link to="/leaderboard" onClick={scrollToTop} className="hover:underline">
+                                    Leaderboard
+                                </Link>
 
-                                <a
-                                    href="https://appointment.mmpsrpc.in/student"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="hover:underline"
-                                >
-                                    Appointment
-                                </a>
+                                <Link to="/about" onClick={scrollToTop} className="hover:underline">
+                                    About Us
+                                </Link>
 
                                 <Link to="/appointment" onClick={scrollToTop} className="hover:underline">
                                     Contact Us
