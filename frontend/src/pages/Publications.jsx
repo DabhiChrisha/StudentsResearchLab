@@ -263,12 +263,6 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
                   </div>
                 )}
 
-                {pub.ipo && (
-                  <div className="mb-1.5 flex items-center gap-2">
-                    <span className="text-xs sm:text-sm text-slate-600 font-semibold">IPO:</span>
-                    <img src={pub.ipo.logo} alt={pub.ipo.name} className="h-8 sm:h-10 object-contain" />
-                  </div>
-                )}
 
                 <div className="text-xs sm:text-sm font-bold text-white bg-teal-600 px-2 py-0.5 rounded leading-snug">
                   <span>Inventors: {pub.authors.join(", ")}</span>
@@ -283,11 +277,8 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
                 </h3>
 
                 {/* Authors section */}
-                <div className="mb-1.5 flex items-center gap-2 flex-wrap">
-                  <span className="text-xs sm:text-sm font-bold text-slate-800">Authors:</span>
-                  <span className="text-[10px] sm:text-xs font-semibold text-slate-700 bg-amber-50 px-2 py-0.5 rounded-full">
-                    {pub.authors.join(", ")}
-                  </span>
+                <div className="mb-1.5 text-xs sm:text-sm font-bold text-white bg-teal-600 px-2 py-0.5 rounded leading-snug">
+                  <span>Authors: {pub.authors.join(", ")}</span>
                 </div>
 
                 {/* Description */}
@@ -315,15 +306,24 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
             <div className="mt-auto pt-1.5 sm:pt-2 border-t border-slate-200 flex flex-col gap-1.5">
               {/* Action Button - Paper only */}
               <div className="flex justify-between items-center">
-                <a
-                  href={pub.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-700 hover:text-teal-600 transition-colors"
-                >
-                  <FileText size={13} />
-                  Paper
-                </a>
+                {pub.category !== "Patents" ? (
+                  <a
+                    href={pub.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-700 hover:text-teal-600 transition-colors"
+                  >
+                    <FileText size={13} />
+                    Paper
+                  </a>
+                ) : (
+                  pub.ipo && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs sm:text-sm font-semibold text-slate-600">IPO:</span>
+                      <img src={pub.ipo.logo} alt={pub.ipo.name} className="h-6 object-contain" />
+                    </div>
+                  )
+                )}
               </div>
 
               {/* Publisher Section - unchanged */}
