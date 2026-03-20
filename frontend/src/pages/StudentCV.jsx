@@ -1,56 +1,22 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Mail, ArrowLeft, Linkedin, Github, GraduationCap, Loader2, User, BookOpen, ExternalLink } from "lucide-react";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://studentsresearchlab-1.onrender.com';
+import { useSupabaseQuery, fetchWithTimeout } from '../hooks/useSupabaseQuery';
+import { API_BASE_URL as API_BASE } from '../config/apiConfig';
 
 export default function StudentCV() {
     const { studentId } = useParams();
-    const [cvData, setCvData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [notFound, setNotFound] = useState(false);
 
-    // Fetch CV data from backend with retry
-    useEffect(() => {
-        let retryCount = 0;
-        let isActive = true;
-
-        const fetchCV = async () => {
-            try {
-                const res = await fetch(`${API_BASE}/api/cv/${studentId}`);
-                if (!res.ok) throw new Error("Backend not ready");
-
-                const json = await res.json();
-                
-                if (json.cv === null) {
-                    if (isActive) {
-                        setNotFound(true);
-                        setLoading(false);
-                    }
-                    return;
-                }
-
-                if (isActive) {
-                    setCvData(json.cv);
-                    setLoading(false);
-                }
-            } catch (err) {
-                console.warn("CV fetch failed, retrying...", err);
-                retryCount++;
-                if (retryCount >= 5) {
-                    if (isActive) {
-                        setNotFound(true);
-                        setLoading(false);
-                    }
-                } else if (isActive) {
-                    setTimeout(fetchCV, 3000);
-                }
-            }
-        };
-
-        fetchCV();
-        return () => { isActive = false; };
+    const { data: cvData, loading, error } = useSupabaseQuery(async () => {
+        const json = await fetchWithTimeout(`${API_BASE}/api/cv/${studentId}`);
+        if (json.cv === null) {
+            setNotFound(true);
+            return null;
+        }
+        return json.cv;
     }, [studentId]);
+
+    const [notFound, setNotFound] = useState(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -143,6 +109,21 @@ export default function StudentCV() {
             <div className="min-h-screen bg-[#e3eef0] flex flex-col items-center justify-center font-sans gap-4">
                 <Loader2 className="w-8 h-8 animate-spin text-secondary" />
                 <p className="text-slate-500 text-sm font-semibold animate-pulse">Loading CV profile...</p>
+            </div>
+        );
+    }
+
+    // Error state
+    if (error && !notFound) {
+        return (
+            <div className="min-h-screen bg-[#e3eef0] flex flex-col items-center justify-center font-sans">
+                <p className="text-red-500 font-bold mb-4">Unable to load data. Please try again.</p>
+                <button 
+                    onClick={() => window.location.reload()} 
+                    className="px-6 py-2 bg-secondary text-white rounded-full font-bold shadow-md transform hover:scale-105 transition-all"
+                >
+                    Try Again
+                </button>
             </div>
         );
     }

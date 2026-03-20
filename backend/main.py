@@ -17,6 +17,7 @@ from routes.publications_routes import router as publications_router
 from routes.cv_routes import router as cv_router
 from routes.papers_routes import router as papers_router
 from routes.metrics_routes import router as metrics_router
+from routes.batch_stats_routes import router as batch_stats_router
 
 app = FastAPI()
 
@@ -41,6 +42,7 @@ app.include_router(publications_router)
 app.include_router(cv_router)
 app.include_router(papers_router)
 app.include_router(metrics_router)
+app.include_router(batch_stats_router)
 
 
 @app.get("/")

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { API_BASE_URL } from '../config/apiConfig';
 
 export default function AddPublication() {
   const navigate = useNavigate();
@@ -32,8 +33,7 @@ export default function AddPublication() {
     setLoading(true);
 
     try {
-      const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
-      const res = await fetch(`${backendUrl}/api/submit-publication`, {
+      const res = await fetch(`${API_BASE_URL}/api/submit-publication`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)

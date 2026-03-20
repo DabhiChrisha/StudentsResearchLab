@@ -1,6 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Medal, Star, Target, Zap, Clock, TrendingUp, Users, Award, BookOpen, Crown, Search, Calendar, Timer } from "lucide-react";
 import React, { useState, useEffect } from 'react';
+import { useSupabaseQuery, fetchWithTimeout } from '../hooks/useSupabaseQuery';
+import { API_BASE_URL as API_BASE } from '../config/apiConfig';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -24,7 +26,6 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://studentsresearchlab-1.onrender.com';
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 // Pass-through parser for newly formatted backend objects
@@ -95,79 +96,35 @@ const LeaderBoard = () => {
     const [monthlyStudents, setMonthlyStudents] = useState([]);
     const [top5ByHours, setTop5ByHours] = useState([]);
     const [monthLabel, setMonthLabel] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [loadingMessage, setLoadingMessage] = useState("");
     const [activeTab, setActiveTab] = useState('overall'); // 'overall', 'monthly', 'hours'
 
-    useEffect(() => {
-        let retryCount = 0;
-        let isActive = true;
+    const { loading, error } = useSupabaseQuery(async () => {
+        const [overallJson, monthlyJson, hoursJson] = await Promise.all([
+            fetchWithTimeout(`${API_BASE}/api/leaderboard`),
+            fetchWithTimeout(`${API_BASE}/api/leaderboard/monthly`),
+            fetchWithTimeout(`${API_BASE}/api/leaderboard/top-hours`),
+        ]);
 
-        const fetchLeaderboard = async () => {
-            try {
-                if (retryCount > 0 && isActive) {
-                    setLoadingMessage("Waking up server...");
-                }
+        const parsedOverall = overallJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin');
+        setAllStudents(parsedOverall);
 
-                const [overallRes, monthlyRes, hoursRes] = await Promise.all([
-                    fetch(`${API_BASE}/api/leaderboard`),
-                    fetch(`${API_BASE}/api/leaderboard/monthly`),
-                    fetch(`${API_BASE}/api/leaderboard/top-hours`),
-                ]);
+        if (monthlyJson && monthlyJson.leaderboard) {
+            const parsedMonthly = monthlyJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin');
+            setMonthlyStudents(parsedMonthly);
+            setMonthLabel((monthlyJson.monthName || MONTH_NAMES[(monthlyJson.month || 1) - 1]) + ' ' + monthlyJson.year);
+        } else {
+            setMonthlyStudents(parsedOverall);
+            setMonthLabel(MONTH_NAMES[new Date().getMonth()] + ' ' + new Date().getFullYear());
+        }
 
-                if (!overallRes.ok) throw new Error("Backend not ready or failed to fetch");
+        if (hoursJson && hoursJson.leaderboard) {
+            setTop5ByHours(hoursJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin'));
+        } else {
+            setTop5ByHours([]);
+        }
 
-                const { leaderboard: overallData } = await overallRes.json();
-                const parsedOverall = overallData.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin');
-                if (isActive) setAllStudents(parsedOverall);
-
-                if (monthlyRes.ok) {
-                    const monthlyJson = await monthlyRes.json();
-                    const parsedMonthly = monthlyJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin');
-                    if (isActive) {
-                        setMonthlyStudents(parsedMonthly);
-                        setMonthLabel((monthlyJson.monthName || MONTH_NAMES[(monthlyJson.month || 1) - 1]) + ' ' + monthlyJson.year);
-                    }
-                } else if (isActive) {
-                    // Fallback: use overall data for monthly
-                    setMonthlyStudents(parsedOverall);
-                    setMonthLabel(MONTH_NAMES[new Date().getMonth()] + ' ' + new Date().getFullYear());
-                }
-
-                if (hoursRes.ok) {
-                    const hoursJson = await hoursRes.json();
-                    if (isActive) setTop5ByHours(hoursJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin'));
-                } else if (isActive) {
-                    setTop5ByHours([]);
-                }
-
-                if (isActive) {
-                    setLoading(false);
-                    setLoadingMessage("");
-                }
-            } catch (error) {
-                console.warn("Backend unavailable, retrying...", error);
-                retryCount++;
-                
-                if (retryCount >= 5) {
-                    if (isActive) {
-                        setLoadingMessage("Taking longer than expected... Reloading");
-                        setTimeout(() => {
-                            if (isActive) window.location.reload();
-                        }, 2000);
-                    }
-                } else {
-                    if (isActive) {
-                        setTimeout(fetchLeaderboard, 3000); // Retry every 3 seconds
-                    }
-                }
-            }
-        };
-
-        fetchLeaderboard();
-
-        return () => { isActive = false; };
-    }, []);
+        return parsedOverall; // Data returned from hook (though we use local states for complex data)
+    });
 
     // Determine current leaderboard array
     let currentLeaderboard = allStudents;
@@ -397,20 +354,18 @@ const LeaderBoard = () => {
             <div className="max-w-[1100px] mx-auto relative z-10">
                 {loading ? (
                     <div className="animate-pulse w-full">
-                        {/* Waking Up Message */}
-                        <AnimatePresence>
-                            {loadingMessage && (
-                                <motion.div 
-                                    initial={{ opacity: 0, y: -10 }} 
-                                    animate={{ opacity: 1, y: 0 }} 
-                                    exit={{ opacity: 0, y: -10 }}
-                                    className="text-center mb-6 text-amber-600 font-semibold text-sm flex items-center justify-center gap-2"
+                        {/* Error State */}
+                        {error && (
+                            <div className="text-center py-10">
+                                <p className="text-red-500 font-bold text-lg mb-4">Unable to load data. Please try again.</p>
+                                <button 
+                                    onClick={() => window.location.reload()} 
+                                    className="px-6 py-2 bg-amber-500 text-white rounded-full font-bold shadow-md hover:bg-amber-600 transition-all"
                                 >
-                                    <div className="w-4 h-4 border-2 border-amber-600 border-t-transparent rounded-full animate-spin" />
-                                    {loadingMessage}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                                    Try Again
+                                </button>
+                            </div>
+                        )}
 
                         {/* Header Skeleton */}
                         <div className="flex flex-col items-center justify-center mb-4 md:mb-6 gap-4">

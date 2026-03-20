@@ -1,36 +1,17 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { supabase } from '../lib/supabaseClient';
+import { useSupabaseQuery, fetchWithTimeout } from '../hooks/useSupabaseQuery';
+import { API_BASE_URL } from '../config/apiConfig';
 import { ExternalLink, X } from 'lucide-react';
 
-
-
 const Activities = () => {
-    const [activities, setActivities] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [modal, setModal] = useState(null); // activity object or null
     const sectionRef = useRef(null);
 
-    useEffect(() => {
-        const fetchActivities = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
-                const res = await fetch(`${backendUrl}/api/activities`);
-                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-                const json = await res.json();
-                setActivities(json.data || []);
-            } catch (err) {
-                console.error("Activities fetch error:", err);
-                setError('Failed to load activities.');
-                setActivities([]);
-            }
-            setLoading(false);
-        };
-        fetchActivities();
-    }, []);
+    const { data: activities = [], loading, error } = useSupabaseQuery(async () => {
+        const json = await fetchWithTimeout(`${API_BASE_URL}/api/activities`);
+        return json.data || [];
+    });
 
     return (
         <div
@@ -82,9 +63,9 @@ const Activities = () => {
                     </div>
                 )}
                 {/* Error */}
-                {error && <div className="text-center text-red-500 py-20 text-lg">{error}</div>}
+                {error && <div className="text-center text-red-500 py-20 text-lg">Unable to load data. Please try again.</div>}
                 {/* No Data */}
-                {!loading && !error && activities.length === 0 && <div className="text-center text-gray-400 py-20 text-lg">No activities found.</div>}
+                {!loading && !error && activities.length === 0 && <div className="text-center text-gray-400 py-20 text-lg">No data available 📭</div>}
 
                 {/* Activities Grid */}
                 {!loading && !error && activities.length > 0 && (

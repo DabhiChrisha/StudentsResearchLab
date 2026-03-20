@@ -2,9 +2,10 @@ import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Linkedin, X, FileText, Eye, Star } from "lucide-react";
 import studentsData from "../data/srlStudents.json";
-import { supabase } from "../lib/supabaseClient";
 import ChromaGrid from "../components/react-bits/ChromaGrid";
 import GradientText from "../components/GradientText";
+import { useSupabaseQuery, fetchWithTimeout } from '../hooks/useSupabaseQuery';
+import { API_BASE_URL } from '../config/apiConfig';
 
 
 // --- Main Researchers Component ---
@@ -12,42 +13,45 @@ export default function Researchers() {
     const [activeStudent, setActiveStudent] = useState(null);
     const [batchMap, setBatchMap] = useState({});
     const [isLoading, setIsLoading] = useState(true);
-    const [paperTitles, setPaperTitles] = useState([]);
     const [papersLoading, setPapersLoading] = useState(false);
-    const [metrics, setMetrics] = useState(null);
-    const [metricsLoading, setMetricsLoading] = useState(false);
+    const [modalDataLoading, setModalDataLoading] = useState(false);
+    const [cardStats, setCardStats] = useState({ stats_by_name: {}, hackathons_by_enrollment: {} });
     const retryRef = useRef(null);
 
-    // Fetch batch data from Supabase students_details table
-    useEffect(() => {
-        const fetchBatches = async () => {
-            try {
-                const { data, error } = await supabase
-                    .from("students_details")
-                    .select("enrollment_no, batch");
-                if (error) {
-                    console.error("Error fetching batch data:", error);
-                    return;
-                }
-                const map = {};
-                (data || []).forEach((row) => {
-                    if (row.enrollment_no && row.batch) {
-                        map[row.enrollment_no.trim().toUpperCase()] = row.batch;
-                    }
-                });
-                setBatchMap(map);
-            } catch (err) {
-                console.error("Failed to fetch batch data:", err);
+    const { data: bMap = {} } = useSupabaseQuery(async () => {
+        const json = await fetchWithTimeout(`${API_BASE_URL}/api/leaderboard`); // Re-using leaderboard for batch/enrollment mapping
+        const map = {};
+        (json.leaderboard || []).forEach((row) => {
+            if (row.enrollment_no && row.batch) {
+                map[row.enrollment_no.trim().toUpperCase()] = row.batch;
             }
-        };
-        fetchBatches();
-    }, []);
+        });
+        return map;
+    });
+
+    useEffect(() => {
+        setBatchMap(bMap || {});
+    }, [bMap]);
 
     // Minimal artificial loading to show the skeleton transition smoothly 
     // without blocking on the heavy Supabase network call above.
     useEffect(() => {
         const timer = setTimeout(() => setIsLoading(false), 500);
         return () => clearTimeout(timer);
+    }, []);
+
+    // Fetch batch stats for all members (cards show real Supabase data)
+    useEffect(() => {
+        let cancelled = false;
+        (async () => {
+            try {
+                const data = await fetchWithTimeout(`${API_BASE_URL}/api/batch-member-stats`);
+                if (!cancelled) setCardStats(data || { stats_by_name: {}, hackathons_by_enrollment: {} });
+            } catch (e) {
+                console.error('Failed to fetch batch member stats:', e);
+            }
+        })();
+        return () => { cancelled = true; };
     }, []);
 
     // Sort students: semester ascending (1→8), then first name alphabetical (A→Z)
@@ -87,7 +91,9 @@ export default function Researchers() {
     const chromaItems = useMemo(() => {
         return members.map((s) => {
             const enrollKey = (s.enrollment_no || "").trim().toUpperCase();
-            const batch = batchMap[enrollKey] || s.batch || null;
+            const batch = (batchMap || {})[enrollKey] || s.batch || null;
+            const nameStats = cardStats.stats_by_name[s.student_name] || {};
+            const hackCount = cardStats.hackathons_by_enrollment[enrollKey];
             return {
                 id: s.enrollment_no || s.student_name.toLowerCase().replace(/\s+/g, "-"),
                 enrollment: s.enrollment_no,
@@ -100,14 +106,17 @@ export default function Researchers() {
                 reflection: s.reflection || "",
                 email: s.email || "",
                 linkedin: s.linkedin || "",
+                researchWorksCount: nameStats.research_works_count ?? "--",
+                hackathonsCount: hackCount ?? "--",
+                papersPublishedCount: nameStats.papers_published_count ?? "--",
                 gradient: "linear-gradient(160deg,#fbe8c1,#167d8d)",
             };
         });
-    }, [members, batchMap]);
+    }, [members, batchMap, cardStats]);
 
     const openModalFor = (s) => {
         const enrollKey = (s.enrollment_no || s.enrollment || "").trim().toUpperCase();
-        const batch = batchMap[enrollKey] || s.batch || null;
+        const batch = (batchMap || {})[enrollKey] || s.batch || null;
         const student = {
             ...s,
             title: s.student_name || s.title,
@@ -119,48 +128,73 @@ export default function Researchers() {
     };
     const closeModal = () => {
         setActiveStudent(null);
-        setPaperTitles([]);
         setPapersLoading(false);
-        setMetrics(null);
-        setMetricsLoading(false);
+        setModalDataLoading(false);
         if (retryRef.current) {
             clearTimeout(retryRef.current);
             retryRef.current = null;
         }
     };
 
-    // Fetch papers + metrics when modal opens
+    // Derive active student's metrics from the single source of truth (cardStats)
+    const activeMetrics = useMemo(() => {
+        if (!activeStudent) return null;
+        const name = (activeStudent.title || activeStudent.student_name || "").trim();
+        const enrollKey = (activeStudent.enrollment || "").trim().toUpperCase();
+        const nameStats = cardStats.stats_by_name[name] || {};
+        const hackCount = cardStats.hackathons_by_enrollment[enrollKey];
+        return {
+            research_works_count: nameStats.research_works_count,
+            hackathons_count: hackCount,
+            papers_published_count: nameStats.papers_published_count,
+            research_areas: nameStats.research_areas || [],
+            hackathons: nameStats.hackathons_list || [],
+            papers: nameStats.papers || [],
+        };
+    }, [activeStudent, cardStats]);
+
+    // Fetch papers + metrics when modal opens — writes back into cardStats
     useEffect(() => {
         if (!activeStudent) return;
 
         const enrollmentNo = activeStudent.enrollment || "";
-        if (!enrollmentNo.trim()) {
-            setPaperTitles([]);
-            setMetrics(null);
-            return;
-        }
+        if (!enrollmentNo.trim()) return;
 
         let cancelled = false;
         let attempt = 0;
         const maxRetries = 3;
         const retryDelay = 3000;
-        const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
         const encodedEnroll = encodeURIComponent(enrollmentNo.trim().toUpperCase());
-        const encodedName = encodeURIComponent((activeStudent.title || activeStudent.student_name || "").trim());
+        const studentName = (activeStudent.title || activeStudent.student_name || "").trim();
+        const encodedName = encodeURIComponent(studentName);
+        const enrollKey = enrollmentNo.trim().toUpperCase();
 
         const fetchUnifiedData = async () => {
             setPapersLoading(true);
-            setMetricsLoading(true);
+            setModalDataLoading(true);
             try {
-                const res = await fetch(`${backendUrl}/api/papers/${encodedName}`);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
+                const data = await fetchWithTimeout(`${API_BASE_URL}/api/papers/${encodedName}?enrollment_no=${encodedEnroll}`);
 
-                if (!cancelled) {
-                    setPaperTitles(data?.papers || []);
-                    setMetrics(data || null); // The unified response IS the metrics object
+                if (!cancelled && data) {
+                    // Write fetched data back into the single source of truth
+                    setCardStats(prev => ({
+                        stats_by_name: {
+                            ...prev.stats_by_name,
+                            [studentName]: {
+                                research_works_count: data.research_works_count ?? 0,
+                                papers_published_count: data.papers_published_count ?? 0,
+                                research_areas: data.research_areas || [],
+                                hackathons_list: data.hackathons || [],
+                                papers: data.papers || [],
+                            },
+                        },
+                        hackathons_by_enrollment: {
+                            ...prev.hackathons_by_enrollment,
+                            [enrollKey]: data.hackathons_count ?? 0,
+                        },
+                    }));
                     setPapersLoading(false);
-                    setMetricsLoading(false);
+                    setModalDataLoading(false);
                 }
             } catch (err) {
                 console.error(`Failed to fetch modal data (attempt ${attempt + 1}):`, err);
@@ -168,10 +202,8 @@ export default function Researchers() {
                 if (!cancelled && attempt < maxRetries) {
                     retryRef.current = setTimeout(fetchUnifiedData, retryDelay);
                 } else if (!cancelled) {
-                    setPaperTitles([]);
-                    setMetrics(null);
                     setPapersLoading(false);
-                    setMetricsLoading(false);
+                    setModalDataLoading(false);
                 }
             }
         };
@@ -257,7 +289,7 @@ export default function Researchers() {
                             ) : (
                                 researchAssistants.map((ra) => {
                                     const enrollKey = (ra.enrollment_no || "").trim().toUpperCase();
-                                const batch = batchMap[enrollKey] || ra.batch || null;
+                                const batch = (batchMap || {})[enrollKey] || ra.batch || null;
                                 
                                 return (
                                 <motion.article
@@ -423,17 +455,17 @@ export default function Researchers() {
                                         <h4 className="text-base font-black uppercase tracking-widest text-slate-500">
                                             Research Areas
                                         </h4>
-                                        <span className="text-xs font-bold text-secondary">{metricsLoading ? "…" : (metrics?.research_areas || []).length} areas</span>
+                                        <span className="text-xs font-bold text-secondary">{modalDataLoading ? "…" : (activeMetrics?.research_areas || []).length} areas</span>
                                     </div>
 
                                     <div className="mt-5 flex flex-wrap gap-2">
-                                        {metricsLoading ? (
+                                        {modalDataLoading ? (
                                             <div className="flex gap-2 animate-pulse">
                                                 <div className="h-6 w-24 bg-gray-200 rounded-full"></div>
                                                 <div className="h-6 w-20 bg-gray-200 rounded-full"></div>
                                             </div>
-                                        ) : (metrics?.research_areas || []).length > 0 ? (
-                                            (metrics.research_areas).map((area, idx) => (
+                                        ) : (activeMetrics?.research_areas || []).length > 0 ? (
+                                            (activeMetrics.research_areas).map((area, idx) => (
                                                 <span key={idx} className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-600">
                                                     {area}
                                                 </span>
@@ -455,15 +487,15 @@ export default function Researchers() {
                                         <div className="grid grid-cols-3 gap-4">
                                             <div className="flex flex-col items-center gap-1">
                                                 <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap">Research Works</span>
-                                                <span className="text-lg font-black text-slate-900">{metricsLoading ? "…" : (metrics?.research_works_count ?? 0)}</span>
+                                                <span className="text-lg font-black text-slate-900">{modalDataLoading ? "…" : (activeMetrics?.research_works_count ?? "--")}</span>
                                             </div>
                                             <div className="flex flex-col items-center gap-1">
                                                 <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap">Hackathons</span>
-                                                <span className="text-lg font-black text-slate-900">{metricsLoading ? "…" : (metrics?.hackathons_count ?? 0)}</span>
+                                                <span className="text-lg font-black text-slate-900">{modalDataLoading ? "…" : (activeMetrics?.hackathons_count ?? "--")}</span>
                                             </div>
                                             <div className="flex flex-col items-center gap-1">
                                                 <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap">Papers Published</span>
-                                                <span className="text-lg font-black text-slate-900">{papersLoading ? "…" : (metrics?.papers_published_count ?? 0)}</span>
+                                                <span className="text-lg font-black text-slate-900">{modalDataLoading ? "…" : (activeMetrics?.papers_published_count ?? "--")}</span>
                                             </div>
                                         </div>
                                     </motion.div>
@@ -477,14 +509,14 @@ export default function Researchers() {
                                         <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
                                             Hackathons
                                         </p>
-                                        {metricsLoading ? (
+                                        {modalDataLoading ? (
                                             <div className="space-y-2 animate-pulse">
                                                 <div className="h-4 bg-gray-200 rounded w-3/4"></div>
                                                 <div className="h-4 bg-gray-200 rounded w-1/2"></div>
                                             </div>
-                                        ) : (metrics?.hackathons || []).length > 0 ? (
+                                        ) : (activeMetrics?.hackathons || []).length > 0 ? (
                                             <ul className="list-disc list-inside space-y-2 text-sm text-slate-700">
-                                                {(metrics.hackathons).map((hack, idx) => (
+                                                {(activeMetrics.hackathons).map((hack, idx) => (
                                                     <li key={idx}>{hack}</li>
                                                 ))}
                                             </ul>
@@ -505,9 +537,9 @@ export default function Researchers() {
                                                 <div className="h-4 bg-gray-200 rounded w-3/4"></div>
                                                 <div className="h-4 bg-gray-200 rounded w-1/2"></div>
                                             </div>
-                                        ) : paperTitles.length > 0 ? (
+                                        ) : (activeMetrics?.papers || []).length > 0 ? (
                                             <ul className="space-y-3">
-                                                {paperTitles.map((title, idx) => (
+                                                {(activeMetrics.papers).map((title, idx) => (
                                                     <li key={idx} className="text-sm text-slate-700">
                                                         • {title}
                                                     </li>
@@ -522,14 +554,14 @@ export default function Researchers() {
                                         <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
                                             Hackathons
                                         </p>
-                                        {metricsLoading ? (
+                                        {modalDataLoading ? (
                                             <div className="space-y-2 animate-pulse">
                                                 <div className="h-4 bg-gray-200 rounded w-3/4"></div>
                                                 <div className="h-4 bg-gray-200 rounded w-1/2"></div>
                                             </div>
-                                        ) : (metrics?.hackathons || []).length > 0 ? (
+                                        ) : (activeMetrics?.hackathons || []).length > 0 ? (
                                             <ul className="space-y-2 text-sm text-slate-700">
-                                                {(metrics.hackathons).map((hack, idx) => (
+                                                {(activeMetrics.hackathons).map((hack, idx) => (
                                                     <li key={idx}>• {hack}</li>
                                                 ))}
                                             </ul>

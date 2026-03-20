@@ -1,9 +1,9 @@
-import React from 'react';
-import { useEffect, useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { motion } from "framer-motion";
 import Tree from './tree';
 import GradientText from './react-bits/GradientText';
-import { supabase } from '../lib/supabaseClient';
+import { useSupabaseQuery, fetchWithTimeout } from '../hooks/useSupabaseQuery';
+import { API_BASE_URL } from '../config/apiConfig';
 
 // Timeline icons mapping
 const timelineIcons = {
@@ -137,30 +137,11 @@ const TimelineSkeleton = () => {
 
 function Timeline() {
   const scrollContainerRef = useRef(null);
-  const [timelineSteps, setTimelineSteps] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchTimeline = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
-        const res = await fetch(`${backendUrl}/api/timeline`);
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        
-        const json = await res.json();
-        setTimelineSteps(json.data || []);
-      } catch (err) {
-        console.error("Timeline fetch error:", err);
-        setError(err.message);
-        setTimelineSteps([]);
-      }
-      setLoading(false);
-    };
-    fetchTimeline();
-  }, []);
+  const { data: timelineSteps = [], loading, error, retry } = useSupabaseQuery(async () => {
+    const json = await fetchWithTimeout(`${API_BASE_URL}/api/timeline`);
+    return json.data || [];
+  });
 
   return (
     <section id="timeline" className="py-24 px-4 md:px-8 bg-gradient-to-b from-white via-[#e8f5f1] to-white relative overflow-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -231,8 +212,18 @@ function Timeline() {
             <div className="w-full lg:w-[58%] h-auto relative bg-transparent z-10 flex flex-col justify-start">
               <div className="pt-8 lg:pt-32 pb-0 px-4">
                 {loading && <TimelineSkeleton />}
-                {error && <div className="text-center text-red-500 py-8">Error: {error}</div>}
-                {!loading && !error && timelineSteps.length === 0 && (<div className="text-center text-slate-500 py-8">No timeline data found.</div>)}
+                {error && (
+                  <div className="flex flex-col items-center justify-center py-12 gap-4">
+                    <p className="text-slate-500 text-sm">Unable to load timeline data.</p>
+                    <button
+                      onClick={retry}
+                      className="px-5 py-2 rounded-full bg-[#16B29D] text-white text-sm font-medium shadow-md hover:bg-[#139485] transition-colors cursor-pointer"
+                    >
+                      Try Again
+                    </button>
+                  </div>
+                )}
+                {!loading && !error && timelineSteps.length === 0 && (<div className="text-center text-slate-500 py-8">No data available 📭</div>)}
                 {!loading && !error && timelineSteps.map((item, index) => (
                   <TimelineItem key={item.id || index} item={item} index={index} scrollRoot={scrollContainerRef} isLast={index === timelineSteps.length - 1} />
                 ))}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { API_BASE_URL } from '../config/apiConfig';
 
 export default function JoinUs() {
   const navigate = useNavigate();
@@ -37,8 +38,7 @@ export default function JoinUs() {
     console.log('Form data being submitted:', formData);
 
     try {
-      const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
-      const res = await fetch(`${backendUrl}/api/join-us`, {
+      const res = await fetch(`${API_BASE_URL}/api/join-us`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
