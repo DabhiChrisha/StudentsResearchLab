@@ -13,9 +13,9 @@
   opacity: 1;
   border: 3px solid #00eaff;
   box-shadow:
-    0 0 24px 6px rgba(0,191,255,0.35),
-    0 0 40px 12px rgba(0,191,255,0.35),
-    0 0 60px 20px rgba(0,124,240,0.35);
+    0 0 24px 6px rgba(0, 191, 255, 0.35),
+    0 0 40px 12px rgba(0, 191, 255, 0.35),
+    0 0 60px 20px rgba(0, 124, 240, 0.35);
 }
 
 @layer base {
@@ -76,7 +76,7 @@
   .neon-gradient-border::before {
     content: '';
     position: absolute;
-      inset: -4px;
+    inset: -4px;
     z-index: -1;
     border-radius: 1.5rem;
     pointer-events: none;
@@ -90,9 +90,9 @@
     opacity: 1;
     background: none;
     box-shadow:
-      0 0 24px 6px rgba(0,191,255,0.35),
-      0 0 40px 12px rgba(0,191,255,0.35),
-      0 0 60px 20px rgba(0,124,240,0.35);
+      0 0 24px 6px rgba(0, 191, 255, 0.35),
+      0 0 40px 12px rgba(0, 191, 255, 0.35),
+      0 0 60px 20px rgba(0, 124, 240, 0.35);
 
     .neon-gradient-border:hover {
       transform: translateY(-8px) scale(1.02);
@@ -264,20 +264,26 @@ img {
 
 /* Animated Gradient Text */
 @keyframes gradient-move {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .animate-gradient-text {
-  background: linear-gradient(
-    to right,
-    #05877a,
-    #00c9b1,
-    #05877a,
-    #00887b,
-    #05877a
-  );
+  background: linear-gradient(to right,
+      #05877a,
+      #00c9b1,
+      #05877a,
+      #00887b,
+      #05877a);
   background-size: 200% auto;
   background-clip: text;
   -webkit-background-clip: text;
@@ -288,12 +294,16 @@ img {
 
 /* Background Float Animation */
 @keyframes float-slow {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translate(0, 0) rotate(0deg);
   }
+
   33% {
     transform: translate(2%, 3%) rotate(2deg);
   }
+
   66% {
     transform: translate(-2%, 2%) rotate(-1deg);
   }
@@ -304,9 +314,12 @@ img {
 }
 
 @keyframes float-slower {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
   }
+
   50% {
     transform: translate(-3%, -5%) scale(1.02);
   }
