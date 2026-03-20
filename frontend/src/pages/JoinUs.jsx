@@ -37,13 +37,21 @@ export default function JoinUs() {
     console.log('Form data being submitted:', formData);
 
     try {
-      const { data, error } = await supabase.from("join_us").insert([formData]);
-
-      if (error) {
-        console.error('Supabase error:', error);
-        throw error;
+      const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+      const res = await fetch(`${backendUrl}/api/join-us`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        const errMessage = errorData.detail?.message || errorData.detail || "Database error";
+        throw new Error(typeof errMessage === 'string' ? errMessage : JSON.stringify(errMessage));
       }
 
+      const json = await res.json();
+      const data = json.data;
       console.log('Success! Data inserted:', data);
       
       setFormData({
@@ -97,7 +105,7 @@ export default function JoinUs() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 pt-[168px] lg:pt-[184px] pb-12">
+    <div className="max-w-4xl mx-auto px-4 pt-16 lg:pt-20 pb-12">
       <div className="bg-white rounded-2xl shadow-lg p-5 sm:p-8 md:p-12 relative">
         {/* Close Button */}
         <button

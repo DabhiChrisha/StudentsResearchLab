@@ -42,29 +42,34 @@ const objectives = [
     {
         title: "Industry Readiness",
         description: "Equipping students for transition into high-impact roles."
+    },
+    {
+        title: "Research Ecosystem",
+        description: "Building a dynamic environment where ideas, resources, and opportunities seamlessly connect to empower student growth."
     }
 ];
 
 const positions = [
-    { top: 30, left: "12%" },    // 360° Development
-    { top: 15, left: "45%" },    // Collaborative Learning
-    { top: 40, left: "78%" },    // Hands-on Experience
+    { top: 25, left: "15%" },    // 360° Development
+    { top: 10, left: "45%" },    // Collaborative Learning
+    { top: 35, left: "75%" },    // Hands-on Experience
 
-    { top: 175, left: "28%" },   // Interdisciplinary Research
-    { top: 150, left: "60%" },   // Bridging Theory & Practice
-    { top: 195, left: "84%" },   // Guided Mentorship
+    { top: 155, left: "30%" },   // Interdisciplinary Research
+    { top: 140, left: "60%" },   // Bridging Theory & Practice
+    { top: 170, left: "90%" }, // Guided Mentorship
 
-    { top: 335, left: "15%" },   // Applied Innovation
-    { top: 305, left: "52%" },   // Professional Excellence
-    { top: 345, left: "78%" },   // Global Recognition
+    { top: 290, left: "18%" },   // Applied Innovation
+    { top: 270, left: "48%" },   // Professional Excellence
+    { top: 300, left: "76%" },   // Global Recognition
 
-    { top: 465, left: "40%" }    // Industry Readiness
+    { top: 430, left: "35%" },    // Industry Readiness
+    { top: 430, left: "62%" }     // Thriving Research Ecosystem (NEW)
 ];
 
 const colors = [
     "#7dd3fc", "#8660bf", "#a5b4fc", "#7ab0c2",
     "#f9a8d4", "#ca2881", "#e8f136", "#1ce867",
-    "#fcd34d", "#5f8ea2"
+    "#fcd34d", "#5f8ea2", "#94a3b8"
 ];
 
 const Objectives = () => {
@@ -90,8 +95,8 @@ const Objectives = () => {
 
     /* Mobile positions - zigzag layout */
     const mobilePositions = objectives.map((_, i) => {
-        const gap = 90;
-        const top = 150 + i * gap;
+        const gap = 84;
+        const top = 145 + i * gap;
         const left = i % 2 === 0 ? 10 : window.innerWidth / 1.45 - 90;
         return { top, left };
     });
@@ -212,7 +217,7 @@ const Objectives = () => {
 
 
 
-                <div ref={containerRef} className={`relative ${isMobile ? "h-[1100px]" : "h-[620px]"}`}>
+                <div ref={containerRef} className={`relative ${isMobile ? "h-[1050px]" : "h-[600px]"}`}>
 
                     {/* Animated Lines */}
 
@@ -304,7 +309,7 @@ inset 0 0 10px #10b98144
                                     ease: "easeOut"
                                 }}
 
-                                className={`absolute ${isMobile ? "w-[155px] h-[85px]" : "w-[185px] h-[105px] xl:w-[200px] xl:h-[115px] 2xl:w-[230px] 2xl:h-[130px]"} rounded-[80px] flex flex-col items-center justify-center text-center px-4 bg-[#0f766e] overflow-hidden group`}
+                                className={`absolute ${isMobile ? "w-[145px] h-[78px]" : "w-[172px] h-[96px] xl:w-[185px] xl:h-[105px] 2xl:w-[210px] 2xl:h-[118px]"} rounded-[80px] flex flex-col items-center justify-center text-center px-4 bg-[#0f766e] overflow-hidden group`}
 
                                 style={{
                                     top: pos.top,
@@ -314,7 +319,7 @@ inset 0 0 10px #10b98144
 0 0 18px #61c8a5ff,
 0 0 30px #f1f7f555
 `,
-                                    padding: isMobile ? "10px" : undefined
+                                    padding: isMobile ? "8px" : undefined
                                 }}
                             >
 
@@ -332,11 +337,11 @@ inset 0 0 10px #10b98144
                                     }}
                                 />
 
-                                <h3 className={`${isMobile ? "text-[10px]" : "text-[13px] 2xl:text-base"} font-bold text-white font-serif leading-tight break-words max-w-full`}>
+                                <h3 className={`${isMobile ? "text-[9.5px]" : "text-[12px] 2xl:text-[15px]"} font-bold text-white font-serif leading-tight break-words max-w-full`}>
                                     {obj.title}
                                 </h3>
 
-                                <p className={`${isMobile ? "text-[9px]" : "text-[11px] 2xl:text-xs"} text-white/85 leading-snug mt-1`}>
+                                <p className={`${isMobile ? "text-[8.5px]" : "text-[10px] 2xl:text-[11px]"} text-white/85 leading-snug mt-1`}>
                                     {obj.description}
                                 </p>
 

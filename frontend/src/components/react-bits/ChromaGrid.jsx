@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import SpotlightCard from '../SpotlightCard';
 
-const ChromaGrid = ({ items, onImageClick }) => {
+const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
     const [loadedImages, setLoadedImages] = useState({});
     const [failedImages, setFailedImages] = useState({});
 
     useEffect(() => {
         // Log all image paths for debugging
-        items.forEach((item, index) => {
-            console.log(`[${index}] ${item.title}: ${item.image}`);
-        });
-    }, [items]);
+        if (!isLoading) {
+            items.forEach((item, index) => {
+                console.log(`[${index}] ${item.title}: ${item.image}`);
+            });
+        }
+    }, [items, isLoading]);
 
     const handleImageLoad = (index) => {
         setLoadedImages(prev => ({ ...prev, [index]: true }));
@@ -20,6 +22,44 @@ const ChromaGrid = ({ items, onImageClick }) => {
         console.error(`Failed to load image for ${item.title}:`, item.image);
         setFailedImages(prev => ({ ...prev, [index]: true }));
     };
+
+    if (isLoading) {
+        return (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                {[...Array(10)].map((_, index) => (
+                    <div
+                        key={index}
+                        className="group relative flex flex-col overflow-hidden rounded-[2rem] bg-gray-200/50 animate-pulse border border-gray-100"
+                    >
+                        {/* Top: Image Box Skeleton */}
+                        <div className="p-3">
+                            <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-gray-300"></div>
+                        </div>
+
+                        {/* Bottom: Info Section Skeleton */}
+                        <div className="px-4 pb-5 pt-2 flex flex-col gap-2">
+                            {/* Title Skeleton */}
+                            <div className="h-6 bg-gray-300 rounded-md w-3/4"></div>
+                            {/* Subtitle/Semester Skeleton */}
+                            <div className="h-4 bg-gray-300 rounded-md w-1/2 mb-2"></div>
+
+                            {/* Icons and Metrics Skeleton */}
+                            <div className="mt-4 flex items-center justify-between gap-4 border-t border-gray-300/40 pt-4">
+                                <div className="flex gap-3">
+                                    <div className="w-6 h-6 bg-gray-300 rounded-lg"></div>
+                                    <div className="w-6 h-6 bg-gray-300 rounded-lg"></div>
+                                </div>
+                                <div className="flex gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-gray-300 outline outline-2 outline-gray-200/50 outline-offset-[2px]"></div>
+                                    <div className="w-8 h-8 rounded-full bg-gray-300 outline outline-2 outline-gray-200/50 outline-offset-[2px]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
+    }
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">

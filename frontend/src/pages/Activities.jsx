@@ -16,33 +16,17 @@ const Activities = () => {
         const fetchActivities = async () => {
             setLoading(true);
             setError(null);
-            const { data, error } = await supabase.from('activities').select('*');
-            if (error) {
+            try {
+                const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+                const res = await fetch(`${backendUrl}/api/activities`);
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                const json = await res.json();
+                setActivities(json.data || []);
+            } catch (err) {
+                console.error("Activities fetch error:", err);
                 setError('Failed to load activities.');
                 setActivities([]);
-                setLoading(false);
-                return;
             }
-            // Generate signed URLs for private bucket images
-            const activitiesWithUrls = await Promise.all(
-                (data || []).map(async (act) => {
-                    if (act.Photo) {
-                        // Extract bucket and path from the Photo field if needed
-                        // Assuming Photo is the path inside the bucket, e.g. 'folder/image.jpg'
-                        // Use the correct bucket name 'Activity_images'
-                        const { data: signedUrlData, error: urlError } = await supabase
-                            .storage
-                            .from('Activity_images')
-                            .createSignedUrl(act.Photo, 60 * 60); // 1 hour expiry
-                        return {
-                            ...act,
-                            signedPhotoUrl: signedUrlData?.signedUrl || '',
-                        };
-                    }
-                    return act;
-                })
-            );
-            setActivities(activitiesWithUrls);
             setLoading(false);
         };
         fetchActivities();
@@ -51,7 +35,7 @@ const Activities = () => {
     return (
         <div
             ref={sectionRef}
-            className="relative pt-[112px] lg:pt-[128px] pb-20 px-6 min-h-screen bg-[#F2EFE8] overflow-hidden"
+            className="relative pt-8 lg:pt-12 pb-20 px-6 min-h-screen bg-[#F2EFE8] overflow-hidden"
         >
             {/* Unique Mesh Gradient Background - Minimal Dark Teal & Enhanced Beige */}
             <div className="absolute inset-0 z-0">
@@ -85,15 +69,13 @@ const Activities = () => {
 
                 {/* Loading Skeleton */}
                 {loading && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
-                        {[...Array(8)].map((_, i) => (
-                            <div key={i} className="bg-white/60 rounded-2xl shadow-sm flex flex-col overflow-hidden min-h-[270px] md:min-h-[290px] animate-pulse border border-gray-100">
-                                <div className="w-full bg-gray-200/60 aspect-[4/3]"></div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-8 items-stretch">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className="bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden min-h-[270px] md:min-h-[290px] animate-pulse border border-gray-100">
+                                <div className="w-full bg-gray-200 aspect-[4/3]"></div>
                                 <div className="flex flex-col flex-1 p-5 pt-4">
-                                    <div className="h-5 bg-gray-200/60 rounded-md w-3/4 mx-auto mb-3"></div>
-                                    <div className="h-3 bg-gray-200/60 rounded-md w-1/3 mx-auto mb-4"></div>
-                                    <div className="h-3 bg-gray-200/60 rounded-md w-full mb-2"></div>
-                                    <div className="h-3 bg-gray-200/60 rounded-md w-5/6 mx-auto"></div>
+                                    <div className="h-6 md:h-7 bg-gray-200 rounded-md w-3/4 mx-auto mb-3"></div>
+                                    <div className="h-4 bg-gray-200 rounded-md w-1/3 mx-auto mb-2"></div>
                                 </div>
                             </div>
                         ))}
@@ -121,7 +103,7 @@ const Activities = () => {
                                     onClick={() => setModal(act)}
                                 >
                                     {/* Always show the image at the top */}
-                                    <div className="w-full bg-gray-100 overflow-hidden flex items-center justify-center aspect-[4/3]">
+                                    <div className="w-full bg-gray-100 overflow-hidden rounded-2xl flex items-center justify-center aspect-[4/3]">
                                         {(() => {
                                             // Prefer signedPhotoUrl, fallback to public URL if not present
                                             let url = act.signedPhotoUrl;
@@ -154,7 +136,7 @@ const Activities = () => {
                                                         <img
                                                             src={url}
                                                             alt={act.title + ' (debug: ' + url + ')'}
-                                                            className="object-contain w-full h-full mx-auto my-auto"
+                                                            className="object-contain w-full h-full mx-auto my-auto rounded-2xl"
                                                             style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }}
                                                         />
                                                     );
@@ -197,12 +179,12 @@ const Activities = () => {
                                 initial={{ scale: 0.95, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale: 0.95, opacity: 0 }}
-                                className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full mx-4 flex flex-col md:flex-row gap-6 relative border-2 border-sky-100 neon-gradient-border"
+                                className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full mx-4 flex flex-col md:flex-row gap-6 relative border-2 border-sky-100 modal-neon-border"
                                 style={{ minHeight: 400, maxHeight: 500 }}
                             >
                                 {/* Image */}
                                 {(modal?.signedPhotoUrl || modal?.Photo) && (
-                                    <div className="md:w-1/2 w-full bg-gray-100 flex items-center justify-center">
+                                    <div className="md:w-1/2 w-full bg-gray-100 flex items-center justify-center rounded-3xl overflow-hidden">
                                         {(() => {
                                             let url = modal.signedPhotoUrl;
                                             if (!url && modal.Photo) {
@@ -230,11 +212,11 @@ const Activities = () => {
                                                 );
                                             } else if (url && url.match(/\.(jpg|jpeg|png|gif|bmp|svg|webp)(\?.*)?$/i)) {
                                                 return (
-                                                    <img src={url} alt={modal.title + ' (debug: ' + url + ')'} className="object-contain w-full h-full max-h-[340px] mx-auto my-auto" style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }} />
+                                                    <img src={url} alt={modal.title + ' (debug: ' + url + ')'} className="object-contain w-full h-full max-h-[340px] mx-auto my-auto rounded-3xl" style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }} />
                                                 );
                                             } else if (url) {
                                                 return (
-                                                    <img src={url} alt={modal.title + ' (debug: ' + url + ')'} className="object-contain w-full h-full max-h-[340px] mx-auto my-auto" style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }} />
+                                                    <img src={url} alt={modal.title + ' (debug: ' + url + ')'} className="object-contain w-full h-full max-h-[340px] mx-auto my-auto rounded-3xl" style={{ maxHeight: '100%', maxWidth: '100%', display: 'block' }} />
                                                 );
                                             }
                                             return null;

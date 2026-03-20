@@ -32,12 +32,15 @@ export default function AddPublication() {
     setLoading(true);
 
     try {
-      // Assuming a table 'publications_submissions' exists in Supabase.
-      const { error } = await supabase.from("publications_submissions").insert([formData]);
-
-      if (error && !error.message.includes('publications_submissions')) {
-        console.error('Supabase error:', error);
-        throw error;
+      const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+      const res = await fetch(`${backendUrl}/api/submit-publication`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.detail || "Database error");
       }
 
       alert("✅ Publication Details Submitted Successfully! They will be displayed after verification.");
@@ -57,7 +60,7 @@ export default function AddPublication() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 pt-[168px] lg:pt-[184px] pb-12">
+    <div className="max-w-4xl mx-auto px-4 pt-16 lg:pt-20 pb-12">
       <div className="bg-white rounded-2xl shadow-lg p-5 sm:p-8 md:p-12 relative">
         <button
           onClick={handleCancel}

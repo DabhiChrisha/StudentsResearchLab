@@ -1,3 +1,18 @@
+  .modal-neon-border::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    z-index: -1;
+    border-radius: 1.5rem;
+    pointer-events: none;
+    background: none;
+    opacity: 1;
+    border: 3px solid #00eaff;
+    box-shadow:
+      0 0 24px 6px rgba(0,191,255,0.35),
+      0 0 40px 12px rgba(0,191,255,0.35),
+      0 0 60px 20px rgba(0,124,240,0.35);
+  }
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 @tailwind base;
@@ -79,9 +94,7 @@
       0 0 24px 6px rgba(0,191,255,0.35),
       0 0 40px 12px rgba(0,191,255,0.35),
       0 0 60px 20px rgba(0,124,240,0.35);
-  }
 
-  @media (min-width: 1024px) {
     .neon-gradient-border:hover {
       transform: translateY(-8px) scale(1.02);
     }

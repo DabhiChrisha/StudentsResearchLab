@@ -39,3 +39,21 @@ Thumbs.db
 frontend/Researchers_c7.jsx
 frontend/Researchers_db.jsx
 frontend/StudentsResearchLab/
+
+# Docker build configs
+Dockerfile
+*Dockerfile*
+docker-compose.yml
+docker-compose.*.yml
+.dockerignore
+
+# Python execution caches
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+backend/venv/
+.pytest_cache/
+.coverage
+
+# Node.js
+**/npm-debug.log*
