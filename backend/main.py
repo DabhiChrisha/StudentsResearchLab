@@ -5,8 +5,8 @@ from datetime import datetime
 import httpx
 
 # Import shared config (also triggers DNS patch and env loading)
-from config import origins, SUPABASE_URL, HEADERS, is_cloud_deployment
-
+from config import ALLOWED_ORIGINS, SUPABASE_URL, HEADERS, is_cloud_deployment
+import os
 # Import all route modules
 from routes.attendance_routes import router as attendance_router
 from routes.sessions_routes import router as sessions_router
@@ -26,10 +26,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization", "Accept"],
+    allow_headers=["*"],
 )
 
 @app.exception_handler(Exception)
@@ -76,8 +76,10 @@ async def health_check():
 
     return {
         "status": "✅ ok" if supabase_status == "connected" else "❌ error",
+        "allowed_origins": ALLOWED_ORIGINS,
+        "frontend_url_env": os.environ.get("FRONTEND_URL", "NOT SET"),
+        "render_env": os.environ.get("RENDER", "NOT SET"),
         "backend_url": "https://studentsresearchlab-1.onrender.com",
-        "frontend_url": "https://students-research-lab-srl.vercel.app",
         "supabase": "✅ connected" if supabase_status == "connected" else supabase_status,
         "environment": "production" if is_cloud_deployment else "development",
         "timestamp": datetime.now().isoformat()

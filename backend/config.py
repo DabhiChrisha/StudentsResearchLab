@@ -13,14 +13,18 @@ if not SUPABASE_URL or not SUPABASE_KEY:
     raise RuntimeError("CRITICAL ERROR: Supabase credentials not found. Make sure to set SUPABASE_URL and SUPABASE_KEY in environment variables.")
 
 # Allow both production and local development origins
-origins = [
-    FRONTEND_URL,
+ALLOWED_ORIGINS = [
+    os.getenv("FRONTEND_URL", "http://localhost:5173"),
+    "https://students-research-lab-srl.vercel.app",  # HARDCODED VERCEL URL
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:3000",
     "http://127.0.0.1:3000"
-    # Wildcard * removed for production security
 ]
+
+# Remove duplicates
+ALLOWED_ORIGINS = list(filter(None, set(ALLOWED_ORIGINS)))
+
 
 # DNS patch for Supabase (bypasses local DNS blocks)
 # We disable this on cloud deployments (like Render) since they have normal DNS and forcing the IP breaks SNI
