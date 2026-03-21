@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from 'react';
+import { useState, lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
@@ -28,6 +28,21 @@ import PageTransitionWrapper from './components/PageTransitionWrapper';
 
 function App() {
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Wake up Render backend immediately on app load
+    fetch(`https://studentsresearchlab-1.onrender.com/api/health`)
+      .then(() => console.log('✅ Backend is awake'))
+      .catch(() => console.log('⚠️ Backend is waking up, please wait...'));
+
+    // Keep it awake every 14 minutes
+    const keepAlive = setInterval(() => {
+      fetch(`https://studentsresearchlab-1.onrender.com/api/health`)
+        .catch(() => {});
+    }, 14 * 60 * 1000);
+
+    return () => clearInterval(keepAlive);
+  }, []);
 
   return (
     <Router>

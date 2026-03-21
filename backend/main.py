@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime
 import httpx
 
 # Import shared config (also triggers DNS patch and env loading)
@@ -72,7 +73,10 @@ async def health_check():
         supabase_status = f"disconnected: {str(e)}"
 
     return {
-        "status": "ok",
+        "status": "✅ ok" if supabase_status == "connected" else "❌ error",
+        "backend_url": "https://studentsresearchlab-1.onrender.com",
+        "frontend_url": "https://students-research-lab-srl.vercel.app",
+        "supabase": "✅ connected" if supabase_status == "connected" else supabase_status,
         "environment": "production" if is_cloud_deployment else "development",
-        "supabase": supabase_status
+        "timestamp": datetime.now().isoformat()
     }
