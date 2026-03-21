@@ -131,11 +131,11 @@ export default function JoinUs() {
           <ul className="space-y-2 text-gray-700">
             <li className="flex items-start gap-3">
               <span className="text-[#05877a] font-bold mt-1">•</span>
-              <span><strong>Filling this form does not confirm that you are an SRL member.</strong></span>
+              <span><strong>Submitting this form shows your interest in joining SRL.</strong></span>
             </li>
             <li className="flex items-start gap-3">
               <span className="text-[#05877a] font-bold mt-1">•</span>
-              <span><strong>This form only shows that you are interested in joining SRL.</strong> Your application will be reviewed by Dr. Himani Trivedi ma'am, Head, Students Research Lab, MMPSRPC, KSV.</span>
+              <span><strong>This form only shows that you are interested in joining SRL.</strong> Your application will be reviewed by Dr. Himani Trivedi, Head Students Research Lab, MMPSRPC, KSV.</span>
             </li>
           </ul>
         </div>
@@ -236,12 +236,16 @@ export default function JoinUs() {
           </div>
 
           {/* College - Row 4 */}
-          <FormInput 
-            label="College Name" 
-            name="college" 
-            value={formData.college} 
+          <FormSelect
+            label="College Name"
+            name="college"
+            value={formData.college}
             onChange={handleChange}
-            placeholder="Enter your college name"
+            options={[
+              { value: "", label: "Select College" },
+              { value: "L.D.R.P. Institute of Technology and Research", label: "L.D.R.P. Institute of Technology and Research" },
+              { value: "Vidush Somany Institute of Technology and Research", label: "Vidush Somany Institute of Technology and Research" },
+            ]}
             required
           />
 
@@ -255,7 +259,7 @@ export default function JoinUs() {
               placeholder="Enter your contact number"
               required
             />
-            <FormInput 
+			<FormInput 
               label="Email ID" 
               name="email" 
               type="email"
@@ -265,34 +269,6 @@ export default function JoinUs() {
               required
             />
           </div>
-
-          {/* Source Dropdown */}
-          <FormSelect 
-            label="Where did you come to know from?" 
-            name="source" 
-            value={formData.source} 
-            onChange={handleChange}
-            options={[
-              { value: "", label: "Select" },
-              { value: "Friend", label: "Friend" },
-              { value: "Faculty", label: "Faculty" },
-              { value: "Social Media", label: "Social Media" },
-              { value: "Website", label: "Website" },
-              { value: "Others", label: "Others" },
-            ]}
-            required
-          />
-
-          {/* Conditional Field */}
-          {(formData.source === "Friend" || formData.source === "Faculty" || formData.source === "Others") && (
-            <FormInput
-              label="Name of the Person"
-              name="reference_name"
-              value={formData.reference_name}
-              onChange={handleChange}
-              placeholder="Enter name"
-            />
-          )}
 
           {/* Buttons - Row 6 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
