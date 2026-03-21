@@ -83,6 +83,7 @@ function AppContent({ loading, setLoading }) {
                     <Route path="/organization/:orgId" element={<PageTransitionWrapper><OrganizationDetails /></PageTransitionWrapper>} />
                     <Route path="/cv/:studentId" element={<PageTransitionWrapper><StudentCV /></PageTransitionWrapper>} />
                     <Route path="/add-publication" element={<PageTransitionWrapper><AddPublication /></PageTransitionWrapper>} />
+                    <Route path="*" element={<PageTransitionWrapper><Home /></PageTransitionWrapper>} />
                   </Routes>
                 </AnimatePresence>
               </Suspense>

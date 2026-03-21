@@ -4,6 +4,10 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/',
+  server: {
+    historyApiFallback: true,
+  },
   plugins: [react()],
   resolve: {
     alias: {
