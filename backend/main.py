@@ -1,8 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+import httpx
 
 # Import shared config (also triggers DNS patch and env loading)
-from config import origins
+from config import origins, SUPABASE_URL, HEADERS, is_cloud_deployment
 
 # Import all route modules
 from routes.attendance_routes import router as attendance_router
@@ -25,9 +27,19 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "Accept"],
 )
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": "Internal Server Error",
+            "detail": f"An unexpected error occurred: {str(exc)}"
+        }
+    )
 
 # Register all routers
 app.include_router(attendance_router)
@@ -48,3 +60,19 @@ app.include_router(batch_stats_router)
 @app.get("/")
 def read_root():
     return {"status": "StudentsResearchLab backend running"}
+
+@app.get("/api/health")
+async def health_check():
+    supabase_status = "connected"
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            res = await client.get(f"{SUPABASE_URL}/rest/v1/", headers=HEADERS)
+            res.raise_for_status()
+    except Exception as e:
+        supabase_status = f"disconnected: {str(e)}"
+
+    return {
+        "status": "ok",
+        "environment": "production" if is_cloud_deployment else "development",
+        "supabase": supabase_status
+    }

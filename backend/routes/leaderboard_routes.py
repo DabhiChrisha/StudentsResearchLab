@@ -7,6 +7,12 @@ from config import SUPABASE_URL, HEADERS
 
 router = APIRouter(prefix="/api")
 
+# ── Names to exclude from ALL leaderboard endpoints only ──
+LEADERBOARD_EXCLUDED_NAMES = {
+    "kandarp dipakkumar gajjar",
+    "nancy rajesh patel",
+}
+
 MONTH_NAMES = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
@@ -152,6 +158,12 @@ async def build_all_time_stats(client):
             "_raw_hours": total_hours,
         }
         
+    # Filter out excluded RAs (leaderboard-only exclusion)
+    stats_map = {
+        en: data for en, data in stats_map.items()
+        if data.get("name", "").strip().lower() not in LEADERBOARD_EXCLUDED_NAMES
+    }
+
     return stats_map
 
 @router.get("/attendance_debug")

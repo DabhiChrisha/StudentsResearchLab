@@ -9,14 +9,17 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 FRONTEND_URL = os.getenv("FRONTEND_URL", "https://students-research-lab-srl.vercel.app")
 
+if not SUPABASE_URL or not SUPABASE_KEY:
+    raise RuntimeError("CRITICAL ERROR: Supabase credentials not found. Make sure to set SUPABASE_URL and SUPABASE_KEY in environment variables.")
+
 # Allow both production and local development origins
 origins = [
     FRONTEND_URL,
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "*" # Catch-all for CORS if the deployed frontend URL is different
+    "http://127.0.0.1:3000"
+    # Wildcard * removed for production security
 ]
 
 # DNS patch for Supabase (bypasses local DNS blocks)
@@ -35,9 +38,6 @@ if SUPABASE_URL and not is_cloud_deployment:
         print(f"Applied DNS patch for {supabase_host} to bypass local DNS blocks")
     except Exception as e:
         print(f"Failed to apply DNS patch: {e}")
-
-if not SUPABASE_URL or not SUPABASE_KEY:
-    print("WARNING: Supabase credentials not found. Make sure to set SUPABASE_URL and SUPABASE_KEY in .env")
 
 # Headers for PostgREST API
 HEADERS = {
