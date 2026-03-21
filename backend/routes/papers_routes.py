@@ -11,7 +11,7 @@ def parse_array_field(val):
     if not val or val == "-":
         return []
     if isinstance(val, list):
-        return [v for v in val if v and v != "-"]
+        return [v for v in val if v is not None and str(v) != "-"]
     if isinstance(val, str):
         trimmed = val.strip()
         if trimmed in ("[]", "", "-"):
@@ -19,7 +19,7 @@ def parse_array_field(val):
         try:
             parsed = json.loads(trimmed)
             if isinstance(parsed, list):
-                return [v for v in parsed if v and v != "-"]
+                return [v for v in parsed if v is not None and str(v) != "-"]
         except (json.JSONDecodeError, ValueError):
             pass
         return [s.strip() for s in trimmed.split(",") if s.strip() and s.strip() != "-"]
@@ -41,13 +41,17 @@ async def get_member_papers(student_name: str, enrollment_no: str = Query("")):
         research_areas = []
         hackathons = []
         hackathons_count = 0
+        patents = []
+        projects = []
 
         async with httpx.AsyncClient(timeout=15.0) as client:
             # 1) Fetch published papers via paper_authors → research_papers
             res = await client.get(
-                f"{SUPABASE_URL}/rest/v1/paper_authors"
-                f"?author_name=eq.{student_name}"
-                f"&select=research_papers(id,title)",
+                f"{SUPABASE_URL}/rest/v1/paper_authors",
+                params={
+                    "author_name": f"eq.{student_name}",
+                    "select": "research_papers(id,title)"
+                },
                 headers=HEADERS,
             )
             res.raise_for_status()
@@ -57,9 +61,11 @@ async def get_member_papers(student_name: str, enrollment_no: str = Query("")):
             if enrollment_no.strip():
                 lookup = enrollment_no.strip().upper()
                 profile_res = await client.get(
-                    f"{SUPABASE_URL}/rest/v1/member_cv_profiles"
-                    f"?enrollment_no=eq.{lookup}"
-                    f"&select=research_area,hackathons,research_papers,patents,projects",
+                    f"{SUPABASE_URL}/rest/v1/member_cv_profiles",
+                    params={
+                        "enrollment_no": f"eq.{lookup}",
+                        "select": "research_area,hackathons,research_papers,patents,projects"
+                    },
                     headers=HEADERS,
                 )
                 profile_res.raise_for_status()
@@ -79,6 +85,14 @@ async def get_member_papers(student_name: str, enrollment_no: str = Query("")):
                     hackathons = parse_array_field(profile.get("hackathons"))
                     hackathons_count = len(hackathons)
 
+                    # Also Parse patents and projects to sum into research_works_count
+                    patents = parse_array_field(profile.get("patents"))
+                    projects = parse_array_field(profile.get("projects"))
+                    # If research_papers column in profile is a number/list, count it too
+                    profile_papers = parse_array_field(profile.get("research_papers"))
+                    
+                    # We add these to the core paper_authors count later
+
         # Extract unique, non-null papers
         seen_ids = set()
         papers = []
@@ -91,13 +105,17 @@ async def get_member_papers(student_name: str, enrollment_no: str = Query("")):
                     seen_ids.add(pid)
                     papers.append(title.strip())
 
-        paper_count = len(papers)
+        papers_published_count = len(papers)
+        
+        # Aggregate count: papers from authors join + patents + projects (if profile exists)
+        # Note: we avoid double counting if papers are in both, but typically they are distinct metrics
+        total_research_works = papers_published_count + len(patents) + len(projects)
 
         return {
             "research_areas": research_areas,
-            "research_works_count": paper_count,
+            "research_works_count": total_research_works,
             "hackathons_count": hackathons_count,
-            "papers_published_count": paper_count,
+            "papers_published_count": papers_published_count,
             "hackathons": hackathons,
             "papers": papers
         }
