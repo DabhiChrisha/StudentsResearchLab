@@ -103,13 +103,29 @@ const PublicationCard = ({ pub, index }) => {
 
   // Premium green theme gradients
   const backgrounds = [
+    { bg: "from-teal-500 to-emerald-400", border: "border-teal-500" },
+    { bg: "from-emerald-500 to-teal-400", border: "border-emerald-500" },
+    { bg: "from-teal-600 to-emerald-500", border: "border-teal-600" }
+  ];
+  
+  const theme = backgrounds[index % backgrounds.length];
+  const bgClass = theme.bg;
+  const borderColor = theme.border;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="flex h-full"
+    >
       {/* OUTER CARD WITH THICK BORDER */}
-      <div className={`h-full relative rounded-2xl sm:rounded-3xl overflow-visible bg-white shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col border-5 sm:border-6 md:border-8 ${borderColor}`}>
+      <div className={`h-full relative rounded-2xl sm:rounded-3xl overflow-visible bg-white shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col border-5 sm:border-6 md:border-8 w-full ${borderColor}`}>
 
         {/* TOP GRADIENT SECTION WITH BACKGROUND IMAGE - CLICKABLE */}
         <a 
           href={pub.link}
           target="_blank"
+          rel="noopener noreferrer"
           className={`relative bg-gradient-to-br ${bgClass} p-4 sm:p-5 md:p-6 flex-none min-h-32 sm:min-h-40 md:min-h-44 flex flex-col justify-between rounded-t-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity duration-300`}
           style={{
             backgroundImage: linkedinImage ? `url(${linkedinImage})` : undefined,
@@ -154,90 +170,11 @@ const PublicationCard = ({ pub, index }) => {
               {pub.title}
             </h3>
 
-            <p className="text-[10px] sm:text-xs text-slate-600 mb-2 line-clamp-2 leading-snug">
-              {pub.description}
-            </p>
-
-<<<<<<< HEAD
-                {pub.supportedBy && (
-                  <div className="mb-1.5 flex flex-col gap-1.5">
-                    <div className="text-xs sm:text-sm text-slate-600 font-semibold">Supported by:</div>
-                    <div className="flex items-center gap-2">
-                      {pub.supportedBy.map((sup, idx) => (
-                        <img key={idx} src={sup.logo} alt={sup.name} className="h-8 sm:h-10 object-contain" />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-
-                <div className="text-xs sm:text-sm font-bold text-white bg-teal-600 px-2 py-0.5 rounded leading-snug">
-                  <span>Inventors: {pub.authors.join(", ")}</span>
-                </div>
-              </>
-            ) : (
-              <>
-                {/* Regular Publication Card Layout - MATCHING IMAGE DESIGN */}
-                {/* Title */}
-                <h3 className="text-sm sm:text-base md:text-base font-bold font-serif text-slate-900 mb-1.5 line-clamp-2 leading-tight">
-                  {pub.title}
-                </h3>
-
-                {/* Authors section */}
-                <div className="mb-1.5 text-xs sm:text-sm font-bold text-white bg-teal-600 px-2 py-0.5 rounded leading-snug">
-                  <span>Authors: {pub.authors.join(", ")}</span>
-                </div>
-
-                {/* Description */}
-                <p className="text-xs sm:text-sm text-slate-700 mb-1.5 line-clamp-2 leading-relaxed">
-                  {pub.description}
-                </p>
-
-                {/* Published in - italicized */}
-                <div className="mb-1.5 text-xs sm:text-sm text-slate-600 leading-snug italic font-normal">
-                  Published in: {pub.venue}
-                </div>
-
-                {/* Tags */}
-                <div className="mb-1.5 flex flex-wrap gap-1">
-                  {pub.tags.map((tag, i) => (
-                    <span key={i} className="text-[9px] sm:text-[10px] font-bold text-slate-700 bg-amber-50 px-1.5 py-0.5 rounded">
-                      {tag.toUpperCase()}
-                    </span>
-                  ))}
-                </div>
-              </>
-            )}
-
-            {/* Footer with Action Buttons and Publisher */}
-            <div className="mt-auto pt-1.5 sm:pt-2 border-t border-slate-200 flex flex-col gap-1.5">
-              {/* Action Button - Paper only */}
-              <div className="flex justify-between items-center">
-                {pub.category !== "Patents" ? (
-                  <a
-                    href={pub.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-700 hover:text-teal-600 transition-colors"
-                  >
-                    <FileText size={13} />
-                    Paper
-                  </a>
-                ) : (
-                  pub.ipo && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs sm:text-sm font-semibold text-slate-600">IPO:</span>
-                      <img src={pub.ipo.logo} alt={pub.ipo.name} className="h-6 object-contain" />
-                    </div>
-                  )
-                )}
-=======
             {/* Authors with icon */}
             <div className="mb-2 flex items-start gap-1.5">
               <FileText size={12} className="text-slate-400 shrink-0 mt-0.5" />
               <div className="text-[9px] sm:text-[10px] font-medium text-slate-700 leading-snug">
                 {pub.authors.join(", ")}
->>>>>>> c57a157 (Fix: JoinUs and Publications pages - errors resolved, improved responsiveness, updated form fields)
               </div>
             </div>
 
@@ -249,11 +186,15 @@ const PublicationCard = ({ pub, index }) => {
               </div>
             </div>
 
+            <p className="text-[10px] sm:text-xs text-slate-600 mb-2 line-clamp-2 leading-snug">
+              {pub.description}
+            </p>
+
             {/* All tags */}
             <div className="mb-3 flex flex-wrap gap-1">
               {pub.tags.map((tag, i) => (
-                <span key={i} className="text-[8px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
-                  #{tag}
+                <span key={i} className="text-[8px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-bold">
+                  #{tag.toUpperCase()}
                 </span>
               ))}
             </div>
@@ -364,6 +305,7 @@ const Publications = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedYear, setSelectedYear] = useState(null);
   const [showYearPicker, setShowYearPicker] = useState(false);
+  const [loading, setLoading] = useState(true);
   const yearButtonRef = useRef(null);
 
   // Extract all unique years from data (2020 to current year)
@@ -552,7 +494,7 @@ const Publications = () => {
                 title="Export to Excel"
                 className="shrink-0 h-[44px] px-3 sm:px-4 rounded-full font-bold text-sm transition-all duration-300 flex items-center gap-2 bg-white text-slate-600 border border-slate-200 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-600"
               >
-                <FileDown size={18} />
+                <Download size={18} />
                 <span className="hidden sm:inline">Export</span>
               </button>            </div>
           </div>
@@ -671,7 +613,6 @@ const Publications = () => {
         {/* Publications Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           <AnimatePresence mode="popLayout">
-<<<<<<< HEAD
             {loading ? (
               [...Array(6)].map((_, index) => (
                 <div key={index} className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col h-[350px] animate-pulse">
@@ -704,14 +645,9 @@ const Publications = () => {
               ))
             ) : filteredPublications.length > 0 ? (
               filteredPublications.map((pub, index) => (
-                <PublicationCard key={pub.id} pub={pub} index={index} exportToExcel={exportToExcel} />
-=======
-            {filteredPublications.length > 0 ? (
-              filteredPublications.map((pub, index) => (
                 <PublicationCard key={pub.id} pub={pub} index={index} />
->>>>>>> c57a157 (Fix: JoinUs and Publications pages - errors resolved, improved responsiveness, updated form fields)
               ))
-            ) : loading ? null : (
+            ) : (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
