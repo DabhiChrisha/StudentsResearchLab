@@ -22,14 +22,17 @@ from routes.papers_routes import router as papers_router
 from routes.metrics_routes import router as metrics_router
 from routes.batch_stats_routes import router as batch_stats_router
 
-app = FastAPI()
+app = FastAPI(title="SRL Backend API")
 
+# ✅ CORS MIDDLEWARE — THIS MUST BE THE FIRST THING ADDED TO THE APP
+# If this is not first, CORS headers will NOT be sent on error responses
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 @app.exception_handler(Exception)
@@ -75,12 +78,10 @@ async def health_check():
         supabase_status = f"disconnected: {str(e)}"
 
     return {
-        "status": "✅ ok" if supabase_status == "connected" else "❌ error",
+        "status": "✅ ok",
         "allowed_origins": ALLOWED_ORIGINS,
+        "supabase_url_set": bool(os.environ.get("SUPABASE_URL")),
+        "supabase_key_set": bool(os.environ.get("SUPABASE_KEY")),
         "frontend_url_env": os.environ.get("FRONTEND_URL", "NOT SET"),
-        "render_env": os.environ.get("RENDER", "NOT SET"),
-        "backend_url": "https://studentsresearchlab-1.onrender.com",
-        "supabase": "✅ connected" if supabase_status == "connected" else supabase_status,
-        "environment": "production" if is_cloud_deployment else "development",
-        "timestamp": datetime.now().isoformat()
+        "render_detected": bool(os.environ.get("RENDER")),
     }

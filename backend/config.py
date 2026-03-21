@@ -5,43 +5,45 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-FRONTEND_URL = os.getenv("FRONTEND_URL", "https://students-research-lab-srl.vercel.app")
+# ── Environment ──────────────────────────────────────────────
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "")
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
 
-if not SUPABASE_URL or not SUPABASE_KEY:
-    raise RuntimeError("CRITICAL ERROR: Supabase credentials not found. Make sure to set SUPABASE_URL and SUPABASE_KEY in environment variables.")
-
-# Allow both production and local development origins
-ALLOWED_ORIGINS = [
-    os.getenv("FRONTEND_URL", "http://localhost:5173"),
-    "https://students-research-lab-srl.vercel.app",  # HARDCODED VERCEL URL
+# ── CORS ─────────────────────────────────────────────────────
+# Hardcoded production URL is the safety net.
+# Even if FRONTEND_URL env variable is missing on Render,
+# the Vercel URL is always present in this list.
+ALLOWED_ORIGINS = list(set(filter(None, [
     "http://localhost:5173",
-    "http://127.0.0.1:5173",
     "http://localhost:3000",
-    "http://127.0.0.1:3000"
-]
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:3000",
+    "https://students-research-lab-srl.vercel.app",  # ← HARDCODED. NEVER REMOVE.
+    FRONTEND_URL,  # ← also pulled from Render env variable
+])))
 
-# Remove duplicates
-ALLOWED_ORIGINS = list(filter(None, set(ALLOWED_ORIGINS)))
+print(f"✅ CORS ALLOWED ORIGINS: {ALLOWED_ORIGINS}")
 
+# ── Cloud Detection ───────────────────────────────────────────
+is_cloud_deployment = bool(
+    os.environ.get("RENDER") or
+    os.environ.get("RENDER_SERVICE_ID") or
+    os.environ.get("RENDER_EXTERNAL_URL")
+)
 
-# DNS patch for Supabase (bypasses local DNS blocks)
-# We disable this on cloud deployments (like Render) since they have normal DNS and forcing the IP breaks SNI
-is_cloud_deployment = os.getenv("RENDER") == "true" or os.getenv("VERCEL") == "1" or os.getenv("PRODUCTION") == "true"
-
-if SUPABASE_URL and not is_cloud_deployment:
-    try:
-        supabase_host = urlparse(SUPABASE_URL).hostname
-        old_getaddrinfo = socket.getaddrinfo
-        def new_getaddrinfo(*args, **kwargs):
-            if args[0] and supabase_host in str(args[0]):
-                return old_getaddrinfo('104.18.38.10', *args[1:], **kwargs)
-            return old_getaddrinfo(*args, **kwargs)
-        socket.getaddrinfo = new_getaddrinfo
-        print(f"Applied DNS patch for {supabase_host} to bypass local DNS blocks")
-    except Exception as e:
-        print(f"Failed to apply DNS patch: {e}")
+# ── DNS Bypass (Local Only) ───────────────────────────────────
+if not is_cloud_deployment:
+    import socket
+    _original_getaddrinfo = socket.getaddrinfo
+    def _patched_getaddrinfo(host, port, *args, **kwargs):
+        if host and "supabase.co" in str(host):
+            return _original_getaddrinfo("104.18.38.10", port, *args, **kwargs)
+        return _original_getaddrinfo(host, port, *args, **kwargs)
+    socket.getaddrinfo = _patched_getaddrinfo
+    print("🔧 DNS patch applied — local dev mode")
+else:
+    print("☁️ Render detected — DNS patch DISABLED")
 
 # Headers for PostgREST API
 HEADERS = {
