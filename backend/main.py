@@ -1,12 +1,9 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from datetime import datetime
-import httpx
-
-# Import shared config (also triggers DNS patch and env loading)
-from config import ALLOWED_ORIGINS, SUPABASE_URL, HEADERS, is_cloud_deployment
 import os
+
+from config import ALLOWED_ORIGINS
 # Import all route modules
 from routes.attendance_routes import router as attendance_router
 from routes.sessions_routes import router as sessions_router
@@ -68,15 +65,7 @@ def read_root():
     return {"status": "StudentsResearchLab backend running"}
 
 @app.get("/api/health")
-async def health_check():
-    supabase_status = "connected"
-    try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
-            res = await client.get(f"{SUPABASE_URL}/rest/v1/", headers=HEADERS)
-            res.raise_for_status()
-    except Exception as e:
-        supabase_status = f"disconnected: {str(e)}"
-
+async def health():
     return {
         "status": "✅ ok",
         "allowed_origins": ALLOWED_ORIGINS,
