@@ -1,4 +1,6 @@
 
+
+import React, { useState, useEffect, useRef } from "react";
 import { BookOpen, Calendar, ExternalLink, Download, Search, Users, ShieldCheck, FileText, Bookmark, PlusCircle, X } from "lucide-react";
 import * as XLSX from 'xlsx';
 
@@ -20,7 +22,8 @@ const publicationsData = [
     title: "EfficientNetB3 Adapted Hybrid UNet with Attention Guided Decoding for Urban Scene Segmentation",
     authors: ["Ayushi Joddha", "Manasvi Shah", "Swayam Kalburgi"],
     venue: "13th IEEE International Conference on Intelligent Systems and Embedded Design (ISED 2025)",
-    date: "Dec 2025",
+                // Removed stray closing parenthesis
+                // Removed component code related to publicationsData array
     category: "Conference",
     description: "This paper proposes a novel adapted hybrid UNet using EfficientNetB3 to perform robust urban scene segmentation by selectively attending to salient spatial features.",
     link: "https://www.linkedin.com/posts/mmpsrpc_ksv-ldrpitr-mmpsrpc-activity-7413814908217344000-JmvS",
@@ -46,53 +49,10 @@ const publicationsData = [
     category: "Conference",
     description: "Utilizes interpretable multi-modal learning approaches wrapped with SHAP values for explaining and predicting the outbreak probabilities of specific waterborne diseases.",
     link: "https://www.linkedin.com/posts/mmpsrpc_ksv-svkm-mmpsrpc-activity-7407377566589759488-qigD",
-    tags: ["Healthcare", "XAI", "Forecasting"],
-  },
-  {
-    id: 5,
-    title: "Enhancing Data Mining Techniques for Identifying Health Risk Patterns in Underserved Populations",
-    authors: ["Hemant Pande", "Honey Modha"],
-    venue: "NASCENT MR 2025",
-    date: "Dec 2025",
-    category: "Conference",
-    description: "Focuses on advanced data mining strategies to uncover hidden health risk variables from unstructured clinical datasets representing underserved demographics.",
-    link: "https://www.linkedin.com/posts/mmpsrpc_ksv-svkm-mmpsrpc-activity-7407377566589759488-qigD",
-    tags: ["Data Mining", "Healthcare", "Analytics"],
-  },
-  {
-    id: 6,
-    title: "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI",
-    authors: ["Students Research Lab"],
-    venue: "AISTS 2025 (IEEE Xplore)",
-    date: "Nov 2025",
-    category: "Conference",
-    description: "An empirical study evaluating how Explainable AI interfaces shape human decision-making processes, cognitive dependency, and productivity in complex task environments.",
-    link: "https://www.linkedin.com/posts/mmpsrpc_ksv-svkm-mmpsrpc-activity-7398590758359912448-l4bb",
-    tags: ["XAI", "Cognitive Computing", "IEEE Xplore"],
-  },
-  {
-    id: 7,
-    title: "TrafficEye: Intelligent Traffic Optimization Using Deep Learning Approach",
-    authors: ["Students Research Lab"],
-    venue: "AIMV-2025 (IEEE Xplore)",
-    date: "Oct 2025",
-    category: "Conference",
-    description: "A deep learning framework to optimize traffic flow operations dynamically, detecting congestion points and redirecting flows intelligently to minimize overall latency.",
-    link: "https://www.linkedin.com/posts/mmpsrpc_ksv-mmpsrpc-researchexcellence-activity-7389603335164743680-rS1B",
-    tags: ["Deep Learning", "Smart City", "IEEE Xplore"],
-  },
-  {
-    id: 8,
-    title: "Improving Urban Road Safety: Enhancing Pedestrian Safety Through Automated Traffic Signal Control and Law Enforcement",
-    authors: ["Students Research Lab"],
-    venue: "International Conference on Data Science, Computation and Security 2024 (Springer LNNS)",
-    date: "Nov 2024",
-    category: "Book Chapter",
-    description: "Proposed automated mechanisms using edge computing architectures integrated with urban traffic signal networks to improve pedestrian safety conditions and automate crosswalk law enforcement.",
-    link: "https://www.linkedin.com/posts/mmpsrpc_springer-researchpublication-datascience-activity-7368163507625746434-vjXc",
-    tags: ["Smart City", "Edge Computing", "Springer"],
+    tags: ["Healthcare", "XAI", "Forecasting"]
   }
 ];
+
 
 const categories = ["All", "Conference", "Journal", "Book Chapter", "Patents"];
 
@@ -222,6 +182,8 @@ const PublicationCard = ({ pub, index }) => {
 };
 
 /* ================= YEAR PICKER MODAL ================= */
+
+>>>>>>> f675a78 (fix: frontend Publications.jsx, install xlsx, clean up errors)
 const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, buttonRef }) => {
   const [position, setPosition] = useState({ top: 0, left: 0 });
 
@@ -613,6 +575,7 @@ const Publications = () => {
         {/* Publications Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           <AnimatePresence mode="popLayout">
+<<<<<<< HEAD
             {loading ? (
               [...Array(6)].map((_, index) => (
                 <div key={index} className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col h-[350px] animate-pulse">
@@ -644,6 +607,9 @@ const Publications = () => {
                 </div>
               ))
             ) : filteredPublications.length > 0 ? (
+=======
+            {filteredPublications.length > 0 ? (
+>>>>>>> f675a78 (fix: frontend Publications.jsx, install xlsx, clean up errors)
               filteredPublications.map((pub, index) => (
                 <PublicationCard key={pub.id} pub={pub} index={index} />
               ))
