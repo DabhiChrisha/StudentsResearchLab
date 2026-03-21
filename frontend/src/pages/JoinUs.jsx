@@ -131,7 +131,7 @@ export default function JoinUs() {
           <ul className="space-y-2 text-gray-700">
             <li className="flex items-start gap-3">
               <span className="text-[#05877a] font-bold mt-1">•</span>
-              <span><strong>Submitting this form shows your interest in joining SRL.</strong></span>
+              <span><strong>Submission of this form will be considered as an application and does not constitute confirmation of being SRL Member</strong></span>
             </li>
             <li className="flex items-start gap-3">
               <span className="text-[#05877a] font-bold mt-1">•</span>
@@ -225,6 +225,22 @@ export default function JoinUs() {
               ]}
               required
             />
+
+            {/* Department/Course Name Dropdown */}
+            <FormSelect
+              label="Department/Course Name"
+              name="department"
+              value={formData.department || ""}
+              onChange={handleChange}
+              options={[
+                { value: "", label: "Select Department/Course" },
+                { value: "CE", label: "CE" },
+                { value: "IT", label: "IT" },
+                { value: "CSE", label: "CSE" },
+                { value: "EC", label: "EC" },
+              ]}
+              required
+            />
             <FormInput 
               label="Batch" 
               name="batch" 
@@ -233,6 +249,155 @@ export default function JoinUs() {
               placeholder="e.g., 2022-2026"
               required
             />
+
+            {/* What do you want to pursue after UG Dropdown */}
+            <FormSelect
+              label="What do you want to pursue after UG"
+              name="after_ug"
+              value={formData.after_ug || ""}
+              onChange={handleChange}
+              options={[
+                { value: "", label: "Select Option" },
+                { value: "MTech", label: "MTech" },
+                { value: "MBA", label: "MBA" },
+                { value: "MCA", label: "MCA" },
+                { value: "PhD", label: "PhD" },
+                { value: "Masters in Abroad", label: "Masters in Abroad" },
+                { value: "Other", label: "Other" },
+              ]}
+              required
+            />
+
+
+            {/* CPI Till current sem */}
+            <FormInput
+              label="CPI Till current sem"
+              name="cpi"
+              value={formData.cpi || ""}
+              onChange={handleChange}
+              placeholder="Enter your CPI till current semester"
+              required
+            />
+
+            {/* Are you an IEEE Member in year 2026? Checkbox group */}
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Are you an IEEE Member in year 2026? <span className="text-red-500">*</span></label>
+              <div className="flex gap-6">
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" name="ieee_member_2026" value="Yes" checked={formData.ieee_member_2026 === "Yes"} onChange={e => setFormData(prev => ({ ...prev, ieee_member_2026: e.target.checked ? "Yes" : "" }))} required />
+                  Yes
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" name="ieee_member_2026" value="No" checked={formData.ieee_member_2026 === "No"} onChange={e => setFormData(prev => ({ ...prev, ieee_member_2026: e.target.checked ? "No" : "" }))} required />
+                  No
+                </label>
+              </div>
+            </div>
+
+            {/* IEEE Membership number */}
+            <FormInput
+              label="IEEE Membership number"
+              name="ieee_membership"
+              value={formData.ieee_membership || ""}
+              onChange={handleChange}
+              placeholder="Enter your IEEE Membership number (if any)"
+            />
+
+            {/* Resume/CV Drive Link */}
+            <FormInput
+              label="Drive link to your Resume/CV (The access of file shall be Anyone with the link can view)"
+              name="resume_link"
+              value={formData.resume_link || ""}
+              onChange={handleChange}
+              placeholder="Paste your Google Drive link here"
+              required
+            />
+
+            {/* Research Publication Radio */}
+            <div className="space-y-2">
+                        {/* Research Expertise Checkbox Group */}
+                        <div className="space-y-2">
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">Research Expertise <span className="text-red-500">*</span></label>
+                          <div className="flex flex-col gap-2">
+                            <label className="flex items-center gap-2">
+                              <input type="checkbox" name="research_expertise" value="Beginner" checked={Array.isArray(formData.research_expertise) && formData.research_expertise.includes('Beginner')} onChange={e => {
+                                const checked = e.target.checked;
+                                const value = e.target.value;
+                                setFormData(prev => {
+                                  let arr = Array.isArray(prev.research_expertise) ? [...prev.research_expertise] : [];
+                                  if (checked) {
+                                    arr.push(value);
+                                  } else {
+                                    arr = arr.filter(v => v !== value);
+                                  }
+                                  return { ...prev, research_expertise: arr };
+                                });
+                              }} required={!(Array.isArray(formData.research_expertise) && formData.research_expertise.length > 0)} />
+                              Beginner
+                            </label>
+                            <label className="flex items-center gap-2">
+                              <input type="checkbox" name="research_expertise" value="Intermediate" checked={Array.isArray(formData.research_expertise) && formData.research_expertise.includes('Intermediate')} onChange={e => {
+                                const checked = e.target.checked;
+                                const value = e.target.value;
+                                setFormData(prev => {
+                                  let arr = Array.isArray(prev.research_expertise) ? [...prev.research_expertise] : [];
+                                  if (checked) {
+                                    arr.push(value);
+                                  } else {
+                                    arr = arr.filter(v => v !== value);
+                                  }
+                                  return { ...prev, research_expertise: arr };
+                                });
+                              }} required={!(Array.isArray(formData.research_expertise) && formData.research_expertise.length > 0)} />
+                              Intermediate
+                            </label>
+                            <label className="flex items-center gap-2">
+                              <input type="checkbox" name="research_expertise" value="Advance" checked={Array.isArray(formData.research_expertise) && formData.research_expertise.includes('Advance')} onChange={e => {
+                                const checked = e.target.checked;
+                                const value = e.target.value;
+                                setFormData(prev => {
+                                  let arr = Array.isArray(prev.research_expertise) ? [...prev.research_expertise] : [];
+                                  if (checked) {
+                                    arr.push(value);
+                                  } else {
+                                    arr = arr.filter(v => v !== value);
+                                  }
+                                  return { ...prev, research_expertise: arr };
+                                });
+                              }} required={!(Array.isArray(formData.research_expertise) && formData.research_expertise.length > 0)} />
+                              Advance
+                            </label>
+                          </div>
+                        </div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Have you published any research publication yet? <span className="text-red-500">*</span></label>
+              <div className="flex gap-6">
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" name="published_research" value="Yes" checked={formData.published_research === "Yes"} onChange={e => setFormData(prev => ({ ...prev, published_research: e.target.checked ? "Yes" : "" }))} required />
+                  Yes
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" name="published_research" value="No" checked={formData.published_research === "No"} onChange={e => setFormData(prev => ({ ...prev, published_research: e.target.checked ? "No" : "" }))} required />
+                  No
+                </label>
+              </div>
+            </div>
+
+            {/* Ongoing Research Radio */}
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Is there any research work ongoing? <span className="text-red-500">*</span></label>
+              <div className="flex gap-6">
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" name="ongoing_research" value="Yes" checked={formData.ongoing_research === "Yes"} onChange={e => setFormData(prev => ({ ...prev, ongoing_research: e.target.checked ? "Yes" : "" }))} required />
+                  Yes
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="checkbox" name="ongoing_research" value="No" checked={formData.ongoing_research === "No"} onChange={e => setFormData(prev => ({ ...prev, ongoing_research: e.target.checked ? "No" : "" }))} required />
+                  No
+                </label>
+              </div>
+            </div>
+
+            
           </div>
 
           {/* College - Row 4 */}
