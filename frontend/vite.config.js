@@ -28,6 +28,8 @@ export default defineConfig({
           vendor: ['react', 'react-dom', 'react-router-dom'],
           supabase: ['@supabase/supabase-js'],
           ui: ['framer-motion', 'lucide-react'],
+          particles: ['@tsparticles/react', '@tsparticles/slim'],
+          globe: ['cobe'],
         }
       },
     },

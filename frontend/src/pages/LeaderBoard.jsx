@@ -1,30 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Medal, Star, Target, Zap, Clock, TrendingUp, Users, Award, BookOpen, Crown, Search, Calendar, Timer } from "lucide-react";
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSupabaseQuery, fetchWithTimeout } from '../hooks/useSupabaseQuery';
 import { API_BASE_URL as API_BASE } from '../config/apiConfig';
-
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error("ErrorBoundary caught an error", error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return <div className="p-10 text-red-500 font-bold"><h1>Something went wrong.</h1><pre>{this.state.error.toString()}</pre></div>;
-    }
-    return this.props.children; 
-  }
-}
+import ErrorBoundary from '../components/ErrorBoundary';
 
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -98,6 +77,16 @@ const LeaderBoard = () => {
     const [monthLabel, setMonthLabel] = useState('');
     const [activeTab, setActiveTab] = useState('overall'); // 'overall', 'monthly', 'hours'
 
+    // Period selector state
+    const [selectedPeriod, setSelectedPeriod] = useState('Mar 2026');
+    const [periodStudents, setPeriodStudents] = useState([]);
+    const [periodLoading, setPeriodLoading] = useState(false);
+
+    // Table search + sort state
+    const [searchQuery, setSearchQuery] = useState('');
+    const [sortKey, setSortKey] = useState(null);   // null | 'rank' | 'name' | 'attendance' | 'hours' | 'score'
+    const [sortDir, setSortDir] = useState('desc');
+
     const { loading, error } = useSupabaseQuery(async () => {
         const [overallJson, monthlyJson, hoursJson] = await Promise.all([
             fetchWithTimeout(`${API_BASE}/api/leaderboard`),
@@ -126,14 +115,58 @@ const LeaderBoard = () => {
         return parsedOverall; // Data returned from hook (though we use local states for complex data)
     });
 
+    // Fetch data whenever selectedPeriod changes (for monthly + hours tabs)
+    useEffect(() => {
+        if (activeTab === 'overall') return;
+        const PERIOD_TO_PARAMS = {
+            'Dec 2025': { month: 12, year: 2025 },
+            'Jan 2026': { month: 1, year: 2026 },
+            'Feb 2026': { month: 2, year: 2026 },
+            'Mar 2026': { month: 3, year: 2026 },
+        };
+        const params = PERIOD_TO_PARAMS[selectedPeriod];
+        if (!params) return;
+        setPeriodLoading(true);
+        fetchWithTimeout(`${API_BASE}/api/leaderboard/monthly?month=${params.month}&year=${params.year}`)
+            .then(json => {
+                if (json?.leaderboard) {
+                    const parsed = json.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin');
+                    setPeriodStudents(parsed);
+                    setMonthLabel(selectedPeriod);
+                }
+            })
+            .catch(() => {})
+            .finally(() => setPeriodLoading(false));
+    }, [selectedPeriod, activeTab]);
+
+    // Column sort handler
+    const handleSort = (key) => {
+        if (sortKey === key) {
+            setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortKey(key);
+            setSortDir(key === 'name' ? 'asc' : 'desc');
+        }
+    };
+
+    const SortIcon = ({ col }) => {
+        if (sortKey !== col) return <span className="ml-1 text-gray-300 text-[10px]">⇅</span>;
+        return <span className="ml-1 text-amber-600 text-[10px]">{sortDir === 'asc' ? '▲' : '▼'}</span>;
+    };
+
     // Determine current leaderboard array
     let currentLeaderboard = allStudents;
     let mainMetricLabel = "pts";
     let mainMetricKey = "score";
     if (activeTab === 'monthly') {
-        currentLeaderboard = monthlyStudents;
+        currentLeaderboard = periodStudents.length > 0 ? periodStudents : monthlyStudents;
     } else if (activeTab === 'hours') {
-        currentLeaderboard = top5ByHours;
+        const base = periodStudents.length > 0 ? periodStudents : top5ByHours;
+        currentLeaderboard = [...base].sort((a, b) => {
+            const hA = parseFloat((a.totalHours || '0').replace(' Hrs', '')) || 0;
+            const hB = parseFloat((b.totalHours || '0').replace(' Hrs', '')) || 0;
+            return hB - hA;
+        }).map((s, i) => ({ ...s, rank: i + 1 }));
         mainMetricLabel = "";
         mainMetricKey = "totalHours";
     }
@@ -283,7 +316,7 @@ const LeaderBoard = () => {
 
                 {/* Avatar */}
                 <div className={`relative mb-2 md:mb-3 rounded-full border-[2px] md:border-[3px] ${s.border} ${s.glow} ${s.avatarSize} shrink-0 bg-white z-20 overflow-hidden`}>
-                    <img src={student.image || '/SRL.svg'} alt={student.name} className="w-full h-full object-cover" />
+                    <img loading="lazy" decoding="async" src={student.image || '/SRL.svg'} alt={student.name} className="w-full h-full object-cover" />
                 </div>
                 
                 {/* Name */}
@@ -324,8 +357,8 @@ const LeaderBoard = () => {
 
     const getTitle = () => {
         if (activeTab === 'overall') return "Cumulative Top Researchers";
-        if (activeTab === 'monthly') return `Monthly Top Scores: ${monthLabel}`;
-        return `Top Hours Dedicated: March 2026`;
+        if (activeTab === 'monthly') return `Monthly Top Scores: ${selectedPeriod}`;
+        return `Top Hours Dedicated: ${selectedPeriod}`;
     };
 
     return (
@@ -335,13 +368,13 @@ const LeaderBoard = () => {
                 @keyframes rotateClockwise { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
                 @keyframes rotateAntiClockwise { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
             `}</style>
-            <img
+            <img loading="lazy" decoding="async"
                 src="/watermark.svg"
                 alt=""
                 className="fixed w-[600px] md:w-[780px] pointer-events-none select-none"
                 style={{ opacity: 0.15, zIndex: 0, top: '-230px', left: '-300px', animation: 'rotateClockwise 30s linear infinite' }}
             />
-            <img
+            <img loading="lazy" decoding="async"
                 src="/watermark.svg"
                 alt=""
                 className="fixed w-[600px] md:w-[780px] pointer-events-none select-none"
@@ -441,24 +474,45 @@ const LeaderBoard = () => {
                             className="flex flex-col items-center justify-center mb-4 md:mb-6 gap-4"
                         >
                             <div className="flex flex-row items-center justify-center gap-3 md:gap-4 w-full flex-wrap md:flex-nowrap">
-                                <button 
+                                <button
                                     onClick={() => setActiveTab('overall')}
                                     className={`whitespace-nowrap px-5 py-2.5 rounded-full text-[13px] md:text-sm font-extrabold border-2 transition-all ${activeTab === 'overall' ? 'bg-amber-500 border-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-transparent border-amber-200/60 text-gray-500 hover:bg-white hover:border-amber-300 hover:text-amber-600'}`}
                                 >
                                     Cumulative Top Researchers
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => setActiveTab('monthly')}
                                     className={`whitespace-nowrap px-5 py-2.5 rounded-full text-[13px] md:text-sm font-extrabold border-2 transition-all ${activeTab === 'monthly' ? 'bg-amber-500 border-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-transparent border-amber-200/60 text-gray-500 hover:bg-white hover:border-amber-300 hover:text-amber-600'}`}
                                 >
                                     Monthly Top Scores
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => setActiveTab('hours')}
                                     className={`whitespace-nowrap px-5 py-2.5 rounded-full text-[13px] md:text-sm font-extrabold border-2 transition-all ${activeTab === 'hours' ? 'bg-amber-500 border-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-transparent border-amber-200/60 text-gray-500 hover:bg-white hover:border-amber-300 hover:text-amber-600'}`}
                                 >
                                     Top Hours Dedicated
                                 </button>
+
+                                {/* Period dropdown — visible on non-overall tabs */}
+                                {activeTab !== 'overall' && (
+                                    <div className="relative">
+                                        <select
+                                            value={selectedPeriod}
+                                            onChange={e => { setSelectedPeriod(e.target.value); setPeriodStudents([]); }}
+                                            disabled={periodLoading}
+                                            className="appearance-none whitespace-nowrap pl-4 pr-8 py-2.5 rounded-full text-[13px] md:text-sm font-extrabold border-2 border-amber-300 bg-white text-amber-700 shadow-sm focus:outline-none focus:border-amber-500 cursor-pointer disabled:opacity-60 transition-all"
+                                        >
+                                            <option value="Dec 2025">Dec 2025</option>
+                                            <option value="Jan 2026">Jan 2026</option>
+                                            <option value="Feb 2026">Feb 2026</option>
+                                            <option value="Mar 2026">Mar 2026</option>
+                                        </select>
+                                        <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 text-[10px]">▼</div>
+                                        {periodLoading && (
+                                            <div className="absolute -right-5 top-1/2 -translate-y-1/2 w-3 h-3 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+                                        )}
+                                    </div>
+                                )}
                             </div>
 
                             <motion.h1 
@@ -483,43 +537,100 @@ const LeaderBoard = () => {
                         </div>
 
                         {/* All Member Rankings Table */}
-                        {allRankedStudents.length > 0 && (
-                            <motion.div 
+                        {allRankedStudents.length > 0 && (() => {
+                            // Search filter
+                            const q = searchQuery.trim().toLowerCase();
+                            let displayedStudents = q
+                                ? allRankedStudents.filter(s =>
+                                    (s.name || '').toLowerCase().includes(q) ||
+                                    (s.enrollment || '').toLowerCase().includes(q)
+                                  )
+                                : allRankedStudents;
+
+                            // Column sort
+                            if (sortKey) {
+                                displayedStudents = [...displayedStudents].sort((a, b) => {
+                                    let av, bv;
+                                    if (sortKey === 'name') { av = (a.name || '').toLowerCase(); bv = (b.name || '').toLowerCase(); }
+                                    else if (sortKey === 'attendance') { av = a.srlAttendanceNum || 0; bv = b.srlAttendanceNum || 0; }
+                                    else if (sortKey === 'hours') { av = parseFloat((a.totalHours || '0').replace(' Hrs', '')) || 0; bv = parseFloat((b.totalHours || '0').replace(' Hrs', '')) || 0; }
+                                    else if (sortKey === 'score') { av = a.score || 0; bv = b.score || 0; }
+                                    else { av = a.rank || 0; bv = b.rank || 0; }
+                                    if (av < bv) return sortDir === 'asc' ? -1 : 1;
+                                    if (av > bv) return sortDir === 'asc' ? 1 : -1;
+                                    return 0;
+                                });
+                            }
+
+                            return (
+                            <motion.div
                                 initial={{ y: 30, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.3, duration: 0.6 }}
                                 className="mt-16 sm:mt-24"
                             >
-                                <h3 className="text-center text-sm md:text-base font-black tracking-widest uppercase text-gray-800 mb-6">
-                                    ALL MEMBER RANKINGS (1st - {currentLeaderboard.length}th)
-                                </h3>
+                                {/* Search bar + count */}
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                                    <h3 className="text-sm md:text-base font-black tracking-widest uppercase text-gray-800">
+                                        ALL MEMBER RANKINGS (1st – {currentLeaderboard.length}th)
+                                    </h3>
+                                    <div className="flex items-center gap-2">
+                                        <div className="relative">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
+                                            <input
+                                                type="text"
+                                                placeholder="Search by name or enrollment…"
+                                                value={searchQuery}
+                                                onChange={e => setSearchQuery(e.target.value)}
+                                                className="pl-8 pr-3 py-2 border border-[#e8dcb8] rounded-full text-[12px] bg-white focus:outline-none focus:border-amber-400 w-56 md:w-72 transition-all"
+                                            />
+                                            {searchQuery && (
+                                                <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs">✕</button>
+                                            )}
+                                        </div>
+                                        {searchQuery && (
+                                            <span className="text-[11px] text-gray-500 font-medium whitespace-nowrap">{displayedStudents.length} result{displayedStudents.length !== 1 ? 's' : ''}</span>
+                                        )}
+                                    </div>
+                                </div>
 
                                 <div className="bg-gradient-to-b from-[#f6ead0] to-[#fcfaf5] p-2 md:p-3 rounded-2xl md:rounded-[32px] border border-[#e8dcb8] shadow-xl">
                                     <div className="bg-white rounded-xl md:rounded-[24px] overflow-hidden shadow-sm">
-                                        
-                                        {/* Table Header */}
-                                        <div className="flex items-center bg-[#faeed1] px-4 md:px-6 py-4 font-bold text-gray-800 border-b border-[#ebdcae] text-[11px] md:text-sm tracking-wide">
-                                            <div className="w-12 md:w-16 text-center shrink-0">Rank</div>
+
+                                        {/* Table Header — sortable columns */}
+                                        <div className="flex items-center bg-[#faeed1] px-4 md:px-6 py-4 font-bold text-gray-800 border-b border-[#ebdcae] text-[11px] md:text-sm tracking-wide select-none">
+                                            <button onClick={() => handleSort('rank')} className="w-12 md:w-16 text-center shrink-0 hover:text-amber-700 transition-colors flex items-center justify-center gap-0.5">
+                                                Rank<SortIcon col="rank" />
+                                            </button>
                                             <div className="w-16 md:w-20 text-center shrink-0 hidden sm:block">Profile</div>
-                                            <div className="flex-1 ml-2 md:ml-4 text-center sm:text-left">Member Details</div>
-                                            <div className="w-32 md:w-48 text-center shrink-0 hidden lg:block">SRL Sessions Attended</div>
-                                            <div className="w-32 md:w-40 text-center shrink-0 hidden md:block">Hours Dedicated</div>
-                                            <div className="w-20 md:w-28 text-center shrink-0">Total Score</div>
+                                            <button onClick={() => handleSort('name')} className="flex-1 ml-2 md:ml-4 text-center sm:text-left hover:text-amber-700 transition-colors flex items-center gap-0.5">
+                                                Member Details<SortIcon col="name" />
+                                            </button>
+                                            <button onClick={() => handleSort('attendance')} className="w-32 md:w-48 text-center shrink-0 hidden lg:flex items-center justify-center gap-0.5 hover:text-amber-700 transition-colors">
+                                                Sessions Attended<SortIcon col="attendance" />
+                                            </button>
+                                            <button onClick={() => handleSort('hours')} className="w-32 md:w-40 text-center shrink-0 hidden md:flex items-center justify-center gap-0.5 hover:text-amber-700 transition-colors">
+                                                Hours Dedicated<SortIcon col="hours" />
+                                            </button>
+                                            <button onClick={() => handleSort('score')} className="w-20 md:w-28 text-center shrink-0 hover:text-amber-700 transition-colors flex items-center justify-center gap-0.5">
+                                                Total Score<SortIcon col="score" />
+                                            </button>
                                         </div>
 
                                         {/* Table Rows — scrollable container */}
                                         <div className="divide-y divide-gray-100 bg-white max-h-[600px] overflow-y-auto">
-                                            {allRankedStudents.map((st, idx) => {
+                                            {displayedStudents.length === 0 ? (
+                                                <div className="text-center py-10 text-sm text-gray-400">No students match your search.</div>
+                                            ) : displayedStudents.map((st, idx) => {
                                                 const displayName = (st.name || '').split('\n').map(l => l.trim()).join(' ');
                                                 const val = st[mainMetricKey] || 0;
                                                 const isTop5 = st.rank >= 1 && st.rank <= 5;
                                                 return (
-                                                    <motion.div 
-                                                        initial={{ opacity: 0, y: 10 }}
-                                                        whileInView={{ opacity: 1, y: 0 }}
-                                                        viewport={{ once: true, margin: "-50px" }}
-                                                        transition={{ delay: Math.min(idx * 0.03, 0.3) }}
-                                                        key={st.enrollment} 
+                                                    <motion.div
+                                                        key={st.name}
+                                                        initial={{ opacity: 0, y: 6 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        transition={{ duration: 0.2, delay: Math.min(idx * 0.02, 0.2) }}
                                                         className={`flex items-center px-4 md:px-6 py-3 transition-colors group ${
                                                             isTop5
                                                                 ? 'bg-gradient-to-r from-amber-50 via-yellow-50/60 to-white border-l-4 border-l-amber-400 hover:from-amber-100/80 hover:via-yellow-50 hover:to-white'
@@ -560,7 +671,7 @@ const LeaderBoard = () => {
                                                         {/* Profile Image - hidden on small mobile */}
                                                         <div className="w-16 md:w-20 justify-center shrink-0 hidden sm:flex">
                                                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border-2 border-gray-100 shadow-sm group-hover:border-amber-300 transition-colors">
-                                                                <img src={st.image || '/SRL.svg'} alt={st.name} className="w-full h-full object-cover" />
+                                                                <img loading="lazy" decoding="async" src={st.image || '/SRL.svg'} alt={st.name} className="w-full h-full object-cover" />
                                                             </div>
                                                         </div>
                                                         
@@ -606,7 +717,8 @@ const LeaderBoard = () => {
                                     </div>
                                 </div>
                             </motion.div>
-                        )}
+                            );
+                        })()}
                     </>
                 )}
             </div>

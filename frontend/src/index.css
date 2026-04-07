@@ -151,6 +151,10 @@
   justify-content: center;
 }
 
+/* Timeline internal scrollbar — hidden */
+.timeline-container::-webkit-scrollbar { display: none; }
+.timeline-container { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

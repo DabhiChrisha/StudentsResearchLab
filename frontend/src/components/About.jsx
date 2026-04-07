@@ -50,7 +50,7 @@ const About = () => {
                     >
                         {/* Background Image Layer */}
                         {organizationData.svkm.heroImage && (
-                            <img
+                            <img loading="lazy" decoding="async"
                                 src={organizationData.svkm.heroImage}
                                 alt=""
                                 className="absolute inset-0 w-full h-full object-cover filter brightness-[1.1] contrast-[1.05] saturate-[1.1]"
@@ -63,7 +63,7 @@ const About = () => {
                         >
                             <div className="flex items-center gap-6">
                                 <div className="w-16 h-16 flex items-center justify-center">
-                                    <img src={organizationData.svkm.image} alt="SVKM" className="h-full object-contain" />
+                                    <img loading="lazy" decoding="async" src={organizationData.svkm.image} alt="SVKM" className="h-full object-contain" />
                                 </div>
                                 <div>
                                     <h4 className="text-xl font-bold text-teal-900 font-sans drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]">Sarva Vidyalaya Kelavani Mandal (SVKM)</h4>
@@ -113,7 +113,7 @@ const About = () => {
                     >
                         {/* Background Image Layer */}
                         {organizationData.ksv.heroImage && (
-                            <img
+                            <img loading="lazy" decoding="async"
                                 src={organizationData.ksv.heroImage}
                                 alt=""
                                 className="absolute inset-0 w-full h-full object-cover filter brightness-[1.1] contrast-[1.05] saturate-[1.1]"
@@ -126,7 +126,7 @@ const About = () => {
                         >
                             <div className="flex items-center gap-6">
                                 <div className="w-16 h-16 flex items-center justify-center">
-                                    <img src={organizationData.ksv.image} alt="KSV" className="h-full object-contain" />
+                                    <img loading="lazy" decoding="async" src={organizationData.ksv.image} alt="KSV" className="h-full object-contain" />
                                 </div>
                                 <div>
                                     <h4 className="text-xl font-bold text-teal-900 font-sans drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]">Kadi Sarva Vishwavidyalaya (KSV)</h4>
@@ -176,7 +176,7 @@ const About = () => {
                     >
                         {/* Background Image Layer */}
                         {organizationData.mmpsrpc.heroImage && (
-                            <img
+                            <img loading="lazy" decoding="async"
                                 src={organizationData.mmpsrpc.heroImage}
                                 alt=""
                                 className="absolute inset-0 w-full h-full object-cover filter brightness-[1.1] contrast-[1.05] saturate-[1.1]"
@@ -189,7 +189,7 @@ const About = () => {
                         >
                             <div className="flex items-center gap-6">
                                 <div className="w-16 h-16 flex items-center justify-center">
-                                    <img src={organizationData.mmpsrpc.image} alt="MMPSRPC" className="h-full object-contain" />
+                                    <img loading="lazy" decoding="async" src={organizationData.mmpsrpc.image} alt="MMPSRPC" className="h-full object-contain" />
                                 </div>
                                 <div>
                                     <h4 className="text-xl font-bold text-teal-900 font-sans drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]">M. M. Patel Students Research Project Cell</h4>
@@ -238,7 +238,7 @@ const About = () => {
                     >
                         {/* Background Image Layer */}
                         {organizationData.ieee?.heroImage && (
-                            <img
+                            <img loading="lazy" decoding="async"
                                 src={organizationData.ieee.heroImage}
                                 alt=""
                                 className="absolute inset-0 w-full h-full object-cover filter brightness-[1.1] contrast-[1.05] saturate-[1.1]"
@@ -251,7 +251,7 @@ const About = () => {
                         >
                             <div className="flex items-center gap-6">
                                 <div className="w-16 h-16 flex items-center justify-center">
-                                    <img src={organizationData.ieee?.image} alt="IEEE KSV" className="h-full object-contain" />
+                                    <img loading="lazy" decoding="async" src={organizationData.ieee?.image} alt="IEEE KSV" className="h-full object-contain" />
                                 </div>
                                 <div>
                                     <h4 className="text-xl font-bold text-teal-900 font-sans drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]">{organizationData.ieee?.title}</h4>
@@ -328,7 +328,7 @@ const About = () => {
                                                         ExeCom'26 - Executive Committee
                                                     </h5>
                                                     <div className="rounded-xl overflow-hidden shadow-lg border border-teal-50">
-                                                        <img 
+                                                        <img loading="lazy" decoding="async" 
                                                             src={organizationData.ieee.execomPhoto} 
                                                             alt="IEEE KSV ExeCom 2026" 
                                                             className="w-full h-auto object-cover"
@@ -384,7 +384,7 @@ const About = () => {
                                 <div className="mb-12 relative">
                                     <div className="absolute inset-0 bg-teal-200/40 blur-2xl rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-700" />
                                     <div className="relative bg-white p-4 rounded-3xl shadow-xl border border-teal-50 overflow-hidden transform group-hover:-translate-y-3 transition-transform duration-700">
-                                        <img
+                                        <img loading="lazy" decoding="async"
                                             src={founder.image}
                                             alt={founder.name}
                                             className="w-56 md:w-64 h-auto block rounded-2xl sepia-[0.2] group-hover:sepia-0 transition-all duration-1000 scale-105 group-hover:scale-110"

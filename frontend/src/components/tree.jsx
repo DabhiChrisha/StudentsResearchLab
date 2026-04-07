@@ -28,9 +28,10 @@ const Tree = ({ rootXPos = 0.5, rootYPos = 1, scale = 1 }) => {
         window.addEventListener("resize", setup);
         setup();
 
-        let growthProgress = 0; 
-        const growthSpeed = 0.008; 
+        let growthProgress = 0;
+        const growthSpeed = 0.005;
         let time = 0;
+        let isVisible = true;
 
         function drawBranch(x, y, len, angle, width, depth, currentProgress) {
             const maxD = 10;
@@ -89,6 +90,8 @@ const Tree = ({ rootXPos = 0.5, rootYPos = 1, scale = 1 }) => {
         }
 
         const render = () => {
+            if (!isVisible) return;
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Subtle gradient background
@@ -98,7 +101,7 @@ const Tree = ({ rootXPos = 0.5, rootYPos = 1, scale = 1 }) => {
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            time += 0.015;
+            time += 0.008;
             if (growthProgress < 1) {
                 growthProgress += growthSpeed;
             }
@@ -106,15 +109,29 @@ const Tree = ({ rootXPos = 0.5, rootYPos = 1, scale = 1 }) => {
             const rootX = canvas.width * rootXPos;
             const rootY = canvas.height * rootYPos;
 
-            // Straight up (angle 0)
             drawBranch(rootX, rootY, startLength, 0, 16, 10, growthProgress);
 
             animationFrameId = requestAnimationFrame(render);
         };
 
+        // Pause the canvas loop when scrolled out of view
+        const visibilityObserver = new IntersectionObserver(
+            ([entry]) => {
+                isVisible = entry.isIntersecting;
+                if (isVisible) {
+                    animationFrameId = requestAnimationFrame(render);
+                } else {
+                    cancelAnimationFrame(animationFrameId);
+                }
+            },
+            { threshold: 0 }
+        );
+        visibilityObserver.observe(canvas);
+
         render();
 
         return () => {
+            visibilityObserver.disconnect();
             window.removeEventListener("resize", setup);
             cancelAnimationFrame(animationFrameId);
         };

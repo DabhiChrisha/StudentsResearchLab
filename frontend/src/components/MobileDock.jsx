@@ -9,16 +9,13 @@ export default function MobileDock() {
     ];
 
     const scrollToSection = (sectionId) => {
-        const mainContent = document.getElementById("main-content");
         const section = document.getElementById(sectionId);
-        
-        if (mainContent && section) {
-            const sectionTop = section.offsetTop;
-            mainContent.scrollTo({
-                top: sectionTop - 72, // Adjust for navbar height
-                behavior: "smooth"
-            });
-        }
+        if (!section) return;
+        const navbarHeight = parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue("--navbar-height")
+        ) || 80;
+        const top = section.getBoundingClientRect().top + window.scrollY - navbarHeight;
+        window.scrollTo({ top, behavior: "smooth" });
     };
 
     return (

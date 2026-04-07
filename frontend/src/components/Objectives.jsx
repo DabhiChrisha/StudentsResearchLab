@@ -74,11 +74,11 @@ const colors = [
 
 const Objectives = () => {
 
-    const [cursor, setCursor] = useState({ x: 0, y: 0 });
     const [lines, setLines] = useState([]);
     const [isMobile, setIsMobile] = useState(false);
 
     const cardRefs = useRef([]);
+    const overlayRefs = useRef([]); // direct DOM refs for hover overlays — no re-render on mousemove
     const circleRef = useRef(null);
     const containerRef = useRef(null);
     const sectionRef = useRef(null);
@@ -174,12 +174,14 @@ const Objectives = () => {
 
     }, [isMobile]);
 
-    const handleMouseMove = (e) => {
+    // Direct DOM update — no setState, no re-render on every mousemove
+    const handleCardMouseMove = (e, index) => {
+        const overlay = overlayRefs.current[index];
+        if (!overlay) return;
         const rect = e.currentTarget.getBoundingClientRect();
-        setCursor({
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
-        });
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        overlay.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(16,185,129,0.35), transparent 40%)`;
     };
 
     return (
@@ -200,8 +202,9 @@ const Objectives = () => {
 
                     <motion.h2
                         initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
                         className="text-4xl font-black font-serif inline-block pb-2"
                         style={{
                             background: "linear-gradient(90deg,#0f766e,#10b981,#2dd4bf,#FFD700)",
@@ -243,8 +246,8 @@ const Objectives = () => {
                                                 pathLength: 1,
                                                 d: [
                                                     `M ${line.x1} ${line.y1} C ${midX} ${line.y1}, ${midX} ${line.y2}, ${line.x2} ${line.y2}`,
-                                                    `M ${line.x1} ${line.y1} C ${midX + 60} ${line.y1 + 40}, ${midX - 60} ${line.y2 - 40}, ${line.x2} ${line.y2}`,
-                                                    `M ${line.x1} ${line.y1} C ${midX - 60} ${line.y1 - 40}, ${midX + 60} ${line.y2 + 40}, ${line.x2} ${line.y2}`,
+                                                    `M ${line.x1} ${line.y1} C ${midX + 20} ${line.y1 + 15}, ${midX - 20} ${line.y2 - 15}, ${line.x2} ${line.y2}`,
+                                                    `M ${line.x1} ${line.y1} C ${midX - 20} ${line.y1 - 15}, ${midX + 20} ${line.y2 + 15}, ${line.x2} ${line.y2}`,
                                                     `M ${line.x1} ${line.y1} C ${midX} ${line.y1}, ${midX} ${line.y2}, ${line.x2} ${line.y2}`
                                                 ]
                                             }
@@ -252,7 +255,7 @@ const Objectives = () => {
                                     }
                                     transition={{
                                         pathLength: { duration: 0.7, delay: i * 0.7, ease: "easeInOut" },
-                                        d: { duration: 3.5, repeat: Infinity, ease: "easeInOut" }
+                                        d: { duration: 7, repeat: Infinity, ease: "easeInOut" }
                                     }}
                                 />
 
@@ -279,7 +282,7 @@ const Objectives = () => {
 inset 0 0 10px #10b98144
 ` }}
                         >
-                            <img
+                            <img loading="lazy" decoding="async"
                                 src="/innovation1.jpg"
                                 alt="innovation"
                                 className={isMobile ? "w-[75px] object-contain" : "w-[125px] h-[125px] object-contain"}
@@ -298,7 +301,7 @@ inset 0 0 10px #10b98144
                             <motion.div
                                 key={index}
                                 ref={(el) => cardRefs.current[index] = el}
-                                onMouseMove={handleMouseMove}
+                                onMouseMove={(e) => handleCardMouseMove(e, index)}
 
                                 initial={{ opacity: 0, scale: 0.5 }}
                                 animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
@@ -330,11 +333,9 @@ inset 0 0 10px #10b98144
                                     }}
                                 />
 
-                                <motion.div
-                                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-300"
-                                    style={{
-                                        background: `radial-gradient(600px circle at ${cursor.x}px ${cursor.y}px, rgba(16,185,129,0.35), transparent 40%)`
-                                    }}
+                                <div
+                                    ref={(el) => overlayRefs.current[index] = el}
+                                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                                 />
 
                                 <h3 className={`${isMobile ? "text-[9.5px]" : "text-[12px] 2xl:text-[15px]"} font-bold text-white font-serif leading-tight break-words max-w-full`}>

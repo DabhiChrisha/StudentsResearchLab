@@ -1,76 +1,66 @@
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  BookOpen,
+  Calendar,
+  ExternalLink,
+  Download,
+  Search,
+  Users,
+  ShieldCheck,
+  FileText,
+  Bookmark,
+  PlusCircle,
+  X,
+} from "lucide-react";
+import * as XLSX from "xlsx";
+import { Link } from "react-router-dom";
+import { API_BASE_URL } from "../config/apiConfig";
 
+/* ================= CONSTANTS ================= */
 
-import React, { useState, useEffect, useRef } from "react";
-import { BookOpen, Calendar, ExternalLink, Download, Search, Users, ShieldCheck, FileText, Bookmark, PlusCircle, X } from "lucide-react";
-import * as XLSX from 'xlsx';
+// UI category labels → must match event_type values in the DB exactly
+const CATEGORIES = ["All", "Conference", "Journal", "Book Chapter", "Poster Presentation"];
 
-/* ================= DATA ================= */
-const publicationsData = [
-  {
-    id: 1,
-    title: "Casebook on AI and Gender Empowerment",
-    authors: ["Janki Chitroda", "Yashvi Chavda", "Krishna Bhatt"],
-    venue: "IndiaAI Impact Summit in collaboration with UN Women India",
-    date: "Feb 2026",
-    category: "Book Chapter",
-    description: "Featured among the prestigious 23 global research works published in the Casebook on AI and Gender Empowerment. The research focuses on inclusive AI innovation and empowerment.",
-    link: "https://www.linkedin.com/posts/mmpsrpc_svkm-ksv-mmpsrpc-activity-7429466085311098880-XDnV",
-    tags: ["AI", "Gender Empowerment", "UN Women"],
-  },
-  {
-    id: 2,
-    title: "EfficientNetB3 Adapted Hybrid UNet with Attention Guided Decoding for Urban Scene Segmentation",
-    authors: ["Ayushi Joddha", "Manasvi Shah", "Swayam Kalburgi"],
-    venue: "13th IEEE International Conference on Intelligent Systems and Embedded Design (ISED 2025)",
-                // Removed stray closing parenthesis
-                // Removed component code related to publicationsData array
-    category: "Conference",
-    description: "This paper proposes a novel adapted hybrid UNet using EfficientNetB3 to perform robust urban scene segmentation by selectively attending to salient spatial features.",
-    link: "https://www.linkedin.com/posts/mmpsrpc_ksv-ldrpitr-mmpsrpc-activity-7413814908217344000-JmvS",
-    tags: ["Computer Vision", "Segmentation", "IEEE Xplore"],
-  },
-  {
-    id: 3,
-    title: "Generative AI as a Catalyst in Indian Education Ecosystems",
-    authors: ["Henit Panchal", "Hetvi Hinsu", "Heny Patel"],
-    venue: "AAMLAD-2025 (Springer CCIS)",
-    date: "Nov 2025",
-    category: "Conference",
-    description: "An analysis of how generative AI paradigms can be adopted to personalize learning paths, scale assessment models, and bridge educational disparities in India.",
-    link: "https://www.linkedin.com/posts/mmpsrpc_ksv-researchexcellence-studentachievement-activity-7412352256806920192-MoVv",
-    tags: ["Generative AI", "EdTech", "Springer"],
-  },
-  {
-    id: 4,
-    title: "SHAP-Enhanced Outbreak Forecasting: Interpretable Multi-Modal Learning for Waterborne Disease Prediction",
-    authors: ["Krish Patel", "Jenish Sorathiya"],
-    venue: "NASCENT MR 2025",
-    date: "Dec 2025",
-    category: "Conference",
-    description: "Utilizes interpretable multi-modal learning approaches wrapped with SHAP values for explaining and predicting the outbreak probabilities of specific waterborne diseases.",
-    link: "https://www.linkedin.com/posts/mmpsrpc_ksv-svkm-mmpsrpc-activity-7407377566589759488-qigD",
-    tags: ["Healthcare", "XAI", "Forecasting"]
-  }
-];
+// Maps DB event_type to a display label for the UI
+const EVENT_TYPE_LABEL = {
+  Conference: "Conference",
+  Journal: "Journal",
+  Book: "Book Chapter",
+  "Poster Presentation": "Poster",
+};
 
+/* ================= HELPERS ================= */
 
-const categories = ["All", "Conference", "Journal", "Book Chapter", "Patents"];
+function formatAuthors(authorsStr) {
+  if (!authorsStr) return [];
+  return authorsStr.split(",").map((a) => a.trim()).filter(Boolean);
+}
 
-/* ================= COMPONENTS ================= */
+function formatDate(raw) {
+  if (!raw) return null;
+  // Show just the year if we can extract it
+  const m = raw.match(/\b(20\d{2})\b/);
+  if (m) return m[1];
+  return raw;
+}
+
+/* ================= PUBLICATION CARD ================= */
 
 const PublicationCard = ({ pub, index }) => {
-  const [linkedinImage, setLinkedinImage] = useState(null);
-
-  // Premium green theme gradients
   const backgrounds = [
     { bg: "from-teal-500 to-emerald-400", border: "border-teal-500" },
     { bg: "from-emerald-500 to-teal-400", border: "border-emerald-500" },
-    { bg: "from-teal-600 to-emerald-500", border: "border-teal-600" }
+    { bg: "from-teal-600 to-emerald-500", border: "border-teal-600" },
   ];
-  
   const theme = backgrounds[index % backgrounds.length];
-  const bgClass = theme.bg;
-  const borderColor = theme.border;
+  const authors = formatAuthors(pub.student_authors);
+  const dateLabel = formatDate(pub.date_raw);
+  const typeLabel = EVENT_TYPE_LABEL[pub.event_type] || pub.event_type || "Publication";
+
+  // Derive category badge colour by category
+  const isScoped = (pub.category || "").toLowerCase().includes("scopus");
+  const isReview = (pub.category || "").toLowerCase().includes("review");
 
   return (
     <motion.div
@@ -78,104 +68,90 @@ const PublicationCard = ({ pub, index }) => {
       animate={{ opacity: 1, scale: 1 }}
       className="flex h-full"
     >
-      {/* OUTER CARD WITH THICK BORDER */}
-      <div className={`h-full relative rounded-2xl sm:rounded-3xl overflow-visible bg-white shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col border-5 sm:border-6 md:border-8 w-full ${borderColor}`}>
-
-        {/* TOP GRADIENT SECTION WITH BACKGROUND IMAGE - CLICKABLE */}
-        <a 
-          href={pub.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`relative bg-gradient-to-br ${bgClass} p-4 sm:p-5 md:p-6 flex-none min-h-32 sm:min-h-40 md:min-h-44 flex flex-col justify-between rounded-t-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity duration-300`}
-          style={{
-            backgroundImage: linkedinImage ? `url(${linkedinImage})` : undefined,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
+      <div
+        className={`h-full relative rounded-2xl sm:rounded-3xl overflow-visible bg-white shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col border-5 sm:border-6 md:border-8 w-full ${theme.border}`}
+      >
+        {/* Top gradient header */}
+        <div
+          className={`relative bg-gradient-to-br ${theme.bg} p-4 sm:p-5 md:p-6 flex-none min-h-32 sm:min-h-40 md:min-h-44 flex flex-col justify-between rounded-t-lg overflow-hidden`}
         >
-          {/* Overlay to ensure badges are readable */}
-          {linkedinImage && (
-            <div className="absolute inset-0 bg-gradient-to-br opacity-60 pointer-events-none rounded-t-lg" 
-              style={{
-                backgroundImage: `linear-gradient(135deg, rgba(20, 184, 166, 0.7), rgba(34, 197, 94, 0.7))`,
-              }}
-            />
-          )}
-
-          {/* Badges - positioned absolutely to appear above image */}
+          {/* Type badge */}
           <div className="absolute top-4 sm:top-5 md:top-6 left-4 sm:left-5 md:left-6 z-20">
             <div className="px-3 py-1.5 rounded-full bg-white/95 text-slate-700 text-xs sm:text-sm font-bold shadow-md backdrop-blur-sm">
-              {pub.category}
+              {typeLabel}
             </div>
           </div>
 
-          <div className="absolute bottom-4 sm:bottom-5 md:bottom-6 right-4 sm:right-5 md:right-6 z-20">
-            <div className="px-3 py-1.5 rounded-full bg-white/95 text-slate-700 text-xs sm:text-sm font-medium shadow-md flex items-center gap-1.5 backdrop-blur-sm">
-              <Calendar size={14} />
-              {pub.date}
+          {/* Date badge */}
+          {dateLabel && (
+            <div className="absolute bottom-4 sm:bottom-5 md:bottom-6 right-4 sm:right-5 md:right-6 z-20">
+              <div className="px-3 py-1.5 rounded-full bg-white/95 text-slate-700 text-xs sm:text-sm font-medium shadow-md flex items-center gap-1.5 backdrop-blur-sm">
+                <Calendar size={14} />
+                {dateLabel}
+              </div>
             </div>
-          </div>
-        </a>
+          )}
+        </div>
 
-        {/* INNER TILTED CARD - White content card with FULL details */}
+        {/* Content card */}
         <div className="flex-1 p-2 sm:p-3 md:p-4 flex items-center justify-center">
           <motion.div
             initial={{ rotateZ: 0 }}
             whileInView={{ rotateZ: -2 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="w-full h-full bg-white rounded-lg sm:rounded-xl border-2 sm:border-3 border-slate-200 shadow-md p-2 sm:p-3 md:p-4 flex flex-col overflow-y-auto"
           >
-            {/* Inner Card Content */}
-            <h3 className="text-xs sm:text-sm md:text-base font-bold font-serif text-slate-800 mb-2 line-clamp-2 leading-tight">
+            <h3 className="text-xs sm:text-sm md:text-base font-bold font-serif text-slate-800 mb-2 line-clamp-3 leading-tight">
               {pub.title}
             </h3>
 
-            {/* Authors with icon */}
+            {/* Authors */}
             <div className="mb-2 flex items-start gap-1.5">
               <FileText size={12} className="text-slate-400 shrink-0 mt-0.5" />
-              <div className="text-[9px] sm:text-[10px] font-medium text-slate-700 leading-snug">
-                {pub.authors.join(", ")}
+              <div className="text-[9px] sm:text-[10px] font-medium text-slate-700 leading-snug line-clamp-2">
+                {authors.slice(0, 5).join(", ")}
+                {authors.length > 5 && ` +${authors.length - 5} more`}
               </div>
             </div>
 
-            {/* Venue with icon */}
+            {/* Venue */}
             <div className="mb-2 flex items-start gap-1.5">
               <ShieldCheck size={12} className="text-teal-500 shrink-0 mt-0.5" />
-              <div className="text-[9px] sm:text-[10px] text-slate-600 leading-snug font-serif italic">
+              <div className="text-[9px] sm:text-[10px] text-slate-600 leading-snug font-serif italic line-clamp-2">
                 {pub.venue}
               </div>
             </div>
 
-            <p className="text-[10px] sm:text-xs text-slate-600 mb-2 line-clamp-2 leading-snug">
-              {pub.description}
-            </p>
-
-            {/* All tags */}
+            {/* Category tag */}
             <div className="mb-3 flex flex-wrap gap-1">
-              {pub.tags.map((tag, i) => (
-                <span key={i} className="text-[8px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-bold">
-                  #{tag.toUpperCase()}
+              <span
+                className={`text-[8px] px-1.5 py-0.5 rounded font-bold ${
+                  isScoped
+                    ? "bg-teal-50 text-teal-700"
+                    : isReview
+                    ? "bg-amber-50 text-amber-700"
+                    : "bg-slate-100 text-slate-600"
+                }`}
+              >
+                #{(pub.category || "").toUpperCase()}
+              </span>
+              {pub.author_count_srl > 0 && (
+                <span className="text-[8px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-bold flex items-center gap-0.5">
+                  <Users size={8} /> {pub.author_count_srl} SRL
                 </span>
-              ))}
+              )}
             </div>
 
-            {/* Footer with button */}
+            {/* Footer */}
             <div className="mt-auto pt-2 border-t border-slate-100 flex justify-end">
-              <a
-                href={pub.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center rounded-full bg-slate-100 text-teal-600 hover:bg-teal-600 hover:text-white transition-all duration-300 shadow-sm"
-                title="View Publication"
-              >
-                <ExternalLink size={14} />
-              </a>
+              <span className="text-[9px] text-slate-400 font-medium">{pub.institute}</span>
             </div>
           </motion.div>
         </div>
 
-        {/* BOTTOM SOLID BAR */}
-        <div className={`h-5 sm:h-6 md:h-7 bg-gradient-to-r ${bgClass} shadow-sm rounded-b-lg`}></div>
+        {/* Bottom bar */}
+        <div className={`h-5 sm:h-6 md:h-7 bg-gradient-to-r ${theme.bg} shadow-sm rounded-b-lg`} />
       </div>
     </motion.div>
   );
@@ -183,17 +159,13 @@ const PublicationCard = ({ pub, index }) => {
 
 /* ================= YEAR PICKER MODAL ================= */
 
->>>>>>> f675a78 (fix: frontend Publications.jsx, install xlsx, clean up errors)
 const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, buttonRef }) => {
   const [position, setPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
     if (isOpen && buttonRef?.current) {
       const rect = buttonRef.current.getBoundingClientRect();
-      setPosition({
-        top: rect.bottom + 8,
-        left: rect.left,
-      });
+      setPosition({ top: rect.bottom + 8, left: rect.left });
     }
   }, [isOpen, buttonRef]);
 
@@ -201,7 +173,6 @@ const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, b
 
   return (
     <>
-      {/* Backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -209,30 +180,19 @@ const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, b
         onClick={onClose}
         className="fixed inset-0 z-40"
       />
-
-      {/* Dropdown Modal */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: -10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: -10 }}
         transition={{ duration: 0.15 }}
-        style={{
-          position: 'fixed',
-          top: `${position.top}px`,
-          left: `${position.left}px`,
-          zIndex: 50,
-        }}
+        style={{ position: "fixed", top: `${position.top}px`, left: `${position.left}px`, zIndex: 50 }}
         className="bg-white rounded-xl shadow-xl border border-slate-200 p-4"
       >
-        {/* Year Grid */}
         <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-xs">
           {years.map((year) => (
             <button
               key={year}
-              onClick={() => {
-                onSelectYear(year);
-                onClose();
-              }}
+              onClick={() => { onSelectYear(year); onClose(); }}
               className={`py-2 sm:py-2.5 px-2 rounded-lg font-bold text-sm transition-all duration-300 ${
                 selectedYear === year
                   ? "bg-teal-600 text-white shadow-md shadow-teal-600/30"
@@ -243,14 +203,9 @@ const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, b
             </button>
           ))}
         </div>
-
-        {/* Clear Selection Button */}
         {selectedYear && (
           <button
-            onClick={() => {
-              onSelectYear(null);
-              onClose();
-            }}
+            onClick={() => { onSelectYear(null); onClose(); }}
             className="w-full mt-3 py-2 bg-slate-200 text-slate-700 rounded-lg font-semibold hover:bg-slate-300 transition-colors text-sm"
           >
             Clear Year
@@ -261,119 +216,126 @@ const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, b
   );
 };
 
+/* ================= SKELETON ================= */
+
+const SkeletonCard = () => (
+  <div className="h-80 rounded-3xl bg-white shadow-md border-8 border-slate-200 flex flex-col overflow-hidden animate-pulse">
+    <div className="h-40 bg-slate-200" />
+    <div className="flex-1 p-4 flex flex-col gap-3">
+      <div className="h-4 bg-slate-200 rounded w-3/4" />
+      <div className="h-3 bg-slate-200 rounded w-1/2" />
+      <div className="h-3 bg-slate-200 rounded w-2/3" />
+    </div>
+  </div>
+);
+
 /* ================= MAIN ================= */
+
 const Publications = () => {
+  const [allPublications, setAllPublications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedYear, setSelectedYear] = useState(null);
   const [showYearPicker, setShowYearPicker] = useState(false);
-  const [loading, setLoading] = useState(true);
   const yearButtonRef = useRef(null);
 
-  // Extract all unique years from data (2020 to current year)
-  const allYears = Array.from({ length: new Date().getFullYear() - 2019 }, (_, i) => 2020 + i).reverse();
-
+  // Fetch all publications once on mount (client-side filter for instant UX)
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 600);
-    return () => clearTimeout(timer);
+    let cancelled = false;
+    setLoading(true);
+    fetch(`${API_BASE_URL}/api/publications`)
+      .then((r) => {
+        if (!r.ok) throw new Error(`Server error: ${r.status}`);
+        return r.json();
+      })
+      .then((json) => {
+        if (!cancelled) {
+          setAllPublications(json.publications || []);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          console.error("Failed to load publications:", err);
+          setError("Could not load publications. Please try again.");
+          setLoading(false);
+        }
+      });
+    return () => { cancelled = true; };
   }, []);
 
-  // Filtering logic
-  const filteredPublications = publicationsData.filter((pub) => {
-    const matchesCat = activeCategory === "All" || pub.category === activeCategory;
-    const searchLower = searchQuery.toLowerCase();
-    const matchesQuery =
-      (pub.title || "").toLowerCase().includes(searchLower) ||
-      (Array.isArray(pub.authors) ? pub.authors.join(", ") : pub.authors || "").toLowerCase().includes(searchLower) ||
-      (pub.venue || "").toLowerCase().includes(searchLower) ||
-      (Array.isArray(pub.tags) ? pub.tags.join(", ") : pub.tags || "").toLowerCase().includes(searchLower);
+  // Derive unique years from fetched data
+  const availableYears = React.useMemo(() => {
+    const years = new Set(allPublications.map((p) => p.year).filter(Boolean));
+    return Array.from(years).sort((a, b) => b - a);
+  }, [allPublications]);
 
-    let matchesYear = true;
-    if (selectedYear) {
-      // Try to extract year from pub.date
-      const pubYear = parseInt((pub.date && pub.date.match(/\d{4}/)?.[0]) || 0);
-      matchesYear = pubYear === selectedYear;
-    }
-    return matchesCat && matchesQuery && matchesYear;
-  });
+  // Client-side filtering — instant, no extra API calls
+  const filteredPublications = React.useMemo(() => {
+    return allPublications.filter((pub) => {
+      const matchesCat =
+        activeCategory === "All" || pub.event_type === activeCategory;
 
-  // Export to Excel function with multiple sheets (Conference as main sheet)
-  const exportToExcel = (data) => {
-    if (data.length === 0) {
+      const q = searchQuery.toLowerCase();
+      const matchesQuery =
+        !q ||
+        (pub.title || "").toLowerCase().includes(q) ||
+        (pub.student_authors || "").toLowerCase().includes(q) ||
+        (pub.venue || "").toLowerCase().includes(q) ||
+        (pub.category || "").toLowerCase().includes(q);
+
+      const matchesYear = !selectedYear || pub.year === selectedYear;
+
+      return matchesCat && matchesQuery && matchesYear;
+    });
+  }, [allPublications, activeCategory, searchQuery, selectedYear]);
+
+  // Export filtered publications to Excel
+  const exportToExcel = useCallback(() => {
+    if (filteredPublications.length === 0) {
       alert("No publications to export");
       return;
     }
-
-    const headers = ["ID", "Title", "Authors", "Venue", "Date", "Category", "Description", "Tags", "Status", "Inventors"];
-    const workbook = XLSX.utils.book_new();
-    
-    // Group data by category
-    const categoryList = ["Conference", "Journal", "Book Chapter", "Patents"];
-    const groupedData = {};
-    
-    categoryList.forEach(cat => {
-      groupedData[cat] = data.filter(pub => pub.category === cat);
-    });
-
-    // Add sheets in order - Conference first as main sheet
-    categoryList.forEach((category) => {
-      const items = groupedData[category];
-      if (items.length > 0) {
-        // Prepare rows with headers
-        const rows = items.map(pub => ([
-          pub.id,
-          pub.title,
-          pub.authors.join("; "),
-          pub.venue,
-          pub.date,
-          pub.category,
-          pub.description,
-          pub.tags.join("; "),
-          pub.status || "-",
-          pub.inventors ? pub.inventors.join("; ") : "-"
-        ]));
-
-        // Create worksheet
-        const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
-        
-        // Add worksheet to workbook
-        XLSX.utils.book_append_sheet(workbook, ws, category);
-      }
-    });
-
-    // Generate Excel file
-    XLSX.writeFile(workbook, `publications_${new Date().toISOString().split('T')[0]}.xlsx`);
-  };
+    const headers = ["Title", "Authors", "Venue", "Date", "Event Type", "Category", "SRL Authors", "Institute"];
+    const rows = filteredPublications.map((p) => [
+      p.title,
+      p.student_authors,
+      p.venue,
+      p.date_raw || "",
+      p.event_type,
+      p.category,
+      p.author_count_srl,
+      p.institute,
+    ]);
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Publications");
+    XLSX.writeFile(wb, `srl_publications_${new Date().toISOString().split("T")[0]}.xlsx`);
+  }, [filteredPublications]);
 
   return (
     <div className="relative pt-8 lg:pt-12 pb-40 px-4 sm:px-6 lg:px-8 min-h-screen bg-[#F2EFE8] overflow-hidden">
-      {/* Unique Mesh Gradient Background - Darkened */}
+      {/* Background */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#f8e6c1]/60 via-[#EAE4D5]/40 to-[#00887b]/20" />
-
-        {/* Animated Glow Spheres - Diagonal Orientation */}
-        <motion.div
-          animate={{ x: [0, 40, 0], y: [0, 40, 0], scale: [1, 1.1, 1] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-secondary/15 rounded-full blur-[120px] pointer-events-none"
-        />
-        <motion.div
-          animate={{ x: [0, -40, 0], y: [0, -40, 0], scale: [1, 1.2, 1] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-[-10%] right-[-10%] w-[800px] h-[800px] bg-[#E6B800]/15 rounded-full blur-[150px] pointer-events-none"
-        />
+        <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-secondary/15 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[800px] h-[800px] bg-[#E6B800]/15 rounded-full blur-[150px] pointer-events-none" />
         <div className="absolute top-[40%] right-[10%] w-[300px] h-[300px] bg-secondary/5 rounded-full blur-[80px] pointer-events-none" />
-
-
-        {/* Subtle SVG Pattern Overlay */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300887b' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4v-4H4v4H0v2h4v4h2v-4h4v-2H6zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
+        <div
+          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300887b' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4v-4H4v4H0v2h4v4h2v-4h4v-2H6zm30 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        
-        {/* Header Section */}
+        {/* Header */}
         <div className="text-center mb-10">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -381,41 +343,44 @@ const Publications = () => {
           >
             Publications
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-slate-500 text-lg max-w-xl mx-auto leading-snug"
           >
-            Explore our latest research papers, journals, and book chapters driving innovation forward.
+            Explore our latest research papers, journals, and book chapters
+            driving innovation forward.
           </motion.p>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mt-6 flex justify-center"
           >
-            <Link to="/add-publication" className="bg-teal-600 text-white px-6 py-3 rounded-full font-bold shadow-md hover:bg-teal-700 transition-colors inline-flex items-center gap-2">
+            <Link
+              to="/add-publication"
+              className="bg-teal-600 text-white px-6 py-3 rounded-full font-bold shadow-md hover:bg-teal-700 transition-colors inline-flex items-center gap-2"
+            >
               <PlusCircle size={20} />
-              Add Publications
+              Add Publication
             </Link>
           </motion.div>
         </div>
 
-        {/* Filters and Search Hub */}
+        {/* Filters */}
         <div className="flex flex-col gap-4 mb-12">
-          {/* Categories and Controls Row */}
           <div className="flex flex-col lg:flex-row justify-between items-center gap-4 bg-slate-50/50 p-2 sm:p-4 rounded-3xl border border-slate-200 shadow-sm">
-            {/* Categories Tab */}
+            {/* Category tabs */}
             <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-auto scrollbar-hide py-1">
-              {categories.map((cat) => (
+              {CATEGORIES.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
                   className={`px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all duration-300 ${
-                    activeCategory === cat 
-                    ? "bg-teal-600 text-white shadow-md shadow-teal-600/20" 
-                    : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 hover:border-slate-300"
+                    activeCategory === cat
+                      ? "bg-teal-600 text-white shadow-md shadow-teal-600/20"
+                      : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 hover:border-slate-300"
                   }`}
                 >
                   {cat}
@@ -423,12 +388,11 @@ const Publications = () => {
               ))}
             </div>
 
-            {/* Search and Year Picker */}
+            {/* Search + year + export */}
             <div className="flex items-center gap-2 w-full lg:w-auto">
-              {/* Search Box */}
               <div className="relative flex-1 lg:flex-none lg:w-80">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                <input 
+                <input
                   type="text"
                   placeholder="Search papers, authors..."
                   value={searchQuery}
@@ -436,8 +400,6 @@ const Publications = () => {
                   className="w-full bg-white border border-slate-200 rounded-full py-3 h-[44px] pl-11 pr-4 text-sm font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all shadow-sm hover:border-slate-300"
                 />
               </div>
-
-              {/* Year Picker Button */}
               <button
                 ref={yearButtonRef}
                 onClick={() => setShowYearPicker(true)}
@@ -450,18 +412,18 @@ const Publications = () => {
                 <Calendar size={18} />
                 <span className="hidden sm:inline">{selectedYear || "Year"}</span>
               </button>
-              {/* Export to Excel Button */}
               <button
-                onClick={() => exportToExcel(filteredPublications)}
+                onClick={exportToExcel}
                 title="Export to Excel"
                 className="shrink-0 h-[44px] px-3 sm:px-4 rounded-full font-bold text-sm transition-all duration-300 flex items-center gap-2 bg-white text-slate-600 border border-slate-200 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-600"
               >
                 <Download size={18} />
                 <span className="hidden sm:inline">Export</span>
-              </button>            </div>
+              </button>
+            </div>
           </div>
 
-          {/* Active Filters Display */}
+          {/* Active filters */}
           {(activeCategory !== "All" || searchQuery || selectedYear) && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -469,64 +431,26 @@ const Publications = () => {
               className="flex flex-wrap items-center gap-2 bg-teal-50/50 p-3 sm:p-4 rounded-2xl border border-teal-200/50"
             >
               <span className="text-xs sm:text-sm font-semibold text-teal-700">Active Filters:</span>
-              
               {activeCategory !== "All" && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full text-xs sm:text-sm text-slate-700 font-medium border border-teal-200"
-                >
+                <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full text-xs sm:text-sm text-slate-700 font-medium border border-teal-200">
                   {activeCategory}
-                  <button
-                    onClick={() => setActiveCategory("All")}
-                    className="hover:text-red-500 transition-colors"
-                  >
-                    <X size={14} />
-                  </button>
+                  <button onClick={() => setActiveCategory("All")} className="hover:text-red-500 transition-colors"><X size={14} /></button>
                 </motion.div>
               )}
-
               {searchQuery && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full text-xs sm:text-sm text-slate-700 font-medium border border-teal-200"
-                >
-                  <Search size={13} />
-                  {searchQuery}
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="hover:text-red-500 transition-colors"
-                  >
-                    <X size={14} />
-                  </button>
+                <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full text-xs sm:text-sm text-slate-700 font-medium border border-teal-200">
+                  <Search size={13} />{searchQuery}
+                  <button onClick={() => setSearchQuery("")} className="hover:text-red-500 transition-colors"><X size={14} /></button>
                 </motion.div>
               )}
-
               {selectedYear && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full text-xs sm:text-sm text-slate-700 font-medium border border-teal-200"
-                >
-                  <Calendar size={13} />
-                  {selectedYear}
-                  <button
-                    onClick={() => setSelectedYear(null)}
-                    className="hover:text-red-500 transition-colors"
-                  >
-                    <X size={14} />
-                  </button>
+                <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full text-xs sm:text-sm text-slate-700 font-medium border border-teal-200">
+                  <Calendar size={13} />{selectedYear}
+                  <button onClick={() => setSelectedYear(null)} className="hover:text-red-500 transition-colors"><X size={14} /></button>
                 </motion.div>
               )}
-
-              {/* Clear All Button */}
               <button
-                onClick={() => {
-                  setActiveCategory("All");
-                  setSearchQuery("");
-                  setSelectedYear(null);
-                }}
+                onClick={() => { setActiveCategory("All"); setSearchQuery(""); setSelectedYear(null); }}
                 className="ml-auto text-teal-600 hover:text-teal-700 font-bold text-xs sm:text-sm underline"
               >
                 Clear All
@@ -535,96 +459,54 @@ const Publications = () => {
           )}
         </div>
 
-        {/* Year Picker Modal */}
         <YearPickerModal
           isOpen={showYearPicker}
           onClose={() => setShowYearPicker(false)}
-          years={allYears}
+          years={availableYears}
           selectedYear={selectedYear}
           onSelectYear={setSelectedYear}
           buttonRef={yearButtonRef}
         />
 
-        {/* Results Counter */}
+        {/* Results count */}
         {loading ? (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-sm sm:text-base text-slate-600 font-medium mb-6"
-          >
-            Loading publications...
-          </motion.p>
-        ) : filteredPublications.length > 0 ? (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-sm sm:text-base text-slate-600 font-medium mb-6"
-          >
-            Showing <span className="font-bold text-teal-600">{filteredPublications.length}</span> of <span className="font-bold">{publicationsData.length}</span> publications
-          </motion.p>
+          <p className="text-sm sm:text-base text-slate-600 font-medium mb-6">Loading publications...</p>
+        ) : error ? (
+          <p className="text-sm text-red-500 font-medium mb-6">{error}</p>
         ) : (
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="text-sm sm:text-base text-slate-600 font-medium mb-6"
           >
-            No publications found.
+            Showing{" "}
+            <span className="font-bold text-teal-600">{filteredPublications.length}</span>{" "}
+            of <span className="font-bold">{allPublications.length}</span> publications
           </motion.p>
         )}
 
-        {/* Publications Grid */}
+        {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <AnimatePresence mode="popLayout">
-<<<<<<< HEAD
-            {loading ? (
-              [...Array(6)].map((_, index) => (
-                <div key={index} className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col h-[350px] animate-pulse">
-                  <div className="flex justify-between items-start mb-5">
-                    <div className="h-6 w-24 bg-teal-50 rounded-full"></div>
-                    <div className="h-4 w-16 bg-gray-200 rounded"></div>
-                  </div>
-                  <div className="h-6 md:h-8 w-3/4 bg-gray-200 rounded-md mb-4"></div>
-                  <div className="h-4 w-full bg-gray-200 rounded-md mb-2"></div>
-                  <div className="h-4 w-5/6 bg-gray-200 rounded-md mb-6"></div>
-                  
-                  <div className="flex items-start gap-3 mb-6">
-                    <div className="w-4 h-4 rounded bg-gray-200 mt-1 shrink-0"></div>
-                    <div className="h-4 w-1/2 bg-gray-200 rounded"></div>
-                  </div>
-                  
-                  <div className="flex items-start gap-3 mb-6">
-                    <div className="w-4 h-4 rounded bg-gray-200 mt-1 shrink-0"></div>
-                    <div className="h-4 w-2/3 bg-gray-200 rounded"></div>
-                  </div>
-                  
-                  <div className="mt-auto border-t border-slate-100 pt-5 flex justify-between items-center">
-                    <div className="flex gap-2">
-                       <div className="h-5 w-16 bg-gray-200 rounded-md"></div>
-                       <div className="h-5 w-12 bg-gray-200 rounded-md"></div>
-                    </div>
-                    <div className="w-10 h-10 rounded-full bg-slate-100"></div>
-                  </div>
-                </div>
-              ))
-            ) : filteredPublications.length > 0 ? (
-=======
-            {filteredPublications.length > 0 ? (
->>>>>>> f675a78 (fix: frontend Publications.jsx, install xlsx, clean up errors)
-              filteredPublications.map((pub, index) => (
-                <PublicationCard key={pub.id} pub={pub} index={index} />
-              ))
-            ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="col-span-full text-center text-slate-500 py-12 text-lg font-semibold"
-              >
-                No publications found.
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {loading ? (
+            [...Array(6)].map((_, i) => <SkeletonCard key={i} />)
+          ) : (
+            <AnimatePresence mode="popLayout">
+              {filteredPublications.length > 0 ? (
+                filteredPublications.map((pub, index) => (
+                  <PublicationCard key={pub.id} pub={pub} index={index} />
+                ))
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="col-span-full text-center text-slate-500 py-12 text-lg font-semibold"
+                >
+                  No publications found.
+                </motion.div>
+              )}
+            </AnimatePresence>
+          )}
         </div>
-
       </div>
     </div>
   );

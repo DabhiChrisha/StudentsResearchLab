@@ -74,7 +74,7 @@ const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
                         <div className="relative aspect-square w-full rounded-2xl overflow-hidden shadow-sm border border-black/5 bg-gray-200">
                             {!failedImages[index] && item.image ? (
                                 <>
-                                    <img
+                                    <img loading="lazy" decoding="async"
                                         src={item.image}
                                         alt={item.title}
                                         onLoad={() => handleImageLoad(index)}

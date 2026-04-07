@@ -54,7 +54,7 @@ export const SparklesCore = (props) => {
               enable: false,
               zIndex: 1,
             },
-            fpsLimit: 120,
+            fpsLimit: 60,
             interactivity: {
               events: {
                 onClick: {
@@ -410,7 +410,7 @@ export const SparklesCore = (props) => {
                 speed: 1,
               },
             },
-            detectRetina: true,
+            detectRetina: false,
           }}
         />
       )}

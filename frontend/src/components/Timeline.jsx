@@ -28,7 +28,7 @@ const TimelineItem = ({ item, index, scrollRoot, isLast }) => {
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ root: scrollRoot, margin: "-10% 0% -10% 0%" }}
+      viewport={{ root: scrollRoot, once: true, margin: "-10% 0% -10% 0%" }}
       variants={{
         hidden: { opacity: 0 },
         visible: {
@@ -147,9 +147,9 @@ function Timeline() {
     <section id="timeline" className="py-24 px-4 md:px-8 bg-gradient-to-b from-white via-[#e8f5f1] to-white relative overflow-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
       {/* Background Decorative Shapes */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-5%] left-[-5%] w-[45%] h-[65%] bg-[#f8e6c1]/60 rounded-full blur-[90px] animate-float-slow opacity-80" style={{ borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' }} />
-        <div className="absolute bottom-[-5%] right-[-5%] w-[55%] h-[75%] bg-[#05877a]/10 rounded-full blur-[110px] animate-float-slower opacity-70" style={{ borderRadius: '40% 60% 70% 30% / 40% 50% 60% 70%' }} />
-        <div className="absolute top-[30%] right-[10%] w-64 h-64 bg-[#05877a]/5 rounded-full blur-[80px] animate-float-slow opacity-50" />
+        <div className="absolute top-[-5%] left-[-5%] w-[45%] h-[65%] bg-[#f8e6c1]/60 rounded-full blur-[90px] animate-float-slow opacity-80" style={{ borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%', willChange: 'transform' }} />
+        <div className="absolute bottom-[-5%] right-[-5%] w-[55%] h-[75%] bg-[#05877a]/10 rounded-full blur-[110px] animate-float-slower opacity-70" style={{ borderRadius: '40% 60% 70% 30% / 40% 50% 60% 70%', willChange: 'transform' }} />
+        <div className="absolute top-[30%] right-[10%] w-64 h-64 bg-[#05877a]/5 rounded-full blur-[80px] animate-float-slow opacity-50" style={{ willChange: 'transform' }} />
       </div>
       <div className="max-w-[1400px] mx-auto relative z-10">
         <div className="relative bg-white/40 backdrop-blur-xl border border-[#05877a]/20 rounded-[3.5rem] shadow-[0_40px_80px_-20px_rgba(5,135,122,0.15)] overflow-hidden h-[900px] lg:h-[700px] z-10">
@@ -158,11 +158,9 @@ function Timeline() {
             <Tree rootXPos={0.25} rootYPos={1.1} scale={0.8} />
           </div>
           <div ref={scrollContainerRef} className="absolute inset-0 flex flex-col lg:flex-row overflow-y-auto overflow-x-hidden z-10 scroll-smooth timeline-container">
-            {/* Hide scrollbars for the whole container */}
-            <style dangerouslySetInnerHTML={{ __html: `.timeline-container::-webkit-scrollbar { display: none; } .timeline-container { -ms-overflow-style: none; scrollbar-width: none; }` }} />
             {/* LEFT: STATIC HUB (Central Hub) - Sticky on Desktop */}
             <div className="w-full lg:w-[42%] lg:sticky lg:top-0 h-[400px] lg:h-full relative flex flex-col items-center justify-center p-6 lg:p-8 z-10 bg-transparent flex-shrink-0">
-              <motion.div initial={{ opacity: 0, y: -20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: "easeOut" }} className="relative lg:absolute lg:top-8 left-0 right-0 z-20 mb-6 lg:mb-0">
+              <motion.div initial={{ opacity: 0, y: -20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: "easeOut" }} className="relative lg:absolute lg:top-8 left-0 right-0 z-20 mb-6 lg:mb-0">
                 <GradientText colors={["#184d46ff", "#16966bff", "#184d46ff", "#16966bff"]} animationSpeed={4} className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter drop-shadow-sm">
                   Our Journey
                 </GradientText>
@@ -196,9 +194,9 @@ function Timeline() {
                 </div>
                 <div className="absolute inset-3 rounded-full bg-white shadow-[0_20px_50px_-20px_rgba(0,0,0,0.1)] flex flex-col items-center justify-center p-6 text-center ring-1 ring-slate-100/50 backdrop-blur-sm">
                   <div className="w-16 h-16 sm:w-20 sm:h-20 mb-3 rounded-full flex items-center justify-center">
-                    <img src="/SRL.svg" alt="SRL Logo" className="w-full h-full object-contain" />
+                    <img loading="lazy" decoding="async" src="/SRL.svg" alt="SRL Logo" className="w-full h-full object-contain" />
                   </div>
-                  <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.5, duration: 1 }} className="text-[#926c15] font-extrabold text-[10px] sm:text-[11px] tracking-[0.3em] uppercase mb-3 drop-shadow-sm">
+                  <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3, duration: 0.6 }} className="text-[#926c15] font-extrabold text-[10px] sm:text-[11px] tracking-[0.3em] uppercase mb-3 drop-shadow-sm">
                     Students Research Lab
                   </motion.span>
                   <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent mb-3" />

@@ -1,6 +1,7 @@
 import { useState, lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { API_BASE_URL } from './config/apiConfig';
 
 // Layout & UI Components
 import Navbar from './components/Navbar';
@@ -8,6 +9,7 @@ import Footer from './components/Footer';
 import AnimatedPreloader from './components/AnimatedPreloader';
 import ScrollToTop from './components/ScrollToTop';
 import MobileDock from './components/MobileDock';
+import ErrorBoundary from './components/ErrorBoundary';
 
 
 // Page Components (Lazy Loaded for Performance)
@@ -31,14 +33,13 @@ function App() {
 
   useEffect(() => {
     // Wake up Render backend immediately on app load
-    fetch(`https://studentsresearchlab-1.onrender.com/api/health`)
+    fetch(`${API_BASE_URL}/api/health`)
       .then(() => console.log('✅ Backend is awake'))
       .catch(() => console.log('⚠️ Backend is waking up, please wait...'));
 
     // Keep it awake every 14 minutes
     const keepAlive = setInterval(() => {
-      fetch(`https://studentsresearchlab-1.onrender.com/api/health`)
-        .catch(() => {});
+      fetch(`${API_BASE_URL}/api/health`).catch(() => {});
     }, 14 * 60 * 1000);
 
     return () => clearInterval(keepAlive);
@@ -66,14 +67,15 @@ function AppContent({ loading, setLoading }) {
         )}
       </AnimatePresence>
 
-      <div className={`h-screen w-full flex flex-col overflow-hidden bg-primary relative transition-opacity duration-1000 ${loading ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`w-full flex flex-col bg-primary relative transition-opacity duration-1000 ${loading ? 'opacity-0' : 'opacity-100'}`}>
         {!loading && (
           <>
 
             <Navbar />
 
-            <div id="main-content" className="flex-1 w-full h-full overflow-y-scroll overflow-x-hidden relative z-10 pb-0 flex flex-col justify-between" style={{ paddingTop: 'var(--navbar-height, 80px)' }}>
+            <div id="main-content" className="w-full overflow-x-hidden relative z-10 flex flex-col" style={{ paddingTop: 'var(--navbar-height, 80px)', minHeight: '100dvh' }}>
               <div className="flex-1 w-full flex flex-col">
+              <ErrorBoundary key={location.pathname} section="page" message="This page couldn't load." hint="Try navigating to another page or refresh.">
               <Suspense fallback={
                 <div className="w-full flex-1 flex items-center justify-center">
                   <div className="flex gap-2">
@@ -102,6 +104,7 @@ function AppContent({ loading, setLoading }) {
                   </Routes>
                 </AnimatePresence>
               </Suspense>
+              </ErrorBoundary>
               </div>
 
               <div className="mt-auto w-full">

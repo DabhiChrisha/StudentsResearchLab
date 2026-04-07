@@ -7,7 +7,7 @@ export default function AnimatedPreloader({ finishLoading }) {
         // Auto-hide after 2.5 seconds
         const timer = setTimeout(() => {
             if (finishLoading) finishLoading();
-        }, 2800);
+        }, 1800);
         return () => clearTimeout(timer);
     }, [finishLoading]);
 
@@ -27,7 +27,7 @@ export default function AnimatedPreloader({ finishLoading }) {
 
                 {/* Center logo */}
                 <div className="logo-wrapper">
-                    <img src="/SRL.svg" alt="SRL Logo" className="animated-logo" />
+                    <img loading="lazy" decoding="async" src="/SRL.svg" alt="SRL Logo" className="animated-logo" />
                     {/* Pulse effect */}
                     <div className="pulse-ring"></div>
                 </div>
