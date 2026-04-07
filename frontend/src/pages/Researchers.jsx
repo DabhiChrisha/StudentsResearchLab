@@ -106,9 +106,12 @@ export default function Researchers() {
                 reflection: s.reflection || "",
                 email: s.email || "",
                 linkedin: s.linkedin || "",
-                researchWorksCount: nameStats.research_works_count ?? "--",
-                hackathonsCount: hackCount ?? "--",
-                papersPublishedCount: nameStats.papers_published_count ?? "--",
+                researchWorksCount: nameStats.research_works_count ?? s.researchWorks?.length ?? "--",
+                hackathonsCount: hackCount ?? s.hackathons?.length ?? "--",
+                papersPublishedCount: nameStats.papers_published_count ?? s.papersPublished?.length ?? "--",
+                hackathons: s.hackathons || [],
+                papers: s.papersPublished || [],
+                research_areas: s.research || [],
                 gradient: "linear-gradient(160deg,#fbe8c1,#167d8d)",
             };
         });
@@ -144,12 +147,12 @@ export default function Researchers() {
         const nameStats = cardStats.stats_by_name[name] || {};
         const hackCount = cardStats.hackathons_by_enrollment[enrollKey];
         return {
-            research_works_count: nameStats.research_works_count,
-            hackathons_count: hackCount,
-            papers_published_count: nameStats.papers_published_count,
-            research_areas: nameStats.research_areas || [],
-            hackathons: nameStats.hackathons_list || [],
-            papers: nameStats.papers || [],
+            research_works_count: nameStats.research_works_count ?? activeStudent.researchWorksCount,
+            hackathons_count: hackCount ?? activeStudent.hackathonsCount,
+            papers_published_count: nameStats.papers_published_count ?? activeStudent.papersPublishedCount,
+            research_areas: (nameStats.research_areas && nameStats.research_areas.length > 0) ? nameStats.research_areas : (activeStudent.research_areas || []),
+            hackathons: (nameStats.hackathons_list && nameStats.hackathons_list.length > 0) ? nameStats.hackathons_list : (activeStudent.hackathons || []),
+            papers: (nameStats.papers && nameStats.papers.length > 0) ? nameStats.papers : (activeStudent.papers || []),
         };
     }, [activeStudent, cardStats]);
 
@@ -310,6 +313,12 @@ export default function Researchers() {
                                                 reflection: ra.reflection || "",
                                                 email: ra.email || "",
                                                 linkedin: ra.linkedin || "",
+                                                hackathons: ra.hackathons || [],
+                                                papers: ra.papersPublished || [],
+                                                research_areas: ra.research || [],
+                                                researchWorksCount: ra.researchWorks?.length ?? "--",
+                                                hackathonsCount: ra.hackathons?.length ?? "--",
+                                                papersPublishedCount: ra.papersPublished?.length ?? "--",
                                             })}
                                             className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-white shadow-xl group-hover:scale-105 transition-transform duration-500 group"
                                         >
@@ -328,10 +337,10 @@ export default function Researchers() {
                                             Research Assistant • {ra.department}
                                         </div>
 
-                                        <div className="flex flex-wrap gap-2 mb-6 justify-center sm:justify-start">
+                                        <div className="flex flex-wrap gap-2 mb-4 justify-center sm:justify-start">
                                             {(ra.research || []).length > 0 ? (
                                                 ra.research.slice(0, 3).map((domain, i) => (
-                                                    <span key={i} className="px-3 py-1 rounded-full bg-white/50 border border-secondary/10 text-slate-600 text-xs font-bold">
+                                                    <span key={i} className="px-3 py-1 rounded-full bg-white/50 border border-secondary/10 text-slate-600 text-[10px] font-black uppercase tracking-wider">
                                                         {domain}
                                                     </span>
                                                 ))
@@ -339,6 +348,29 @@ export default function Researchers() {
                                                 <span className="text-sm text-slate-400">-</span>
                                             )}
                                         </div>
+
+                                        {/* Hackathons List */}
+                                        {ra.hackathons && ra.hackathons.length > 0 && (
+                                            <div className="flex flex-col gap-1.5 mb-3 text-center sm:text-left">
+                                                <p className="text-[9px] font-black uppercase tracking-[0.15em] text-secondary/40 mb-1">Hackathons</p>
+                                                <div className="flex flex-col gap-1">
+                                                    {ra.hackathons.slice(0, 2).map((hack, hIdx) => (
+                                                        <div key={hIdx} className="flex items-center gap-2 group/hack justify-center sm:justify-start">
+                                                            <div className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
+                                                            <span className="text-[11px] font-bold text-slate-600 line-clamp-1 truncate tracking-tight">
+                                                                {hack}
+                                                            </span>
+                                                        </div>
+                                                    ))}
+                                                    {ra.hackathons.length > 2 && (
+                                                        <p className="text-[10px] font-black text-secondary/70 pl-4 uppercase tracking-[0.15em]">
+                                                            +{ra.hackathons.length - 2} More
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+
 
                                         <div className="flex items-center justify-center sm:justify-start gap-4">
                                             {ra.email && (

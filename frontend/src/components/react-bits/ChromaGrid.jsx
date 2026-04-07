@@ -100,9 +100,32 @@ const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
                         <h4 className="text-xl font-black text-white mb-0.5 tracking-tight line-clamp-1">
                             {item.title}
                         </h4>
-                        <p className="text-xs font-bold text-white uppercase tracking-widest mb-4">
+                        <p className="text-xs font-bold text-white uppercase tracking-widest mb-2">
                             {item.subtitle}
                         </p>
+
+                        {/* Hackathons List */}
+                        {item.hackathons && item.hackathons.length > 0 && (
+                            <div className="flex flex-col gap-1.5 mb-2 text-center sm:text-left">
+                                <p className="text-[9px] font-black uppercase tracking-[0.15em] text-white/50 mb-1">Hackathons</p>
+                                <div className="flex flex-col gap-1">
+                                    {item.hackathons.slice(0, 2).map((hack, hIdx) => (
+                                        <div key={hIdx} className="flex items-center gap-1.5 group/hack">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-white shrink-0 shadow-sm" />
+                                            <span className="text-[11px] font-bold text-white line-clamp-1 truncate tracking-tight">
+                                                {hack}
+                                            </span>
+                                        </div>
+                                    ))}
+                                    {item.hackathons.length > 2 && (
+                                        <p className="text-[10px] font-black text-white/60 pl-3 uppercase tracking-widest">
+                                            +{item.hackathons.length - 2} More
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
 
                         {/* Bottom Row: Icons + Metrics in one line */}
                         <div className="mt-4 flex items-center justify-between gap-4 border-t border-white/40 pt-4">

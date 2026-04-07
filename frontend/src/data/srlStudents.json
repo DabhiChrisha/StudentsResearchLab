@@ -27,12 +27,17 @@
             "Dean's List Semester 3"
         ],
         "papersPublished": [
-            "Smart Campus Energy Monitor",
-            "AI-based Attendance Tracker"
+            "Misinformation Detection using LLMs with Explainability (IEEE Xplore, 2026)",
+            "AI's Influence on Human Thinking (IEEE Xplore, 2025)",
+            "Tracking Air Pollution using INSAT (Poster, 2025)",
+            "AI's Influence on Human Thinking (Poster, 2025)"
         ],
         "hackathons": [
-            "HackNIT 2023",
-            "CodeFest 2024"
+            "InnovAItion - Shortlisted",
+            "KDSH 2026 - Participated",
+            "Cognivia - Participated",
+            "Odoo x GV - Participated",
+            "AISEHack 2026 - Shortlisted \u2192 FINALIST"
         ]
     },
     {
@@ -67,8 +72,11 @@
             "Real-time Traffic Analysis"
         ],
         "hackathons": [
-            "SmartCity Hack 2024",
-            "AI Innovators 2024"
+            "InnovAItion - Shortlisted",
+            "KDSH 2026 - Participated",
+            "Cognivia - 2nd Runner Up (Finalist)",
+            "Odoo x GV - Runner Up",
+            "AISEHack 2026 - Shortlisted \u2192 FINALIST"
         ]
     },
     {
@@ -99,12 +107,14 @@
             "Merit Scholar"
         ],
         "papersPublished": [
-            "Accessible UI Toolkit",
-            "Gesture-Based Control System"
+            "Tracking Air Pollution using INSAT Satellite and Ground Data Fusion (Poster Presentation, 2025)"
         ],
         "hackathons": [
-            "UX Sprint 2024",
-            "Design Jam 2023"
+            "InnovAItion - Participated",
+            "KDSH 2026 - Participated",
+            "Cognivia - Participated",
+            "Odoo x GV - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -135,12 +145,12 @@
             "Academic Excellence Award"
         ],
         "papersPublished": [
-            "Warehouse Automation Bot",
-            "Low-power Sensor Mesh"
+            "TrafficEye: Intelligent Traffic Optimization (IEEE Xplore, 2025)"
         ],
         "hackathons": [
-            "RoboHack 2024",
-            "IoT Challenge 2023"
+            "InnovAItion - Participated",
+            "Cognivia - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -175,8 +185,11 @@
             "Smart Agriculture Sensors"
         ],
         "hackathons": [
-            "RoboHack 2024",
-            "GreenTech Hack 2023"
+            "InnovAItion - Shortlisted",
+            "KDSH 2026 - Participated",
+            "Cognivia - Participated",
+            "Odoo x GV - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -212,8 +225,8 @@
             "Privacy-Preserving Identity System"
         ],
         "hackathons": [
-            "BlockHack 2024",
-            "CyberQuest 2023"
+            "InnovAItion - Shortlisted",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -249,12 +262,13 @@
             "Best RA Award 2024"
         ],
         "papersPublished": [
-            "GAN Model for Art Generation",
-            "Real-time Neural Network Optimizer"
+            "Fusing Retrieval Techniques for Enhanced Personalized Community Question Answering (Conference Proceedings, 2024, CEUR WS)"
         ],
         "hackathons": [
-            "AI Conclave 2024",
-            "Deep Learning Sprint 2023"
+            "InnovAItion - Shortlisted",
+            "Cognivia - 2nd Runner Up (Finalist)",
+            "Odoo x GV - Shortlisted (Finalist)",
+            "TIGC La Trobe - Participated"
         ]
     },
     {
@@ -294,8 +308,9 @@
             "Social Media Trends Dashboard"
         ],
         "hackathons": [
-            "DataHack 2024",
-            "Analytics Marathon 2023"
+            "InnovAItion - Shortlisted",
+            "Odoo x GV - Shortlisted (Finalist)",
+            "TIGC La Trobe - Participated"
         ]
     },
     {
@@ -331,8 +346,9 @@
             "Automated Phishing Simulator"
         ],
         "hackathons": [
-            "CyberShield 2024",
-            "CTF Challenge 2023"
+            "InnovAItion - Shortlisted",
+            "KDSH 2026 - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -368,8 +384,8 @@
             "Interactive Event Scheduler"
         ],
         "hackathons": [
-            "Webathon 2024",
-            "CodeSprint 2023"
+            "Odoo x GV - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -405,8 +421,10 @@
             "Algorithm Visualizer"
         ],
         "hackathons": [
-            "AlgoFest 2024",
-            "Code Jam 2023"
+            "InnovAItion - Shortlisted",
+            "KDSH 2026 - Participated",
+            "Odoo x GV - Runner Up",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -442,8 +460,8 @@
             "Compiler Optimization Suite"
         ],
         "hackathons": [
-            "Open Source Summit 2024",
-            "Hack the Kernel 2023"
+            "InnovAItion - Shortlisted",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -473,6 +491,12 @@
         "achievements": [
             "Best Web Developer Award",
             "Dean's List Semester 5"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "Cognivia - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -502,6 +526,12 @@
         "achievements": [
             "Inter-college Science Fair Winner",
             "Gold Medalist in Biology"
+        ],
+        "hackathons": [
+            "InnovAItion - Participated",
+            "KDSH 2026 - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -531,6 +561,12 @@
         "achievements": [
             "Marketing Lead at Club",
             "Google Analytics Certified"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "Cognivia - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -560,6 +596,14 @@
         "achievements": [
             "Game Jam 2024 Finalist",
             "Unity Developer Certificate"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "KDSH 2026 - Participated",
+            "Cognivia - Participated",
+            "Odoo x GV - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Participated"
         ]
     },
     {
@@ -589,6 +633,14 @@
         "achievements": [
             "Finnovation 2023 Runner-up",
             "CFA Level 1 Candidate"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "KDSH 2026 - Participated",
+            "Cognivia - Participated",
+            "Odoo x GV - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Participated"
         ]
     },
     {
@@ -618,6 +670,13 @@
         "achievements": [
             "10k downloads for side-project",
             "App Store Optimization Specialist"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "KDSH 2026 - Participated",
+            "Cognivia - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -647,6 +706,16 @@
         "achievements": [
             "SQL Expert Award",
             "Open Source Contributor"
+        ],
+        "papersPublished": [
+            "Enhancing Data Mining Techniques for Identifying Health Risk Patterns in Underserved Populations (Conference Proceedings, 2025, NASCENT MR 2025 Conference Proceedings)"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "KDSH 2026 - Participated",
+            "Cognivia - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -676,6 +745,10 @@
         "achievements": [
             "Quantum Summer School Participant",
             "Distinction in Discrete Maths"
+        ],
+        "hackathons": [
+            "Cognivia - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -705,6 +778,21 @@
         "achievements": [
             "NLP Workshop organizer",
             "Winner of College Debate 2023"
+        ],
+        "papersPublished": [
+            "Misinformation Detection using Large Language Models with Explainability (Conference Proceedings, 2026, IEEE Xplore)",
+            "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI (Conference Proceedings, 2025, IEEE Xplore)",
+            "Tracking Air Pollution using INSAT Satellite and Ground Data Fusion (Poster Presentation, 2025)",
+            "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI (Poster Presentation, 2025)"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "Sampark DSC 3.0 - Shortlisted",
+            "KDSH 2026 - Participated",
+            "Cognivia - Participated",
+            "Odoo x GV - Runner Up",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted \u2192 FINALIST"
         ]
     },
     {
@@ -734,6 +822,20 @@
         "achievements": [
             "TCS Ninja Candidate",
             "Math Pro Award"
+        ],
+        "papersPublished": [
+            "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI (Conference Proceedings, 2025, IEEE Xplore)",
+            "Tracking Air Pollution using INSAT Satellite and Ground Data Fusion (Poster Presentation, 2025)",
+            "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI (Poster Presentation, 2025)"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "Sampark DSC 3.0 - Shortlisted",
+            "KDSH 2026 - Participated",
+            "Cognivia - Participated",
+            "Odoo x GV - Runner Up",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted \u2192 FINALIST"
         ]
     },
     {
@@ -763,6 +865,16 @@
         "achievements": [
             "ISTQB Foundation Level",
             "Best Presenter at Seminar"
+        ],
+        "papersPublished": [
+            "TrafficEye: Intelligent Traffic Optimization Using Deep Learning Approach (Conference Proceedings, 2025, IEEE Xplore)"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "Cognivia - Participated",
+            "Odoo x GV - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -792,6 +904,16 @@
         "achievements": [
             "AR/VR Hackathon Finalist",
             "Creative Design Award"
+        ],
+        "papersPublished": [
+            "TrafficEye: Intelligent Traffic Optimization Using Deep Learning Approach (Conference Proceedings, 2025, IEEE Xplore)"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "Cognivia - Participated",
+            "Odoo x GV - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -821,6 +943,15 @@
         "achievements": [
             "CodeChef 3-star",
             "AI Enthusiast Award"
+        ],
+        "papersPublished": [
+            "TrafficEye: Intelligent Traffic Optimization Using Deep Learning Approach (Conference Proceedings, 2025, IEEE Xplore)"
+        ],
+        "hackathons": [
+            "InnovAItion - Participated",
+            "KDSH 2026 - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -850,6 +981,15 @@
         "achievements": [
             "Cisco Certified Network Associate",
             "Security Seminar Speaker"
+        ],
+        "papersPublished": [
+            "Generative AI as a Catalyst in Indian Education Ecosystems (Conference Proceedings, 2025)"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "Cognivia - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -879,6 +1019,19 @@
         "achievements": [
             "AWS Certified Cloud Practitioner",
             "Lab Infrastructure Lead"
+        ],
+        "papersPublished": [
+            "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI (Conference Proceedings, 2025, IEEE Xplore)",
+            "SHAP-Enhanced Outbreak Forecasting: Interpretable MultiModal Learning for Waterborne Disease Prediction (Conference Proceedings, 2025, NASCENT MR 2025 Conference Proceedings)",
+            "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI (Poster Presentation, 2025)"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "KDSH 2026 - Participated",
+            "Cognivia - Participated",
+            "Odoo x GV - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -908,6 +1061,15 @@
         "achievements": [
             "Research Grant Recipient",
             "Gold Medal in Mathematics"
+        ],
+        "papersPublished": [
+            "Generative AI as a Catalyst in Indian Education Ecosystems (Conference Proceedings, 2025)"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "Cognivia - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -937,6 +1099,12 @@
         "achievements": [
             "Linux Guru Award",
             "System Admin Certificate"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "Cognivia - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -966,6 +1134,16 @@
         "achievements": [
             "Full Stack Developer of the Year",
             "Hacktoberfest Contributor"
+        ],
+        "papersPublished": [
+            "Generative AI as a Catalyst in Indian Education Ecosystems (Conference Proceedings, 2025)"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "Cognivia - Participated",
+            "Odoo x GV - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -995,6 +1173,15 @@
         "achievements": [
             "UiPath Certified Developer",
             "Academic Mentor"
+        ],
+        "papersPublished": [
+            "Deep Learning based Safe Car Driving Experience Using Glaucoma Grading (Conference Proceedings, 2025, IEEE Xplore)"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "Cognivia - Participated",
+            "Odoo x GV - Participated",
+            "TIGC La Trobe - Participated"
         ]
     },
     {
@@ -1024,6 +1211,9 @@
         "achievements": [
             "UI Design Finalist",
             "Web Accessibility Advocate"
+        ],
+        "hackathons": [
+            "InnovAItion - Participated"
         ]
     },
     {
@@ -1053,6 +1243,10 @@
         "achievements": [
             "Cyber Security Scholar",
             "Industry Internship at Forensics Lab"
+        ],
+        "hackathons": [
+            "InnovAItion - Participated",
+            "Odoo x GV - Shortlisted (Finalist)"
         ]
     },
     {
@@ -1082,6 +1276,14 @@
         "achievements": [
             "Smart India Hackathon Participant",
             "IoT Workshop Topper"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "KDSH 2026 - Participated",
+            "Cognivia - 2nd Runner Up (Finalist)",
+            "Odoo x GV - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted"
         ]
     },
     {
@@ -1092,6 +1294,11 @@
         "division": "P",
         "batch": "2023-2027",
         "email": "hp926591@gmail.com",
+        "papersPublished": [
+            "Enhancing Data Mining Techniques for Identifying Health Risk Patterns in Underserved Populations (Conference Proceedings, 2025, NASCENT MR 2025 Conference Proceedings)",
+            "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI (Conference Proceedings, 2025, IEEE Xplore)",
+            "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI (Poster Presentation, 2025)"
+        ],
         "linkedin": "https://www.linkedin.com/in/hemant-pande926591/",
         "photo": "/students/Pande Hemant Rameshwarkumar.jpeg",
         "contact_no": "8780508139",
@@ -1111,6 +1318,14 @@
         "achievements": [
             "Open Source Contributor (GSoC)",
             "Tech Quiz Winner"
+        ],
+        "hackathons": [
+            "InnovAItion - Shortlisted",
+            "KDSH 2026 - Participated",
+            "Cognivia - Participated",
+            "Odoo x GV - Participated",
+            "TIGC La Trobe - Participated",
+            "AISEHack 2026 - Shortlisted \u2192 FINALIST"
         ]
     },
     {
@@ -1140,6 +1355,11 @@
         "achievements": [
             "Smart India Hackathon Participant",
             "IoT Workshop Topper"
+        ],
+        "hackathons": [
+            "InnovAItion - Participated",
+            "Cognivia - 2nd Runner Up (Finalist)",
+            "Odoo x GV - Participated"
         ]
     }
 ]

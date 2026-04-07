@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Mail, ArrowLeft, Linkedin, Github, GraduationCap, Loader2, User, BookOpen, ExternalLink } from "lucide-react";
+import { Mail, ArrowLeft, Linkedin, Github, GraduationCap, Loader2, User, BookOpen, ExternalLink, Trophy } from "lucide-react";
 import { useSupabaseQuery, fetchWithTimeout } from '../hooks/useSupabaseQuery';
 import { API_BASE_URL as API_BASE } from '../config/apiConfig';
+import studentsData from "../data/srlStudents.json";
 
 export default function StudentCV() {
     const { studentId } = useParams();
@@ -69,7 +70,20 @@ export default function StudentCV() {
         : [];
 
     // Parsed array fields from Supabase
-    const hackathons = cvData ? parseArrayField(cvData.hackathons) : [];
+    const staticStudent = useMemo(() => {
+        return studentsData.find(s => {
+            const sid = s.enrollment_no || s.student_name.toLowerCase().replace(/\s+/g, "-");
+            return sid === studentId;
+        });
+    }, [studentId]);
+
+    const hackathons = useMemo(() => {
+        const fromDb = cvData ? parseArrayField(cvData.hackathons) : [];
+        // Use static if DB is empty or missing
+        if (fromDb.length === 0) return staticStudent?.hackathons || [];
+        return fromDb;
+    }, [cvData, staticStudent]);
+
     const researchPapers = cvData ? parseArrayField(cvData.research_papers) : [];
     const patents = cvData ? parseArrayField(cvData.patents) : [];
     const projects = cvData ? parseArrayField(cvData.projects) : [];
