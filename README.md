@@ -1,6 +1,6 @@
 # 🔬 Students Research Lab (SRL)
 
-A modern, full-stack web platform built for a university research lab to showcase its researchers, track attendance and performance, manage sessions, and engage students — all powered by **React 19**, **FastAPI**, and **Supabase**.
+A modern, full-stack web platform built for a university research lab to showcase its researchers, track attendance and performance, manage sessions, and engage students — all powered by **React 19**, **Node.js/Express**, and **Supabase**.
 
 ---
 
@@ -38,10 +38,11 @@ A modern, full-stack web platform built for a university research lab to showcas
 
 | Technology | Purpose |
 |---|---|
-| **FastAPI** | High-performance Python API framework |
-| **Uvicorn** | ASGI server for running the FastAPI application |
-| **HTTPX** | Async HTTP client for proxying requests to Supabase |
-| **Python Dotenv** | Environment variable management from `.env` files |
+| **Node.js** | JavaScript runtime (v20+) |
+| **Express.js** | Lightweight HTTP server and API framework |
+| **Supabase JS** | Client for querying the Supabase PostgreSQL database |
+| **dotenv** | Environment variable management from `.env` files |
+| **Nodemon** | Auto-reloading development server |
 
 ### Database / BaaS
 
@@ -57,8 +58,6 @@ A modern, full-stack web platform built for a university research lab to showcas
 | Technology | Purpose |
 |---|---|
 | **Docker** | Containerization for consistent dev/prod environments |
-| **Docker Compose** | Multi-service orchestration (frontend + backend) |
-| **Nginx** | Production web server and reverse proxy |
 | **ESLint** | JavaScript/React code linting and quality enforcement |
 | **PostCSS + Autoprefixer** | CSS processing and cross-browser compatibility |
 
@@ -69,8 +68,8 @@ A modern, full-stack web platform built for a university research lab to showcas
 ```
 ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
 │                 │       │                 │       │                 │
-│   React SPA     │──────▶│  FastAPI Proxy   │──────▶│    Supabase     │
-│   (Vite)        │  API  │  (Uvicorn)      │ REST  │  (PostgreSQL)   │
+│   React SPA     │──────▶│  Express.js API  │──────▶│    Supabase     │
+│   (Vite)        │  API  │  (Node.js)      │ REST  │  (PostgreSQL)   │
 │                 │◀──────│                 │◀──────│                 │
 └─────────────────┘       └─────────────────┘       └─────────────────┘
      Frontend                  Backend                   Database
@@ -78,11 +77,9 @@ A modern, full-stack web platform built for a university research lab to showcas
 
 **How it works:**
 
-1. **React Frontend** — Renders the UI and sends API requests to the FastAPI backend.
-2. **FastAPI Backend** — Acts as a secure proxy layer. It receives requests from the frontend, attaches Supabase credentials (API key), and forwards them to Supabase's PostgREST API. This keeps secrets off the client.
-3. **Supabase** — Hosts the PostgreSQL database with tables for students, attendance, debate scores, and SRL sessions. Handles auth and file storage.
-
-**In Docker:** Nginx serves the React SPA and reverse-proxies `/api/` requests to the FastAPI container — no CORS issues, single entry point on port `3000`.
+1. **React Frontend** — Renders the UI and sends API requests to the Express backend.
+2. **Express Backend** — Handles complex data aggregation (leaderboard rankings, attendance calculations, tie-breaking logic) and serves optimized responses to the frontend. Keeps Supabase credentials off the client.
+3. **Supabase** — Hosts the PostgreSQL database with tables for students, attendance, debate scores, sessions, publications, and achievements.
 
 ---
 
@@ -106,16 +103,31 @@ A modern, full-stack web platform built for a university research lab to showcas
 
 ```
 StudentsResearchLab/
-├── backend/                        # Python FastAPI backend
-│   ├── main.py                     # API routes and Supabase proxy logic
-│   ├── requirements.txt            # Python dependencies
-│   ├── Dockerfile                  # Backend container image
-│   └── .dockerignore
+├── backend/                        # Node.js/Express backend
+│   ├── src/
+│   │   ├── index.js                # Express app entry point, CORS & route setup
+│   │   ├── supabase.js             # Supabase client initialization
+│   │   └── routes/                 # API route handlers
+│   │       ├── leaderboard.js
+│   │       ├── students.js
+│   │       ├── publications.js
+│   │       ├── achievements.js
+│   │       ├── sessions.js
+│   │       ├── attendance.js
+│   │       ├── scores.js
+│   │       ├── join_us.js
+│   │       ├── metrics.js
+│   │       └── ...
+│   ├── migrations/                 # SQL migration files
+│   ├── assets/                     # CSV data files
+│   ├── scripts/                    # Utility scripts
+│   ├── package.json
+│   ├── Dockerfile
+│   └── README_NEW.md
 │
 ├── frontend/                       # React + Vite application
 │   ├── public/                     # Static assets (images, logos)
 │   │   ├── Achievements/
-│   │   ├── Founders/
 │   │   ├── Sessions/
 │   │   ├── students/               # Student profile photos
 │   │   └── SRL.svg                 # Lab logo
@@ -125,18 +137,12 @@ StudentsResearchLab/
 │   │   │   ├── Navbar.jsx
 │   │   │   ├── Footer.jsx
 │   │   │   ├── Hero.jsx
-│   │   │   ├── AnimatedPreloader.*
-│   │   │   ├── GradientText.jsx
-│   │   │   ├── SpotlightCard.jsx
-│   │   │   ├── ui/                 # Base UI primitives
-│   │   │   └── react-bits/         # Custom React utilities
+│   │   │   └── ...
 │   │   │
-│   │   ├── data/                   # Static data
-│   │   │   ├── organizationData.js
-│   │   │   └── srlStudents.json
+│   │   ├── config/
+│   │   │   └── apiConfig.js        # API endpoint configuration
 │   │   │
-│   │   ├── lib/
-│   │   │   └── supabaseClient.js   # Supabase client initialization
+│   │   ├── lib/                    # Utility functions & Supabase client
 │   │   │
 │   │   ├── pages/                  # Route-level page components
 │   │   │   ├── Home.jsx
@@ -144,7 +150,7 @@ StudentsResearchLab/
 │   │   │   ├── LeaderBoard.jsx
 │   │   │   ├── Sessions.jsx
 │   │   │   ├── Achievements.jsx
-│   │   │   └── ... (6 more pages)
+│   │   │   └── ...
 │   │   │
 │   │   ├── App.jsx                 # Root component with routing
 │   │   ├── main.jsx                # Entry point
@@ -154,12 +160,10 @@ StudentsResearchLab/
 │   ├── package.json
 │   ├── vite.config.js
 │   ├── tailwind.config.js
-│   └── eslint.config.js
+│   ├── vercel.json
+│   └── README_NEW.md
 │
-├── Dockerfile                      # Frontend multi-stage build (Nginx)
 ├── docker-compose.yml              # Multi-service orchestration
-├── nginx.conf                      # Nginx reverse proxy config
-├── .dockerignore                   # Root Docker context filter
 ├── .gitignore
 └── README.md
 ```
@@ -170,8 +174,7 @@ StudentsResearchLab/
 
 ### Prerequisites
 
-- **Node.js** ≥ 18.x and **npm** ≥ 9.x
-- **Python** ≥ 3.9
+- **Node.js** ≥ 20.x and **npm** ≥ 10.x
 - **Docker** and **Docker Compose** (for containerized setup)
 - A **Supabase** project ([supabase.com](https://supabase.com))
 
@@ -194,7 +197,7 @@ cd ..
 
 ```bash
 cd backend
-pip install -r requirements.txt
+npm install
 cd ..
 ```
 
@@ -202,58 +205,57 @@ cd ..
 
 ## 🔐 Environment Variables
 
-The project uses environment variables to securely connect to Supabase. We provide `.env.example` files to help you get started.
+### Frontend — `frontend/.env`
 
-1. **Frontend Setup:** Copy `frontend/.env.example` to `frontend/.env` and fill in your Supabase project URL and Anon Key.
-2. **Backend Setup:** Copy `backend/.env.example` to `backend/.env` and fill in your Supabase project URL and Service Role Key.
+```bash
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
+
+### Backend — `backend/.env`
+
+```bash
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+PORT=8000
+NODE_ENV=development
+```
 
 > ⚠️ **Never commit `.env` files to version control.** They are already ignored via `.gitignore`.
 
 ---
 
-## 🚀 Run Without Docker (Recommended for Local Development)
+## 🏃 Running Locally
 
-This is the fastest, simplest way to run the stack while developing.
-
-### Prerequisites
-- **Node.js**: v20 (see `.nvmrc`)
-- **Python**: v3.11 (see `backend/.python-version`)
-
-### Terminal 1 — Backend (FastAPI)
-
-Run the API on port `8000`:
+### Terminal 1 — Backend (Express)
 
 ```bash
 cd backend
-python -m venv venv
-# Windows: venv\Scripts\activate
-# Mac/Linux: source venv/bin/activate
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
+npm run dev
 ```
-> The API will be available at `http://localhost:8000`.
 
-### Terminal 2 — Frontend (React+Vite)
+> API will be available at `http://127.0.0.1:8000`.
 
-Run the web app on port `5173`:
+### Terminal 2 — Frontend (React + Vite)
 
 ```bash
 cd frontend
-npm install
 npm run dev
 ```
-> The app will be available at `http://localhost:5173`. By default, it will automatically route API requests to `http://localhost:8000` assuming you left `VITE_API_BASE_URL` commented out in your `.env` file.
+
+> App will be available at `http://localhost:5173`.
 
 ---
 
 ## 🐳 Run With Docker (Optional)
 
-Docker is great for testing the exact production build locally or running everything with zero dependencies other than Docker Desktop.
+Docker is great for testing the production build locally or running everything with zero local dependencies.
 
 ### Quick Start
 
 ```bash
-# 1. Ensure you created the frontend and backend .env files as described above.
+# 1. Ensure frontend and backend .env files are created as above.
 
 # 2. Build and start all services
 docker compose up --build
@@ -262,43 +264,38 @@ docker compose up --build
 #    → http://localhost:3000
 ```
 
-### Architecture in Docker
-- **frontend (`srl-frontend`)**: Nginx serves the React SPA on port `3000` and reverse-proxies `/api/` requests to the backend.
-- **backend (`srl-backend`)**: FastAPI proxies to Supabase. This container is entirely hidden from your local host network for security.
+### Docker Commands
 
-### Docker Commands & Troubleshooting
-
-| Goal | Command / Solution |
+| Goal | Command |
 |---|---|
 | Run in background | `docker compose up --build -d` |
 | View active logs | `docker compose logs -f` |
 | Stop all services | `docker compose down` |
-| Port 3000 collision | Change `"3000:80"` to `"3001:80"` in `docker-compose.yml` |
-| API isn't connecting | Ensure `docker compose logs backend` shows no Python errors and your `.env` keys are valid. |
 
 ---
 
 ## 🌐 Deployment
 
-### With Docker (Recommended)
+### Frontend — Vercel (Recommended)
 
-Deploy the Docker Compose stack to any container hosting platform:
+1. Connect the repository to Vercel
+2. Set root directory to `frontend/`
+3. Set environment variables in the Vercel dashboard
+4. Vercel auto-deploys on push to `main`
 
-| Platform | Method |
-|---|---|
-| **AWS ECS / EC2** | Push images to ECR, deploy with ECS or docker-compose on EC2 |
-| **DigitalOcean App Platform** | Connect repo with Dockerfile detection |
-| **Railway** | Connect repo → auto-detects docker-compose |
-| **Render** | Deploy each service separately with Dockerfiles |
+### Backend — Any Node.js Host (Render, Railway, etc.)
 
-### Without Docker
+**Start command:**
+```bash
+npm start
+```
 
-| Component | Platform | Method |
-|---|---|---|
-| **Frontend** | Vercel / Netlify | Connect repo → auto-deploys `frontend/` |
-| **Backend** | Render / Railway | Set start command: `uvicorn main:app --host 0.0.0.0 --port $PORT` |
+**Environment variables to set:**
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+- `NODE_ENV=production`
 
-> 💡 Set environment variables on your hosting platform for both frontend and backend.
+> 💡 After deploying the backend, update `VITE_API_BASE_URL` in the frontend environment to point to the production backend URL.
 
 ---
 

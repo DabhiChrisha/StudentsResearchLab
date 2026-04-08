@@ -1,313 +1,394 @@
-# 🔬 Students Research Lab (SRL)
+# 🎓 Students Research Lab (SRL) — Frontend
 
-A modern, full-stack web platform built for a university research lab to showcase its researchers, track attendance and performance, manage sessions, and engage students — all powered by **React 19**, **FastAPI**, and **Supabase**.
+A modern, interactive React web application showcasing university research lab members, tracking performance metrics, sessions, publications, and achievements. Built with **React 19**, **Vite**, **TailwindCSS**, and **Supabase**.
 
 ---
 
 ## 📋 Table of Contents
 
+- [Overview](#overview)
 - [Tech Stack](#-tech-stack)
-- [Architecture](#-architecture)
-- [Key Features](#-key-features)
-- [Folder Structure](#-folder-structure)
-- [Getting Started](#-getting-started)
+- [Prerequisites](#-prerequisites)
+- [Installation](#-installation)
 - [Environment Variables](#-environment-variables)
 - [Running Locally](#-running-locally)
-- [Docker](#-docker)
+- [Building for Production](#-building-for-production)
+- [Folder Structure](#-folder-structure)
+- [Available Scripts](#-available-scripts)
+- [Key Features](#-key-features)
 - [Deployment](#-deployment)
+
+---
+
+## Overview
+
+The Students Research Lab frontend is a comprehensive web platform designed to:
+
+- Display researcher profiles and accomplishments
+- Track student leaderboards with real-time performance metrics
+- Showcase research sessions, publications, and achievements
+- Provide an interactive timeline of lab activities
+- Enable student recruitment through an application form
+
+The application communicates with:
+- **Supabase** (PostgreSQL database) for data storage
+- **Backend API** (Node.js/Express) running on `http://127.0.0.1:8000` for complex data aggregation
 
 ---
 
 ## 🛠 Tech Stack
 
-### Frontend
-
-| Technology | Purpose |
-|---|---|
-| **React 19** | Core UI framework with functional components and hooks |
-| **Vite 7** | Lightning-fast dev server and optimized production builds |
-| **React Router 7** | Client-side routing and navigation |
-| **Tailwind CSS 3** | Utility-first CSS framework for responsive design |
-| **Framer Motion** | Declarative animations and page transitions |
-| **Lucide React** | Modern, customizable icon library |
-| **Swiper** | Touch-friendly carousels and sliders |
-| **Canvas Confetti** | Celebratory confetti effects (leaderboard, achievements) |
-| **clsx + tailwind-merge** | Conditional and conflict-free class name merging |
-
-### Backend
-
-| Technology | Purpose |
-|---|---|
-| **FastAPI** | High-performance Python API framework |
-| **Uvicorn** | ASGI server for running the FastAPI application |
-| **HTTPX** | Async HTTP client for proxying requests to Supabase |
-| **Python Dotenv** | Environment variable management from `.env` files |
-
-### Database / BaaS
-
-| Technology | Purpose |
-|---|---|
-| **Supabase** | Backend-as-a-Service built on PostgreSQL |
-| PostgreSQL (via Supabase) | Relational database for all application data |
-| Supabase Auth | User authentication and access control |
-| Supabase Storage | File and image storage for public assets |
-
-### Dev Tooling & Infrastructure
-
-| Technology | Purpose |
-|---|---|
-| **Docker** | Containerization for consistent dev/prod environments |
-| **Docker Compose** | Multi-service orchestration (frontend + backend) |
-| **Nginx** | Production web server and reverse proxy |
-| **ESLint** | JavaScript/React code linting and quality enforcement |
-| **PostCSS + Autoprefixer** | CSS processing and cross-browser compatibility |
+| Layer | Technology | Version |
+|-------|-----------|---------|
+| **Framework** | React | 19.2.0 |
+| **Build Tool** | Vite | 7.3.1 |
+| **Styling** | TailwindCSS | 3.4.19 |
+| **Styling Utils** | Tailwind Merge, clsx | Latest |
+| **Database Client** | Supabase JS | 2.97.0 |
+| **Animations** | Framer Motion | 12.34.3 |
+| **Routing** | React Router DOM | 7.13.0 |
+| **UI Icons** | Lucide React | 0.575.0 |
+| **Carousel** | Swiper | 12.1.2 |
+| **Effects** | tsParticles, Canvas Confetti | Latest |
+| **Data Format** | XLSX (Excel support) | 0.18.5 |
+| **Linting** | ESLint | 9.39.1 |
+| **CSS Processing** | PostCSS, Autoprefixer | Latest |
 
 ---
 
-## 🏗 Architecture
+## 📦 Prerequisites
 
-```
-┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
-│                 │       │                 │       │                 │
-│   React SPA     │──────▶│  FastAPI Proxy   │──────▶│    Supabase     │
-│   (Vite)        │  API  │  (Uvicorn)      │ REST  │  (PostgreSQL)   │
-│                 │◀──────│                 │◀──────│                 │
-└─────────────────┘       └─────────────────┘       └─────────────────┘
-     Frontend                  Backend                   Database
-```
+Before you begin, make sure you have:
 
-**How it works:**
+- **Node.js** version 18 or higher
+- **npm** (comes with Node.js) or **yarn**
+- Git installed on your system
+- Access to Supabase project credentials
 
-1. **React Frontend** — Renders the UI and sends API requests to the FastAPI backend.
-2. **FastAPI Backend** — Acts as a secure proxy layer. It receives requests from the frontend, attaches Supabase credentials (API key), and forwards them to Supabase's PostgREST API. This keeps secrets off the client.
-3. **Supabase** — Hosts the PostgreSQL database with tables for students, attendance, debate scores, and SRL sessions. Handles auth and file storage.
-
-**In Docker:** Nginx serves the React SPA and reverse-proxies `/api/` requests to the FastAPI container — no CORS issues, single entry point on port `3000`.
-
----
-
-## ✨ Key Features
-
-- **🏠 Home & Landing** — Animated hero section, about section, objectives, and timeline
-- **👥 Researchers Directory** — Searchable researcher profiles with student CV pages
-- **🏆 Leaderboard** — Ranked podium display with debate scores and attendance metrics
-- **📅 Sessions** — Carousel-based view of all research lab sessions
-- **🏅 Achievements** — Showcase of lab accomplishments and milestones
-- **📊 Attendance Tracking** — Per-student attendance percentage and SRL session attendance
-- **📝 Join Us** — Application form for prospective members with success confirmation
-- **📆 Appointment Booking** — Schedule consultations with the lab
-- **🏛 Organization Details** — Detailed pages for partner organizations
-- **🎨 Premium UI** — Animated preloader, page transitions, gradient text effects, spotlight cards, and confetti celebrations
-- **📱 Fully Responsive** — Mobile-first design with Tailwind CSS
-
----
-
-## 📁 Folder Structure
-
-```
-StudentsResearchLab/
-├── backend/                        # Python FastAPI backend
-│   ├── main.py                     # API routes and Supabase proxy logic
-│   ├── requirements.txt            # Python dependencies
-│   ├── Dockerfile                  # Backend container image
-│   └── .dockerignore
-│
-├── frontend/                       # React + Vite application
-│   ├── public/                     # Static assets (images, logos)
-│   │   ├── Achievements/
-│   │   ├── Founders/
-│   │   ├── Sessions/
-│   │   ├── students/               # Student profile photos
-│   │   └── SRL.svg                 # Lab logo
-│   │
-│   ├── src/
-│   │   ├── components/             # Reusable UI components
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── Footer.jsx
-│   │   │   ├── Hero.jsx
-│   │   │   ├── AnimatedPreloader.*
-│   │   │   ├── GradientText.jsx
-│   │   │   ├── SpotlightCard.jsx
-│   │   │   ├── ui/                 # Base UI primitives
-│   │   │   └── react-bits/         # Custom React utilities
-│   │   │
-│   │   ├── data/                   # Static data
-│   │   │   ├── organizationData.js
-│   │   │   └── srlStudents.json
-│   │   │
-│   │   ├── lib/
-│   │   │   └── supabaseClient.js   # Supabase client initialization
-│   │   │
-│   │   ├── pages/                  # Route-level page components
-│   │   │   ├── Home.jsx
-│   │   │   ├── Researchers.jsx
-│   │   │   ├── LeaderBoard.jsx
-│   │   │   ├── Sessions.jsx
-│   │   │   ├── Achievements.jsx
-│   │   │   └── ... (6 more pages)
-│   │   │
-│   │   ├── App.jsx                 # Root component with routing
-│   │   ├── main.jsx                # Entry point
-│   │   └── index.css               # Global styles
-│   │
-│   ├── index.html
-│   ├── package.json
-│   ├── vite.config.js
-│   ├── tailwind.config.js
-│   └── eslint.config.js
-│
-├── Dockerfile                      # Frontend multi-stage build (Nginx)
-├── docker-compose.yml              # Multi-service orchestration
-├── nginx.conf                      # Nginx reverse proxy config
-├── .dockerignore                   # Root Docker context filter
-├── .gitignore
-└── README.md
-```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Node.js** ≥ 18.x and **npm** ≥ 9.x
-- **Python** ≥ 3.9
-- **Docker** and **Docker Compose** (for containerized setup)
-- A **Supabase** project ([supabase.com](https://supabase.com))
-
-### 1. Clone the Repository
-
+To check your Node version:
 ```bash
-git clone https://github.com/DabhiChrisha/StudentsResearchLab.git
-cd StudentsResearchLab
+node --version
+npm --version
 ```
 
-### 2. Frontend Setup
+---
 
+## 🚀 Installation
+
+1. **Clone the repository** (if not already done):
 ```bash
-cd frontend
+git clone <repository-url>
+cd StudentsResearchLab/frontend
+```
+
+2. **Install dependencies:**
+```bash
 npm install
-cd ..
 ```
 
-### 3. Backend Setup
+This will install all packages listed in `package.json`.
 
+3. **Verify installation:**
 ```bash
-cd backend
-pip install -r requirements.txt
-cd ..
+npm list --depth=0
 ```
 
 ---
 
 ## 🔐 Environment Variables
 
-The project uses environment variables to securely connect to Supabase. We provide `.env.example` files to help you get started.
+Create a `.env` file in the `frontend/` directory with the following variables:
 
-1. **Frontend Setup:** Copy `frontend/.env.example` to `frontend/.env` and fill in your Supabase project URL and Anon Key.
-2. **Backend Setup:** Copy `backend/.env.example` to `backend/.env` and fill in your Supabase project URL and Service Role Key.
+```bash
+# Supabase Configuration
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
-> ⚠️ **Never commit `.env` files to version control.** They are already ignored via `.gitignore`.
+# Backend API Configuration
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
+
+### Variable Descriptions
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `VITE_SUPABASE_URL` | Your Supabase project URL | `https://abcxyz.supabase.co` |
+| `VITE_SUPABASE_ANON_KEY` | Supabase anonymous API key (public) | JWT token from Supabase dashboard |
+| `VITE_API_BASE_URL` | Backend API endpoint | `http://127.0.0.1:8000` (dev) or production URL |
+
+**⚠️ Important:** Variables starting with `VITE_` are exposed to the browser. Never put secrets like database passwords or private API keys here. Only use the anonymous/public key from Supabase.
 
 ---
 
-## 🚀 Run Without Docker (Recommended for Local Development)
+## 🏃 Running Locally
 
-This is the fastest, simplest way to run the stack while developing.
+### Development Server
 
-### Prerequisites
-- **Node.js**: v20 (see `.nvmrc`)
-- **Python**: v3.11 (see `backend/.python-version`)
-
-### Terminal 1 — Backend (FastAPI)
-
-Run the API on port `8000`:
+Start the Vite development server:
 
 ```bash
-cd backend
-python -m venv venv
-# Windows: venv\Scripts\activate
-# Mac/Linux: source venv/bin/activate
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
-```
-> The API will be available at `http://localhost:8000`.
-
-### Terminal 2 — Frontend (React+Vite)
-
-Run the web app on port `5173`:
-
-```bash
-cd frontend
-npm install
 npm run dev
 ```
-> The app will be available at `http://localhost:5173`. By default, it will automatically route API requests to `http://localhost:8000` assuming you left `VITE_API_BASE_URL` commented out in your `.env` file.
+
+The application will start at:
+```
+http://localhost:5173
+```
+
+The dev server includes:
+- ✅ Hot Module Replacement (HMR) — automatic reload on code changes
+- ✅ Fast refresh for React components
+- ✅ Source maps for debugging
+
+### With Backend Running
+
+Make sure your backend is also running on `http://127.0.0.1:8000`:
+
+```bash
+# In a separate terminal, from backend/ directory
+cd ../backend
+npm run dev
+```
+
+Then access the full application at `http://localhost:5173`.
 
 ---
 
-## 🐳 Run With Docker (Optional)
+## 🏗 Building for Production
 
-Docker is great for testing the exact production build locally or running everything with zero dependencies other than Docker Desktop.
-
-### Quick Start
+### Create an Optimized Build
 
 ```bash
-# 1. Ensure you created the frontend and backend .env files as described above.
-
-# 2. Build and start all services
-docker compose up --build
-
-# 3. Open the app
-#    → http://localhost:3000
+npm run build
 ```
 
-### Architecture in Docker
-- **frontend (`srl-frontend`)**: Nginx serves the React SPA on port `3000` and reverse-proxies `/api/` requests to the backend.
-- **backend (`srl-backend`)**: FastAPI proxies to Supabase. This container is entirely hidden from your local host network for security.
+This command:
+- Bundles all code and assets
+- Minifies JavaScript and CSS
+- Creates source maps (currently disabled in `vite.config.js`)
+- Outputs to the `dist/` directory
+- Applies code splitting for vendor libraries
 
-### Docker Commands & Troubleshooting
+Output directory: `frontend/dist/`
 
-| Goal | Command / Solution |
-|---|---|
-| Run in background | `docker compose up --build -d` |
-| View active logs | `docker compose logs -f` |
-| Stop all services | `docker compose down` |
-| Port 3000 collision | Change `"3000:80"` to `"3001:80"` in `docker-compose.yml` |
-| API isn't connecting | Ensure `docker compose logs backend` shows no Python errors and your `.env` keys are valid. |
+### Preview Production Build Locally
+
+After building, preview the production version:
+
+```bash
+npm run preview
+```
+
+This starts a local server serving the built `dist/` directory at `http://localhost:4173`.
+
+---
+
+## 📂 Folder Structure
+
+```
+frontend/
+├── src/
+│   ├── components/              # React components
+│   │   ├── Hero.jsx
+│   │   ├── About.jsx
+│   │   ├── Leaderboard.jsx
+│   │   ├── Publications.jsx
+│   │   ├── Achievements.jsx
+│   │   ├── Footer.jsx
+│   │   └── ...more components
+│   ├── pages/                   # Page components
+│   │   ├── Home.jsx
+│   │   ├── Leaderboard.jsx
+│   │   └── ...
+│   ├── hooks/                   # Custom React hooks
+│   ├── lib/                     # Utility functions
+│   ├── config/
+│   │   └── apiConfig.js         # API endpoint configuration
+│   ├── assets/                  # Images, icons, etc.
+│   ├── App.jsx                  # Main app component
+│   ├── main.jsx                 # Entry point
+│   ├── index.css                # Global styles
+│   └── App.css                  # App-level styles
+├── public/
+│   ├── students/                # Student profile images
+│   ├── Achievements/            # Achievement images
+│   ├── Sessions/                # Session photos
+│   └── SRL.svg                  # Logo and fallback images
+├── dist/                        # Production build (generated)
+├── node_modules/                # Dependencies (generated)
+├── .env                         # Environment variables (local)
+├── .gitignore                   # Git ignore rules
+├── index.html                   # HTML entry point
+├── package.json                 # Project metadata & scripts
+├── package-lock.json            # Dependency lock file
+├── vite.config.js               # Vite configuration
+├── tailwind.config.js           # TailwindCSS configuration
+├── postcss.config.js            # PostCSS configuration
+├── eslint.config.js             # ESLint rules
+└── vercel.json                  # Vercel deployment config
+```
+
+### Key Files Explained
+
+- **src/main.jsx** — React entry point; registers global error handlers
+- **src/App.jsx** — Root component; sets up routing
+- **vite.config.js** — Vite build configuration with React plugin & code splitting
+- **tailwind.config.js** — TailwindCSS theme customization
+- **public/students/** — Static student profile images served as `/students/imagename.jpg`
+
+---
+
+## 📜 Available Scripts
+
+Run these commands from the `frontend/` directory:
+
+```bash
+# Start development server on http://localhost:5173
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build locally
+npm run preview
+
+# Run ESLint to check code quality
+npm run lint
+
+# Also available via npm start (alias for dev)
+npm start
+```
+
+### Script Details
+
+| Command | Purpose | Output |
+|---------|---------|--------|
+| `npm run dev` | Hot-reload development server | Runs on localhost:5173 |
+| `npm run build` | Optimize & bundle for production | Creates `dist/` folder |
+| `npm run preview` | Test production build locally | Runs on localhost:4173 |
+| `npm run lint` | Check code style & potential errors | Terminal output |
+
+---
+
+## ✨ Key Features
+
+### Leaderboard System
+- Real-time performance metrics
+- Filters by time period (monthly, all-time)
+- Sorting by debate score, hours contributed, attendance
+- Student profile images and metadata
+
+### Student Profiles
+- Enrollment details
+- Semester and division information
+- Department and batch assignment
+- Profile pictures and achievements
+
+### Publications & Achievements
+- Showcase research papers
+- Display research posters
+- Conference presentations
+- Award recognition
+
+### Interactive UI
+- Particle effects and animations
+- Responsive design for mobile/tablet/desktop
+- Smooth transitions and hover effects
+- Loading states and fallbacks
+
+### Data Management
+- Import/export Excel data
+- Filter students by department
+- Search functionality
+- Dynamic data aggregation from backend
 
 ---
 
 ## 🌐 Deployment
 
-### With Docker (Recommended)
+### Vercel (Recommended)
 
-Deploy the Docker Compose stack to any container hosting platform:
+The project includes `vercel.json` for Vercel deployment:
 
-| Platform | Method |
-|---|---|
-| **AWS ECS / EC2** | Push images to ECR, deploy with ECS or docker-compose on EC2 |
-| **DigitalOcean App Platform** | Connect repo with Dockerfile detection |
-| **Railway** | Connect repo → auto-detects docker-compose |
-| **Render** | Deploy each service separately with Dockerfiles |
+1. Push your code to GitHub
+2. Connect repository to Vercel
+3. Set environment variables in Vercel dashboard
+4. Vercel auto-deploys on push to main branch
 
-### Without Docker
+### Other Platforms
 
-| Component | Platform | Method |
-|---|---|---|
-| **Frontend** | Vercel / Netlify | Connect repo → auto-deploys `frontend/` |
-| **Backend** | Render / Railway | Set start command: `uvicorn main:app --host 0.0.0.0 --port $PORT` |
+**Build command:**
+```bash
+npm run build
+```
 
-> 💡 Set environment variables on your hosting platform for both frontend and backend.
+**Start command:**
+```bash
+npm run preview
+```
+
+**Environment variables to set:**
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+- `VITE_API_BASE_URL` (use production backend URL)
 
 ---
 
-## 📄 License
+## 🔗 Integration with Backend
 
-This project is private and intended for educational use within the Students Research Lab.
+The frontend expects a backend API running on `VITE_API_BASE_URL` with these endpoints:
+
+```
+GET  /api/leaderboard              — Get all-time leaderboard
+GET  /api/leaderboard/monthly      — Get monthly rankings
+GET  /api/leaderboard/top-hours    — Get top contributors by hours
+GET  /api/students                 — Get student list
+GET  /api/publications             — Get publications
+GET  /api/achievements             — Get achievements
+POST /api/join_us                  — Submit application form
+```
+
+See the [Backend README](../backend/README_NEW.md) for full API documentation.
 
 ---
 
-<p align="center">
-  Built with ❤️ by the <strong>Students Research Lab</strong> team
-</p>
+## 🐛 Troubleshooting
+
+### Issue: Port 5173 already in use
+```bash
+# Kill process using port 5173 or use different port
+npm run dev -- --port 3000
+```
+
+### Issue: Environment variables not loading
+- Ensure `.env` file exists in `frontend/` root
+- Restart dev server after changing `.env`
+- Vite only loads `VITE_*` prefixed variables
+
+### Issue: Backend API connection error
+- Verify backend is running on `http://127.0.0.1:8000`
+- Check `VITE_API_BASE_URL` in `.env`
+- Check browser console for CORS errors
+
+### Issue: Supabase connection failing
+- Verify `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are correct
+- Check Supabase project is active in dashboard
+- Ensure Row Level Security (RLS) policies allow anonymous access if needed
+
+---
+
+## 📝 License
+
+<!-- Add your license here -->
+
+---
+
+## 👥 Contributing
+
+<!-- Add contribution guidelines here -->
+
+---
+
+## 📞 Support
+
+For issues or questions, contact the development team or create an issue in the repository.
