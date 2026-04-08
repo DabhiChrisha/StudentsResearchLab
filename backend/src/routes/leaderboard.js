@@ -53,7 +53,10 @@ async function buildLeaderboard(period) {
       .select("enrollment_no, profile_image, department, semester, division, batch"),
   ]);
 
-  if (statsRes.error) throw statsRes.error;
+  if (statsRes.error) {
+    console.error("❌ leaderboard_stats query error:", statsRes.error);
+    throw statsRes.error;
+  }
   // details failure is non-fatal — just use empty map
   const detailRows = detailsRes.data || [];
 
