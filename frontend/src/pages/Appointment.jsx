@@ -28,8 +28,8 @@ const Appointment = () => {
                 {
                   icon: Mail,
                   label: "Email Us",
-                  text: "mmpsrc.ksv@gmail.com",
-                  link: "mailto:mmpsrc.ksv@gmail.com",
+                  text: "mmpsrpc@ksv.ac.in",
+                  link: "mailto:mmpsrpc@ksv.ac.in",
                 },
                 {
                   icon: MapPin,

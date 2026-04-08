@@ -120,27 +120,78 @@ const Home = () => {
                       Measurable outcomes of our commitment to excellence.
                     </p>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5">
                     {[
-                      { label: "Research Paper Publications", value: "6" },
-                      { label: "Research Poster Presentations", value: "4" },
-                      { label: "Research Projects Sanctioned", value: "6" },
-                      { label: "Awards and Recognitions", value: "2" },
+                      {
+                        label: "Research Papers/ Case Studies/ Book Chapters",
+                        value: "9",
+                        category: "Total Publications",
+                      },
+                      {
+                        label: "Research Poster Presentations",
+                        value: "4",
+                        category: "Conferences",
+                      },
+                      {
+                        label: "Awards and Recognitions",
+                        value: "2",
+                        category: "Excellence",
+                      },
+                      {
+                        label: "Hackathon",
+                        isHackathon: true,
+                        winners: "10",
+                        finalists: "20",
+                      },
                     ].map((stat, i) => (
                       <motion.div
                         key={i}
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: i * 0.07 }}
+                        transition={{ duration: 0.4, delay: i * 0.05 }}
                         viewport={{ once: true }}
-                        className="bg-white/70 backdrop-blur-sm border border-slate-200/50 p-3 sm:p-4 rounded-2xl flex flex-col items-start group hover:bg-white transition-colors"
+                        className="bg-white/70 backdrop-blur-sm border border-slate-200/50 p-4 sm:p-6 rounded-[1.5rem] 2xl:rounded-[2rem] flex flex-col items-start group hover:bg-white transition-all hover:shadow-md hover:-translate-y-1 h-full"
                       >
-                        <div className="text-5xl sm:text-5xl font-bold font-display text-teal-800 mb-1">
-                          {stat.value}
-                        </div>
-                        <div className="text-slate-500 text-[14px] font-medium leading-snug">
-                          {stat.label}
-                        </div>
+                        {stat.isHackathon ? (
+                          <div className="w-full flex flex-col h-full justify-between">
+                            <div className="flex items-center w-full">
+                              <div className="flex-1 text-center">
+                                <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none">
+                                  {stat.winners}
+                                </div>
+                                <div className="text-slate-500 text-[11px] sm:text-[13px] font-bold uppercase tracking-wide mt-1">
+                                  Winners
+                                </div>
+                              </div>
+                              <div className="w-px h-12 bg-slate-200 mx-2" />
+                              <div className="flex-1 text-center">
+                                <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none">
+                                  {stat.finalists}
+                                </div>
+                                <div className="text-slate-500 text-[11px] sm:text-[13px] font-bold uppercase tracking-wide mt-1">
+                                  Finalists
+                                </div>
+                              </div>
+                            </div>
+                            <div className="mt-4 pt-3 border-t border-slate-100 w-full text-center">
+                              <span className="text-slate-900 text-[14px] sm:text-[16px] font-black uppercase tracking-[0.2em]">
+                                Hackathons
+                              </span>
+                            </div>
+                          </div>
+                        ) : stat.value ? (
+                          <>
+                            <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 mb-1">
+                              {stat.value}
+                            </div>
+                            <div className="text-slate-800 text-[14px] sm:text-[16px] font-bold leading-tight mb-1">
+                              {stat.label}
+                            </div>
+                            <div className="text-slate-400 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider">
+                              {stat.category}
+                            </div>
+                          </>
+                        ) : null}
                       </motion.div>
                     ))}
                   </div>

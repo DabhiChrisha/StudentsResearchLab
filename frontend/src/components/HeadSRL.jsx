@@ -106,7 +106,7 @@ export default function HeadSRL() {
                 Dr. Himani Trivedi
               </h3>
               <p className="text-xs font-bold text-[#05877a] uppercase tracking-widest mt-1">
-                HEAD, M. M. PATEL STUDENTS RESEARCH PROJECT CELL
+                HEAD, M. M. PATEL STUDENTS RESEARCH PROJECT CELL, KADI SARVA VISHWAVIDYALAYA 
               </p>
             </div>
 
@@ -115,16 +115,16 @@ export default function HeadSRL() {
               <div className="flex items-center gap-3 text-slate-700 hover:text-[#05877a] transition-colors group">
                 <Mail className="w-5 h-5 text-[#05877a]" />
                 <a
-                  href="mailto:mmpsrc.ksv@gmail.com"
+                  href="mailto:mmpsrpc@ksv.ac.in"
                   className="font-medium underline decoration-[#05877a]/30 hover:decoration-[#05877a]"
                 >
-                  mmpsrpc.ksv@gmail.com
+                  mmpsrpc@ksv.ac.in
                 </a>
               </div>
               <div className="flex items-center gap-3 text-slate-700">
                 <MapPin className="w-5 h-5 text-[#05877a]" />
                 <span className="font-medium">
-                  AF-7 Lab, First Floor, Shift 2, LDRP-ITR
+                  Reseach Lab, First Floor, Shift 2, LDRP-ITR
                 </span>
               </div>
             </div>
