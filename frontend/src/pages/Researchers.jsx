@@ -112,6 +112,8 @@ export default function Researchers() {
                 hackathons: s.hackathons || [],
                 papers: s.papersPublished || [],
                 research_areas: s.research || [],
+                achievements_extended: s.achievements_extended || null,
+                srlPublications: s.srlPublications || [],
                 gradient: "linear-gradient(160deg,#fbe8c1,#167d8d)",
             };
         });
@@ -316,6 +318,8 @@ export default function Researchers() {
                                                 hackathons: ra.hackathons || [],
                                                 papers: ra.papersPublished || [],
                                                 research_areas: ra.research || [],
+                                                achievements_extended: ra.achievements_extended || null,
+                                                srlPublications: ra.srlPublications || [],
                                                 researchWorksCount: ra.researchWorks?.length ?? "--",
                                                 hackathonsCount: ra.hackathons?.length ?? "--",
                                                 papersPublishedCount: ra.papersPublished?.length ?? "--",
@@ -439,198 +443,218 @@ export default function Researchers() {
                                 </button>
                             </div>
 
-                            <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1.2fr_1fr] gap-6 p-6 h-full overflow-hidden">
-                                {/* Profile Card (left) */}
-                                <div className="rounded-3xl bg-slate-50 shadow-sm p-6 flex flex-col items-center text-center">
-                                    <div className="relative mb-6">
-                                        <div className="absolute inset-0 bg-secondary blur-3xl opacity-20 rounded-full" />
-                                        <div className="relative w-36 h-36 rounded-full overflow-hidden border-8 border-white shadow-2xl">
-                                            <img loading="lazy" decoding="async"
-                                                src={activeStudent.image || "/students/schoolstudent.png"}
-                                                alt={activeStudent.title}
-                                                className="w-full h-full object-cover"
-                                            />
+                            <div className="flex flex-col h-full overflow-hidden">
+                                <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_2fr] gap-6 p-6 overflow-y-auto custom-scrollbar h-full">
+                                    {/* Left Column: Profile Card + Contact */}
+                                    <div className="space-y-6">
+                                        <div className="rounded-3xl bg-slate-50 shadow-sm p-6 flex flex-col items-center text-center">
+                                            <div className="relative mb-6">
+                                                <div className="absolute inset-0 bg-secondary blur-3xl opacity-20 rounded-full" />
+                                                <div className="relative w-36 h-36 rounded-full overflow-hidden border-8 border-white shadow-2xl">
+                                                    <img loading="lazy" decoding="async"
+                                                        src={activeStudent.image || "/students/schoolstudent.png"}
+                                                        alt={activeStudent.title}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="space-y-1">
+                                                <h3 className="text-3xl font-black font-serif bg-gradient-to-r from-secondary to-slate-900 bg-clip-text text-transparent">
+                                                    {activeStudent.title}
+                                                </h3>
+                                                <p className="text-secondary font-black text-sm uppercase tracking-widest">
+                                                    {activeStudent.subtitle}
+                                                </p>
+                                                <div className="flex flex-col gap-1 mt-2">
+                                                    {activeStudent.achievements_extended?.institute && (
+                                                        <p className="text-[10px] font-black uppercase text-slate-400">
+                                                            {activeStudent.achievements_extended.institute}
+                                                        </p>
+                                                    )}
+                                                    {activeStudent.achievements_extended?.organization && (
+                                                        <p className="text-[10px] font-bold text-secondary/60 uppercase">
+                                                            {activeStudent.achievements_extended.organization}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div className="mt-6 w-full pt-6 border-t border-slate-200">
+                                                <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
+                                                    Reflection
+                                                </p>
+                                                <p className="text-sm text-slate-700 leading-relaxed italic">
+                                                    "{activeStudent.reflection || "-"}"
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="rounded-3xl bg-slate-50 shadow-sm p-4 space-y-3">
+                                            <a href={`mailto:${activeStudent.email}`} className="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-secondary hover:text-white transition-all text-sm font-bold">
+                                                <Mail size={16} /> Email
+                                            </a>
+                                            {activeStudent.linkedin && (
+                                                <a href={activeStudent.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-xl bg-slate-900 text-white hover:bg-secondary transition-all text-sm font-bold">
+                                                    <Linkedin size={16} /> LinkedIn
+                                                </a>
+                                            )}
                                         </div>
                                     </div>
-                                    <div className="space-y-1">
-                                        <h3 className="text-3xl font-black font-serif bg-gradient-to-r from-secondary to-slate-900 bg-clip-text text-transparent">
-                                            {activeStudent.title}
-                                        </h3>
-                                        <p className="text-secondary font-black text-sm uppercase tracking-widest">
-                                            {activeStudent.subtitle}
-                                        </p>
-                                        {activeStudent.batch && (
-                                            <p className="text-slate-500 font-bold text-xs uppercase tracking-widest mt-1">
-                                                Batch: {activeStudent.batch}
-                                            </p>
-                                        )}
-                                    </div>
 
-                                    <div className="mt-6 w-full">
-                                        <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
-                                            Reflection
-                                        </p>
-                                        <motion.p
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ duration: 0.4 }}
-                                            className="text-sm text-slate-700 leading-relaxed"
-                                        >
-                                            {activeStudent.reflection || "-"}
-                                        </motion.p>
-                                    </div>
-                                </div>
-
-                                {/* Research Areas (middle) */}
-                                <div className="rounded-3xl bg-slate-50 shadow-sm p-6 overflow-hidden">
-                                    <div className="flex items-center justify-between">
-                                        <h4 className="text-base font-black uppercase tracking-widest text-slate-500">
-                                            Research Areas
-                                        </h4>
-                                        <span className="text-xs font-bold text-secondary">{modalDataLoading ? "…" : (activeMetrics?.research_areas || []).length} areas</span>
-                                    </div>
-
-                                    <div className="mt-5 flex flex-wrap gap-2">
-                                        {modalDataLoading ? (
-                                            <div className="flex gap-2 animate-pulse">
-                                                <div className="h-6 w-24 bg-gray-200 rounded-full"></div>
-                                                <div className="h-6 w-20 bg-gray-200 rounded-full"></div>
-                                            </div>
-                                        ) : (activeMetrics?.research_areas || []).length > 0 ? (
-                                            (activeMetrics.research_areas).map((area, idx) => (
-                                                <span key={idx} className="px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-600">
-                                                    {area}
-                                                </span>
-                                            ))
-                                        ) : (
-                                            <p className="text-sm text-slate-400">-</p>
-                                        )}
-                                    </div>
-
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.35 }}
-                                        className="mt-6 rounded-2xl bg-white border border-slate-100 p-4 shadow-sm"
-                                    >
-                                        <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
-                                            Key Metrics
-                                        </p>
+                                    {/* Right Column: Achievements & Research */}
+                                    <div className="space-y-6 pb-12">
+                                        {/* Metrics Grid */}
                                         <div className="grid grid-cols-3 gap-4">
-                                            <div className="flex flex-col items-center gap-1">
-                                                <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap">Research Works</span>
-                                                <span className="text-lg font-black text-slate-900">{modalDataLoading ? "…" : (activeMetrics?.research_works_count ?? "--")}</span>
-                                            </div>
-                                            <div className="flex flex-col items-center gap-1">
-                                                <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap">Hackathons</span>
-                                                <span className="text-lg font-black text-slate-900">{modalDataLoading ? "…" : (activeMetrics?.hackathons_count ?? "--")}</span>
-                                            </div>
-                                            <div className="flex flex-col items-center gap-1">
-                                                <span className="text-[10px] font-semibold text-slate-500 whitespace-nowrap">Papers Published</span>
-                                                <span className="text-lg font-black text-slate-900">{modalDataLoading ? "…" : (activeMetrics?.papers_published_count ?? "--")}</span>
-                                            </div>
+                                            {[
+                                                { label: "Research", val: modalDataLoading ? "…" : (activeMetrics?.research_works_count ?? "--") },
+                                                { label: "Hackathons", val: modalDataLoading ? "…" : (activeMetrics?.hackathons_count ?? "--") },
+                                                { label: "Papers", val: modalDataLoading ? "…" : (activeMetrics?.papers_published_count ?? "--") }
+                                            ].map((m, i) => (
+                                                <div key={i} className="bg-white border border-slate-100 rounded-2xl p-3 shadow-sm text-center">
+                                                    <p className="text-[10px] font-black uppercase text-slate-400 mb-1">{m.label}</p>
+                                                    <p className="text-xl font-black text-secondary">{m.val}</p>
+                                                </div>
+                                            ))}
                                         </div>
-                                    </motion.div>
 
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 12 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.35, delay: 0.1 }}
-                                        className="mt-6 rounded-2xl bg-white border border-slate-100 p-4 shadow-sm"
-                                    >
-                                        <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
-                                            Hackathons
-                                        </p>
-                                        {modalDataLoading ? (
-                                            <div className="space-y-2 animate-pulse">
-                                                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                                                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                                        {/* Achievements Extended Section */}
+                                        {activeStudent.achievements_extended && (
+                                            <div className="space-y-6">
+                                                {/* Leadership & Awards */}
+                                                {(activeStudent.achievements_extended.leadership?.length > 0 || activeStudent.achievements_extended.awards?.length > 0) && (
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        {activeStudent.achievements_extended.leadership?.length > 0 && (
+                                                            <div className="rounded-2xl bg-white border border-slate-100 p-5 shadow-sm">
+                                                                <h5 className="text-xs font-black uppercase tracking-widest text-secondary mb-4 flex items-center gap-2">
+                                                                    <Star size={14} /> Leadership Roles
+                                                                </h5>
+                                                                <ul className="space-y-3">
+                                                                    {activeStudent.achievements_extended.leadership.map((l, i) => (
+                                                                        <li key={i} className="text-xs font-bold text-slate-700 flex gap-2">
+                                                                            <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-secondary mt-1" />
+                                                                            {l}
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            </div>
+                                                        )}
+                                                        {activeStudent.achievements_extended.awards?.length > 0 && (
+                                                            <div className="rounded-2xl bg-white border border-slate-100 p-5 shadow-sm">
+                                                                <h5 className="text-xs font-black uppercase tracking-widest text-amber-500 mb-4 flex items-center gap-2">
+                                                                    <Star size={14} className="fill-amber-500" /> Awards
+                                                                </h5>
+                                                                <ul className="space-y-3">
+                                                                    {activeStudent.achievements_extended.awards.map((a, i) => (
+                                                                        <li key={i} className="text-xs font-bold text-slate-700 flex gap-2">
+                                                                            <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-amber-500 mt-1" />
+                                                                            {a}
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+
+                                                {/* Internships & Experience */}
+                                                {activeStudent.achievements_extended.internships?.length > 0 && (
+                                                    <div className="rounded-2xl bg-white border border-slate-100 p-5 shadow-sm">
+                                                        <h5 className="text-xs font-black uppercase tracking-widest text-slate-500 mb-4">Professional Experience</h5>
+                                                        <div className="space-y-4">
+                                                            {activeStudent.achievements_extended.internships.map((exp, i) => (
+                                                                <div key={i} className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-3">
+                                                                    <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center shrink-0">
+                                                                        <FileText size={16} className="text-secondary" />
+                                                                    </div>
+                                                                    <p className="text-xs font-bold text-slate-700 leading-relaxed">{exp}</p>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {/* Hackathons & Certifications */}
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div className="rounded-2xl bg-white border border-slate-100 p-5 shadow-sm">
+                                                        <h5 className="text-xs font-black uppercase tracking-widest text-slate-500 mb-4">Hackathons</h5>
+                                                        <ul className="space-y-2">
+                                                            {(activeStudent.achievements_extended.hackathons || []).map((h, i) => (
+                                                                <li key={i} className="text-[11px] font-medium text-slate-600 flex gap-2">
+                                                                    • {h}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                    <div className="rounded-2xl bg-white border border-slate-100 p-5 shadow-sm">
+                                                        <h5 className="text-xs font-black uppercase tracking-widest text-slate-500 mb-4">Certifications</h5>
+                                                        <ul className="space-y-2">
+                                                            {(activeStudent.achievements_extended.certifications || []).map((c, i) => (
+                                                                <li key={i} className="text-[11px] font-medium text-slate-600 flex gap-2">
+                                                                    • {c}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                {/* Research Work (Ongoing/Projects) */}
+                                                {activeStudent.achievements_extended.researchWork?.length > 0 && (
+                                                    <div className="rounded-2xl bg-secondary/5 border border-secondary/10 p-5 shadow-sm">
+                                                        <h5 className="text-xs font-black uppercase tracking-widest text-secondary mb-4">Research & Projects</h5>
+                                                        <ul className="space-y-3">
+                                                            {activeStudent.achievements_extended.researchWork.map((rw, i) => (
+                                                                <li key={i} className="text-xs font-black text-slate-800 flex gap-2 items-start">
+                                                                    <div className="w-1.5 h-1.5 rounded-full bg-secondary mt-1.5 shrink-0" />
+                                                                    {rw}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                )}
                                             </div>
-                                        ) : (activeMetrics?.hackathons || []).length > 0 ? (
-                                            <ul className="list-disc list-inside space-y-2 text-sm text-slate-700">
-                                                {(activeMetrics.hackathons).map((hack, idx) => (
-                                                    <li key={idx}>{hack}</li>
-                                                ))}
-                                            </ul>
-                                        ) : (
-                                            <p className="text-sm text-slate-400">-</p>
                                         )}
-                                    </motion.div>
-                                </div>
 
-                                {/* Ongoing Projects + Hackathons (right) */}
-                                <div className="rounded-3xl bg-slate-50 shadow-sm p-6 flex flex-col justify-between">
-                                    <div>
-                                        <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-4">
-                                            Papers Published
-                                        </p>
-                                        {papersLoading ? (
-                                            <div className="space-y-3 animate-pulse">
-                                                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                                                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                                        {/* SRL PUBLICATIONS (Scrollable Section at bottom) */}
+                                        {activeStudent.srlPublications?.length > 0 && (
+                                            <div className="pt-6 border-t border-slate-200">
+                                                <div className="flex items-center justify-between mb-6">
+                                                    <h4 className="text-xl font-black font-serif text-slate-900">SRL Publications</h4>
+                                                    <div className="h-px flex-1 mx-4 bg-slate-200" />
+                                                    <span className="text-[10px] font-black uppercase tracking-widest text-secondary bg-secondary/10 px-3 py-1 rounded-full">
+                                                        {activeStudent.srlPublications.length} Records
+                                                    </span>
+                                                </div>
+                                                <div className="grid grid-cols-1 gap-4">
+                                                    {activeStudent.srlPublications.map((pub, pIdx) => (
+                                                        <div key={pIdx} className="group/pub relative p-5 rounded-2xl bg-white border border-slate-100 shadow-sm hover:border-secondary/30 transition-all">
+                                                            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                                                                <div className="space-y-2 flex-1">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${pub.type === 'Journal' ? 'bg-blue-100 text-blue-600' : 'bg-emerald-100 text-emerald-600'}`}>
+                                                                            {pub.type}
+                                                                        </span>
+                                                                        <span className="text-[10px] font-bold text-slate-400">• {pub.category}</span>
+                                                                    </div>
+                                                                    <h5 className="text-sm font-black text-slate-900 group-hover/pub:text-secondary transition-colors">
+                                                                        {pub.title}
+                                                                    </h5>
+                                                                    <p className="text-xs font-bold text-slate-500 italic">
+                                                                        {pub.venue || pub.event}
+                                                                    </p>
+                                                                </div>
+                                                                <div className="flex flex-col md:items-end gap-2 shrink-0">
+                                                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{pub.date || pub.status}</span>
+                                                                    {pub.studentPresenter && (
+                                                                        <p className="text-[10px] font-bold text-secondary bg-secondary/5 px-2 py-1 rounded">
+                                                                            Presenter: {pub.studentPresenter}
+                                                                        </p>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
-                                        ) : (activeMetrics?.papers || []).length > 0 ? (
-                                            <ul className="space-y-3">
-                                                {(activeMetrics.papers).map((title, idx) => (
-                                                    <li key={idx} className="text-sm text-slate-700">
-                                                        • {title}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        ) : (
-                                            <p className="text-sm text-slate-400">-</p>
-                                        )}
-                                    </div>
-
-                                    <div className="mt-6">
-                                        <p className="text-xs font-black uppercase tracking-widest text-slate-500 mb-3">
-                                            Hackathons
-                                        </p>
-                                        {modalDataLoading ? (
-                                            <div className="space-y-2 animate-pulse">
-                                                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                                                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                                            </div>
-                                        ) : (activeMetrics?.hackathons || []).length > 0 ? (
-                                            <ul className="space-y-2 text-sm text-slate-700">
-                                                {(activeMetrics.hackathons).map((hack, idx) => (
-                                                    <li key={idx}>• {hack}</li>
-                                                ))}
-                                            </ul>
-                                        ) : (
-                                            <p className="text-sm text-slate-400">-</p>
-                                        )}
-                                    </div>
-
-                                    <div className="mt-6 space-y-3">
-                                        <a
-                                            href={`/cv/${activeStudent.enrollment}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-xl bg-secondary text-white hover:bg-secondary-dark transition-all text-sm font-bold"
-                                        >
-                                            <FileText size={16} />
-                                            View Full CV
-                                        </a>
-                                        {activeStudent.linkedin && (
-                                            <a
-                                                href={activeStudent.linkedin}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-xl bg-slate-900 text-white hover:bg-secondary transition-all text-sm font-bold"
-                                            >
-                                                <Linkedin size={16} />
-                                                LinkedIn
-                                            </a>
-                                        )}
-                                        {activeStudent.email && (
-                                            <a
-                                                href={`mailto:${activeStudent.email}`}
-                                                className="flex items-center justify-center gap-2 w-full px-5 py-2.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-secondary hover:text-white transition-all text-sm font-bold"
-                                            >
-                                                <Mail size={16} />
-                                                Email
-                                            </a>
                                         )}
                                     </div>
                                 </div>

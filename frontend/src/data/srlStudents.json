@@ -37,8 +37,61 @@
             "KDSH 2026 - Participated",
             "Cognivia - Participated",
             "Odoo x GV - Participated",
-            "AISEHack 2026 - Shortlisted \u2192 FINALIST"
-        ]
+            "AISEHack 2026 - Shortlisted → FINALIST"
+        ],
+        "srlPublications": [
+            {
+                "title": "Fed-DETR: A Privacy-Preserving Framework for K-Means Driven Decentralised Helmet Surveillance of Two-Wheeler Riders",
+                "venue": "International Journal of Intelligent Transportation Systems Research",
+                "type": "Journal",
+                "category": "Paper under Review",
+                "date": "11/03/2026 - Submitted",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Ensemble Intelligence for Model Classification in Next-Generation Smart Agriculture: Crop and Soil-Based Recommendation System",
+                "venue": "Pertanika Journal of Science and Technology",
+                "type": "Journal",
+                "category": "Paper under Review",
+                "date": "08/03/2026 - Submitted for reviewal",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Bridging the Disconnect: Holistic Student Dropout Analysis in Schools through Data-Driven Machine Learning",
+                "venue": "National Poster Competition on AI-Powered Research and Innovation",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "19th - 20th September",
+                "conferenceGrant": false
+            }
+        ],
+        "achievements_extended": {
+            "semester": 4,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [],
+            "hackathons": [
+                "1st Runner-Up – SAMPARK'25 Datathon, IEEE Gujarat Section",
+                "GTU National Poster Presentation Finalist",
+                "Finalist – InnovAItion Hackathon, Intuitive × Dhirubhai Ambani University",
+                "ImpactThon 2025-26 @KSV Finalist",
+                "AISEHack Hackathon Finalist"
+            ],
+            "leadership": [
+                "Secretary, IEEE KSV SPS 2025",
+                "Outreach Committee Member of SCR 2025",
+                "Webmaster, IEEE KSV SB 2026"
+            ],
+            "awards": [
+                "1st Runner-Up – SAMPARK'25 Datathon, IEEE Gujarat Section"
+            ],
+            "certifications": [
+                "1st Runner-Up – SAMPARK'25 Datathon, IEEE Gujarat Section"
+            ],
+            "additionalAchievements": [],
+            "internships": []
+        }
     },
     {
         "student_name": "Aayush Viral Pandya",
@@ -76,8 +129,35 @@
             "KDSH 2026 - Participated",
             "Cognivia - 2nd Runner Up (Finalist)",
             "Odoo x GV - Runner Up",
-            "AISEHack 2026 - Shortlisted \u2192 FINALIST"
-        ]
+            "AISEHack 2026 - Shortlisted → FINALIST"
+        ],
+        "achievements_extended": {
+            "semester": 4,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [],
+            "hackathons": [
+                "2nd Runner-Up Cognivia Hackathon Sampark'26",
+                "InnovAItion Hackathon 2026, DAU Finalists",
+                "ImpactThon 2025-26 Finalist",
+                "AISEHack Hackathon Finalist",
+                "OdooxGVP Hackathon 2026"
+            ],
+            "leadership": [
+                "Treasurer, IEEE KSV SPS 2025",
+                "Chair, IEEE KSV SPS 2026",
+                "Coordinator, Website Committee, IEEE KSV SB 2026"
+            ],
+            "awards": [
+                "2nd Runner-Up Cognivia Hackathon Sampark'26"
+            ],
+            "certifications": [
+                "2nd Runner-Up Cognivia Hackathon Sampark'26"
+            ],
+            "additionalAchievements": [],
+            "internships": []
+        }
     },
     {
         "student_name": "Mahi Parmar",
@@ -115,7 +195,49 @@
             "Cognivia - Participated",
             "Odoo x GV - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Ensemble Intelligence for Model Classification in Next-Generation Smart Agriculture: Crop and Soil-Based Recommendation System",
+                "venue": "Pertanika Journal of Science and Technology",
+                "type": "Journal",
+                "category": "Paper under Review",
+                "date": "08/03/2026 - Submitted for reviewal",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Tracking Air Pollution using INSAT Satellite and Ground Data Fusion",
+                "venue": "National Poster Competition on AI-Powered Research and Innovation",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "19th - 20th September",
+                "conferenceGrant": false
+            }
+        ],
+        "achievements_extended": {
+            "semester": 4,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [
+                "Ongoing: Smart Agriculture Project",
+                "Ongoing: Drone Surveillance Project",
+                "Ongoing: Encroachment Detection Project"
+            ],
+            "hackathons": [
+                "ImpactThon@KSV 2025-2026 Finalist",
+                "AISEHack Hackathon Finalist",
+                "GTU Poster Presentation Finalist"
+            ],
+            "leadership": [
+                "Webmaster, IEEE KSV WIE 2026",
+                "Webmaster, IEEE KSV SPS 2025"
+            ],
+            "awards": [],
+            "certifications": [],
+            "additionalAchievements": [],
+            "internships": []
+        }
     },
     {
         "student_name": "Pragati Varu",
@@ -151,7 +273,34 @@
             "InnovAItion - Participated",
             "Cognivia - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "achievements_extended": {
+            "semester": 4,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [
+                "Ongoing Research Paper: An Optimized Hybrid Ensemble Machine Learning Framework for Employability Prediction using a Multi-Attribute Dataset"
+            ],
+            "hackathons": [
+                "Finalist Impactthon",
+                "Finalist ANRF AISE-Hack 2026",
+                "Participated in Smart India Hackathon (2024, 2025)",
+                "Participated in SSIP(2024, 2025)",
+                "Participated in DAU InnovAItion 2026",
+                "Participated in Cognivia Hackathon of SAMPARK 2026"
+            ],
+            "leadership": [
+                "Treasurer, IEEE SPS KSV"
+            ],
+            "awards": [],
+            "certifications": [
+                "ImpactThon (2025-2026) Participation",
+                "NPTEL - Python For Data Science (Elite)"
+            ],
+            "additionalAchievements": [],
+            "internships": []
+        }
     },
     {
         "student_name": "Yajurshi Velani",
@@ -190,7 +339,35 @@
             "Cognivia - Participated",
             "Odoo x GV - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "achievements_extended": {
+            "semester": 4,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [
+                "Ongoing: Encroachment Detection Project"
+            ],
+            "hackathons": [
+                "4th Runner up in Impacthon",
+                "Finalist ANRF AISE-Hack 2026",
+                "SIH/SSIP Participant",
+                "Finalist IEEE MYOSA COMPETITION 4.0"
+            ],
+            "leadership": [
+                "Secretary , IEEE SPS , KSV"
+            ],
+            "awards": [],
+            "certifications": [
+                "Certificate of impacthon , Ideathon"
+            ],
+            "additionalAchievements": [
+                "Anchoring at Xenesis , Orientation"
+            ],
+            "internships": [
+                "IEEE EMBS Student Internship Program IEEE Pune Section"
+            ]
+        }
     },
     {
         "student_name": "Yash Kumavat",
@@ -227,7 +404,32 @@
         "hackathons": [
             "InnovAItion - Shortlisted",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "achievements_extended": {
+            "semester": 4,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [],
+            "hackathons": [
+                "AISEHack Hackathon Finalist",
+                "ImpactThon Finalist",
+                "InnovAItion - Shaping Future Innovators, DAU Finalists",
+                "Participated in SSIP 2025",
+                "Participated in SIH 2025",
+                "Participated in SSIP 2024"
+            ],
+            "leadership": [
+                "Chair, IEEE KSV SB"
+            ],
+            "awards": [],
+            "certifications": [
+                "ImpactThon Finalist",
+                "InnovAItion - Shaping Future Innovators, DAU Finalists"
+            ],
+            "additionalAchievements": [],
+            "internships": []
+        }
     },
     {
         "student_name": "Kandarp Gajjar",
@@ -269,7 +471,60 @@
             "Cognivia - 2nd Runner Up (Finalist)",
             "Odoo x GV - Shortlisted (Finalist)",
             "TIGC La Trobe - Participated"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Fed-DETR: A Privacy-Preserving Framework for K-Means Driven Decentralised Helmet Surveillance of Two-Wheeler Riders",
+                "venue": "International Journal of Intelligent Transportation Systems Research",
+                "type": "Journal",
+                "category": "Paper under Review",
+                "date": "11/03/2026 - Submitted",
+                "conferenceGrant": false
+            }
+        ],
+        "achievements_extended": {
+            "semester": 8,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [
+                "Publication: Fusing Retrieval Techniques for Enhanced Personalized Community Question Answering (PIRFIRE 2024)",
+                "Patent: EcoSmart Dustbin for Automated Waste Segregation (Project Grant: ₹15,000)"
+            ],
+            "hackathons": [
+                "OdooxGVP Hackathon 2026 - Runnerups",
+                "InnovAItion Hackathon 2026 - 4th Runnerups",
+                "SIH 2024 National Finalists",
+                "SSIP 2023 - 2nd Runnerups",
+                "SIH 2023 AIR 7"
+            ],
+            "leadership": [
+                "Research Assistant, MMPSRPC, 2026",
+                "Student Coordinator, ImpactThon@KSV 2025-2026",
+                "Chairperson, IEEE LDRP-ITR Student Branch 2024",
+                "Main Student Event Coordinator, Xenesis 2024"
+            ],
+            "awards": [],
+            "certifications": [
+                "GATE CSE 2026 Qualified",
+                "GATE DA 2026 Qualified",
+                "CAT 2025 Qualified (94.46 Percentile)",
+                "HASOC FIRE 2025- Data Annotation Certification",
+                "GATE CSE 2025 Qualified",
+                "NPTEL- Python for Data Science (Top 5%)",
+                "Letter of Recommendation from Global Cert Pte. Ltd., Singapore",
+                "AWS Certified Cloud Practitioner (CCP) 2024"
+            ],
+            "additionalAchievements": [
+                "Acknowledgment letter for MMPSRPC website from SVKM President",
+                "Runner-up in Business and Innovation Program, Global Cert Pte. Ltd., Singapore"
+            ],
+            "internships": [
+                "Research Assistant at MMPSRPC, KSV",
+                "National Technical Research Organisation, Delhi (30K/Month Stipend)",
+                "Institute for Plasma Research (Software Development Intern)"
+            ]
+        }
     },
     {
         "student_name": "Nancy Patel",
@@ -311,7 +566,55 @@
             "InnovAItion - Shortlisted",
             "Odoo x GV - Shortlisted (Finalist)",
             "TIGC La Trobe - Participated"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Fed-DETR: A Privacy-Preserving Framework for K-Means Driven Decentralised Helmet Surveillance of Two-Wheeler Riders",
+                "venue": "International Journal of Intelligent Transportation Systems Research",
+                "type": "Journal",
+                "category": "Paper under Review",
+                "date": "11/03/2026 - Submitted",
+                "conferenceGrant": false
+            }
+        ],
+        "achievements_extended": {
+            "semester": 8,
+            "department": "IT",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [
+                "International: EcoAudit AI (9th NYC Green School Conference, New York)",
+                "National: EcoSmart Dustbin Project (Filed Patent: 202521111515)",
+                "State: Finalist - Research Poster Presentation"
+            ],
+            "hackathons": [
+                "Top 5 Finalist - KAVACH 2023 National Hackathon",
+                "Top 5 Finalist - Smart India Hackathon 2023",
+                "Top 5 Finalist - Smart India Hackathon 2024",
+                "Top 25 Finalist - Odoo x Gujarat Vidhyapith Hackathon 2025",
+                "4th Runner-up - InnovAItion Hackathon 2026",
+                "2nd Runner-up - SSIP 2023 Hackathon"
+            ],
+            "leadership": [
+                "Student Coordinator - ERTE 2025",
+                "Student Coordinator - ImpactThon @KSV 2025-2026",
+                "Vice-Chairperson, IEEE LDRP-ITR Student Branch, 2024",
+                "Student Event Co-Coordinator, Xenesis’24",
+                "Digital Committee Head, Xenesis’24"
+            ],
+            "awards": [],
+            "certifications": [
+                "Dau Hackathon Participation"
+            ],
+            "additionalAchievements": [
+                "Letter of Appreciation for MMPSRPC website from SVKM President",
+                "Letter of Recommendation from GlobalCert Pte. Ltd., Singapore"
+            ],
+            "internships": [
+                "Summer School Programme 2025 at IPR",
+                "Institute for Plasma Research (IPR) Internship 2024"
+            ]
+        }
     },
     {
         "student_name": "Antra Gajjar",
@@ -349,7 +652,33 @@
             "InnovAItion - Shortlisted",
             "KDSH 2026 - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "achievements_extended": {
+            "semester": 4,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [],
+            "hackathons": [
+                "AISEHack Hackathon Finalist",
+                "ImpactThon Finalist",
+                "InnovAItion - Shaping Future Innovators, DAU Finalists",
+                "Participated in SSIP 2025",
+                "Participated in SIH 2025",
+                "Participated in SSIP 2024",
+                "Participated in IEEE Intel Hackathon 2024"
+            ],
+            "leadership": [
+                "Vice Chair, IEEE KSV SB"
+            ],
+            "awards": [],
+            "certifications": [
+                "ImpactThon Finalist",
+                "InnovAItion - Shaping Future Innovators, DAU Finalists"
+            ],
+            "additionalAchievements": [],
+            "internships": []
+        }
     },
     {
         "student_name": "Bhagyashree Jadeja",
@@ -386,7 +715,24 @@
         "hackathons": [
             "Odoo x GV - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "achievements_extended": {
+            "semester": 4,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [],
+            "hackathons": [
+                "AISEHack26 Finalist"
+            ],
+            "leadership": [
+                "Co-coordinator, Website Commitee, IEEE KSV SB"
+            ],
+            "awards": [],
+            "certifications": [],
+            "additionalAchievements": [],
+            "internships": []
+        }
     },
     {
         "student_name": "Rudr Halvadiya",
@@ -425,7 +771,30 @@
             "KDSH 2026 - Participated",
             "Odoo x GV - Runner Up",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "achievements_extended": {
+            "semester": 4,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [],
+            "hackathons": [
+                "AISEHack Hackathon Finalist",
+                "Odoo X :Gujarat Vidyapith Finalist",
+                "ImpactThon Finalist",
+                "InnovAItion - Shaping Future Innovators, DAU Finalists",
+                "Participated in SSIP 2024/2025",
+                "Participated in SIH 2025"
+            ],
+            "leadership": [
+                "Secretary,IEEE KSV SB",
+                "Team Leader OdooxVidhyapith [2026]"
+            ],
+            "awards": [],
+            "certifications": [],
+            "additionalAchievements": [],
+            "internships": []
+        }
     },
     {
         "student_name": "Dev Kansara",
@@ -462,7 +831,32 @@
         "hackathons": [
             "InnovAItion - Shortlisted",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "achievements_extended": {
+            "semester": 4,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [],
+            "hackathons": [
+                "AISEHack Hackathon Finalist",
+                "Participated in ImpactThon 2025-2026",
+                "InnovAItion - Shaping Future Innovators, DAU Finalists",
+                "Participated in KDSH Hackathon",
+                "Participated in SSIP 2025",
+                "Participated in SIH 2025",
+                "Participated in SSIP 2024"
+            ],
+            "leadership": [
+                "Treasurer IEEE KSV SB"
+            ],
+            "awards": [],
+            "certifications": [
+                "InnovAItion - Shaping Future Innovators, DAU Finalists"
+            ],
+            "additionalAchievements": [],
+            "internships": []
+        }
     },
     {
         "student_name": "Krishna Bhatt",
@@ -497,7 +891,50 @@
             "Cognivia - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Thermalytix: Privacy-Preserving AI for Breast Cancer Screening",
+                "venue": "India AI Impact Summit-2026",
+                "type": "Conference",
+                "category": "Case Study Publication",
+                "date": "17-Feb-26",
+                "conferenceGrant": true,
+                "studentPresenter": "Chitroda Janki"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [
+                "Ongoing Research Paper: An Optimized Hybrid Ensemble Machine Learning Framework for Employability Prediction using a Multi-Attribute Dataset",
+                "AI Impact Summit 2026 Case Study: Niramai — Thermalytix: Privacy-Preserving AI for Breast Cancer Screening"
+            ],
+            "hackathons": [
+                "Semifinilist at ImpactThon-2026",
+                "Participated at ANRF-AISEHACK 2026",
+                "Participated in Smart India Hackathon(2024, 2025)",
+                "Participated in SSIP(2024)",
+                "Participated in Bhartiya Antariksh Hackathon by ISRO 2024",
+                "Finalists in DAU InnovAItion 2026",
+                "Participated in Cognivia Hackathon of SAMPARK 2026(IEEE Gujarat Section)",
+                "Waitlisted in Smart India Hackathon(2024)"
+            ],
+            "leadership": [],
+            "awards": [],
+            "certifications": [
+                "NPTEL-Programming, Data Structures and Algorithms using Python",
+                "NPTEL-Programming in Java(Topper 1%)",
+                "NPTEL-Mathematical Foundations for Machine Learning",
+                "NPTEL-Introduction to Machine Learning"
+            ],
+            "additionalAchievements": [],
+            "internships": [
+                "Completed Internship at IIT ROPAR"
+            ]
+        }
     },
     {
         "student_name": "Zenisha Devani",
@@ -532,7 +969,69 @@
             "KDSH 2026 - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "From Theory to Practice a Survey and Case Based Analysis of Face Swapping Deepfake Detection Models",
+                "venue": "Multimedia Tools and Applications",
+                "type": "Journal",
+                "category": "Paper under Review",
+                "date": "20/02/2026 - Submitted",
+                "conferenceGrant": false
+            },
+            {
+                "title": "ZTA-Shield: A Zero Trust Approach for Multi-Tenant Clouds",
+                "venue": "International Conference on Converging Intelligence (CICON 2026)",
+                "type": "Conference",
+                "category": "Paper under Review",
+                "date": "nan",
+                "conferenceGrant": "-"
+            },
+            {
+                "title": "Quantum Simulation Tools: A Comprehensive Survey",
+                "venue": "Contemporary Research in Mathematics from India",
+                "type": "Book",
+                "category": "Scopus Book Chapter Accepted",
+                "date": "28-10-2025",
+                "conferenceGrant": false
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [
+                "Accepted: Book Chapter: Quantum Tools: A Comprehensive Survey (Springer)",
+                "Ongoing: FaceSwapping Deepfake Detection Models survey",
+                "Ongoing: ZTA-Shield",
+                "Ongoing: OSMAR: Oil Spill Monitoring"
+            ],
+            "hackathons": [
+                "1st Runner Up at Gujarat Innovation Showcase 2026",
+                "Finalists at ImpactThon-2026",
+                "Finalists at ANRF-AISEHACK 2026",
+                "2nd Runner Up at Innovation Track of SAMPARK 2024"
+            ],
+            "leadership": [
+                "Website Committee Member- IEEE LDRP-ITR",
+                "Member of NSS"
+            ],
+            "awards": [
+                "Second Winner- Edunet Regional Showcase Event, Gujarat."
+            ],
+            "certifications": [
+                "NPTEL Introduction to Algorithms",
+                "NPTEL DBMS",
+                "AZ-900 Azure Fundamentals (Microsoft)"
+            ],
+            "additionalAchievements": [
+                "Volunteered at STTP on Mathmatics Driven Machine Learning (2024)"
+            ],
+            "internships": [
+                "Internship at Institute of Plasma Research"
+            ]
+        }
     },
     {
         "student_name": "Rachita Devda",
@@ -567,7 +1066,35 @@
             "Cognivia - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [
+                "Ongoing Research Paper: An Optimized Hybrid Ensemble Machine Learning Framework for Employability Prediction using a Multi-Attribute Dataset"
+            ],
+            "hackathons": [
+                "Semifinilist at ImpactThon-2026",
+                "Participated at ANRF-AISEHACK 2026",
+                "Participated in Smart India Hackathon(2024, 2025)",
+                "Participated in SSIP(2024)",
+                "Participated in Bhartiya Antariksh Hackathon by ISRO 2024",
+                "Finalists in DAU InnovAItion 2026",
+                "Participated in Cognivia Hackathon of SAMPARK 2026(IEEE Gujarat Section)",
+                "Waitlisted in Smart India Hackathon(2024)"
+            ],
+            "leadership": [],
+            "awards": [],
+            "certifications": [
+                "NPTEL-Programming in Java(Topper 1%)"
+            ],
+            "additionalAchievements": [
+                "Coordinator in the Xenesis 2025"
+            ],
+            "internships": []
+        }
     },
     {
         "student_name": "Janki Chitroda",
@@ -604,7 +1131,50 @@
             "Odoo x GV - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Participated"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Thermalytix: Privacy-Preserving AI for Breast Cancer Screening",
+                "venue": "India AI Impact Summit-2026",
+                "type": "Conference",
+                "category": "Case Study Publication",
+                "date": "17-Feb-26",
+                "conferenceGrant": true,
+                "studentPresenter": "Chitroda Janki"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [
+                "AI Impact Summit 2026 Case Study: Niramai — Thermalytix: Privacy-Preserving AI for Breast Cancer Screening",
+                "Ongoing Research Paper: An Optimized Hybrid Ensemble Machine Learning Framework for Employability Prediction using a Multi-Attribute Dataset"
+            ],
+            "hackathons": [
+                "Finalists at ImpactThon-2026",
+                "Participated at ANRF-AISEHACK 2026",
+                "Participated in Smart India Hackathon(2025)",
+                "Participated in SSIP(2024)",
+                "Participated in Bhartiya Antariksh Hackathon by ISRO 2024",
+                "Finalists in DAU InnovAItion 2026",
+                "Participated in Cognivia Hackathon of SAMPARK 2026(IEEE Gujarat Section)",
+                "Waitlisted in Smart India Hackathon(2024)"
+            ],
+            "leadership": [],
+            "awards": [],
+            "certifications": [
+                "ImpactThon Finalist Certificate (2025-2026)",
+                "NPTEL-Programming in Java"
+            ],
+            "additionalAchievements": [
+                "Coordinator in the Xenesis 2025"
+            ],
+            "internships": [
+                "Completed Def-Space Winter Internship at BSERC (2026)"
+            ]
+        }
     },
     {
         "student_name": "Kanksha Buch",
@@ -641,7 +1211,32 @@
             "Odoo x GV - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Participated"
-        ]
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [
+                "Ongoing Research Paper: An Optimized Hybrid Ensemble Machine Learning Framework for Employability Prediction using a Multi-Attribute Dataset"
+            ],
+            "hackathons": [
+                "Semifinilist at ImpactThon-2026",
+                "Participated at ANRF-AISEHACK 2026",
+                "Participated in Smart India Hackathon(2025)",
+                "Participated in SSIP(2024)",
+                "Participated in Bhartiya Antariksh Hackathon by ISRO 2024",
+                "Finalists in DAU InnovAItion 2026",
+                "Participated in Cognivia Hackathon of SAMPARK 2026(IEEE Gujarat Section)"
+            ],
+            "leadership": [],
+            "awards": [],
+            "certifications": [
+                "NPTEL-Programming in Java(Topper 1%)"
+            ],
+            "additionalAchievements": [],
+            "internships": []
+        }
     },
     {
         "student_name": "Yashvi Chavda",
@@ -677,7 +1272,46 @@
             "Cognivia - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Thermalytix: Privacy-Preserving AI for Breast Cancer Screening",
+                "venue": "India AI Impact Summit-2026",
+                "type": "Conference",
+                "category": "Case Study Publication",
+                "date": "17-Feb-26",
+                "conferenceGrant": true,
+                "studentPresenter": "Chitroda Janki"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [
+                "Ongoing Research Paper: An Optimized Hybrid Ensemble Machine Learning Framework for Employability Prediction using a Multi-Attribute Dataset",
+                "AI Impact Summit 2026 Case Study: Niramai — Thermalytix: Privacy-Preserving AI for Breast Cancer Screening"
+            ],
+            "hackathons": [
+                "Finalists at ImpactThon-2026",
+                "Participated at ANRF-AISEHACK 2026",
+                "Participated in Smart India Hackathon(2025)",
+                "Participated in SSIP(2024)",
+                "Participated in Bhartiya Antariksh Hackathon by ISRO 2024",
+                "Finalists in DAU InnovAItion 2026",
+                "Participated in Cognivia Hackathon of SAMPARK 2026(IEEE Gujarat Section)"
+            ],
+            "leadership": [],
+            "awards": [],
+            "certifications": [
+                "NPTEL-Programming in Java(Topper 1%)"
+            ],
+            "additionalAchievements": [
+                "Coordinator in the Xenesis 2025"
+            ],
+            "internships": []
+        }
     },
     {
         "student_name": "Honey Modha",
@@ -716,7 +1350,46 @@
             "Cognivia - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Enhancing Data Mining Techniques for Identifying Health Risk Patterns in Underserved Populations",
+                "venue": "National Scientific Conference on Emerging Trends in Multidisciplinary Research - 2025",
+                "type": "Conference",
+                "category": "Non-Scopus Paper Publication",
+                "date": "10-Dec-25",
+                "conferenceGrant": true,
+                "studentPresenter": "Hemant Pande"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [
+                "Enhancing Data Mining Techniques for Identifying Health Risk Patterns in Underserved Populations (NASCENT MR 2025)"
+            ],
+            "hackathons": [
+                "Participated in ImpactThon",
+                "4th Runnerup at InnovAItion Hackathon by Intuitive & Dhirubhai Ambani University",
+                "Shortlisted - AISEHack 2026 Finale at IIIT Hyderabad",
+                "Participated in Cognivia Hackathon 2026",
+                "Participated in Smart India Hackathon (2025)"
+            ],
+            "leadership": [
+                "Secretary, IEEE KSV WIE Affinity Group 2025 and 2026",
+                "Coordinator of Documentation and Report Committee 2026"
+            ],
+            "awards": [],
+            "certifications": [
+                "Impacthon Winner Certificate"
+            ],
+            "additionalAchievements": [],
+            "internships": [
+                "Project Trainee at Institute for Plasma Research (December 2025 to March 2026)"
+            ]
+        }
     },
     {
         "student_name": "Zeel Kanudawala",
@@ -749,7 +1422,60 @@
         "hackathons": [
             "Cognivia - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "From Theory to Practice a Survey and Case Based Analysis of Face Swapping Deepfake Detection Models",
+                "venue": "Multimedia Tools and Applications",
+                "type": "Journal",
+                "category": "Paper under Review",
+                "date": "20/02/2026 - Submitted",
+                "conferenceGrant": false
+            },
+            {
+                "title": "ZTA-Shield: A Zero Trust Approach for Multi-Tenant Clouds",
+                "venue": "International Conference on Converging Intelligence (CICON 2026)",
+                "type": "Conference",
+                "category": "Paper under Review",
+                "date": "nan",
+                "conferenceGrant": "-"
+            },
+            {
+                "title": "Quantum Simulation Tools: A Comprehensive Survey",
+                "venue": "Contemporary Research in Mathematics from India",
+                "type": "Book",
+                "category": "Scopus Book Chapter Accepted",
+                "date": "28-10-2025",
+                "conferenceGrant": false
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [
+                "Accepted: Book Chapter: Quantum Tools: A Comprehensive Survey (Springer)",
+                "Ongoing: A survey and Case Based Analysis of FaceSwapping Deepfake Detection Models",
+                "Ongoing: ZTA-Shield: A Zero Trust Approach for Multi-Tenant Clouds"
+            ],
+            "hackathons": [
+                "Finalists at ImpactThon-2026",
+                "Finalists at ANRF-AISEHACK 2026",
+                "Participated in Smart India Hackathon(2024, 2025)",
+                "Participated in SSIP(2024, 2025)",
+                "Participated in Cognivia Hackathon 2026"
+            ],
+            "leadership": [],
+            "awards": [],
+            "certifications": [
+                "Microsoft Azure (AZ-900)",
+                "AWS Cloud Practitioner (CLF-CO2)",
+                "Nptel for Database Management System (Elite)"
+            ],
+            "additionalAchievements": [],
+            "internships": []
+        }
     },
     {
         "student_name": "Jainee Patel",
@@ -792,8 +1518,99 @@
             "Cognivia - Participated",
             "Odoo x GV - Runner Up",
             "TIGC La Trobe - Participated",
-            "AISEHack 2026 - Shortlisted \u2192 FINALIST"
-        ]
+            "AISEHack 2026 - Shortlisted → FINALIST"
+        ],
+        "srlPublications": [
+            {
+                "title": "Early Epileptic Seizure Diagnosis Through Dilated Temporal Convolutional Networks on CHB-MIT Scalp EEG Signals",
+                "venue": "International Conference on Converging Intelligence",
+                "type": "Conference",
+                "category": "Paper under Review",
+                "date": "20/03/2026 - Submitted",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI",
+                "venue": "2025 Artificial Intelligence and Smart Technologies for Sustainability Conference (AISTS)",
+                "type": "Conference",
+                "category": "Scopus Paper Publication",
+                "date": "17/11/2025 - Published",
+                "conferenceGrant": true,
+                "studentPresenter": "Banshari Patel"
+            },
+            {
+                "title": "Tracking Air Pollution using INSAT Satellite and Ground Data Fusion",
+                "venue": "National Poster Competition on AI-Powered Research and Innovation",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "19th - 20th September",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Introduction to Internet of Things",
+                "venue": "Contemporary Research in Mathematics from India",
+                "type": "Book",
+                "category": "Scopus Book Chapter Accepted",
+                "date": "28-Oct-25",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Misinformation Detection using Large Language Models with Explainability",
+                "venue": "8th International Conference on Algorithms, Computing and Artificial Intelligence (ACAI 2025), Nanjing, China",
+                "type": "Conference",
+                "category": "Scopus Paper Publication",
+                "date": "02/03/2026 - Published",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI",
+                "venue": "IGNITE 2.0 flagship event of IEEE SPS GS organized during AISTS 2025",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "21st - 22nd August 2025",
+                "conferenceGrant": true,
+                "studentPresenter": "Banshari Patel"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [
+                "Published: Exploring AI's Influence on Human Thinking (AISTS 2025)",
+                "Published: Misinformation Detection using LLMs (ACAI 2025)",
+                "Published: Book Chapter: Introduction to Internet of Things (Springer)",
+                "Winner Project: Student Attendance Tracking (Grant: ₹50,000)"
+            ],
+            "hackathons": [
+                "Winner - ImpactThon @ KSV 2025–26",
+                "Runner-Up - Datathon, Sampark 2025",
+                "Finalist - IEEE Data Science Challenge (DSC 3.0)",
+                "Finalist - InnovAItion Hackathon",
+                "5th Position - Internal SIH 2024"
+            ],
+            "leadership": [
+                "Co-ordinator – Xensis 2025",
+                "Core Member – WEC, LDRP-ITR",
+                "Sarva Netrutva-102 Best Leader"
+            ],
+            "awards": [
+                "Winner — IEEE R10 Ethics Awareness Contest",
+                "Best Poster / 2nd Prize — IGNITE 2.0 (AISTS 2025)",
+                "Appreciation Letter for IEEE KSV Website"
+            ],
+            "certifications": [],
+            "additionalAchievements": [
+                "UK–France Future Leaders Program 2025",
+                "Active Member — SRL",
+                "Azure Fundamentals (AZ-900) Certified"
+            ],
+            "internships": [
+                "Research Internship — IEEE (EMBS) Pune Chapter",
+                "Research Internship — IEEE SPS Gujarat Section"
+            ]
+        }
     },
     {
         "student_name": "Banshari Patel",
@@ -835,8 +1652,101 @@
             "Cognivia - Participated",
             "Odoo x GV - Runner Up",
             "TIGC La Trobe - Participated",
-            "AISEHack 2026 - Shortlisted \u2192 FINALIST"
-        ]
+            "AISEHack 2026 - Shortlisted → FINALIST"
+        ],
+        "srlPublications": [
+            {
+                "title": "Early Epileptic Seizure Diagnosis Through Dilated Temporal Convolutional Networks on CHB-MIT Scalp EEG Signals",
+                "venue": "International Conference on Converging Intelligence",
+                "type": "Conference",
+                "category": "Paper under Review",
+                "date": "20/03/2026 - Submitted",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI",
+                "venue": "2025 Artificial Intelligence and Smart Technologies for Sustainability Conference (AISTS)",
+                "type": "Conference",
+                "category": "Scopus Paper Publication",
+                "date": "17/11/2025 - Published",
+                "conferenceGrant": true,
+                "studentPresenter": "Banshari Patel"
+            },
+            {
+                "title": "Tracking Air Pollution using INSAT Satellite and Ground Data Fusion",
+                "venue": "National Poster Competition on AI-Powered Research and Innovation",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "19th - 20th September",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Introduction to Internet of Things",
+                "venue": "Contemporary Research in Mathematics from India",
+                "type": "Book",
+                "category": "Scopus Book Chapter Accepted",
+                "date": "28-Oct-25",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Personalized Mood Detection Using LLMs",
+                "venue": "Second International Conference On Artificial Intelligence, Computation, Communication And Network Security (AICCoNS), University of Wollongong in Dubai, UAE",
+                "type": "Conference",
+                "category": "Scopus Paper Acceptance",
+                "date": "3rd January 2026",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI",
+                "venue": "IGNITE 2.0 flagship event of IEEE SPS GS organized during AISTS 2025",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "21st - 22nd August 2025",
+                "conferenceGrant": true,
+                "studentPresenter": "Banshari Patel"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [
+                "Published: AI's Influence on Human Thinking (AISTS 2025)",
+                "Book Chapter: Introduction to Internet of Things (Springer)",
+                "Accepted: Personalized Mood Detection Using LLMs (AICCoNS 2026, Dubai)",
+                "Winner Project: Student Attendance Tracking (Grant: ₹50,000)",
+                "Ongoing: Early Epileptic Seizure Diagnosis",
+                "Ongoing: AI-Powered Drone Surveillance",
+                "Ongoing: Intelligent Skill Extraction"
+            ],
+            "hackathons": [
+                "1st Runner-Up – SAMPARK'25 Datathon",
+                "5th Position – Internal SIH 2024",
+                "Finalist – InnovAItion Hackathon",
+                "Finalist – IEEE Data Science Challenge (DSC 3.0)",
+                "Winner – ImpactThon @ KSV 2025–26 (₹50,000 prize)"
+            ],
+            "leadership": [
+                "Chairperson – IEEE KSV SPS Student Chapter",
+                "Vice Chair – IEEE Student Branch, KSV",
+                "Webmaster – IEEE KSV WIE Affinity Group",
+                "Section Co-Lead – IEEEXtreme 2025"
+            ],
+            "awards": [
+                "1st Prize – Poster Making (Xenesis 2025)",
+                "Best Poster (2nd Position) – Track V: Intelligent Data Analytics (IGNITE 2.0)",
+                "1st Runner-Up – Datathon (Sampark 2025)"
+            ],
+            "certifications": [],
+            "additionalAchievements": [
+                "UK–France Future Leaders Immersion Program 2025",
+                "ACM India Summer School 2025 on AI for Social Good"
+            ],
+            "internships": [
+                "IEEE EMBS Student Internship Program (NeuroPredict Project)",
+                "IEEE SPS GS Mentorship Program (Mood Detection Project)"
+            ]
+        }
     },
     {
         "student_name": "Charmi Padh",
@@ -875,7 +1785,72 @@
             "Odoo x GV - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "From Theory to Practice a Survey and Case Based Analysis of Face Swapping Deepfake Detection Models",
+                "venue": "Multimedia Tools and Applications",
+                "type": "Journal",
+                "category": "Paper under Review",
+                "date": "20/02/2026 - Submitted",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Quantum Simulation Tools: A Comprehensive Survey",
+                "venue": "Contemporary Research in Mathematics from India",
+                "type": "Book",
+                "category": "Scopus Book Chapter Accepted",
+                "date": "28-10-2025",
+                "conferenceGrant": false
+            },
+            {
+                "title": "TrafficEye: Intelligent Traffic Optimization using Deep Learning Approach",
+                "venue": "2nd IEEE International Conference on Artificial Intelligence and Machine Vision",
+                "type": "Conference",
+                "category": "Scopus Paper Publication",
+                "date": "21/10/2025 - Published",
+                "conferenceGrant": true,
+                "studentPresenter": "Charmi Padh"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [
+                "Published: TrafficEye: Intelligent Traffic Optimization (AIMV 2025, IEEE Xplore)",
+                "Published: Quantum Tools: A Comprehensive Survey (Springer)",
+                "Ongoing: Secure Park: Real-Time Edge AI Vision (Grant: ₹69,017)",
+                "Ongoing: PharmaADRAI",
+                "Ongoing: SecureSamvaad",
+                "Ongoing: FaceSwapping Deepfake Detection Models Survey"
+            ],
+            "hackathons": [
+                "Finalist at TicTechToe 2024",
+                "4th Runnerup at InnovAItion Hackathon by Intuitive & Dhirubhai Ambani University",
+                "Shortlisted - AISEHack 2026 Finale at IIIT Hyderabad",
+                "Participated in Cognivia Hackathon 2026",
+                "Participated in Smart India Hackathon (2024, 2025)",
+                "Participated SSIP (2023, 2024)",
+                "Participated in ISRO Hackathon (2023, 2024)"
+            ],
+            "leadership": [
+                "Digital Committee Member- IEEE LDRP-ITR"
+            ],
+            "awards": [],
+            "certifications": [
+                "ISRO Hackathon Participation Certificate"
+            ],
+            "additionalAchievements": [
+                "Active Member — SRL",
+                "Introduction to Algorithms and Analysis (NPTEL 2025)"
+            ],
+            "internships": [
+                "AI/ML Research Intern at Reliance Industries Limited (May-June 2025)",
+                "Institute For Plasma Research (December - April 2025)"
+            ]
+        }
     },
     {
         "student_name": "Prem Raichura",
@@ -914,7 +1889,56 @@
             "Odoo x GV - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "From Theory to Practice a Survey and Case Based Analysis of Face Swapping Deepfake Detection Models",
+                "venue": "Multimedia Tools and Applications",
+                "type": "Journal",
+                "category": "Paper under Review",
+                "date": "20/02/2026 - Submitted",
+                "conferenceGrant": false
+            },
+            {
+                "title": "TrafficEye: Intelligent Traffic Optimization using Deep Learning Approach",
+                "venue": "2nd IEEE International Conference on Artificial Intelligence and Machine Vision",
+                "type": "Conference",
+                "category": "Scopus Paper Publication",
+                "date": "21/10/2025 - Published",
+                "conferenceGrant": true,
+                "studentPresenter": "Charmi Padh"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [
+                "Published: TrafficEye: Intelligent Traffic Optimization (AIMV 2025, IEEE)",
+                "Winner Project: Secure Park ecosystem (Grant: ₹69,017)",
+                "Ongoing: PharmaADR-AI",
+                "Ongoing: Face-Swapping Deepfake Detection Models survey",
+                "Ongoing: Secure Samvaad"
+            ],
+            "hackathons": [
+                "Finalist - InnovAItion Hackathon by Intuitive & DAU (2025)",
+                "Finalist - Tic Tae Toe Hackathon by Intuitive & DAU (2024)",
+                "Shortlisted - AISEHack 2026 Finale at IIIT Hyderabad",
+                "Participated - SIH (2024, 2025) & SSIP"
+            ],
+            "leadership": [],
+            "awards": [
+                "Grant ₹2,500/- for conference publications from MMPSRPC"
+            ],
+            "certifications": [
+                "NPTEL - Python for data science"
+            ],
+            "additionalAchievements": [],
+            "internships": [
+                "Institute for Plasma Research (Devops Intern) (Jan 2026 - April 2026)"
+            ]
+        }
     },
     {
         "student_name": "Rohan Thakar",
@@ -952,7 +1976,72 @@
             "KDSH 2026 - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "From Theory to Practice a Survey and Case Based Analysis of Face Swapping Deepfake Detection Models",
+                "venue": "Multimedia Tools and Applications",
+                "type": "Journal",
+                "category": "Paper under Review",
+                "date": "20/02/2026 - Submitted",
+                "conferenceGrant": false
+            },
+            {
+                "title": "ZTA-Shield: A Zero Trust Approach for Multi-Tenant Clouds",
+                "venue": "International Conference on Converging Intelligence (CICON 2026)",
+                "type": "Conference",
+                "category": "Paper under Review",
+                "date": "nan",
+                "conferenceGrant": "-"
+            },
+            {
+                "title": "Quantum Simulation Tools: A Comprehensive Survey",
+                "venue": "Contemporary Research in Mathematics from India",
+                "type": "Book",
+                "category": "Scopus Book Chapter Accepted",
+                "date": "28-10-2025",
+                "conferenceGrant": false
+            },
+            {
+                "title": "TrafficEye: Intelligent Traffic Optimization using Deep Learning Approach",
+                "venue": "2nd IEEE International Conference on Artificial Intelligence and Machine Vision",
+                "type": "Conference",
+                "category": "Scopus Paper Publication",
+                "date": "21/10/2025 - Published",
+                "conferenceGrant": true,
+                "studentPresenter": "Charmi Padh"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [
+                "Accepted: Book Chapter: Quantum Tools: A Comprehensive Survey (Springer)",
+                "Accepted: TrafficEye: Intelligent Smart Traffic Enhancement",
+                "Ongoing: FaceSwapping Deepfake Detection Models survey",
+                "Ongoing: ZTA-Shield: Zero Trust Approach"
+            ],
+            "hackathons": [
+                "Finalists at ImpactThon-2026",
+                "Finalists at ANRF-AISEHACK 2026",
+                "SIH (2024, 2025)",
+                "SSIP (2024, 2025)",
+                "DAU InnovAItion 2026"
+            ],
+            "leadership": [],
+            "awards": [],
+            "certifications": [
+                "NPTEL Modern C++",
+                "NPTEL DBMS",
+                "NPTEL Introduction to Algorithms"
+            ],
+            "additionalAchievements": [
+                "Volunteered at ROBOFEST 5.0"
+            ],
+            "internships": []
+        }
     },
     {
         "student_name": "Hetvi Hinsu",
@@ -990,7 +2079,62 @@
             "Cognivia - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Intelligent Bending Parameter Optimizer",
+                "venue": "National-level 3rd Project Advisor Group (PAG) Meeting of the DST–Technology Enabling Centre (DST-TEC)",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "06-Feb-26",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Generative AI as a Catalyst in Indian Education Ecosystems",
+                "venue": "Advancing AI and ML Across Disciplines, Gwailor, India",
+                "type": "Conference",
+                "category": "Scopus Paper Publication",
+                "date": "23-Dec-25",
+                "conferenceGrant": false,
+                "studentPresenter": "Henit Panchal"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [
+                "Generative AI as a Catalyst in Indian Education Ecosystem"
+            ],
+            "hackathons": [
+                "Winner - ImpactThon @ KSV 2025–26 (Track: Technologyfor Social Good and sustainable Process) — ₹50,000 prize",
+                "Finalist - InnovAItion Hackathon by Intuitive & Dhirubhai Ambani University",
+                "Shortlisted - AISEHack 2026 Finale at IIIT Hyderabad",
+                "Participated in Cognivia Hackathon 2026",
+                "Participated in Smart India Hackathon (2024, 2025)",
+                "Participated SSIP (2023, 2024)",
+                "Participated in ISRO Hackathon (2023, 2024)",
+                "Participated in SBI Hackathon (2024)"
+            ],
+            "leadership": [],
+            "awards": [
+                "Second Winner- Edunet Regional Showcase Event, Gujarat."
+            ],
+            "certifications": [
+                "NPTEL- DBMS",
+                "ImpacThon Winner Certificate",
+                "EDUNET Foundation - Regional Event Certificate",
+                "InnvoAItion -DAU Certificate"
+            ],
+            "additionalAchievements": [
+                "Presented Bending Research Project at PAG MEETING-2026(PDEU, GANDHINAGAR)"
+            ],
+            "internships": [
+                "Front End Web Development Intern(Aug2025- Sept2025)",
+                "Research Intern AT IPR GANDHINAGAR (DEC-2025 to APRIL-2026)"
+            ]
+        }
     },
     {
         "student_name": "Krish Patel",
@@ -1032,7 +2176,109 @@
             "Odoo x GV - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Effect of Class Imbalance and Resample on CNN Performance for Prostate Cancer Detection",
+                "venue": "World Conference on Computational Science and Intelligence",
+                "type": "Conference",
+                "category": "Non-Scopus Paper Accepted",
+                "date": "19-Nov-25",
+                "conferenceGrant": true,
+                "studentPresenter": "Krish Patel"
+            },
+            {
+                "title": "SHAP-Enhanced Outbreak Forecasting: Interpretable Multi- Modal Learning for Waterborne Disease Prediction",
+                "venue": "National Scientific Conference on Emerging Trends in Multidisciplinary Research - 2025",
+                "type": "Conference",
+                "category": "Non-Scopus Paper Publication",
+                "date": "10-Dec-25",
+                "conferenceGrant": true,
+                "studentPresenter": "Krish Patel"
+            },
+            {
+                "title": "Early Epileptic Seizure Diagnosis Through Dilated Temporal Convolutional Networks on CHB-MIT Scalp EEG Signals",
+                "venue": "International Conference on Converging Intelligence",
+                "type": "Conference",
+                "category": "Paper under Review",
+                "date": "20/03/2026 - Submitted",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI",
+                "venue": "2025 Artificial Intelligence and Smart Technologies for Sustainability Conference (AISTS)",
+                "type": "Conference",
+                "category": "Scopus Paper Publication",
+                "date": "17/11/2025 - Published",
+                "conferenceGrant": true,
+                "studentPresenter": "Banshari Patel"
+            },
+            {
+                "title": "Bridging the Disconnect: Holistic Student Dropout Analysis in Schools through Data-Driven Machine Learning",
+                "venue": "National Poster Competition on AI-Powered Research and Innovation",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "19th - 20th September",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Introduction to Internet of Things",
+                "venue": "Contemporary Research in Mathematics from India",
+                "type": "Book",
+                "category": "Scopus Book Chapter Accepted",
+                "date": "28-Oct-25",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI",
+                "venue": "IGNITE 2.0 flagship event of IEEE SPS GS organized during AISTS 2025",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "21st - 22nd August 2025",
+                "conferenceGrant": true,
+                "studentPresenter": "Banshari Patel"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [
+                "Published: Exploring AI's Influence on Human Thinking (AISTS 2025)",
+                "Published: Prostate Cancer Detection (WcCST 2026)",
+                "Published: SHAP-Enhanced Outbreak Forecasting (NASCENT MR 2025)",
+                "Winner Project: Student Attendance Tracking (Grant: ₹50,000)"
+            ],
+            "hackathons": [
+                "Winner - ImpactThon @ KSV 2025–26",
+                "Finalist - InnovAItion Hackathon",
+                "Shortlisted - AISEHack 2026 Finale",
+                "5th Position - Internal SIH 2024"
+            ],
+            "leadership": [
+                "Student Research Coordinator - MMPSRPC",
+                "Treasurer – IEEE Student Branch, KSV (2025)",
+                "Section Student Representative - IEEE Gujarat Section"
+            ],
+            "awards": [
+                "2nd Prize - Poster Presentation (IGNITE 2.0)",
+                "Finalist - National Poster Competition (GTU)"
+            ],
+            "certifications": [
+                "AWS Cloud Practitioner",
+                "NPTEL Problem Solving in C (Silver medal, Top 5%)",
+                "NPTEL Python for Data Science (Silver medal)"
+            ],
+            "additionalAchievements": [
+                "Demonstrated 'Silent-Talk' project at Savishkar 2025",
+                "Round 2 Qualifier - TCS CodeVita Season 13"
+            ],
+            "internships": [
+                "Research Internship — IEEE (EMBS) Pune Chapter (Schizophrenia detection pipeline)",
+                "Research Internship — IEEE SPS Gujarat Section (Prostate cancer grading)"
+            ]
+        }
     },
     {
         "student_name": "Heny Patel",
@@ -1070,7 +2316,46 @@
             "Cognivia - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Intelligent Bending Parameter Optimizer",
+                "venue": "National-level 3rd Project Advisor Group (PAG) Meeting of the DST–Technology Enabling Centre (DST-TEC)",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "06-Feb-26",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Generative AI as a Catalyst in Indian Education Ecosystems",
+                "venue": "Advancing AI and ML Across Disciplines, Gwailor, India",
+                "type": "Conference",
+                "category": "Scopus Paper Publication",
+                "date": "23-Dec-25",
+                "conferenceGrant": false,
+                "studentPresenter": "Henit Panchal"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [
+                "Generative AI as a Catalyst in Indian Education Ecosystem"
+            ],
+            "hackathons": [],
+            "leadership": [],
+            "awards": [],
+            "certifications": [
+                "NPTEL Python for Data Science",
+                "Dau Hackathon Participation",
+                "Impacthon Winner Certificate",
+                "ISRO Hackathon Participation Certificate"
+            ],
+            "additionalAchievements": [],
+            "internships": []
+        }
     },
     {
         "student_name": "Mihir Patel",
@@ -1105,7 +2390,47 @@
             "Cognivia - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Intelligent Bending Parameter Optimizer",
+                "venue": "National-level 3rd Project Advisor Group (PAG) Meeting of the DST–Technology Enabling Centre (DST-TEC)",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "06-Feb-26",
+                "conferenceGrant": false
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [],
+            "hackathons": [
+                "Winner - ImpactThon @ KSV 2025–26 (Track: Technologyfor Social Good and sustainable Process) — ₹50,000 prize",
+                "Finalist - InnovAItion Hackathon by Intuitive & Dhirubhai Ambani University",
+                "Shortlisted - AISEHack 2026 Finale at IIIT Hyderabad",
+                "Participated in Cognivia Hackathon 2026",
+                "Participated in Smart India Hackathon (2024, 2025)",
+                "Participated SSIP (2023, 2024)",
+                "Participated in ISRO Hackathon (2023, 2024)",
+                "Participated in SBI Hackathon (2024)"
+            ],
+            "leadership": [],
+            "awards": [],
+            "certifications": [
+                "NPTEL Python for Data Science",
+                "Dau Hackathon Participation",
+                "Columbia++ Machine Learning Certificate",
+                "Impactthon Winner Certificate",
+                "ISRO Hackathon Participation Certificate"
+            ],
+            "additionalAchievements": [
+                "Presented Bending Research Project at PAG MEETING-2026(PDEU, GANDHINAGAR)"
+            ],
+            "internships": []
+        }
     },
     {
         "student_name": "Henit Panchal",
@@ -1144,7 +2469,68 @@
             "Odoo x GV - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Intelligent Bending Parameter Optimizer",
+                "venue": "National-level 3rd Project Advisor Group (PAG) Meeting of the DST–Technology Enabling Centre (DST-TEC)",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "06-Feb-26",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Generative AI as a Catalyst in Indian Education Ecosystems",
+                "venue": "Advancing AI and ML Across Disciplines, Gwailor, India",
+                "type": "Conference",
+                "category": "Scopus Paper Publication",
+                "date": "23-Dec-25",
+                "conferenceGrant": false,
+                "studentPresenter": "Henit Panchal"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [
+                "Generative AI as a Catalyst in Indian Education Ecosystem"
+            ],
+            "hackathons": [
+                "Winner - ImpactThon @ KSV 2025–26 (Track: Technologyfor Social Good and sustainable Process) — ₹50,000 prize",
+                "Finalist - InnovAItion Hackathon by Intuitive & Dhirubhai Ambani University",
+                "Shortlisted - AISEHack 2026 Finale at IIIT Hyderabad",
+                "Participated in Cognivia Hackathon 2026",
+                "Participated in Smart India Hackathon (2023, 2024, 2025)",
+                "Participated SSIP (2023, 2024)",
+                "Participated in ISRO Hackathon (2023, 2024)",
+                "Participated in SBI Hackathon (2024)"
+            ],
+            "leadership": [
+                "Digital Committee Member- IEEE LDRP-ITR"
+            ],
+            "awards": [
+                "Entrepreneurship Award(WEC,KSV)- 2024, 2025",
+                "Second Winner- Edunet Regional Showcase Event, Gujarat."
+            ],
+            "certifications": [
+                "AZ-900 Azure Fundamentals (Microsoft)",
+                "NPTEL- DBMS",
+                "NPTEL-C++",
+                "ImpacThon Winner Certificate",
+                "EDUNET Foundation - Regional Event Certificate",
+                "InnvoAItion -DAU Certificate",
+                "Ignite(WEC,KSV)-2024"
+            ],
+            "additionalAchievements": [
+                "Presented Bending Research Project at PAG MEETING-2026(PDEU, GANDHINAGAR)"
+            ],
+            "internships": [
+                "Front End Web Development Intern(Aug2025- Sept2025)",
+                "Research Intern(IIT GANDHINAGAR)--Lingo Labs (Jan2026- Present)"
+            ]
+        }
     },
     {
         "student_name": "Parva Kumar",
@@ -1182,7 +2568,54 @@
             "Cognivia - Participated",
             "Odoo x GV - Participated",
             "TIGC La Trobe - Participated"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Explainable Edge Intelligence for WiFi Anomaly Detection in IoT Environments using TinyML",
+                "venue": "2026 International Conference on NextGen Data Science and Analytics (ICNDSA)",
+                "type": "Conference",
+                "category": "Scopus Paper Acceptance",
+                "date": "10-Mar-26",
+                "conferenceGrant": false
+            }
+        ],
+        "achievements_extended": {
+            "semester": 8,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [
+                "Published: Deep Learning based Safe Car Driving Experience (AIMV 2025, IEEE)",
+                "Published: Explainable Edge Intelligence (Accepted at ICNDSA-2026)",
+                "Ongoing: Secure Park: Real-Time Edge AI Vision (Grant: ₹69,017)"
+            ],
+            "hackathons": [
+                "Finalist at Odoo Combat 2024",
+                "Finalist at InnovAItion Hackathon",
+                "Participated in OdooXGVP 2026",
+                "SIH (2024, 2025)",
+                "SSIP (2023, 2024)",
+                "ISRO Hackathon (2024)"
+            ],
+            "leadership": [
+                "Core Volunteer - Xenesis 2023",
+                "Event Organizer - Xenesis 2024"
+            ],
+            "awards": [],
+            "certifications": [
+                "Python for Data Science (NPTEL)",
+                "Research Paper Presentor at AIMV 2025",
+                "Google Data Analytics by Google",
+                "Machine Learning by DeepLearning.AI"
+            ],
+            "additionalAchievements": [
+                "Demonstrated 'Silent-Talk' project at Savishkar 2025",
+                "Student Coordinator – STTP Program"
+            ],
+            "internships": [
+                "AI/ML Developer Internship (Jun 2025-Oct 2025)"
+            ]
+        }
     },
     {
         "student_name": "Krutika Patel",
@@ -1214,7 +2647,52 @@
         ],
         "hackathons": [
             "InnovAItion - Participated"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Fed-DETR: A Privacy-Preserving Framework for K-Means Driven Decentralised Helmet Surveillance of Two-Wheeler Riders",
+                "venue": "International Journal of Intelligent Transportation Systems Research",
+                "type": "Journal",
+                "category": "Paper under Review",
+                "date": "11/03/2026 - Submitted",
+                "conferenceGrant": false
+            }
+        ],
+        "achievements_extended": {
+            "semester": 8,
+            "department": "IT",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [
+                "International: Ethical AI and Gamified Pedagogy for Sustainable Classrooms (9th NYC Green School Conference, New York)",
+                "National: EcoSmart Dustbin Project (Filed Patent: 202521111515)"
+            ],
+            "hackathons": [
+                "Participated in SIH 2025"
+            ],
+            "leadership": [
+                "Student Organiser - ERTE 2025",
+                "Core Volunteer - Xenesis 2023",
+                "Treasurer - IEEE LDRP-ITR Student Branch 2024",
+                "Student Organiser - ImpactThon @KSV 2025",
+                "Volunteer - ERT in AI&LLM 2025",
+                "Volunteer - MMPSRPC Research Presentation 2025"
+            ],
+            "awards": [],
+            "certifications": [
+                "GATE DA 2026 Qualified",
+                "AWS Certified Cloud Practitioner (CCP) 2025",
+                "Python for Data Science (NPTEL)",
+                "Database Management System (NPTEL)",
+                "C Programming Language (NPTEL)"
+            ],
+            "additionalAchievements": [
+                "Acknowledgment letter for MMPSRPC website from SVKM President"
+            ],
+            "internships": [
+                "Institute for Plasma Research (Software Development Intern)"
+            ]
+        }
     },
     {
         "student_name": "Ridham Patel",
@@ -1247,7 +2725,59 @@
         "hackathons": [
             "InnovAItion - Participated",
             "Odoo x GV - Shortlisted (Finalist)"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "Fed-DETR: A Privacy-Preserving Framework for K-Means Driven Decentralised Helmet Surveillance of Two-Wheeler Riders",
+                "venue": "International Journal of Intelligent Transportation Systems Research",
+                "type": "Journal",
+                "category": "Paper under Review",
+                "date": "11/03/2026 - Submitted",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Bridging the Disconnect: Holistic Student Dropout Analysis in Schools through Data-Driven Machine Learning",
+                "venue": "National Poster Competition on AI-Powered Research and Innovation",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "19th - 20th September",
+                "conferenceGrant": false
+            }
+        ],
+        "achievements_extended": {
+            "semester": 8,
+            "department": "IT",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [
+                "National: EcoSmart Dustbin Project (Filed Patent: 202521111515)"
+            ],
+            "hackathons": [
+                "SSIP New Vibrant Hackathon 2023 (2nd Runner Up)",
+                "SIH 2023 Finalist",
+                "SIH 2024 Finalist",
+                "Odoo x GVP Hackathon 2025/2026"
+            ],
+            "leadership": [
+                "Webmaster - IEEE LDRP-ITR Student Branch 2024",
+                "Student Organiser - ERTE ERTE 2025"
+            ],
+            "awards": [],
+            "certifications": [
+                "AWS Certified Cloud Practitioner",
+                "GATE DA 2026 Qualified"
+            ],
+            "additionalAchievements": [
+                "UK–France Future Leaders Immersion Program 2025",
+                "Developed ImpactThon @KSV 2025 Hackathon Website"
+            ],
+            "internships": [
+                "MotionCut (Web Development Intern)",
+                "Institute for Plasma Research (Software Development Intern)",
+                "IEEE EMBS Pune Chapter (AI/ML Intern)",
+                "OpenXcell Technolabs (Associate Software Engineer)"
+            ]
+        }
     },
     {
         "student_name": "Jenish Sorathiya",
@@ -1284,7 +2814,43 @@
             "Odoo x GV - Participated",
             "TIGC La Trobe - Participated",
             "AISEHack 2026 - Shortlisted"
-        ]
+        ],
+        "srlPublications": [
+            {
+                "title": "SHAP-Enhanced Outbreak Forecasting: Interpretable Multi- Modal Learning for Waterborne Disease Prediction",
+                "venue": "National Scientific Conference on Emerging Trends in Multidisciplinary Research - 2025",
+                "type": "Conference",
+                "category": "Non-Scopus Paper Publication",
+                "date": "10-Dec-25",
+                "conferenceGrant": true,
+                "studentPresenter": "Krish Patel"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "IT",
+            "institute": "VS-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [],
+            "hackathons": [
+                "2nd Runner-Up Cognivia Hackathon Sampark'26",
+                "InnovAItion Hackathon 2026, DAU Finalists",
+                "2nd Runner-Up ImpactThon 2025-26",
+                "AISEHack Hackathon Finalist",
+                "2 times Odoo Hackathon Finalist"
+            ],
+            "leadership": [
+                "Webmaster, IEEE KSV SPS 2026",
+                "SPOC 1, Website Committee, IEEE KSV SB 2026"
+            ],
+            "awards": [
+                "2nd Runner-Up Cognivia Hackathon Sampark'26",
+                "2nd Runner-Up ImpactThon 2025-26"
+            ],
+            "certifications": [],
+            "additionalAchievements": [],
+            "internships": []
+        }
     },
     {
         "student_name": "Hemant Pande",
@@ -1325,8 +2891,112 @@
             "Cognivia - Participated",
             "Odoo x GV - Participated",
             "TIGC La Trobe - Participated",
-            "AISEHack 2026 - Shortlisted \u2192 FINALIST"
-        ]
+            "AISEHack 2026 - Shortlisted → FINALIST"
+        ],
+        "srlPublications": [
+            {
+                "title": "Enhancing Data Mining Techniques for Identifying Health Risk Patterns in Underserved Populations",
+                "venue": "National Scientific Conference on Emerging Trends in Multidisciplinary Research - 2025",
+                "type": "Conference",
+                "category": "Non-Scopus Paper Publication",
+                "date": "10-Dec-25",
+                "conferenceGrant": true,
+                "studentPresenter": "Hemant Pande"
+            },
+            {
+                "title": "Early Epileptic Seizure Diagnosis Through Dilated Temporal Convolutional Networks on CHB-MIT Scalp EEG Signals",
+                "venue": "International Conference on Converging Intelligence",
+                "type": "Conference",
+                "category": "Paper under Review",
+                "date": "20/03/2026 - Submitted",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI",
+                "venue": "2025 Artificial Intelligence and Smart Technologies for Sustainability Conference (AISTS)",
+                "type": "Conference",
+                "category": "Scopus Paper Publication",
+                "date": "17/11/2025 - Published",
+                "conferenceGrant": true,
+                "studentPresenter": "Banshari Patel"
+            },
+            {
+                "title": "Bridging the Disconnect: Holistic Student Dropout Analysis in Schools through Data-Driven Machine Learning",
+                "venue": "National Poster Competition on AI-Powered Research and Innovation",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "19th - 20th September",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Introduction to Internet of Things",
+                "venue": "Contemporary Research in Mathematics from India",
+                "type": "Book",
+                "category": "Scopus Book Chapter Accepted",
+                "date": "28-Oct-25",
+                "conferenceGrant": false
+            },
+            {
+                "title": "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI",
+                "venue": "IGNITE 2.0 flagship event of IEEE SPS GS organized during AISTS 2025",
+                "type": "Poster Presentation",
+                "category": "Poster Presentation",
+                "date": "21st - 22nd August 2025",
+                "conferenceGrant": true,
+                "studentPresenter": "Banshari Patel"
+            }
+        ],
+        "achievements_extended": {
+            "semester": 6,
+            "department": "CE",
+            "institute": "LDRP-ITR",
+            "organization": "SRL, IEEE-KSV",
+            "researchWork": [
+                "Published: Exploring AI’s Influence on Human Thinking (AISTS 2025, IEEE)",
+                "Published: Identifying Health Risk Patterns (NASCENT MR 2025)",
+                "Published: Book Chapter - Introduction to Internet of Things",
+                "Ongoing: Early Epileptic Seizure Diagnosis",
+                "Ongoing: LLM-Based Personalized Health Advice Generator",
+                "Current Project: Portable Sensor for Microplastic Detection",
+                "Winner Project: Student Attendance Tracking (Grant: ₹50,000)"
+            ],
+            "hackathons": [
+                "Smart India Hackathon 2024 (Wellness Vivek)",
+                "Smart India Hackathon 2025 (EduTrack)",
+                "Odoo Hackathon 2025 (ReWear)",
+                "IEEE Gujarat Datathon 2025 (AI-Based Nail Disease Detection)",
+                "ISRO Hackathon (2024, 2025)",
+                "Winner – ImpactThon @ KSV 2025–26",
+                "4th runnerup – InnovAItion Hackathon",
+                "Finalist - ANRF - AISEHack Hacakthon (2026)"
+            ],
+            "leadership": [
+                "Secretary - IEEE KSV Student Branch (2025)",
+                "Vice Chair - IEEE SPS Student Chapter (2025)",
+                "Hackathon Coordinator - MMPSRPC",
+                "Student Coordinator - ERTE-2025"
+            ],
+            "awards": [
+                "Winner - IEEE R10 Ethics Awareness Contest",
+                "2nd Prize - Poster Presentation (IEEE SPS Forum – IGNITE 2.0)",
+                "National Poster Competition (GTU) - Presented Dropout Analysis"
+            ],
+            "certifications": [
+                "NPTEL Certified – DBMS",
+                "NPTEL Certified – Python for Data Science",
+                "NPTEL Certified – Introduction to Algorithms",
+                "Github Certified – Github Foundation"
+            ],
+            "additionalAchievements": [
+                "Student Coordinator – STTP Program",
+                "Volunteer – Research Oriented Workshop",
+                "Volunteer – Chiropractic Research Meet"
+            ],
+            "internships": [
+                "AI/ML Research Intern - IEEE EMBS Student Internship 2025",
+                "AI/ML Intern - SPS Internship 2025"
+            ]
+        }
     },
     {
         "student_name": "Poojan Ghetiya",
@@ -1360,6 +3030,33 @@
             "InnovAItion - Participated",
             "Cognivia - 2nd Runner Up (Finalist)",
             "Odoo x GV - Participated"
-        ]
+        ],
+        "achievements_extended": {
+            "semester": 2,
+            "department": "CE - Masters",
+            "institute": "LDRP-ITR",
+            "organization": "SRL",
+            "researchWork": [],
+            "hackathons": [
+                "IEEE Sampark 26 - Second Runner up",
+                "Impactthon @KSV 2025 Hackathon Finalist",
+                "Smart India Hackathon 2024 Winner"
+            ],
+            "leadership": [],
+            "awards": [
+                "Finalist - Laksh Season 5",
+                "Winner - Laksh Season 6",
+                "Finalist - Laksh Season 7"
+            ],
+            "certifications": [],
+            "additionalAchievements": [
+                "UK–France Future Leaders Immersion Program 2025 – University of Kent (UK) & IESEG School of Management (France)"
+            ],
+            "internships": [
+                "FullStack Developer Intern (Passdn Technologies) (March 24 - May 24)",
+                "JavaScript Developer Intern (MealPe) (May 24 - Sept. 25)",
+                "Software Engineer (MealPe) (Sept. 25 - Present)"
+            ]
+        }
     }
 ]
