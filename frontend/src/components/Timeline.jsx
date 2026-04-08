@@ -140,7 +140,16 @@ function Timeline() {
 
   const { data: timelineSteps = [], loading, error, retry } = useSupabaseQuery(async () => {
     const json = await fetchWithTimeout(`${API_BASE_URL}/api/timeline`);
-    return json.data || [];
+    const timelineData = json?.data || json?.sessions || json?.timeline || [];
+
+    return timelineData.map((item, index) => ({
+      id: item.id || item.serial_no || index,
+      step: item.step ?? item.serial_no ?? index + 1,
+      title: item.title || item.name || `Step ${index + 1}`,
+      description: item.description || item.brief || '',
+      icon: item.icon || item.category || item.type || 'beginning',
+      ...item,
+    }));
   });
 
   return (
