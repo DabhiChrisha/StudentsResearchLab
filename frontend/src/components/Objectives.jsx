@@ -45,7 +45,7 @@ const objectives = [
     },
     {
         title: "Research Ecosystem",
-        description: "Building a dynamic environment where ideas, resources, and opportunities seamlessly connect to empower student growth."
+        description: "Building a dynamic environment where ideas and opportunities empower student growth."
     }
 ];
 

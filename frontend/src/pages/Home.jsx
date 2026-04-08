@@ -122,12 +122,10 @@ const Home = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     {[
-                      { label: "Paper Publications", value: "6" },
-                      { label: "Poster Presentation", value: "4" },
-                      { label: "Case Study Publication", value: "1" },
-                      { label: "Paper Acceptance", value: "3" },
-                      { label: "Chapter Acceptance", value: "2" },
-                      { label: "Awards Won", value: "1" },
+                      { label: "Research Paper Publications", value: "6" },
+                      { label: "Research Poster Presentations", value: "4" },
+                      { label: "Research Projects Sanctioned", value: "6" },
+                      { label: "Awards and Recognitions", value: "2" },
                     ].map((stat, i) => (
                       <motion.div
                         key={i}

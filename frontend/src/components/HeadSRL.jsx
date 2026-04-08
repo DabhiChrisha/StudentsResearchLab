@@ -118,7 +118,7 @@ export default function HeadSRL() {
                   href="mailto:mmpsrc.ksv@gmail.com"
                   className="font-medium underline decoration-[#05877a]/30 hover:decoration-[#05877a]"
                 >
-                  mmpsrc.ksv@gmail.com
+                  mmpsrpc.ksv@gmail.com
                 </a>
               </div>
               <div className="flex items-center gap-3 text-slate-700">

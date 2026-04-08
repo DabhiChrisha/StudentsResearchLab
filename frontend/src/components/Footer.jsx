@@ -140,10 +140,10 @@ const Footer = () => {
 
               <div className="flex flex-col gap-1 text-xs text-[#134E4A]/80 mb-2">
                 <a
-                  href="mailto:mmpsrc.ksv@gmail.com"
+                  href="mailto:mmpsrpc.ksv@gmail.com"
                   className="hover:underline"
                 >
-                  mmpsrc.ksv@gmail.com
+                  mmpsrpc.ksv@gmail.com
                 </a>
               </div>
             </div>
