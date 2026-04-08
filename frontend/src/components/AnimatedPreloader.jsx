@@ -13,9 +13,9 @@ export default function AnimatedPreloader({ finishLoading }) {
 
     return (
         <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
+            initial={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: '-100%' }}
+            transition={{ duration: 0.8, ease: 'easeInOut' }}
             className="preloader-container"
         >
             {/* Main animated logo background */}
