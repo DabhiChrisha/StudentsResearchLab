@@ -124,12 +124,12 @@ const Home = () => {
                     {[
                       {
                         label: "Research Poster Presentations",
-                        value: "4",
+                        value: "4+",
                         category: "Conferences",
                       },
                       {
                         label: "Awards and Recognitions",
-                        value: "2",
+                        value: "2+",
                         category: "Excellence",
                       },
                       {
@@ -138,7 +138,7 @@ const Home = () => {
                             Research Publications: <br /> Papers/Case Studies/Book Chapters
                           </>
                         ),
-                        value: "9",
+                        value: "10+",
                         category: "Total Publications",
                       },
                       {
@@ -217,7 +217,7 @@ const Home = () => {
                       research.
                     </h3>
 
-                    <div className="absolute -right-20 -bottom-20 z-10 w-[400px] md:w-[500px] 2xl:w-[650px] aspect-square flex items-center justify-center pointer-events-auto">
+                    <div className="absolute -right-12 -bottom-12 z-10 w-[350px] md:w-[450px] 2xl:w-[600px] aspect-square flex items-center justify-center pointer-events-auto">
                       <Suspense
                         fallback={
                           <div className="animate-pulse bg-white/10 rounded-full w-64 h-64" />
@@ -225,7 +225,7 @@ const Home = () => {
                       >
                         <Earth
                           className="w-full h-full"
-                          scale={1.2}
+                          scale={1.1}
                           dark={0.8}
                         />
                       </Suspense>
