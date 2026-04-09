@@ -636,9 +636,9 @@ export default function Researchers() {
                                                     </h4>
                                                     <div className="grid grid-cols-3 gap-3">
                                                         {[
-                                                            { label: "Ongoing", val: activeMetrics?.ongoing_projects_count ?? 0 },
-                                                            { label: "Research", val: activeMetrics?.research_works_count ?? 0 },
-                                                            { label: "Hack", val: activeMetrics?.papers_published_count ?? 0, label_alt: "Papers" }
+                                                            { label: "Projects", val: activeMetrics?.ongoing_projects_count ?? 0, label_alt: "Ongoing" },
+                                                            { label: "Hackathons", val: activeMetrics?.hackathons_count ?? 0, label_alt: "Total" },
+                                                            { label: "Published", val: activeMetrics?.papers_published_count ?? 0, label_alt: "Research" }
                                                         ].map((m, i) => (
                                                             <div key={i} className="p-3 rounded-2xl bg-teal-50/50 border border-teal-100/50 text-center">
                                                                 <p className="text-[8px] font-black uppercase text-slate-400 mb-1">{m.label_alt || m.label}</p>

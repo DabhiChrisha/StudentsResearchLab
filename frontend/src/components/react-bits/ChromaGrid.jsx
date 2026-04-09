@@ -133,8 +133,7 @@ const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
                         <div className="mt-auto pt-5 border-t border-slate-50 flex items-center justify-between">
                             <div className="flex gap-4 lg:gap-3 flex-wrap">
                                 <Metric icon={Activity} value={item.ongoingProjectsCount} label="Ongoing" />
-                                <Metric icon={Target} value={item.researchWorksCount} label="Research" />
-                                <Metric icon={Zap} value={item.hackathonsCount} label="Hack" />
+                                <Metric icon={Zap} value={item.hackathonsCount} label="Hacks" />
                                 <Metric icon={ScrollText} value={item.papersPublishedCount} label="Papers" />
                             </div>
                             <div className="shrink-0 w-7 h-7 rounded-lg bg-white/50 flex items-center justify-center text-slate-400 group-hover:bg-secondary group-hover:text-white transition-all duration-500">
