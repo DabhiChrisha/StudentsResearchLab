@@ -140,8 +140,8 @@ const Home = () => {
                       {
                         label: "Hackathon",
                         isHackathon: true,
-                        winners: "12",
-                        finalists: "38",
+                        winners: "16",
+                        finalists: "46",
                       },
                     ].map((stat, i) => (
                       <motion.div
