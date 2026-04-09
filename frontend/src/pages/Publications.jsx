@@ -714,6 +714,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
           className="fixed inset-0 z-40"
         />
 
+<<<<<<< Updated upstream
         {/* Dropdown Modal */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: -10 }}
@@ -753,6 +754,35 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
                 onClose();
               }}
               className="w-full mt-3 py-2 bg-slate-200 text-slate-700 rounded-lg font-semibold hover:bg-slate-300 transition-colors text-sm"
+=======
+      {/* Dropdown Modal */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: -10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: -10 }}
+        transition={{ duration: 0.15 }}
+        style={{
+          position: 'fixed',
+          top: `${position.top}px`,
+          left: `${position.left}px`,
+          zIndex: 50,
+        }}
+        className="bg-white rounded-xl shadow-xl border border-slate-200 p-4"
+      >
+        {/* Year Grid */}
+        <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-xs">
+          {years.map((year) => (
+            <button
+              key={year}
+              onClick={() => {
+                onSelectYear(year);
+                onClose();
+              }}
+              className={`py-2 sm:py-2.5 px-2 rounded-lg font-bold text-sm transition-all duration-300 ${selectedYear === year
+                ? "bg-teal-600 text-white shadow-md shadow-teal-600/30"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
+>>>>>>> Stashed changes
             >
               Clear Selection
             </button>
@@ -802,6 +832,11 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
 
     const headers = ["ID", "Title", "Authors", "Venue", "Date", "Category", "Description", "Tags", "Status", "Inventors"];
     const workbook = XLSX.utils.book_new();
+<<<<<<< Updated upstream
+=======
+
+    // Group data by category
+>>>>>>> Stashed changes
     const categoryList = ["Conference", "Journal", "Book Chapter", "Patents"];
     const groupedData = {};
 
@@ -825,6 +860,11 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
           pub.inventors ? pub.inventors.join("; ") : "-"
         ]));
         const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+<<<<<<< Updated upstream
+=======
+
+        // Add worksheet to workbook
+>>>>>>> Stashed changes
         XLSX.utils.book_append_sheet(workbook, ws, category);
       }
     });
@@ -851,6 +891,11 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
+<<<<<<< Updated upstream
+=======
+
+        {/* Header Section */}
+>>>>>>> Stashed changes
         <div className="text-center mb-10">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -1030,14 +1075,26 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
                   <div className="h-6 md:h-8 w-3/4 bg-gray-200 rounded-md mb-4"></div>
                   <div className="h-4 w-full bg-gray-200 rounded-md mb-2"></div>
                   <div className="h-4 w-5/6 bg-gray-200 rounded-md mb-6"></div>
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
                   <div className="flex items-start gap-3 mb-6">
                     <div className="w-4 h-4 rounded bg-gray-200 mt-1 shrink-0"></div>
                     <div className="h-4 w-1/2 bg-gray-200 rounded"></div>
                   </div>
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
                   <div className="flex items-start gap-3 mb-6">
                     <div className="w-4 h-4 rounded bg-gray-200 mt-1 shrink-0"></div>
                     <div className="h-4 w-2/3 bg-gray-200 rounded"></div>
                   </div>
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
                   <div className="mt-auto border-t border-slate-100 pt-5 flex justify-between items-center">
                     <div className="flex gap-2">
                       <div className="h-5 w-16 bg-gray-200 rounded-md"></div>
