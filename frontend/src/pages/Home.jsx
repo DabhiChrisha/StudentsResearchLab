@@ -140,7 +140,7 @@ const Home = () => {
                       {
                         label: "Hackathon",
                         isHackathon: true,
-                        winners: "19",
+                        winners: "23",
                         finalists: "57",
                       },
                     ].map((stat, i) => (
