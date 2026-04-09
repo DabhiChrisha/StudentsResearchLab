@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSupabaseQuery, fetchWithTimeout } from "../hooks/useSupabaseQuery";
 import { API_BASE_URL } from "../config/apiConfig";
 import { ExternalLink, X } from "lucide-react";
+import { getImageUrl } from "../lib/imageUrl";
 
 const Activities = () => {
   const [modal, setModal] = useState(null); // activity object or null
@@ -115,14 +116,14 @@ const Activities = () => {
                         if (url.match(/\.(mp4|webm|ogg)(\?.*)?$/i)) {
                           return (
                             <video
-                              src={url}
+                              src={getImageUrl(url)}
                               className="object-contain w-full h-full mx-auto my-auto bg-black"
                               controls
                               autoPlay={false}
                               muted
                               playsInline
                               preload="metadata"
-                              poster="/video-poster.png"
+                              poster={getImageUrl("/video-poster.png")}
                             >
                               Sorry, your browser doesn't support embedded
                               videos.
@@ -137,7 +138,7 @@ const Activities = () => {
                             <img
                               loading="lazy"
                               decoding="async"
-                              src={url}
+                              src={getImageUrl(url)}
                               alt={act.title + " (debug: " + url + ")"}
                               className="object-contain w-full h-full mx-auto my-auto rounded-2xl"
                               style={{
@@ -153,7 +154,7 @@ const Activities = () => {
                             <img
                               loading="lazy"
                               decoding="async"
-                              src={url}
+                              src={getImageUrl(url)}
                               alt={act.title + " (debug: " + url + ")"}
                               className="object-contain w-full h-full mx-auto my-auto"
                               style={{
@@ -219,14 +220,14 @@ const Activities = () => {
                       if (url && url.match(/\.(mp4|webm|ogg)(\?.*)?$/i)) {
                         return (
                           <video
-                            src={url}
+                            src={getImageUrl(url)}
                             className="object-contain w-full h-full max-h-[340px] mx-auto my-auto bg-black"
                             controls
                             autoPlay={false}
                             muted
                             playsInline
                             preload="metadata"
-                            poster="/video-poster.png"
+                            poster={getImageUrl("/video-poster.png")}
                           >
                             Sorry, your browser doesn't support embedded videos.
                           </video>
@@ -239,7 +240,7 @@ const Activities = () => {
                           <img
                             loading="lazy"
                             decoding="async"
-                            src={url}
+                            src={getImageUrl(url)}
                             alt={modal.title + " (debug: " + url + ")"}
                             className="object-contain w-full h-full max-h-[340px] mx-auto my-auto rounded-3xl"
                             style={{
@@ -254,7 +255,7 @@ const Activities = () => {
                           <img
                             loading="lazy"
                             decoding="async"
-                            src={url}
+                            src={getImageUrl(url)}
                             alt={modal.title + " (debug: " + url + ")"}
                             className="object-contain w-full h-full max-h-[340px] mx-auto my-auto rounded-3xl"
                             style={{

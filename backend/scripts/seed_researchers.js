@@ -1,10 +1,16 @@
 const { createClient } = require("@supabase/supabase-js");
 const fs = require("fs");
 const path = require("path");
-const dotenv = require("dotenv");
+const cloudinary = require("cloudinary").v2;
 
 // Load backend .env
-dotenv.config({ path: path.join(__dirname, "../backend/.env") });
+require("dotenv").config({ path: path.join(__dirname, "../.env") });
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const supabase = createClient(
     process.env.VITE_SUPABASE_URL || "https://npdtneznlzganiolvhmw.supabase.co",

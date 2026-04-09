@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { Mail, MapPin } from "lucide-react";
-import mamPhoto from "../assets/Ma'am Photo.png";
+import { getImageUrl } from "../lib/imageUrl";
+
+const mamPhoto = getImageUrl("frontend/src/assets/Ma'am Photo.png");
 
 export default function HeadSRL() {
   return (

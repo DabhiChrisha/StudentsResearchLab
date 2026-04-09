@@ -4,6 +4,7 @@ import Tree from './tree';
 import GradientText from './react-bits/GradientText';
 import { useSupabaseQuery, fetchWithTimeout } from '../hooks/useSupabaseQuery';
 import { API_BASE_URL } from '../config/apiConfig';
+import { getImageUrl } from '../lib/imageUrl';
 
 // Timeline icons mapping
 const timelineIcons = {
@@ -203,7 +204,7 @@ function Timeline() {
                 </div>
                 <div className="absolute inset-3 rounded-full bg-white shadow-[0_20px_50px_-20px_rgba(0,0,0,0.1)] flex flex-col items-center justify-center p-6 text-center ring-1 ring-slate-100/50 backdrop-blur-sm">
                   <div className="w-16 h-16 sm:w-20 sm:h-20 mb-3 rounded-full flex items-center justify-center">
-                    <img loading="lazy" decoding="async" src="/SRL.svg" alt="SRL Logo" className="w-full h-full object-contain" />
+                    <img loading="lazy" decoding="async" src={getImageUrl("/SRL.svg")} alt="SRL Logo" className="w-full h-full object-contain" />
                   </div>
                   <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3, duration: 0.6 }} className="text-[#926c15] font-extrabold text-[10px] sm:text-[11px] tracking-[0.3em] uppercase mb-3 drop-shadow-sm">
                     Students Research Lab

@@ -4,47 +4,48 @@ import { useState, useEffect } from 'react';
 import { useSupabaseQuery, fetchWithTimeout } from '../hooks/useSupabaseQuery';
 import { API_BASE_URL as API_BASE } from '../config/apiConfig';
 import ErrorBoundary from '../components/ErrorBoundary';
+import { getImageUrl } from '../lib/imageUrl';
 
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 // Pass-through parser for newly formatted backend objects
 const IMAGE_MAP = {
-    "22BECE30091": encodeURI("/students/Kandarp Gajjar.jpeg"),
-    "22BEIT30123": encodeURI("/students/Nancy.jpeg"),
-    "23BECE30493": encodeURI("/students/Pande Hemant Rameshwarkumar.jpeg"),
-    "23BECE30532": encodeURI("/students/Patel Krish Himanshu.jpeg"),
-    "23BECE30168": encodeURI("/students/Patel Banshari Rahulkumar.jpg"),
-    "23BEIT54020": encodeURI("/students/Jenish Sorathiya.jpeg"),
-    "23BECE30203": encodeURI("/students/Patel Jainee Hasmukhbhai.jpeg"),
-    "24BECE30489": encodeURI("/students/Dabhi Chrisha Manish.png"),
-    "24BECE30114": encodeURI("/students/Kansara Dev Dharmeshkumar.jpeg"),
-    "24BECE30122": encodeURI("/students/Yash Kumavat.jpeg"),
-    "24BECE30094": encodeURI("/students/Halvdadiya Rudr.jpeg"),
-    "24BECE30081": encodeURI("/students/Gajjar Antra Ashvinkumar.jpeg"),
-    "24BECE30099": encodeURI("/students/Jadeja Bhagyashree.jpeg"),
-    "23BECE30036": encodeURI("/students/Chavda Yashvi Surendrasinh.jpeg"),
-    "23BECE30059": encodeURI("/students/Devda Rachita Bharatsinh.jpeg"),
-    "25MECE30003": encodeURI("/students/Ghetiya Poojan Rahulbhai.jpeg"),
-    "23BECE30521": encodeURI("/students/Heny Patel.jpeg"),
-    "23BECE30449": encodeURI("/students/Hetvi Hinsu.jpeg"),
-    "224SBECE30016": encodeURI("/students/Honey Modha.jpeg"),
-    "23BECE30040": encodeURI("/students/Janki Chitroda.jpeg"),
-    "23BECE30029": encodeURI("/students/Kanksha Keyur Buch.jpeg"),
-    "23BECE30101": encodeURI("/students/Kanudawala Zeel PareshKumar.jpeg"),
-    "23BECE30023": encodeURI("/students/Krishna Bhatt.jpeg"),
-    "22BEIT30118": encodeURI("/students/Krutika Vijaybhai Patel.jpeg"),
-    "23BECE30542": encodeURI("/students/Mihir Patel.png"),
-    "23BECE30144": encodeURI("/students/Padh Charmi Ketankumar.jpeg"),
-    "23BECE30490": encodeURI("/students/Panchal Henit Shaileshbhai.jpeg"),
-    "24BECE30541": encodeURI("/students/Pandya Aayush Viral.jpeg"),
-    "24BECE30548": encodeURI("/students/Parmar Mahi Nitinchandra.jpeg"),
-    "22BECE30153": encodeURI("/students/Parva Kumar.jpeg"),
-    "24BECE30436": encodeURI("/students/Pragati Varu.jpeg"),
-    "224SBECE30059": encodeURI("/students/Prem Raichura.jpeg"),
-    "22BEIT30133": encodeURI("/students/Ridham Patel.png"),
-    "23BECE30364": encodeURI("/students/Rohan Thakar.png"),
-    "24BECE30441": encodeURI("/students/Yajurshi Velani.png"),
-    "23BECE30058": encodeURI("/students/Zenisha Devani.jpeg"),
+    "22BECE30091": getImageUrl("/students/Kandarp Gajjar.jpeg"),
+    "22BEIT30123": getImageUrl("/students/Nancy.jpeg"),
+    "23BECE30493": getImageUrl("/students/Pande Hemant Rameshwarkumar.jpeg"),
+    "23BECE30532": getImageUrl("/students/Patel Krish Himanshu.jpeg"),
+    "23BECE30168": getImageUrl("/students/Patel Banshari Rahulkumar.jpg"),
+    "23BEIT54020": getImageUrl("/students/Jenish Sorathiya.jpeg"),
+    "23BECE30203": getImageUrl("/students/Patel Jainee Hasmukhbhai.jpeg"),
+    "24BECE30489": getImageUrl("/students/Dabhi Chrisha Manish.png"),
+    "24BECE30114": getImageUrl("/students/Kansara Dev Dharmeshkumar.jpeg"),
+    "24BECE30122": getImageUrl("/students/Yash Kumavat.jpeg"),
+    "24BECE30094": getImageUrl("/students/Halvdadiya Rudr.jpeg"),
+    "24BECE30081": getImageUrl("/students/Gajjar Antra Ashvinkumar.jpeg"),
+    "24BECE30099": getImageUrl("/students/Jadeja Bhagyashree.jpeg"),
+    "23BECE30036": getImageUrl("/students/Chavda Yashvi Surendrasinh.jpeg"),
+    "23BECE30059": getImageUrl("/students/Devda Rachita Bharatsinh.jpeg"),
+    "25MECE30003": getImageUrl("/students/Ghetiya Poojan Rahulbhai.jpeg"),
+    "23BECE30521": getImageUrl("/students/Heny Patel.jpeg"),
+    "23BECE30449": getImageUrl("/students/Hetvi Hinsu.jpeg"),
+    "224SBECE30016": getImageUrl("/students/Honey Modha.jpeg"),
+    "23BECE30040": getImageUrl("/students/Janki Chitroda.jpeg"),
+    "23BECE30029": getImageUrl("/students/Kanksha Keyur Buch.jpeg"),
+    "23BECE30101": getImageUrl("/students/Kanudawala Zeel PareshKumar.jpeg"),
+    "23BECE30023": getImageUrl("/students/Krishna Bhatt.jpeg"),
+    "22BEIT30118": getImageUrl("/students/Krutika Vijaybhai Patel.jpeg"),
+    "23BECE30542": getImageUrl("/students/Mihir Patel.png"),
+    "23BECE30144": getImageUrl("/students/Padh Charmi Ketankumar.jpeg"),
+    "23BECE30490": getImageUrl("/students/Panchal Henit Shaileshbhai.jpeg"),
+    "24BECE30541": getImageUrl("/students/Pandya Aayush Viral.jpeg"),
+    "24BECE30548": getImageUrl("/students/Parmar Mahi Nitinchandra.jpeg"),
+    "22BECE30153": getImageUrl("/students/Parva Kumar.jpeg"),
+    "24BECE30436": getImageUrl("/students/Pragati Varu.jpeg"),
+    "224SBECE30059": getImageUrl("/students/Prem Raichura.jpeg"),
+    "22BEIT30133": getImageUrl("/students/Ridham Patel.png"),
+    "23BECE30364": getImageUrl("/students/Rohan Thakar.png"),
+    "24BECE30441": getImageUrl("/students/Yajurshi Velani.png"),
+    "23BECE30058": getImageUrl("/students/Zenisha Devani.jpeg"),
 };
 
 const parseBackendStudent = (student, index) => {
@@ -57,7 +58,7 @@ const parseBackendStudent = (student, index) => {
         id: index + 1,
         enrollment: student.enrollment_no,
         name: student.name || "Unknown Student",
-        image: student.image || IMAGE_MAP[en] || "/SRL.svg",
+        image: getImageUrl(student.image || IMAGE_MAP[en] || "/SRL.svg"),
         score: student.total_score || 0,
         srlAttendance: rawAtt,
         srlAttendanceNum: numAtt,
@@ -316,7 +317,7 @@ const LeaderBoard = () => {
 
                 {/* Avatar */}
                 <div className={`relative mb-2 md:mb-3 rounded-full border-[2px] md:border-[3px] ${s.border} ${s.glow} ${s.avatarSize} shrink-0 bg-white z-20 overflow-hidden`}>
-                    <img loading="lazy" decoding="async" src={student.image || '/SRL.svg'} alt={student.name} className="w-full h-full object-cover" />
+                    <img loading="lazy" decoding="async" src={getImageUrl(student.image || '/SRL.svg')} alt={student.name} className="w-full h-full object-cover" />
                 </div>
                 
                 {/* Name */}
@@ -369,13 +370,13 @@ const LeaderBoard = () => {
                 @keyframes rotateAntiClockwise { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
             `}</style>
             <img loading="lazy" decoding="async"
-                src="/watermark.svg"
+                src={getImageUrl("/watermark.svg")}
                 alt=""
                 className="fixed w-[600px] md:w-[780px] pointer-events-none select-none"
                 style={{ opacity: 0.15, zIndex: 0, top: '-230px', left: '-300px', animation: 'rotateClockwise 30s linear infinite' }}
             />
             <img loading="lazy" decoding="async"
-                src="/watermark.svg"
+                src={getImageUrl("/watermark.svg")}
                 alt=""
                 className="fixed w-[600px] md:w-[780px] pointer-events-none select-none"
                 style={{ opacity: 0.15, zIndex: 0, bottom: '-230px', right: '-300px', animation: 'rotateAntiClockwise 30s linear infinite' }}
@@ -571,9 +572,7 @@ const LeaderBoard = () => {
                             >
                                 {/* Search bar + count */}
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-                                    <h3 className="text-sm md:text-base font-black tracking-widest uppercase text-gray-800">
-                                        ALL MEMBER RANKINGS (1st – {currentLeaderboard.length}th)
-                                    </h3>
+                                    <div className="flex-1" />
                                     <div className="flex items-center gap-2">
                                         <div className="relative">
                                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
@@ -671,7 +670,7 @@ const LeaderBoard = () => {
                                                         {/* Profile Image - hidden on small mobile */}
                                                         <div className="w-16 md:w-20 justify-center shrink-0 hidden sm:flex">
                                                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border-2 border-gray-100 shadow-sm group-hover:border-amber-300 transition-colors">
-                                                                <img loading="lazy" decoding="async" src={st.image || '/SRL.svg'} alt={st.name} className="w-full h-full object-cover" />
+                                                                <img loading="lazy" decoding="async" src={getImageUrl(st.image || '/SRL.svg')} alt={st.name} className="w-full h-full object-cover" />
                                                             </div>
                                                         </div>
                                                         

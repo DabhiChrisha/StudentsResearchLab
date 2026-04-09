@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { BookOpen, Calendar, ExternalLink, Download, Search, Users, ShieldCheck, FileText, Bookmark, PlusCircle, X, FileDown } from "lucide-react";
 import * as XLSX from 'xlsx';
+import { getImageUrl } from "../lib/imageUrl";
 
 /* ================= DATA ================= */
 const publicationsData = [
@@ -405,7 +406,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
     const fetchImage = async () => {
       // Check if publication has custom background image - use it with highest priority
       if (pub.backgroundImage) {
-        setLinkedinImage(pub.backgroundImage);
+        setLinkedinImage(getImageUrl(pub.backgroundImage));
         return;
       }
 
@@ -561,7 +562,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
             background: fallbackGradient,
             // Show image on top
             ...(linkedinImage && {
-              backgroundImage: `url('${linkedinImage}')`,
+              backgroundImage: `url('${getImageUrl(linkedinImage)}')`,
               backgroundSize: pub.useContainBackground ? "contain" : (pub.link && pub.link.includes('ieeexplore') ? "cover" : "75%"),
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -629,7 +630,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
                     <span className="text-xs sm:text-sm font-semibold text-slate-700">By:</span>
                     {pub.ipo && (
                       <img
-                        src={pub.ipo.logo}
+                        src={getImageUrl(pub.ipo.logo)}
                         alt={pub.ipo.name}
                         className="h-8 object-contain"
                         title={pub.ipo.name}
@@ -667,7 +668,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
                     {pub.publishers.map((publisherItem, idx) => (
                       <img
                         key={idx}
-                        src={publisherItem.logo}
+                        src={getImageUrl(publisherItem.logo)}
                         alt={publisherItem.name}
                         className={`object-contain ${publisherItem.name === "Springer" ? "h-6" : publisherItem.name === "NASCENT MR" ? "h-14" : publisherItem.name === "74th IPC Pharma Exhibition" ? "h-10" : "h-6"}`}
                         title={publisherItem.name}

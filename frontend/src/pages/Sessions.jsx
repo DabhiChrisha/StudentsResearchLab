@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../config/apiConfig";
+import { getImageUrl } from "../lib/imageUrl";
 
 /* Image Carousel for photo-type sessions */
 const ImageCarousel = ({ images }) => {
@@ -22,7 +23,7 @@ const ImageCarousel = ({ images }) => {
           loading="lazy"
           decoding="async"
           key={i}
-          src={img}
+          src={getImageUrl(img)}
           alt=""
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
             i === index ? "opacity-100" : "opacity-0"
@@ -143,7 +144,7 @@ const Sessions = () => {
                         preload="metadata"
                         className="w-full h-full object-contain pointer-events-none transform-gpu"
                       >
-                        <source src={session.media_urls?.[0]} type="video/mp4" />
+                        <source src={getImageUrl(session.media_urls?.[0])} type="video/mp4" />
                       </video>
                     ) : (
                       <ImageCarousel images={session.media_urls || []} />

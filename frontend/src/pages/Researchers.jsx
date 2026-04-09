@@ -6,6 +6,7 @@ import ChromaGrid from "../components/react-bits/ChromaGrid";
 import GradientText from "../components/GradientText";
 import { useSupabaseQuery, fetchWithTimeout } from '../hooks/useSupabaseQuery';
 import { API_BASE_URL } from '../config/apiConfig';
+import { getImageUrl } from '../lib/imageUrl';
 
 
 // --- Main Researchers Component ---
@@ -123,7 +124,7 @@ export default function Researchers() {
             return {
                 id: s.enrollment_no || s.student_name.toLowerCase().replace(/\s+/g, "-"),
                 enrollment: s.enrollment_no,
-                image: s.photo || "/students/schoolstudent.png",
+                image: getImageUrl(s.photo || "/students/schoolstudent.png"),
                 title: s.student_name,
                 subtitle: `${s.department} • Semester ${s.semester}`,
                 batch,
@@ -365,7 +366,7 @@ export default function Researchers() {
                                                     onClick={() => openModalFor({
                                                         id: ra.enrollment_no || ra.student_name.toLowerCase().replace(/\s+/g, "-"),
                                                         enrollment: ra.enrollment_no,
-                                                        image: ra.photo || "/students/schoolstudent.png",
+                                                        image: getImageUrl(ra.photo || "/students/schoolstudent.png"),
                                                         title: ra.student_name,
                                                         subtitle: ra.department + " • Semester " + ra.semester,
                                                         batch: batch,
@@ -387,7 +388,7 @@ export default function Researchers() {
                                                     <img
                                                         loading="lazy"
                                                         decoding="async"
-                                                        src={ra.photo || "/students/schoolstudent.png"}
+                                                        src={getImageUrl(ra.photo || "/students/schoolstudent.png")}
                                                         alt={ra.student_name}
                                                         className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                                                     />
@@ -515,7 +516,7 @@ export default function Researchers() {
                                                 <div className="absolute -inset-6 bg-teal-500/10 blur-[60px] rounded-full opacity-60 group-hover/profile:opacity-100 transition-opacity duration-700" />
                                                 <div className="relative w-48 h-48 lg:w-56 lg:h-56 rounded-[3rem] overflow-hidden border-[8px] border-white shadow-2xl transition-transform duration-700 group-hover/profile:scale-[1.03]">
                                                     <img loading="lazy" decoding="async"
-                                                        src={activeStudent.image || "/students/schoolstudent.png"}
+                                                        src={getImageUrl(activeStudent.image || "/students/schoolstudent.png")}
                                                         alt={activeStudent.title}
                                                         className="w-full h-full object-cover"
                                                     />

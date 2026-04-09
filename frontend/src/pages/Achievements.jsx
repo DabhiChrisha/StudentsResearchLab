@@ -6,6 +6,7 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import { API_BASE_URL } from "../config/apiConfig";
+import { getImageUrl } from "../lib/imageUrl";
 
 /* 🎊 Confetti helper */
 const fireConfetti = () => {
@@ -53,7 +54,7 @@ const Card = ({ item, onClick }) => (
               <img
                 loading="lazy"
                 decoding="async"
-                src={img}
+                src={getImageUrl(img)}
                 alt={item.title}
                 className="block max-w-full max-h-full object-contain mx-auto"
               />
@@ -63,7 +64,7 @@ const Card = ({ item, onClick }) => (
       ) : item.type === "video" && item.media_urls?.length > 0 ? (
         <div className="w-full h-full flex items-center justify-center bg-white">
           <video
-            src={item.media_urls[0]}
+            src={getImageUrl(item.media_urls[0])}
             muted
             loop
             autoPlay
@@ -276,7 +277,7 @@ const Achievements = () => {
                         <img
                           loading="lazy"
                           decoding="async"
-                          src={img}
+                          src={getImageUrl(img)}
                           alt={selected.title}
                           className="block max-w-full max-h-full object-contain mx-auto"
                         />
@@ -286,7 +287,7 @@ const Achievements = () => {
                 ) : selected.type === "video" && selected.media_urls?.length > 0 ? (
                   <div className="w-full h-full flex items-center justify-center">
                     <video
-                      src={selected.media_urls[0]}
+                      src={getImageUrl(selected.media_urls[0])}
                       controls
                       autoPlay
                       className="block max-w-full max-h-full object-contain mx-auto"
