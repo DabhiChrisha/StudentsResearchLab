@@ -91,6 +91,7 @@ const Achievements = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
+  const [detailHeight, setDetailHeight] = useState(null);
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
   const detailRef = useRef(null);
@@ -130,6 +131,35 @@ const Achievements = () => {
       }, 120);
       hadSelectionRef.current = false;
     }
+  }, [selected]);
+
+  useEffect(() => {
+    if (!selected || !detailRef.current) return;
+
+    const panel = detailRef.current;
+    const syncHeight = () => {
+      const nextHeight = panel.offsetHeight || null;
+      setDetailHeight((prev) => (prev === nextHeight ? prev : nextHeight));
+    };
+
+    const rafId = requestAnimationFrame(syncHeight);
+    window.addEventListener("resize", syncHeight);
+
+    if (typeof ResizeObserver !== "undefined") {
+      const observer = new ResizeObserver(syncHeight);
+      observer.observe(panel);
+
+      return () => {
+        cancelAnimationFrame(rafId);
+        observer.disconnect();
+        window.removeEventListener("resize", syncHeight);
+      };
+    }
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", syncHeight);
+    };
   }, [selected]);
 
   const handleSelect = (item) => {
@@ -204,7 +234,8 @@ const Achievements = () => {
             <motion.div
               layout
               onClick={(e) => e.stopPropagation()}
-              className="hidden lg:block space-y-6 self-start"
+              style={detailHeight ? { maxHeight: `${detailHeight}px` } : undefined}
+              className="hidden lg:block space-y-6 self-start lg:sticky lg:top-[calc(var(--navbar-height,80px)+16px)] lg:overflow-y-auto lg:pr-2"
             >
               <Card item={selected} onClick={() => setSelected(null)} />
               {remaining.map((item) => (
@@ -221,8 +252,16 @@ const Achievements = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 120, damping: 18 }}
               style={{ scrollMarginTop: "calc(var(--navbar-height, 80px) + 12px)" }}
-              className="scroll-mt-28 w-full bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-200 order-first lg:order-last"
+              className="scroll-mt-28 relative w-full bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-200 order-first lg:order-last"
             >
+              <button
+                onClick={(e) => { e.stopPropagation(); setSelected(null); }}
+                aria-label="Back to all achievements"
+                className="hidden lg:inline-flex absolute top-4 left-4 z-30 h-11 w-11 items-center justify-center rounded-full bg-white/95 text-slate-700 border border-slate-200 shadow hover:bg-slate-50 transition"
+              >
+                &larr;
+              </button>
+
               <div className="aspect-[4/3] bg-white flex items-center justify-center overflow-hidden">
                 {selected.type === "image" && selected.media_urls?.length > 0 ? (
                   <Swiper
@@ -294,7 +333,7 @@ const Achievements = () => {
                     onClick={(e) => { e.stopPropagation(); setSelected(null); }}
                     className="inline-flex items-center gap-2 bg-slate-100 text-slate-700 px-5 py-3 rounded-xl font-semibold hover:bg-slate-200 transition lg:hidden"
                   >
-                    ← Back to All
+                    &larr; Back to All
                   </button>
                 </div>
               </div>
