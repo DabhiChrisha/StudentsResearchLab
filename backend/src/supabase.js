@@ -1,7 +1,8 @@
 const { createClient } = require("@supabase/supabase-js");
 const dotenv = require("dotenv");
 
-dotenv.config();
+const path = require("path");
+dotenv.config({ path: path.join(__dirname, "../.env"), override: true });
 
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'placeholder';
