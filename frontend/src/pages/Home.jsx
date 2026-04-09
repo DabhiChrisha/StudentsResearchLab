@@ -133,7 +133,11 @@ const Home = () => {
                         category: "Excellence",
                       },
                       {
-                        label: "Research Publications: Papers/Case Studies/Book Chapters",
+                        label: (
+                          <>
+                            Research Publications: <br /> Papers/Case Studies/Book Chapters
+                          </>
+                        ),
                         value: "9",
                         category: "Total Publications",
                       },
@@ -168,7 +172,7 @@ const Home = () => {
                               </div>
                             </div>
                             
-                            <div className="text-slate-800 text-[14px] sm:text-[16px] font-bold leading-tight mb-1">
+                            <div className="text-slate-800 text-[13px] sm:text-[15px] font-bold leading-tight tracking-tight">
                               Hackathons
                             </div>
                             
@@ -183,7 +187,7 @@ const Home = () => {
                             <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 mb-1">
                               {stat.value}
                             </div>
-                            <div className="text-slate-800 text-[14px] sm:text-[16px] font-bold leading-tight mb-1">
+                            <div className="text-slate-800 text-[13px] sm:text-[15px] font-bold leading-tight mb-1 tracking-tight">
                               {stat.label}
                             </div>
                             <div className="text-slate-400 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider">
