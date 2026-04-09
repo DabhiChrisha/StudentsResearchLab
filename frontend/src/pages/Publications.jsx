@@ -687,83 +687,83 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
   );
 };
 
-  /* ================= YEAR PICKER MODAL ================= */
-  const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, buttonRef }) => {
-    const [position, setPosition] = useState({ top: 0, left: 0 });
+/* ================= YEAR PICKER MODAL ================= */
+const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, buttonRef }) => {
+  const [position, setPosition] = useState({ top: 0, left: 0 });
 
-    useEffect(() => {
-      if (isOpen && buttonRef?.current) {
-        const rect = buttonRef.current.getBoundingClientRect();
-        setPosition({
-          top: rect.bottom + 8,
-          left: rect.left,
-        });
-      }
-    }, [isOpen, buttonRef]);
+  useEffect(() => {
+    if (isOpen && buttonRef?.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setPosition({
+        top: rect.bottom + 8,
+        left: rect.left,
+      });
+    }
+  }, [isOpen, buttonRef]);
 
-    if (!isOpen) return null;
+  if (!isOpen) return null;
 
-    return (
-      <>
-        {/* Backdrop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          className="fixed inset-0 z-40"
-        />
+  return (
+    <>
+      {/* Backdrop */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        className="fixed inset-0 z-40"
+      />
 
-        {/* Dropdown Modal */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: -10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: -10 }}
-          transition={{ duration: 0.15 }}
-          style={{
-            position: 'fixed',
-            top: `${position.top}px`,
-            left: `${position.left}px`,
-            zIndex: 50,
-          }}
-          className="bg-white rounded-xl shadow-xl border border-slate-200 p-4"
-        >
-          {/* Year Grid */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-xs">
-            {years.map((year) => (
-              <button
-                key={year}
-                onClick={() => {
-                  onSelectYear(year);
-                  onClose();
-                }}
-                className={`py-2 sm:py-2.5 px-2 rounded-lg font-bold text-sm transition-all duration-300 ${selectedYear === year
-                  ? "bg-teal-600 text-white shadow-md shadow-teal-600/30"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                  }`}
-              >
-                {year}
-              </button>
-            ))}
-          </div>
-
-          {selectedYear && (
+      {/* Dropdown Modal */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: -10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: -10 }}
+        transition={{ duration: 0.15 }}
+        style={{
+          position: 'fixed',
+          top: `${position.top}px`,
+          left: `${position.left}px`,
+          zIndex: 50,
+        }}
+        className="bg-white rounded-xl shadow-xl border border-slate-200 p-4"
+      >
+        {/* Year Grid */}
+        <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-xs">
+          {years.map((year) => (
             <button
+              key={year}
               onClick={() => {
-                onSelectYear(null);
+                onSelectYear(year);
                 onClose();
               }}
-              className="w-full mt-3 py-2 bg-slate-200 text-slate-700 rounded-lg font-semibold hover:bg-slate-300 transition-colors text-sm"
+              className={`py-2 sm:py-2.5 px-2 rounded-lg font-bold text-sm transition-all duration-300 ${selectedYear === year
+                ? "bg-teal-600 text-white shadow-md shadow-teal-600/30"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
             >
-              Clear Selection
+              {year}
             </button>
-          )}
-        </motion.div>
-      </>
-    );
-  };
+          ))}
+        </div>
 
-  const Publications = () => {
+        {selectedYear && (
+          <button
+            onClick={() => {
+              onSelectYear(null);
+              onClose();
+            }}
+            className="w-full mt-3 py-2 bg-slate-200 text-slate-700 rounded-lg font-semibold hover:bg-slate-300 transition-colors text-sm"
+          >
+            Clear Selection
+          </button>
+        )}
+      </motion.div>
+    </>
+  );
+};
+
+const Publications = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedYear, setSelectedYear] = useState(null);
