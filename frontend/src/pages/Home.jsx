@@ -123,7 +123,7 @@ const Home = () => {
                   <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5">
                     {[
                       {
-                        label: "Research Papers/ Case Studies/ Book Chapters",
+                        label: "Research Publications",
                         value: "9",
                         category: "Total Publications",
                       },

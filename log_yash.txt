@@ -1,0 +1,144 @@
+﻿commit 2e848d2bb8b6b4d56b03ff6a2d4a2e1c842583e7
+Author: Bhagyashreejadeja <bhagyashreejadeja76@gmail.com>
+Date:   Thu Mar 19 00:04:26 2026 +0530
+
+    IEEE
+
+diff --git a/frontend/src/data/organizationData.js b/frontend/src/data/organizationData.js
+index 6c69b94..99f3af8 100644
+--- a/frontend/src/data/organizationData.js
++++ b/frontend/src/data/organizationData.js
+@@ -17,7 +17,7 @@ export const organizationData = {
+         heroImage: svkmCampus,
+         website: "https://svkm.org.in/",
+         description: [
+-            "Sarva Vidyalaya Kelavani Mandal (SVKM) was founded in 1919 by the visionary philanthropist Pujya Chhaganbha, whose guiding philosophy, "α¬òα¬░ α¬¡α¬▓α¬╛, α¬╣α½ïα¬ùα¬╛ α¬¡α¬▓α¬╛" (Do good, and good will come), continues to inspire the institutionΓÇÖs enduring legacy of education and service. From its humble beginnings with just six students, SVKM has evolved into a vast educational network that today nurtures the academic aspirations of over 54,000 students across Kadi and Gandhinagar. With a prestigious history spanning over 106 years, SVKM stands as one of India's oldest and most respected educational trusts, operating a diverse range of institutions including CBSE and GSEB schools, as well as undergraduate, graduate, and doctoral programs in fields such as engineering, sciences, management, arts, and healthcare. Driven by the core principles of innovation, entrepreneurship, and academic rigor, the Mandal remains dedicated to fostering holistic development and excellence for its students, faculty, and society at large."
++            `Sarva Vidyalaya Kelavani Mandal (SVKM) was founded in 1919 by the visionary philanthropist Pujya Chhaganbha, whose guiding philosophy, "α¬òα¬░ α¬¡α¬▓α¬╛, α¬╣α½ïα¬ùα¬╛ α¬¡α¬▓α¬╛" (Do good, and good will come), continues to inspire the institutionΓÇÖs enduring legacy of education and service. From its humble beginnings with just six students, SVKM has evolved into a vast educational network that today nurtures the academic aspirations of over 54,000 students across Kadi and Gandhinagar. With a prestigious history spanning over 106 years, SVKM stands as one of India's oldest and most respected educational trusts, operating a diverse range of institutions including CBSE and GSEB schools, as well as undergraduate, graduate, and doctoral programs in fields such as engineering, sciences, management, arts, and healthcare. Driven by the core principles of innovation, entrepreneurship, and academic rigor, the Mandal remains dedicated to fostering holistic development and excellence for its students, faculty, and society at large.`
+         ],
+         stats: [
+             { label: "Years of Legacy", value: "100+" },
+@@ -39,11 +39,6 @@ export const organizationData = {
+                 quote: "α¬╢α¬┐α¬òα½ìα¬╖α¬ú α¬Å α¬£ α¬╕α¬╛α¬Üα½Ç α¬╕α½çα¬╡α¬╛ α¬¢α½ç."
+             }
+         ],
+-        // goals: [
+-        //     "Providing qualitative and affordable education.",
+-        //     "Promoting research and development in all disciplines.",
+-        //     "Fostering entrepreneurship and innovation."
+-        // ],
+         features: [
+             "Philanthropic Legacy Since 1919",
+             "Value-Based Education",
+@@ -75,18 +70,6 @@ export const organizationData = {
+         ],
+         mission: "To deliver need-based education relevant to contemporary times, promote excellence in research and innovation, and cultivate an inclusive and welcoming environment for all students.",
+         vision: "To be a leading university that provides quality education and research opportunities to students from all backgrounds, contributing significantly to the social, economic, and cultural development of society.",
+-        // founders: [
+-        //     {
+-        //         name: "Chhaganbhai Patel",
+-        //         image: chairmanPhoto, // Using available chairman photo as placeholder if specific KSV founder not available
+-        //         quote: "α¬òα¬░ α¬¡α¬▓α¬╛ α¬╣α½ïα¬ùα¬╛ α¬¡α¬▓α¬╛."
+-        //     }
+-        // ],
+-        // goals: [
+-        //     "Integrating technology in education.",
+-        //     "Encouraging social responsibility.",
+-        //     "Developing global leaders."
+-        // ],
+         features: [
+             "UGC Approved University",
+             "Inclusive & Equitable Education",
+@@ -133,7 +116,6 @@ export const organizationData = {
+                 ]
+             },
+             {
+-                // role: "Head of MMPSRPC, KSV",
+                 header: "Message from Head of MMPSRPC, KSV",
+                 name: "Dr. Himani Trivedi",
+                 designation: "Head of M. M. Patel Students Research Project Cell",
+@@ -181,15 +163,15 @@ export const organizationData = {
+         }
+     },
+     "ieee": {
+-        title: "KSV IEEE Student Branch",
++        title: "IEEE Student Branch\nKadi Sarva Vishwavidyalaya",
+         subtitle: "Empowering Students through Innovation and Leadership",
+-        image: "https://ieee-ksv-sb.mmpsrpc.in/Pasted-Graphic.svg", // Using the icon from the site
+-        heroImage: ksvCampus, // Placeholder to match KSV theme
++        image: "https://ieee-ksv-sb.mmpsrpc.in/Pasted-Graphic.svg",
++        heroImage: ksvCampus,
+         website: "https://ieee-ksv-sb.mmpsrpc.in/",
+         sections: {
+             intro: [
+                 "The KSV IEEE Student Branch, established under the esteemed guidance of Kadi Sarva Vishwavidyalaya (KSV), has emerged as a premier hub for technological innovation, professional growth, and cutting-edge research. Serving a diverse community of students across more than 25 colleges under the KSV umbrella, the branch was founded to cultivate a vibrant culture of research, creativity, and interdisciplinary collaboration. Since its inception, it has evolved into an essential pillar of the universityΓÇÖs mission, driving excellence in engineering and technology education. By bridging the gap between academic theory and industry practice, the KSV IEEE Student Branch empowers the next generation of engineers to become global innovators and leaders in an ever-evolving digital landscape.",
+-                "Guided by the core global principle of "Advancing Technology for Humanity," the KSV IEEE Student Branch aligns seamlessly with the university's ethos of delivering purposeful, need-based education. By offering contemporary courses and hands-on technical opportunities, the branch bridges the gap between traditional learning and the demands of an ever-changing technological landscape. This synergy ensures that students are not only academically proficient but also equipped with the innovative mindset required to solve real-world challenges. As a vital extension of KSVΓÇÖs mission, the IEEE Student Branch remains committed to empowering future professionals who are ready to lead and contribute to the global advancement of technology."
++                "Guided by the core global principle of 'Advancing Technology for Humanity,' the KSV IEEE Student Branch aligns seamlessly with the university's ethos of delivering purposeful, need-based education. By offering contemporary courses and hands-on technical opportunities, the branch bridges the gap between traditional learning and the demands of an ever-changing technological landscape. This synergy ensures that students are not only academically proficient but also equipped with the innovative mindset required to solve real-world challenges. As a vital extension of KSVΓÇÖs mission, the IEEE Student Branch remains committed to empowering future professionals who are ready to lead and contribute to the global advancement of technology."
+             ],
+             mission: [
+                 "The Institute of Electrical and Electronics Engineers (IEEE) is dedicated to advancing technology for the benefit of humanity, serving as a global catalyst for innovation and excellence in engineering and applied sciences. The organizationΓÇÖs vision is to foster a world where technology acts as a primary driver for societal progress, promoting sustainable development and significantly enhancing the quality of life for people worldwide. By upholding the highest standards of academic and professional rigor, IEEE inspires a global community of thinkers and doers to collaborate on solutions that address the worldΓÇÖs most pressing challenges, ensuring that technical advancement always aligns with the greater good of society.",
+@@ -199,23 +181,23 @@ export const organizationData = {
+                 "Since its inception, the IEEE KSV Student Branch has established itself as a premier leader in orchestrating a diverse array of high-impact technical symposiums, specialized workshops, and scholarly seminars across the critical disciplines of Computer Science, Electronics, Electrical Engineering, and Information Technology. By curating a portfolio of flagship initiativesΓÇöincluding technical paper presentations, project exhibitions, advanced coding competitions, and intensive hackathonsΓÇöthe branch provides a sophisticated platform for students to demonstrate their technical prowess and engage in creative, interdisciplinary collaboration. These engagements foster a rigorous culture of healthy competition and provide indispensable hands-on experience with the latest global technology trends, effectively bridging the gap between theoretical academic concepts and real-world application. Through this dedicated focus on innovation and excellence, the branch empowers its members to transcend traditional boundaries, thoroughly preparing them for distinguished careers at the vanguard of engineering and transformative research."
+             ],
+             impact: [
+-                "The IEEE KSV Student Branch serves as a vital conduit between academia and the global technology sector, fostering robust industry synergies by hosting distinguished experts from leading corporations and premier research institutions. These high-level engagements are meticulously designed to augment student employability while providing deep insights into the rapidly evolving demands of the modern industrial landscape. Beyond professional networking, the branch is a steadfast advocate for scholarly excellence, actively mentoring students as they navigate the complexities of research and publication within IEEE-indexed conferences and journals. By empowering students to contribute to the global body of technical knowledge, the branch significantly elevates the stature of Kadi Sarva Vishwavidyalaya as a distinguished hub of innovation, research, and transformative engineering leadership."
++                "The IEEE KSV Student Branch serves as a vital conduit between academia and the global technology sector, fostering robust industry synergies by hosting distinguished experts from leading corporations and premier research institutions. These high-level engagements are meticulously designed to augment student employability while providing deep insights into the rapidly evolving demands of the modern industrial landscape. Beyond professional networking, the branch is a steadfast advocate for scholarly excellence, actively mentoring students as they navigate the complexities of research and publication within IEEE-indexed conferences and journals. By empowering students to contribute to the global body of technical knowledge, the branch significantly elevates the stature of Kadi Sarva Vishwavidyalaya as a distinguished hub of innovation, research, and transformative engineering leadership.",
+                 "Aligned with the core values of Kadi Sarva Vishwavidyalaya (KSV) and its commitment to profound social responsibility, the branch orchestrates strategic initiatives designed to bridge the digital divide and empower underserved communities. These efforts include high-impact digital literacy workshops and the development of bespoke technological solutions tailored to address critical local challenges. By actively promoting STEM education and fostering an environment of inclusive innovation, the branch demonstrates a steadfast dedication to the global IEEE mission of Advancing Technology for Humanity. These humanitarian endeavors ensure that the technical expertise cultivated within our laboratories is translated into tangible societal progress, reinforcing our role as a catalyst for both engineering excellence and global well-being."
+-                
++            ]
+         },
+         description: [
+-            "The IEEE KSV Student Branch, established under the esteemed guidance of Kadi Sarva Vishwavidyalaya (KSV), stands as a premier epicenter for technological innovation, professional development, and scholarly research. Serving a diverse academic community across more than 25 constituent colleges under the expansive KSV umbrella, the branch was founded with a strategic vision to cultivate a robust culture of interdisciplinary research and creative collaboration. Since its inception, it has rapidly evolved into an indispensable component of the universityΓÇÖs broader commitment to excellence in engineering and technological education. By fostering an environment where academic theory and practical innovation converge, the branch empowers the next generation of engineers to push the boundaries of modern science and contribute meaningfully to the global research landscape."
+-            "Guided by the fundamental global principle of "Advancing Technology for Humanity," the IEEE KSV Student Branch aligns seamlessly with the core ethos of Kadi Sarva Vishwavidyalaya (KSV). This synergy is characterized by a shared commitment to providing need-based, high-impact education and curating contemporary curricula designed to address the complexities of an ever-evolving technological landscape. By integrating these international standards into the local academic framework, the branch serves as a critical bridge between scholarly theory and industrial demand. This ensures that the student community is not only technically proficient but also strategically positioned to navigate and lead within the dynamic frontiers of modern engineering and transformative research."
++            "The IEEE KSV Student Branch, established under the esteemed guidance of Kadi Sarva Vishwavidyalaya (KSV), stands as a premier epicenter for technological innovation, professional development, and scholarly research. Serving a diverse academic community across more than 25 constituent colleges under the expansive KSV umbrella, the branch was founded with a strategic vision to cultivate a robust culture of interdisciplinary research and creative collaboration. Since its inception, it has rapidly evolved into an indispensable component of the universityΓÇÖs broader commitment to excellence in engineering and technological education. By fostering an environment where academic theory and practical innovation converge, the branch empowers the next generation of engineers to push the boundaries of modern science and contribute meaningfully to the global research landscape.",
++            "Guided by the fundamental global principle of 'Advancing Technology for Humanity, '' the IEEE KSV Student Branch aligns seamlessly with the core ethos of Kadi Sarva Vishwavidyalaya (KSV). This synergy is characterized by a shared commitment to providing need-based, high-impact education and curating contemporary curricula designed to address the complexities of an ever-evolving technological landscape. By integrating these international standards into the local academic framework, the branch serves as a critical bridge between scholarly theory and industrial demand. This ensures that the student community is not only technically proficient but also strategically positioned to navigate and lead within the dynamic frontiers of modern engineering and transformative research."
+         ],
+         stats: [
+             { label: "Past Events", value: "32+" },
+             { label: "Members", value: "94+" },
+             { label: "Upcoming Events", value: "2+" }
+         ],
+-        mission: "Dedicated to advancing technology for the ultimate benefit of humanity, IEEE strives to foster unparalleled innovation and excellence across the global landscape of engineering and applied sciences. Its mission is to empower a worldwide community of professionals to push the frontiers of technological possibility through collaboration and education, all while strictly upholding the most rigorous ethical standards.",
+-        vision: "Envisioning a future where technology functions as a transformative catalyst for societal progress, IEEE seeks to drive sustainable development and significantly elevate the quality of life for global populations. By architecting an ecosystem where engineering excellence is the primary driver of prosperity, the organization ensures that technological advancement remains seamlessly aligned with humanitarian goals for generations to come.",
+-        objectivesTitle: "Core Objectives",
+-        objectivesSubtitle: "Dedicated to advancing technology and fostering a global community of technical professionals.",
++        mission: "IEEE is committed to advancing technology for the benefit of humanity by fostering innovation and excellence in engineering and applied sciences. Through collaboration, education, and research, it empowers individuals to push technological boundaries while upholding strong ethical standards. The KSV IEEE Student Branch supports this mission by creating opportunities for student growth, leadership, and innovation.",
++        vision: "To create a future where students harness technology, research, and innovation to drive societal progress, promote sustainable development, and enhance quality of life through impactful engineering solutions.",
++        objectivesTitle: "Objectives of IEEE-KSV SB",
++        // objectivesSubtitle: "Dedicated to advancing technology and fostering a global community of technical professionals.",
+         objectives: [
+             { title: "Advancing Technology", description: "Foster technological innovation and excellence for the benefit of humanity." },
+             { title: "Career Development", description: "Offer comprehensive resources for professional development, including workshops, mentorship programs, and access to industry insights." },
+@@ -236,12 +218,30 @@ export const organizationData = {
+             { title: "Ethical Leadership", description: "Promote responsible technological advancement and professional integrity." },
+             { title: "Resource Access", description: "Utilize an extensive digital library containing millions of technical documents." },
+             { title: "Recognition", description: "Gain prestige through IEEE's renowned awards, fellowships, and certifications." },
+-            { title: "Networking Opportunities", description: "Participate in local and international events, conferences, and symposia." },
+-            { title: "Student Support", description: "Benefit from tailored programs for students and young professionals." }
++            { title: "Networking Opportunities", description: "Participate in local and international events, conferences, and symposia." }
++        ],
++        execomTitle: "Executive Committee ΓÇô IEEE KSV",
++        execomSubtitle: "Meet the student leaders driving innovation and collaboration across IEEE chapters.",
++        execom: [
++            { name: "Yash Kumavat", role: "Chairperson", group: "IEEE KSV SB", image: "/students/Yash Kumavat.jpeg" },
++            { name: "Antra Gajjar", role: "Vice Chair", group: "IEEE KSV SB", image: "/students/Gajjar Antra Ashvinkumar.jpeg" },
++            { name: "Rudr Halvadiya", role: "Secretary", group: "IEEE KSV SB", image: "/students/Halvdadiya Rudr.jpeg" },
++            { name: "Dev Kansara", role: "Treasurer", group: "IEEE KSV SB", image: "/students/Kansara Dev Dharmeshkumar.jpeg" },
++            { name: "Chrisha Dabhi", role: "Webmaster", group: "IEEE KSV SB", image: "/students/Dabhi Chrisha Manish.png" },
++            { name: "Aayush Pandya", role: "Chairperson", group: "IEEE KSV SPS", image: "/students/Pandya Aayush Viral.jpeg" },
++            { name: "Harsh Parekh", role: "Vice Chair", group: "IEEE KSV SPS", image: "/students/Harsh Parekh.jpeg" },
++            { name: "Yajurshi Velani", role: "Secretary", group: "IEEE KSV SPS", image: "/students/Yajurshi Velani.png" },
++            { name: "Pragati Varu", role: "Treasurer", group: "IEEE KSV SPS", image: "/students/Pragati Varu.jpeg" },
++            { name: "Jenish Sorathiya", role: "Webmaster", group: "IEEE KSV SPS", image: "/students/Jenish Sorathiya.jpeg" },
++            { name: "Riyaben Solanki", role: "Chairperson", group: "IEEE KSV WIE", image: "/students/Riya Solanki.png" },
++            { name: "Divya Balchandani", role: "Vice-Chair", group: "IEEE KSV WIE", image: "/students/Divya Balchandani.png" },
++            { name: "Honey Modha", role: "Secretary", group: "IEEE KSV WIE", image: "/students/Honey Modha.jpeg" },
++            { name: "Banshari Patel", role: "Treasurer", group: "IEEE KSV WIE", image: "/students/Patel Banshari Rahulkumar.jpg" },
++            { name: "Mahi Parmar", role: "Webmaster", group: "IEEE KSV WIE", image: "/students/Parmar Mahi Nitinchandra.jpeg" }
+         ],
+         contact: {
+             address: "LDRP-ITR Campus, Kadi Sarva Vishwavidyalaya, Sector-15, KH-5, Gandhinagar-382015, Gujarat, India",
+-            email: "info.ieeeksv@gmail.com",
++            email: "ieeeksv@ksv.ac.in",
+             phone: "+91 9408801690",
+             linkedin: "https://www.linkedin.com/company/ieee-student-branch-ksv/posts/?feedView=all",
+             mapEmbed: "https://maps.google.com/maps?q=LDRP+Institute+of+Technology+and+Research+Gandhinagar&t=&z=15&ie=UTF8&iwloc=&output=embed"

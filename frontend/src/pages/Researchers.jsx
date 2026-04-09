@@ -672,15 +672,7 @@ export default function Researchers() {
                                                     ))}
                                                 </div>
                                                 
-                                                {/* Contact Me Button at the bottom of the right panel, or centered */}
-                                                <div className="mt-auto pt-10 flex justify-center">
-                                                    <button 
-                                                        onClick={() => window.location.href = `mailto:${activeStudent.email}`}
-                                                        className="px-12 py-4 rounded-full bg-teal-800 text-white text-[12px] font-black uppercase tracking-[0.3em] hover:bg-teal-900 hover:scale-105 transition-all shadow-xl shadow-teal-900/20"
-                                                    >
-                                                        CONTACT
-                                                    </button>
-                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
