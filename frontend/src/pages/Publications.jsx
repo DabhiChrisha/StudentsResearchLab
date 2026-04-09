@@ -16,7 +16,7 @@ const publicationsData = [
     description: "Featured among the prestigious 23 global research works published in the Casebook on AI and Gender Empowerment. The research focuses on inclusive AI innovation and empowerment.",
     link: "https://www.linkedin.com/posts/mmpsrpc_svkm-ksv-mmpsrpc-activity-7429466085311098880-XDnV",
     tags: ["AI", "Gender Empowerment", "UN Women"],
-    publishers: [{name: "UN Women", logo: "/UN%20Women.png"}, {name: "MeitY", logo: "/MeitY.png"}],
+    publishers: [{ name: "UN Women", logo: "/UN%20Women.png" }, { name: "MeitY", logo: "/MeitY.png" }],
   },
   {
     id: 2,
@@ -28,7 +28,7 @@ const publicationsData = [
     description: "This paper proposes a novel adapted hybrid UNet using EfficientNetB3 to perform robust urban scene segmentation by selectively attending to salient spatial features.",
     link: "https://www.linkedin.com/posts/mmpsrpc_ksv-ldrpitr-mmpsrpc-activity-7413814908217344000-JmvS",
     tags: ["Computer Vision", "Segmentation", "IEEE Xplore"],
-    publishers: [{name: "IEEE Xplore", logo: "/Xplore.png"}],
+    publishers: [{ name: "IEEE Xplore", logo: "/Xplore.png" }],
     useContainBackground: true,
   },
   {
@@ -41,7 +41,7 @@ const publicationsData = [
     description: "Proposed automated mechanisms using edge computing architectures integrated with urban traffic signal networks to improve pedestrian safety conditions and automate crosswalk law enforcement.",
     link: "https://www.linkedin.com/posts/mmpsrpc_springer-researchpublication-datascience-activity-7368163507625746434-vjXc",
     tags: ["Smart City", "Edge Computing", "Springer"],
-    publishers: [{name: "Springer", logo: "/springer.png"}],
+    publishers: [{ name: "Springer", logo: "/springer.png" }],
     useContainBackground: true,
   },
   {
@@ -57,8 +57,8 @@ const publicationsData = [
     status: "Ongoing",
     inventors: ["Nancy Patel", "Kandarp Gajjar", "Patel Ridham", "Patel Krutika"],
     logoInfo: "/ksv.png",
-    supportedBy: [{name: "KSV", logo: "/ksv.png"}, {name: "MMPSRPC", logo: "/mm.png"}],
-    ipo: {name: "IPO", logo: "/IPO.jpeg"},
+    supportedBy: [{ name: "KSV", logo: "/ksv.png" }, { name: "MMPSRPC", logo: "/mm.png" }],
+    ipo: { name: "IPO", logo: "/IPO.jpeg" },
     backgroundImage: "/patent.jpeg",
     useContainBackground: true
   },
@@ -72,7 +72,7 @@ const publicationsData = [
     description: "Proposes a novel approach for detecting misinformation using Large Language Models with explainability techniques. The research integrates advanced NLP and XAI methods to enhance the transparency and reliability of misinformation detection systems.",
     link: "https://ieeexplore.ieee.org/document/11406235",
     tags: ["LLM", "Misinformation Detection", "XAI", "Scopus"],
-    publishers: [{name: "IEEE Xplore", logo: "/Xplore.png"}],
+    publishers: [{ name: "IEEE Xplore", logo: "/Xplore.png" }],
   },
   {
     id: 6,
@@ -84,7 +84,7 @@ const publicationsData = [
     description: "An empirical study evaluating how Explainable AI interfaces shape human decision-making processes, cognitive dependency, and productivity in complex task environments.",
     link: "https://ieeexplore.ieee.org/document/11232740",
     tags: ["XAI", "Cognitive Computing", "Human-AI Interaction", "Scopus"],
-    publishers: [{name: "IEEE Xplore", logo: "/Xplore.png"}],
+    publishers: [{ name: "IEEE Xplore", logo: "/Xplore.png" }],
     backgroundImage: "/poster.png",
     useContainBackground: true,
   },
@@ -98,7 +98,7 @@ const publicationsData = [
     description: "A comprehensive survey and case-based analysis of deepfake detection models, focusing on face-swapping techniques. The paper provides theoretical foundations and practical implementations for detecting fraudulent video content.",
     link: "https://ieeexplore.ieee.org/document/11203522",
     tags: ["Deepfake Detection", "Face Swapping", "Computer Vision", "Under Review"],
-    publishers: [{name: "IEEE Xplore", logo: "/Xplore.png"}],
+    publishers: [{ name: "IEEE Xplore", logo: "/Xplore.png" }],
     status: "Paper under Review",
   },
   {
@@ -111,7 +111,7 @@ const publicationsData = [
     description: "Develops an advanced deep learning approach using dilated temporal convolutional networks to enable early diagnosis of epileptic seizures from scalp EEG signals. The model shows significant improvements in sensitivity and specificity.",
     link: "https://drive.google.com/file/d/1mt1ZA1hYJpLCNmESQ2U5h7xN9GXRoVAD/view",
     tags: ["Healthcare", "EEG Analysis", "Deep Learning", "Under Review"],
-    publishers: [{name: "NASCENT MR", logo: "/Vmrfsalem.png"}],
+    publishers: [{ name: "NASCENT MR", logo: "/Vmrfsalem.png" }],
     status: "Paper under Review",
     backgroundImage: "/book.png",
     useContainBackground: true,
@@ -126,7 +126,9 @@ const publicationsData = [
     description: "An innovative approach to track and monitor air pollution levels by fusing satellite data from INSAT with ground-based sensors. The system provides real-time air quality assessment and predictive modeling.",
     link: "https://drive.google.com/file/d/1Y4EJwUSobWPPwendmO7oJZY80-hAV86t/view",
     tags: ["Environmental Monitoring", "Satellite Data", "Data Fusion", "Poster"],
-    publishers: [{name: "National Poster Competition", logo: "/poster.png"}],
+    publishers: [{ name: "National Poster Competition", logo: "/poster.png" }],
+    backgroundImage: "/air_pollution.png",
+    useContainBackground: true,
   },
   {
     id: 10,
@@ -138,20 +140,7 @@ const publicationsData = [
     description: "Poster presentation showcasing empirical findings on how AI interfaces influence human cognitive processes, learning outcomes, and professional productivity in diverse work environments.",
     link: "https://drive.google.com/file/d/1YMtYf9HSIDIvpjz3GuK5YU6dlKatYAta/view",
     tags: ["XAI", "Cognitive Skills", "Human-AI Interaction", "IEEE", "Poster"],
-    publishers: [{name: "IEEE SPS", logo: "/IEEE.png"}],
-  },
-  {
-    id: 11,
-    title: "Fed-DETR: A Privacy-Preserving Framework for K-Means Driven Decentralised Helmet Surveillance of Two-Wheeler Riders",
-    authors: ["Kandarp Gajjar", "Nancy Patel", "Ridham Patel", "Krutika Patel", "Chrisha Dabhi", "Himani Trivedi", "Mahesh Goyani", "Chintan Bhatt"],
-    venue: "International Journal of Intelligent Transportation Systems Research",
-    date: "Mar 2026",
-    category: "Journal",
-    description: "Proposes a federated learning-based framework for decentralized helmet detection and surveillance. The approach prioritizes privacy while maintaining accuracy in detecting traffic safety compliance.",
-    link: "https://ieeexplore.ieee.org/document/11203360",
-    tags: ["Federated Learning", "Computer Vision", "IoT", "Safe Driving", "Under Review"],
-    publishers: [{name: "IEEE Xplore", logo: "/Xplore.png"}],
-    status: "Paper under Review",
+    publishers: [{ name: "IEEE SPS", logo: "/IEEE.png" }],
   },
   {
     id: 12,
@@ -163,7 +152,7 @@ const publicationsData = [
     description: "Applies advanced machine learning algorithms to analyze and predict student dropout patterns. The research integrates demographic, academic, and socioeconomic data for comprehensive intervention strategies.",
     link: "https://ieeexplore.ieee.org/document/11203360",
     tags: ["Education Analytics", "Machine Learning", "Student Success", "Poster"],
-    publishers: [{name: "NASCENT MR", logo: "/Vmrfsalem.png"}],
+    publishers: [{ name: "NASCENT MR", logo: "/Vmrfsalem.png" }],
   },
   {
     id: 13,
@@ -175,10 +164,10 @@ const publicationsData = [
     description: "Develops an intelligent system that fuses multiple retrieval techniques to provide personalized, context-aware answers in community question answering platforms. The approach enhances user experience through semantic understanding.",
     link: "https://ceur-ws.org/Vol-4054/T5-2.pdf",
     tags: ["NLP", "Information Retrieval", "QA Systems", "Machine Learning"],
-    publishers: [{name: "CEUR WS", logo: "/ceur.png"}],
+    publishers: [{ name: "CEUR WS", logo: "/ceur.png" }],
     backgroundImage: "/papers.png",
     useContainBackground: true,
-  },  
+  },
   {
     id: 14,
     title: "Quantum Simulation Tools: A Comprehensive Survey",
@@ -189,7 +178,7 @@ const publicationsData = [
     description: "A comprehensive survey of quantum simulation tools and frameworks, covering theoretical foundations and practical applications. The chapter explores advanced computational techniques for quantum system modeling.",
     link: "https://ieeexplore.ieee.org/document/10543438",
     tags: ["Quantum Computing", "Simulation Tools", "Mathematics", "Scopus"],
-    publishers: [{name: "Springer", logo: "/springer.png"}],
+    publishers: [{ name: "Springer", logo: "/springer.png" }],
     status: "Scopus Book Chapter Accepted",
   },
   {
@@ -202,7 +191,7 @@ const publicationsData = [
     description: "A deep learning framework to optimize traffic flow operations dynamically. The system detects congestion points and intelligently redirects vehicle flows to minimize latency and reduce environmental impact.",
     link: "https://link.springer.com/chapter/10.1007/978-3-032-10756-5_12",
     tags: ["Deep Learning", "Smart City", "IoT", "Scopus"],
-    publishers: [{name: "IEEE Xplore", logo: "/Xplore.png"}],
+    publishers: [{ name: "IEEE Xplore", logo: "/Xplore.png" }],
     status: "Scopus Paper Publication",
     useContainBackground: true,
   },
@@ -216,7 +205,7 @@ const publicationsData = [
     description: "An innovative privacy-preserving AI system for breast cancer screening that leverages federated learning and differential privacy. The approach maintains patient confidentiality while enabling accurate diagnosis.",
     link: "https://ieeexplore.ieee.org/document/10425861",
     tags: ["Healthcare", "Breast Cancer", "Privacy", "AI", "Case Study"],
-    publishers: [{name: "India AI Impact Summit", logo: "/aiimpact.png"}],
+    publishers: [{ name: "India AI Impact Summit", logo: "/aiimpact.png" }],
     status: "Case Study Publication",
   },
   {
@@ -229,7 +218,7 @@ const publicationsData = [
     description: "An analysis of how generative AI paradigms can be adopted to personalize learning paths, scale assessment models, and bridge educational disparities in India.",
     link: "https://link.springer.com/chapter/10.1007/978-981-96-4880-1_29#:~:text=A%20dynamic%20signal%20control%20system,augmenting%20road%20safety%20and%20compliance.",
     tags: ["Generative AI", "EdTech", "India", "Education", "Scopus"],
-    publishers: [{name: "Springer", logo: "/springer.png"}],
+    publishers: [{ name: "Springer", logo: "/springer.png" }],
     status: "Scopus Paper Publication",
     useContainBackground: true,
   },
@@ -243,7 +232,7 @@ const publicationsData = [
     description: "Develops an ensemble learning system for intelligent crop and soil classification in precision agriculture. The model integrates multiple AI techniques to provide actionable recommendations for farmers.",
     link: "https://link.springer.com/chapter/10.1007/978-3-032-10670-4_17",
     tags: ["Precision Agriculture", "Machine Learning", "Ensemble Methods", "IoT", "Under Review"],
-    publishers: [{name: "Springer", logo: "/springer.png"}],
+    publishers: [{ name: "Springer", logo: "/springer.png" }],
     status: "Paper under Review",
     useContainBackground: true,
   },
@@ -257,7 +246,7 @@ const publicationsData = [
     description: "Proposes a zero-trust security architecture specifically designed for multi-tenant cloud environments. The framework ensures continuous verification and minimizes security risks in shared cloud infrastructure.",
     link: "https://ieeexplore.ieee.org/abstract/document/11405024",
     tags: ["Cybersecurity", "Cloud Computing", "Zero Trust", "Architecture", "Under Review"],
-    publishers: [{name: "IEEE Xplore", logo: "/Xplore.png"}],
+    publishers: [{ name: "IEEE Xplore", logo: "/Xplore.png" }],
     status: "Paper under Review",
   },
   {
@@ -270,7 +259,7 @@ const publicationsData = [
     description: "Utilizes interpretable multi-modal learning approaches enhanced with SHAP values for explaining and predicting waterborne disease outbreak probabilities with high precision.",
     link: "https://ieeexplore.ieee.org/document/11203360",
     tags: ["Healthcare", "XAI", "Disease Forecasting", "Multi-Modal Learning"],
-    publishers: [{name: "NASCENT MR", logo: "/Vmrfsalem.png"}],
+    publishers: [{ name: "NASCENT MR", logo: "/Vmrfsalem.png" }],
     status: "Non-Scopus Paper Publication",
   },
   {
@@ -283,7 +272,7 @@ const publicationsData = [
     description: "Focuses on advanced data mining strategies to uncover hidden health risk variables from unstructured clinical datasets representing underserved demographics.",
     link: "https://www.inderscienceonline.com/doi/abs/10.1504/IJCVR.2025.147513",
     tags: ["Data Mining", "Healthcare", "Analytics", "Health Equity"],
-    publishers: [{name: "NASCENT MR", logo: "/Vmrfsalem.png"}],
+    publishers: [{ name: "NASCENT MR", logo: "/Vmrfsalem.png" }],
     status: "Non-Scopus Paper Publication",
   },
   {
@@ -296,7 +285,7 @@ const publicationsData = [
     description: "A comprehensive introduction to Internet of Things architectures, protocols, and applications. The chapter covers fundamental concepts and practical implementations in modern IoT systems.",
     link: "https://link.springer.com/chapter/10.1007/978-3-032-10940-8_29",
     tags: ["IoT", "Networking", "Smart Systems", "Scopus"],
-    publishers: [{name: "Springer", logo: "/springer.png"}],
+    publishers: [{ name: "Springer", logo: "/springer.png" }],
     status: "Scopus Book Chapter Accepted",
   },
   {
@@ -309,7 +298,7 @@ const publicationsData = [
     description: "An advanced optimization system for manufacturing processes that intelligently adjusts bending parameters. The system uses ML to improve precision and reduce material waste in industrial production.",
     link: "https://ieeexplore.ieee.org/document/11212073",
     tags: ["Manufacturing", "Optimization", "Machine Learning", "Poster"],
-    publishers: [{name: "DST-TEC", logo: "/dst.png"}],
+    publishers: [{ name: "DST-TEC", logo: "/dst.png" }],
     status: "Poster Presentation",
   },
   {
@@ -322,23 +311,10 @@ const publicationsData = [
     description: "Analyzes the impact of class imbalance in medical imaging datasets and evaluates resampling techniques for improving CNN performance in prostate cancer detection.",
     link: "https://expo.74ipc.com/posters",
     tags: ["Healthcare", "Deep Learning", "Medical Imaging", "Class Imbalance"],
-    publishers: [{name: "World Conference on CS", logo: "/wcci.png"}],
+    publishers: [],
     status: "Non-Scopus Paper Accepted",
     backgroundImage: "/poster.png",
     useContainBackground: true,
-  },
-  {
-    id: 25,
-    title: "Personalized Mood Detection Using LLMs",
-    authors: ["Banshari Patel", "Chintan Bhatt", "Himani Trivedi", "Alessandro Bruno", "Pier Luigi Mazzeo"],
-    venue: "Second International Conference On Artificial Intelligence, Computation, Communication And Network Security (AICCoNS), University of Wollongong in Dubai, UAE",
-    date: "Jan 2026",
-    category: "Conference",
-    description: "Develops an intelligent system using Large Language Models to detect and analyze human emotions from textual communication. The approach enables personalized mental health monitoring and support.",
-    link: "https://journals.lww.com/jcor/fulltext/2025/07000/association_of_socioeconomic_factors_and_body_mass.13.aspx",
-    tags: ["LLM", "Emotion Detection", "Psychology", "AI", "Scopus"],
-    publishers: [{name: "IEEE Xplore", logo: "/Xplore.png"}],
-    status: "Scopus Index Paper Accepted",
   },
   {
     id: 26,
@@ -350,7 +326,7 @@ const publicationsData = [
     description: "An innovative approach combining edge computing, lightweight machine learning, and explainability techniques for detecting WiFi anomalies in IoT networks. The system operates efficiently on resource-constrained devices.",
     link: "https://ieeexplore.ieee.org/document/11438568",
     tags: ["IoT", "Edge Computing", "TinyML", "Anomaly Detection", "XAI", "Scopus"],
-    publishers: [{name: "IEEE Xplore", logo: "/Xplore.png"}],
+    publishers: [{ name: "IEEE Xplore", logo: "/Xplore.png" }],
     status: "Scopus Paper Acceptance",
   },
 ];
@@ -426,7 +402,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
   // Fetch preview image from link with enhanced parameters and multiple sources
   useEffect(() => {
     const abortController = new AbortController();
-    
+
     const fetchImage = async () => {
       // Check if publication has custom background image - use it with highest priority
       if (pub.backgroundImage) {
@@ -446,13 +422,13 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
       // Try primary attempts
       for (const microlinkUrl of primaryAttempts) {
         try {
-          const response = await fetch(microlinkUrl, { 
+          const response = await fetch(microlinkUrl, {
             signal: abortController.signal,
           });
-          
+
           if (response.ok) {
             const data = await response.json();
-            
+
             // Try multiple image sources in order
             if (data.data?.image?.url && data.data.image.url.length > 0) {
               setLinkedinImage(data.data.image.url);
@@ -474,10 +450,10 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
       // Secondary fallback: try URL2PNG service
       try {
         const screenshotUrl = `https://v1.screenshot.11ty.dev/${encodeURIComponent(pub.link)}/opengraph/`;
-        const response = await fetch(screenshotUrl, { 
+        const response = await fetch(screenshotUrl, {
           signal: abortController.signal,
         });
-        
+
         if (response.ok) {
           setLinkedinImage(screenshotUrl);
           return;
@@ -489,11 +465,11 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
       // Tertiary fallback: try thum.io
       try {
         const thumbUrl = `https://image.thum.io/get/width/1200/height/630/crop/smart/${encodeURIComponent(pub.link)}`;
-        const headResponse = await fetch(thumbUrl, { 
+        const headResponse = await fetch(thumbUrl, {
           method: 'HEAD',
           signal: abortController.signal,
         });
-        
+
         if (headResponse.ok) {
           setLinkedinImage(thumbUrl);
           return;
@@ -504,13 +480,13 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
 
       // Final fallback: try open graph meta tags
       try {
-        const ogResponse = await fetch(pub.link, { 
+        const ogResponse = await fetch(pub.link, {
           signal: abortController.signal,
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
           }
         });
-        
+
         if (ogResponse.ok) {
           const html = await ogResponse.text();
           // Try multiple OG tag formats
@@ -519,7 +495,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
             html.match(/<meta\s+name=["']twitter:image["']\s+content=["']([^"']+)["']/),
             html.match(/<meta\s+property=["']twitter:image["']\s+content=["']([^"']+)["']/),
           ];
-          
+
           for (const match of ogMatches) {
             if (match && match[1] && match[1].length > 0) {
               setLinkedinImage(match[1]);
@@ -576,7 +552,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
       >
 
         {/* TOP GRADIENT SECTION WITH BACKGROUND IMAGE - CLICKABLE */}
-        <a 
+        <a
           href={headerLink}
           target={headerLink !== "#" ? "_blank" : "_self"}
           rel="noopener noreferrer"
@@ -653,8 +629,8 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
                   <div className="flex items-center gap-2">
                     <span className="text-xs sm:text-sm font-semibold text-slate-700">By:</span>
                     {pub.ipo && (
-                      <img 
-                        src={pub.ipo.logo} 
+                      <img
+                        src={pub.ipo.logo}
                         alt={pub.ipo.name}
                         className="h-8 object-contain"
                         title={pub.ipo.name}
@@ -690,12 +666,12 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
                   <span className="text-xs sm:text-sm font-semibold text-slate-600">Publisher:</span>
                   <div className="flex gap-1.5 items-center">
                     {pub.publishers.map((publisherItem, idx) => (
-                      <img 
-                        key={idx} 
-                        src={publisherItem.logo} 
-                        alt={publisherItem.name} 
-                        className={`object-contain ${publisherItem.name === "Springer" ? "h-6" : publisherItem.name === "NASCENT MR" ? "h-14" : "h-6"}`}
-                        title={publisherItem.name} 
+                      <img
+                        key={idx}
+                        src={publisherItem.logo}
+                        alt={publisherItem.name}
+                        className={`object-contain ${publisherItem.name === "Springer" ? "h-6" : publisherItem.name === "NASCENT MR" ? "h-14" : publisherItem.name === "74th IPC Pharma Exhibition" ? "h-10" : "h-6"}`}
+                        title={publisherItem.name}
                       />
                     ))}
                   </div>
@@ -762,11 +738,10 @@ const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, b
                 onSelectYear(year);
                 onClose();
               }}
-              className={`py-2 sm:py-2.5 px-2 rounded-lg font-bold text-sm transition-all duration-300 ${
-                selectedYear === year
-                  ? "bg-teal-600 text-white shadow-md shadow-teal-600/30"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-              }`}
+              className={`py-2 sm:py-2.5 px-2 rounded-lg font-bold text-sm transition-all duration-300 ${selectedYear === year
+                ? "bg-teal-600 text-white shadow-md shadow-teal-600/30"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
             >
               {year}
             </button>
@@ -836,11 +811,11 @@ const Publications = () => {
 
     const headers = ["ID", "Title", "Authors", "Venue", "Date", "Category", "Description", "Tags", "Status", "Inventors"];
     const workbook = XLSX.utils.book_new();
-    
+
     // Group data by category
     const categoryList = ["Conference", "Journal", "Book Chapter", "Patents"];
     const groupedData = {};
-    
+
     categoryList.forEach(cat => {
       groupedData[cat] = data.filter(pub => pub.category === cat);
     });
@@ -865,7 +840,7 @@ const Publications = () => {
 
         // Create worksheet
         const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
-        
+
         // Add worksheet to workbook
         XLSX.utils.book_append_sheet(workbook, ws, category);
       }
@@ -900,10 +875,10 @@ const Publications = () => {
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
-        
+
         {/* Header Section */}
         <div className="text-center mb-10">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -911,7 +886,7 @@ const Publications = () => {
           >
             Publications
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -919,7 +894,7 @@ const Publications = () => {
           >
             Explore our latest research papers, journals, and book chapters driving innovation forward.
           </motion.p>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -942,11 +917,10 @@ const Publications = () => {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-300 ${
-                    activeCategory === cat 
-                    ? "bg-teal-600 text-white shadow-md shadow-teal-600/20" 
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-300 ${activeCategory === cat
+                    ? "bg-teal-600 text-white shadow-md shadow-teal-600/20"
                     : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 hover:border-slate-300"
-                  }`}
+                    }`}
                 >
                   {cat}
                 </button>
@@ -958,7 +932,7 @@ const Publications = () => {
               {/* Search Box */}
               <div className="relative flex-1 lg:flex-none lg:w-60">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                <input 
+                <input
                   type="text"
                   placeholder="Search papers, authors..."
                   value={searchQuery}
@@ -971,11 +945,10 @@ const Publications = () => {
               <button
                 ref={yearButtonRef}
                 onClick={() => setShowYearPicker(true)}
-                className={`shrink-0 h-9 px-2.5 sm:px-3 rounded-full font-bold text-xs sm:text-sm transition-all duration-300 flex items-center gap-1.5 ${
-                  selectedYear
-                    ? "bg-teal-600 text-white shadow-md shadow-teal-600/20"
-                    : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
-                }`}
+                className={`shrink-0 h-9 px-2.5 sm:px-3 rounded-full font-bold text-xs sm:text-sm transition-all duration-300 flex items-center gap-1.5 ${selectedYear
+                  ? "bg-teal-600 text-white shadow-md shadow-teal-600/20"
+                  : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                  }`}
               >
                 <Calendar size={15} />
                 <span className="hidden sm:inline text-xs">{selectedYear || "Year"}</span>
@@ -999,7 +972,7 @@ const Publications = () => {
               className="flex flex-wrap items-center gap-1.5 bg-teal-50/50 p-2 sm:p-3 rounded-2xl border border-teal-200/50"
             >
               <span className="text-xs font-semibold text-teal-700">Filters:</span>
-              
+
               {activeCategory !== "All" && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -1115,21 +1088,21 @@ const Publications = () => {
                   <div className="h-6 md:h-8 w-3/4 bg-gray-200 rounded-md mb-4"></div>
                   <div className="h-4 w-full bg-gray-200 rounded-md mb-2"></div>
                   <div className="h-4 w-5/6 bg-gray-200 rounded-md mb-6"></div>
-                  
+
                   <div className="flex items-start gap-3 mb-6">
                     <div className="w-4 h-4 rounded bg-gray-200 mt-1 shrink-0"></div>
                     <div className="h-4 w-1/2 bg-gray-200 rounded"></div>
                   </div>
-                  
+
                   <div className="flex items-start gap-3 mb-6">
                     <div className="w-4 h-4 rounded bg-gray-200 mt-1 shrink-0"></div>
                     <div className="h-4 w-2/3 bg-gray-200 rounded"></div>
                   </div>
-                  
+
                   <div className="mt-auto border-t border-slate-100 pt-5 flex justify-between items-center">
                     <div className="flex gap-2">
-                       <div className="h-5 w-16 bg-gray-200 rounded-md"></div>
-                       <div className="h-5 w-12 bg-gray-200 rounded-md"></div>
+                      <div className="h-5 w-16 bg-gray-200 rounded-md"></div>
+                      <div className="h-5 w-12 bg-gray-200 rounded-md"></div>
                     </div>
                     <div className="w-10 h-10 rounded-full bg-slate-100"></div>
                   </div>
