@@ -125,7 +125,7 @@ const Home = () => {
                       {
                         label: "Research Poster Presentations",
                         value: "4+",
-                        category: "Conferences",
+                        category: "Posters Presented",
                       },
                       {
                         label: "Awards and Recognitions",
