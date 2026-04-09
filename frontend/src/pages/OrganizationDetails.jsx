@@ -39,7 +39,7 @@ const OrganizationDetails = () => {
         const nextIndex = (currentIndex + 1) % filters.length;
         return filters[nextIndex];
       });
-    }, 3000);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [orgId, data.execom]);
