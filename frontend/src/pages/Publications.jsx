@@ -1,8 +1,38 @@
+<<<<<<< Updated upstream
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { BookOpen, Calendar, ExternalLink, Download, Search, Users, ShieldCheck, FileText, Bookmark, PlusCircle, X, FileDown } from "lucide-react";
 import * as XLSX from 'xlsx';
+=======
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  BookOpen,
+  Calendar,
+  ExternalLink,
+  Download,
+  Search,
+  Users,
+  ShieldCheck,
+  FileText,
+  Bookmark,
+  PlusCircle,
+  X,
+  Code,
+  Layers,
+  Award,
+  ArrowRight,
+  TrendingUp,
+  Cpu,
+  Globe,
+  Database
+} from "lucide-react";
+import * as XLSX from "xlsx";
+import { Link } from "react-router-dom";
+import { API_BASE_URL } from "../config/apiConfig";
+import studentsData from "../data/srlStudents.json";
+>>>>>>> Stashed changes
 
 /* ================= DATA ================= */
 const publicationsData = [
@@ -355,14 +385,26 @@ const publicationsData = [
   },
 ];
 
+<<<<<<< Updated upstream
 const categories = ["All", "Conference", "Journal", "Book Chapter", "Poster Presentation", "Patents"];
 
+=======
+const CATEGORIES = ["All", "Conference", "Journal", "Book Chapter", "Poster Presentation"];
+
+const EVENT_TYPE_LABEL = {
+  Conference: "Conference",
+  Journal: "Journal",
+  Book: "Book Chapter",
+  "Poster Presentation": "Poster",
+};
+>>>>>>> Stashed changes
 
 /* ================= COMPONENTS ================= */
 
 const PublicationCard = ({ pub, index, exportToExcel }) => {
   const [linkedinImage, setLinkedinImage] = useState(null);
 
+<<<<<<< Updated upstream
   // Premium green theme gradients
   const backgrounds = [
     "from-teal-500 to-teal-600",
@@ -707,11 +749,109 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
 
         {/* BOTTOM SOLID BAR */}
         <div className={`h-5 sm:h-6 md:h-7 bg-gradient-to-r ${bgClass} shadow-sm rounded-b-lg`}></div>
+=======
+function formatDate(raw) {
+  if (!raw) return null;
+  const m = raw.match(/\b(20\d{2})\b/);
+  if (m) return m[1];
+  return raw;
+}
+
+/* ================= COMPONENTS ================= */
+
+const TabButton = ({ active, label, icon: Icon, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`relative px-8 py-4 flex items-center gap-3 transition-all duration-500 overflow-hidden ${
+      active ? "text-white" : "text-slate-500 hover:text-slate-800"
+    }`}
+  >
+    {active && (
+      <motion.div
+        layoutId="tab-bg"
+        className="absolute inset-0 bg-gradient-to-r from-teal-600 to-emerald-500 shadow-xl shadow-teal-600/20 z-0"
+      />
+    )}
+    <Icon size={18} className={`relative z-10 transition-transform duration-500 ${active ? "scale-110" : ""}`} />
+    <span className="relative z-10 font-black uppercase tracking-[0.2em] text-[10px] md:text-xs">
+      {label}
+    </span>
+  </button>
+);
+
+const PublicationCard = ({ pub, index }) => {
+  const isScoped = (pub.category || "").toLowerCase().includes("scopus");
+  const isReview = (pub.category || "").toLowerCase().includes("review");
+  const authors = formatAuthors(pub.student_authors);
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      whileHover={{ y: -5 }}
+      className="group relative"
+    >
+      <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500/20 to-emerald-500/20 rounded-[2.5rem] blur opacity-0 group-hover:opacity-100 transition duration-500" />
+      <div className="relative h-full bg-white rounded-[2.5rem] border border-slate-100 p-6 md:p-8 flex flex-col shadow-sm hover:shadow-2xl hover:shadow-teal-500/5 transition-all duration-500 overflow-hidden">
+        {/* Category Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className={`px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest ${
+            isScoped ? "bg-teal-50 text-teal-600 border border-teal-100" : 
+            isReview ? "bg-amber-50 text-amber-600 border border-amber-100" :
+            "bg-slate-50 text-slate-500 border border-slate-100"
+          }`}>
+            {pub.event_type || "Publication"}
+          </div>
+          <div className="flex items-center gap-2 text-slate-400">
+            <Calendar size={14} />
+            <span className="text-[10px] font-black tracking-widest uppercase">{pub.year || "2025"}</span>
+          </div>
+        </div>
+
+        {/* Title */}
+        <h3 className="text-xl font-bold font-serif text-slate-800 mb-4 line-clamp-3 leading-tight group-hover:text-teal-600 transition-colors duration-500">
+          {pub.title}
+        </h3>
+
+        {/* Authors */}
+        <div className="mb-6 space-y-3">
+          <div className="flex items-start gap-4">
+            <div className="w-8 h-8 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
+              <Users size={14} className="text-slate-400" />
+            </div>
+            <div className="text-[11px] font-bold text-slate-600 leading-relaxed uppercase tracking-wide">
+              {authors.slice(0, 3).join(", ")}
+              {authors.length > 3 && <span className="text-teal-500"> +{authors.length - 3} others</span>}
+            </div>
+          </div>
+
+          <div className="flex items-start gap-4">
+            <div className="w-8 h-8 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
+              <ShieldCheck size={14} className="text-teal-500" />
+            </div>
+            <div className="text-[11px] font-medium text-slate-500 italic font-serif leading-relaxed line-clamp-2 pr-2">
+              {pub.venue}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Metadata */}
+        <div className="mt-auto pt-6 border-t border-slate-50 flex items-center justify-between">
+          <div className="flex gap-2">
+            <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{pub.institute || "SRL"}</span>
+          </div>
+          <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-teal-500 group-hover:text-white transition-all duration-500">
+             <ArrowRight size={14} />
+          </div>
+        </div>
+>>>>>>> Stashed changes
       </div>
     </motion.div>
   );
 };
 
+<<<<<<< Updated upstream
 /* ================= YEAR PICKER MODAL ================= */
 const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, buttonRef }) => {
   const [position, setPosition] = useState({ top: 0, left: 0 });
@@ -781,24 +921,107 @@ const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, b
               onClose();
             }}
             className="w-full mt-3 py-2 bg-slate-200 text-slate-700 rounded-lg font-semibold hover:bg-slate-300 transition-colors text-sm"
+=======
+const ProjectCard = ({ project, index }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      whileHover={{ y: -5 }}
+      className="group relative"
+    >
+      <div className="absolute -inset-0.5 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-[2.5rem] blur opacity-0 group-hover:opacity-100 transition duration-500" />
+      <div className="relative h-full bg-white rounded-[2.5rem] border border-slate-100 p-6 md:p-8 flex flex-col shadow-sm hover:shadow-2xl hover:shadow-amber-500/5 transition-all duration-500 overflow-hidden">
+        
+        {/* Status Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="px-4 py-1.5 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 text-[9px] font-black uppercase tracking-widest flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+            </span>
+            {project.status || "Active Research"}
+          </div>
+          {project.grant && (
+             <div className="px-3 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase tracking-widest rounded-lg border border-emerald-100">
+                Grant Funded
+             </div>
+          )}
+        </div>
+
+        <h3 className="text-xl font-bold font-serif text-slate-800 mb-4 leading-tight group-hover:text-amber-600 transition-colors duration-500">
+          {project.title}
+        </h3>
+
+        <p className="text-sm text-slate-500 leading-relaxed mb-6 line-clamp-3 pr-2">
+          {project.description || "Experimental research pushing the boundaries of AI and software engineering within the lab environment."}
+        </p>
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          {(project.tags || ["Machine Learning", "Innovation"]).map((tag, i) => (
+            <span key={i} className="px-3 py-1 bg-slate-50 text-slate-500 text-[10px] font-bold uppercase tracking-tight rounded-lg border border-slate-100">
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        {/* Authors / Leads */}
+        <div className="mt-auto pt-6 border-t border-slate-50 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+             <div className="flex -space-x-3">
+                {[1, 2].map((i) => (
+                  <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200 overflow-hidden shadow-sm">
+                    <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-slate-400">SRL</div>
+                  </div>
+                ))}
+             </div>
+             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Team {project.teamCount || index + 2}</span>
+          </div>
+          <motion.div 
+            whileHover={{ x: 5 }}
+            className="text-amber-600 font-black text-[10px] uppercase tracking-widest flex items-center gap-2 cursor-pointer"
+>>>>>>> Stashed changes
           >
-            Clear Year
-          </button>
-        )}
-      </motion.div>
-    </>
+            Details <ArrowRight size={14} />
+          </motion.div>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
+<<<<<<< Updated upstream
 
 /* ================= MAIN ================= */
 const Publications = () => {
+=======
+/* ================= SKELETON ================= */
+
+const SkeletonCard = () => (
+  <div className="h-80 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm p-8 flex flex-col gap-4 animate-pulse">
+    <div className="h-6 bg-slate-100 rounded-lg w-1/4" />
+    <div className="h-10 bg-slate-100 rounded-lg w-3/4 mt-4" />
+    <div className="h-20 bg-slate-100 rounded-lg w-full mt-4" />
+    <div className="mt-auto h-12 bg-slate-100 rounded-lg w-full" />
+  </div>
+);
+
+/* ================= MAIN ================= */
+
+const Repository = () => {
+  const [activeTab, setActiveTab] = useState("publications");
+  const [allPublications, setAllPublications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+>>>>>>> Stashed changes
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedYear, setSelectedYear] = useState(null);
-  const [showYearPicker, setShowYearPicker] = useState(false);
-  const yearButtonRef = useRef(null);
 
+<<<<<<< Updated upstream
   // Extract all unique years from data (2020 to current year)
   const allYears = Array.from({ length: new Date().getFullYear() - 2019 }, (_, i) => 2020 + i).reverse();
   const [loading, setLoading] = useState(true);
@@ -921,17 +1144,149 @@ const Publications = () => {
           </motion.p>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
+=======
+  // Fetch data
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    fetch(`${API_BASE_URL}/api/publications`)
+      .then((r) => r.ok ? r.json() : Promise.reject(r))
+      .then((json) => {
+        if (!cancelled) {
+          setAllPublications(json.publications || []);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          console.error("Failed to load publications:", err);
+          setError("Experience an issue loading the repository.");
+          setLoading(false);
+        }
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  // Aggregate Projects from studentsData
+  const projectList = useMemo(() => {
+    const list = [];
+    // 1. Extract specifically mentioned ongoing researchWork
+    studentsData.forEach(student => {
+       const works = student.achievements_extended?.researchWork || [];
+       works.forEach(w => {
+          if (w.toLowerCase().includes("ongoing") || w.toLowerCase().includes("project")) {
+             list.push({
+                id: `p-${Math.random()}`,
+                title: w.replace(/Ongoing Research Paper:|Ongoing:/gi, "").trim(),
+                description: `A collaborative project by ${student.student_name} within the SRL infrastructure.`,
+                tags: student.research || ["Innovation"],
+                status: "Ongoing",
+                grant: w.toLowerCase().includes("grant"),
+                student: student.student_name
+             });
+          }
+       });
+
+       // 2. Extract srlPublications that are "under review" as ongoing projects
+       const pubs = student.srlPublications || [];
+       pubs.forEach(p => {
+          if (p.category === "Paper under Review") {
+             list.push({
+                id: `pr-${Math.random()}`,
+                title: p.title,
+                description: `Research paper submitted to ${p.venue}. Currently undergoing peer review and validation.`,
+                tags: ["Research Paper", "Peer Review"],
+                status: "Under Review",
+                grant: p.conferenceGrant,
+                student: student.student_name
+             });
+          }
+       });
+    });
+
+    // De-duplicate projects by title roughly
+    const seen = new Set();
+    return list.filter(p => {
+       const key = p.title.toLowerCase().trim();
+       if (seen.has(key)) return false;
+       seen.add(key);
+       return true;
+    });
+  }, []);
+
+  const availableYears = useMemo(() => {
+    const years = new Set(allPublications.map((p) => p.year).filter(Boolean));
+    return Array.from(years).sort((a, b) => b - a);
+  }, [allPublications]);
+
+  const filteredItems = useMemo(() => {
+    if (activeTab === "publications") {
+      return allPublications.filter((pub) => {
+        const matchesCat = activeCategory === "All" || pub.event_type === activeCategory;
+        const q = searchQuery.toLowerCase();
+        const matchesQuery = !q || (pub.title || "").toLowerCase().includes(q) || (pub.student_authors || "").toLowerCase().includes(q) || (pub.venue || "").toLowerCase().includes(q);
+        const matchesYear = !selectedYear || pub.year === selectedYear;
+        return matchesCat && matchesQuery && matchesYear;
+      });
+    } else {
+      return projectList.filter(p => {
+         const q = searchQuery.toLowerCase();
+         return !q || (p.title || "").toLowerCase().includes(q) || (p.description || "").toLowerCase().includes(q);
+      });
+    }
+  }, [allPublications, projectList, activeTab, activeCategory, searchQuery, selectedYear]);
+
+  const exportToExcel = useCallback(() => {
+    if (filteredItems.length === 0) return;
+    const items = activeTab === "publications" ? filteredItems : projectList;
+    const ws = XLSX.utils.json_to_sheet(items);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, activeTab);
+    XLSX.writeFile(wb, `srl_${activeTab}_${new Date().toISOString().split("T")[0]}.xlsx`);
+  }, [filteredItems, activeTab, projectList]);
+
+  return (
+    <div className="relative min-h-screen bg-[#FAFAFA] text-slate-900 overflow-hidden font-sans">
+      
+      {/* Dynamic Background Elements */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-[50%] h-[50%] bg-[#0D9488]/5 blur-[120px] rounded-full -mr-20 -mt-20" />
+        <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-amber-500/5 blur-[100px] rounded-full -ml-10 -mb-10" />
+        <div className="absolute top-[20%] left-[10%] w-[1px] h-[60%] bg-gradient-to-b from-transparent via-slate-200 to-transparent" />
+        <div className="absolute top-[20%] right-[10%] w-[1px] h-[60%] bg-gradient-to-b from-transparent via-slate-200 to-transparent" />
+      </div>
+
+      {/* Hero Section */}
+      <div className="relative z-10 pt-20 pb-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+>>>>>>> Stashed changes
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-6 flex justify-center"
+            className="text-center"
           >
+<<<<<<< Updated upstream
             <Link to="/add-publication" className="bg-teal-600 text-white px-6 py-3 rounded-full font-bold shadow-md hover:bg-teal-700 transition-colors inline-flex items-center gap-2">
               <PlusCircle size={20} />
               Add Publications
             </Link>
+=======
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 group cursor-default">
+               <Layers size={14} className="group-hover:text-teal-500 transition-colors" />
+               Scholarly Repository
+            </div>
+            <h1 className="text-6xl md:text-8xl font-black font-serif tracking-tight mb-8 leading-none">
+               SRL <span className="bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">Repository</span>
+            </h1>
+            <p className="max-w-2xl mx-auto text-lg text-slate-500 font-medium leading-relaxed">
+               A centralized hub for our laboratory's high-impact publications and ongoing research projects pioneering the future of technology.
+            </p>
+>>>>>>> Stashed changes
           </motion.div>
         </div>
+      </div>
 
+<<<<<<< Updated upstream
         {/* Filters and Search Hub */}
         <div className="flex flex-col gap-2 mb-8">
           {/* Categories and Controls Row */}
@@ -946,13 +1301,101 @@ const Publications = () => {
                     activeCategory === cat 
                     ? "bg-teal-600 text-white shadow-md shadow-teal-600/20" 
                     : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 hover:border-slate-300"
+=======
+      {/* Control Center */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div className="bg-white rounded-[3rem] border border-slate-100 shadow-2xl p-2 md:p-4 flex flex-col md:flex-row items-center gap-6 justify-between">
+           
+           {/* Tab Switcher */}
+           <div className="flex bg-slate-50 rounded-[2rem] p-1.5 border border-slate-100 overflow-hidden">
+              <TabButton 
+                active={activeTab === "publications"} 
+                label="Publications" 
+                icon={BookOpen} 
+                onClick={() => setActiveTab("publications")} 
+              />
+              <TabButton 
+                active={activeTab === "projects"} 
+                label="Projects" 
+                icon={Cpu} 
+                onClick={() => setActiveTab("projects")} 
+              />
+           </div>
+
+           {/* Filters & Search */}
+           <div className="flex flex-1 items-center gap-3 w-full md:w-auto">
+              <div className="relative flex-1 group">
+                 <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-500 transition-colors" size={18} />
+                 <input 
+                    type="text" 
+                    placeholder="Search by title, author or keyword..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-100 rounded-[2rem] py-4 pl-14 pr-6 text-sm font-bold text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-teal-500/10 focus:bg-white focus:border-teal-500 transition-all"
+                 />
+              </div>
+
+              <div className="hidden lg:flex items-center gap-2">
+                 <button 
+                  onClick={exportToExcel}
+                  className="p-4 rounded-[2rem] bg-slate-50 text-slate-400 hover:bg-teal-500 hover:text-white transition-all duration-500 border border-slate-100"
+                  title="Export Data"
+                 >
+                   <Download size={20} />
+                 </button>
+                 <Link 
+                  to="/add-publication"
+                  className="flex items-center gap-3 bg-teal-600 text-white px-8 py-4 rounded-[2rem] font-black uppercase tracking-widest text-xs shadow-xl shadow-teal-500/20 hover:scale-[1.02] active:scale-95 transition-all"
+                 >
+                   <PlusCircle size={18} />
+                   Contribute
+                 </Link>
+              </div>
+           </div>
+        </div>
+
+        {/* Secondary Category Filters (Only for Publications) */}
+        {activeTab === "publications" && (
+           <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-2 mt-8 overflow-x-auto pb-4 no-scrollbar"
+           >
+              {CATEGORIES.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
+                    activeCategory === cat 
+                    ? "bg-slate-900 text-white border-slate-900 shadow-lg" 
+                    : "bg-white text-slate-500 border-slate-100 hover:border-slate-300"
+>>>>>>> Stashed changes
                   }`}
                 >
                   {cat}
                 </button>
               ))}
-            </div>
+              
+              <div className="w-px h-6 bg-slate-200 mx-2" />
+              
+              {availableYears.slice(0, 5).map(year => (
+                <button
+                  key={year}
+                  onClick={() => setSelectedYear(selectedYear === year ? null : year)}
+                  className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 border ${
+                    selectedYear === year 
+                    ? "bg-teal-500 text-white border-teal-500 shadow-lg shadow-teal-500/20" 
+                    : "bg-white text-slate-400 border-slate-100 hover:border-slate-300"
+                  }`}
+                >
+                  {year}
+                </button>
+              ))}
+           </motion.div>
+        )}
+      </div>
 
+<<<<<<< Updated upstream
             {/* Search and Year Picker */}
             <div className="flex items-center gap-1.5 w-full lg:w-auto">
               {/* Search Box */}
@@ -1151,9 +1594,61 @@ const Publications = () => {
           </AnimatePresence>
         </div>
 
+=======
+      {/* Results Grid */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-40">
+        
+        {/* Count Indicator */}
+        <div className="flex items-center justify-between mb-8 px-4">
+           <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
+              Showing <span className="text-teal-600">{filteredItems.length}</span> Results
+           </p>
+           {activeTab === "projects" && (
+              <div className="flex items-center gap-2">
+                 <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                 <span className="text-[10px] font-black uppercase text-amber-600 tracking-widest">Live Research Feed</span>
+              </div>
+           )}
+        </div>
+
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
+          </div>
+        ) : (
+          <AnimatePresence mode="popLayout">
+            <motion.div 
+               layout
+               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+              {filteredItems.length > 0 ? (
+                filteredItems.map((item, index) => (
+                  activeTab === "publications" 
+                  ? <PublicationCard key={item.id} pub={item} index={index} />
+                  : <ProjectCard key={item.id} project={item} index={index} />
+                ))
+              ) : (
+                <div className="col-span-full py-32 text-center">
+                   <div className="w-20 h-20 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-slate-200">
+                      <Search size={40} />
+                   </div>
+                   <h3 className="text-2xl font-black font-serif text-slate-300">No matching entries found</h3>
+                   <p className="text-slate-400 text-sm mt-2">Try adjusting your filters or search terms.</p>
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        )}
+>>>>>>> Stashed changes
       </div>
+
+      {/* Background Style */}
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </div>
   );
 };
 
-export default Publications;
+export default Repository;

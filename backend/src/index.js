@@ -16,13 +16,16 @@ const leaderboardRouter = require("./routes/leaderboard");
 const batchStatsRouter = require("./routes/batch_stats");
 const metricsRouter = require("./routes/metrics");
 const achievementsRouter = require("./routes/achievements");
+const researchersRouter = require("./routes/researchers");
 
 const app = express();
 
 const ALLOWED_ORIGINS = [
   "http://localhost:5173",
+  "http://localhost:5174",
   "http://localhost:3000",
   "http://127.0.0.1:5173",
+  "http://127.0.0.1:5174",
   "http://127.0.0.1:3000",
   "https://students-research-lab-srl.vercel.app",
 ];
@@ -63,6 +66,7 @@ app.use("/api", leaderboardRouter);
 app.use("/api", batchStatsRouter);
 app.use("/api", metricsRouter);
 app.use("/api", achievementsRouter);
+app.use("/api", researchersRouter);
 
 // Global error handler — must be after all routes
 app.use((err, req, res, next) => {
