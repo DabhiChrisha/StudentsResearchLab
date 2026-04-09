@@ -747,22 +747,24 @@ const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, b
           ))}
         </div>
 
-        {selectedYear && (
-          <button
-            onClick={() => {
-              onSelectYear(null);
-              onClose();
-            }}
-            className="w-full mt-3 py-2 bg-slate-200 text-slate-700 rounded-lg font-semibold hover:bg-slate-300 transition-colors text-sm"
-          >
-            Clear Selection
-          </button>
-        )}
-      </motion.div>
+          {selectedYear && (
+            <button
+              onClick={() => {
+                onSelectYear(null);
+                onClose();
+              }}
+              className="w-full mt-3 py-2 bg-slate-200 text-slate-700 rounded-lg font-semibold hover:bg-slate-300 transition-colors text-sm"
+            >
+              Clear Selection
+            </button>
+          )}
+        </motion.div>
     </>
   );
 };
 
+
+/* ================= MAIN ================= */
 const Publications = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
