@@ -123,11 +123,6 @@ const Home = () => {
                   <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5">
                     {[
                       {
-                        label: "Research Publications",
-                        value: "9",
-                        category: "Total Publications",
-                      },
-                      {
                         label: "Research Poster Presentations",
                         value: "4",
                         category: "Conferences",
@@ -136,6 +131,11 @@ const Home = () => {
                         label: "Awards and Recognitions",
                         value: "2",
                         category: "Excellence",
+                      },
+                      {
+                        label: "Research Publications: Papers/Case Studies/Book Chapters",
+                        value: "9",
+                        category: "Total Publications",
                       },
                       {
                         label: "Hackathon",
@@ -153,30 +153,28 @@ const Home = () => {
                         className="bg-white/70 backdrop-blur-sm border border-slate-200/50 p-4 sm:p-6 rounded-[1.5rem] 2xl:rounded-[2rem] flex flex-col items-start group hover:bg-white transition-all hover:shadow-md hover:-translate-y-1 h-full"
                       >
                         {stat.isHackathon ? (
-                          <div className="w-full flex flex-col h-full justify-between">
-                            <div className="flex items-center w-full">
-                              <div className="flex-1 text-center">
-                                <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none">
+                          <div className="w-full flex flex-col h-full">
+                            <div className="flex items-center w-full mb-4">
+                              <div className="flex-1">
+                                <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none mb-1">
                                   {stat.winners}
                                 </div>
-                                <div className="text-slate-400 text-[11px] sm:text-[13px] font-bold uppercase tracking-wide mt-1">
+                                <div className="text-slate-400 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider">
                                   Winners
                                 </div>
                               </div>
-                              <div className="w-px h-12 bg-slate-200 mx-2" />
-                              <div className="flex-1 text-center">
-                                <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none">
+                              <div className="w-px h-10 bg-slate-200 mx-3" />
+                              <div className="flex-1">
+                                <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none mb-1">
                                   {stat.finalists}
                                 </div>
-                                <div className="text-slate-400 text-[11px] sm:text-[13px] font-bold uppercase tracking-wide mt-1">
+                                <div className="text-slate-400 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider">
                                   Finalists
                                 </div>
                               </div>
                             </div>
-                            <div className="mt-4 pt-3 border-t border-slate-100 w-full text-center">
-                              <span className="text-slate-800 text-[14px] sm:text-[16px] font-black uppercase tracking-[0.2em]">
-                                Hackathons
-                              </span>
+                            <div className="text-slate-800 text-[14px] sm:text-[16px] font-bold leading-tight">
+                              Hackathons
                             </div>
                           </div>
                         ) : stat.value ? (
