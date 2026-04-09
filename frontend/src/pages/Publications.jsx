@@ -769,6 +769,9 @@ const Publications = () => {
   const [selectedYear, setSelectedYear] = useState(null);
   const [showYearPicker, setShowYearPicker] = useState(false);
   const yearButtonRef = useRef(null);
+
+  // Extract all unique years from data (2020 to current year)
+  const allYears = Array.from({ length: new Date().getFullYear() - 2019 }, (_, i) => 2020 + i).reverse();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -776,7 +779,7 @@ const Publications = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const allYears = Array.from({ length: new Date().getFullYear() - 2019 }, (_, i) => 2020 + i).reverse();
+  // const allYears = Array.from({ length: new Date().getFullYear() - 2019 }, (_, i) => 2020 + i).reverse();
 
   const filteredPublications = publicationsData.filter((pub) => {
     const matchesCat = activeCategory === "All" || pub.category === activeCategory;
@@ -875,19 +878,20 @@ const Publications = () => {
           >
             Explore our latest research papers, journals, and book chapters driving innovation forward.
           </motion.p>
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-6"
+            className="mt-6 flex justify-center"
           >
-            <Link to="/add-publication" className="bg-teal-600 text-white px-6 py-3 rounded-full font-bold shadow-md hover:bg-teal-700 transition-colors inline-flex items-center gap-2 text-sm sm:text-base">
+            <Link to="/add-publication" className="bg-teal-600 text-white px-6 py-3 rounded-full font-bold shadow-md hover:bg-teal-700 transition-colors inline-flex items-center gap-2">
               <PlusCircle size={20} />
               Add Publications
             </Link>
           </motion.div>
         </div>
 
+        {/* Filters and Search Hub */}
         <div className="flex flex-col gap-2 mb-8">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-2 bg-slate-50/50 p-1.5 sm:p-2.5 rounded-3xl border border-slate-200 shadow-sm">
             <div className="flex items-center gap-1.5 overflow-x-auto lg:overflow-visible w-full lg:w-auto lg:scrollbar-hide py-0.5">
@@ -898,13 +902,14 @@ const Publications = () => {
                   className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-300 ${activeCategory === cat
                     ? "bg-teal-600 text-white shadow-md shadow-teal-600/20"
                     : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 hover:border-slate-300"
-                    }`}
+                  }`}
                 >
                   {cat}
                 </button>
               ))}
             </div>
 
+            {/* Search and Year Picker */}
             <div className="flex items-center gap-1.5 w-full lg:w-auto">
               <div className="relative flex-1 lg:flex-none lg:w-60">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -1069,12 +1074,8 @@ const Publications = () => {
             )}
           </AnimatePresence>
         </div>
-      </div>
 
-      <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
+      </div>
     </div>
   );
 };
