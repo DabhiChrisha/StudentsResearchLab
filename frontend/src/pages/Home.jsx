@@ -158,28 +158,28 @@ const Home = () => {
                       >
                         {stat.isHackathon ? (
                           <div className="w-full flex flex-col h-full relative overflow-hidden">
-                            <div className="flex items-center w-full mb-3">
+                            <div className="flex items-center w-full mb-4">
                               <div className="flex-1">
-                                <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none">
+                                <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none mb-1">
                                   {stat.winners}
+                                </div>
+                                <div className="text-slate-400 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider">
+                                  Winners
                                 </div>
                               </div>
                               <div className="w-px h-10 bg-slate-200 mx-3" />
                               <div className="flex-1">
-                                <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none">
+                                <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none mb-1">
                                   {stat.finalists}
+                                </div>
+                                <div className="text-slate-400 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider">
+                                  Finalists
                                 </div>
                               </div>
                             </div>
                             
                             <div className="text-slate-800 text-[13px] sm:text-[15px] font-bold leading-tight tracking-tight">
                               Hackathons
-                            </div>
-                            
-                            <div className="flex items-center gap-2 text-slate-400 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider">
-                              <span>Winners</span>
-                              <span className="w-1 h-1 rounded-full bg-slate-300" />
-                              <span>Finalists</span>
                             </div>
                           </div>
                         ) : stat.value ? (
