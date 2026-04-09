@@ -217,7 +217,7 @@ const Home = () => {
                       research.
                     </h3>
 
-                    <div className="absolute -right-12 -bottom-12 z-10 w-[350px] md:w-[450px] 2xl:w-[600px] aspect-square flex items-center justify-center pointer-events-auto">
+                    <div className="absolute -right-8 -bottom-8 z-10 w-[300px] md:w-[400px] 2xl:w-[550px] aspect-square flex items-center justify-center pointer-events-auto">
                       <Suspense
                         fallback={
                           <div className="animate-pulse bg-white/10 rounded-full w-64 h-64" />
@@ -225,7 +225,7 @@ const Home = () => {
                       >
                         <Earth
                           className="w-full h-full"
-                          scale={1.1}
+                          scale={0.9}
                           dark={0.8}
                         />
                       </Suspense>

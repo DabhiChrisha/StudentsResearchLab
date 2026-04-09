@@ -571,9 +571,7 @@ const LeaderBoard = () => {
                             >
                                 {/* Search bar + count */}
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-                                    <h3 className="text-sm md:text-base font-black tracking-widest uppercase text-gray-800">
-                                        ALL MEMBER RANKINGS (1st – {currentLeaderboard.length}th)
-                                    </h3>
+                                    <div className="flex-1" />
                                     <div className="flex items-center gap-2">
                                         <div className="relative">
                                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
