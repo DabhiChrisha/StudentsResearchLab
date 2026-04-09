@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { motion } from "framer-motion";
+import { Trophy } from "lucide-react";
 import Hero from "../components/Hero";
 import HeadSRL from "../components/HeadSRL";
 import LazySection from "../components/LazySection";
@@ -153,28 +154,32 @@ const Home = () => {
                         className="bg-white/70 backdrop-blur-sm border border-slate-200/50 p-4 sm:p-6 rounded-[1.5rem] 2xl:rounded-[2rem] flex flex-col items-start group hover:bg-white transition-all hover:shadow-md hover:-translate-y-1 h-full"
                       >
                         {stat.isHackathon ? (
-                          <div className="w-full flex flex-col h-full">
-                            <div className="flex items-center w-full mb-4">
+                          <div className="w-full flex flex-col h-full relative overflow-hidden">
+                             {/* Decorative Background Icon */}
+                            <Trophy className="absolute -right-4 -top-4 w-24 h-24 text-teal-800/5 group-hover:text-teal-800/10 transition-colors rotate-12" />
+                            
+                            <div className="flex items-center w-full mb-3">
                               <div className="flex-1">
-                                <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none mb-1">
+                                <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none">
                                   {stat.winners}
-                                </div>
-                                <div className="text-slate-400 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider">
-                                  Winners
                                 </div>
                               </div>
                               <div className="w-px h-10 bg-slate-200 mx-3" />
                               <div className="flex-1">
-                                <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none mb-1">
+                                <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none">
                                   {stat.finalists}
-                                </div>
-                                <div className="text-slate-400 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider">
-                                  Finalists
                                 </div>
                               </div>
                             </div>
-                            <div className="text-slate-800 text-[14px] sm:text-[16px] font-bold leading-tight">
+                            
+                            <div className="text-slate-800 text-[14px] sm:text-[16px] font-bold leading-tight mb-1">
                               Hackathons
+                            </div>
+                            
+                            <div className="flex items-center gap-2 text-slate-400 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider">
+                              <span>Winners</span>
+                              <span className="w-1 h-1 rounded-full bg-slate-300" />
+                              <span>Finalists</span>
                             </div>
                           </div>
                         ) : stat.value ? (
