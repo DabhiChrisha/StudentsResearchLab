@@ -1,30 +1,27 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import createGlobe from "cobe";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-// Premium Realistic Earth Palette
-const EARTH_GREEN = [0.52, 0.92, 0.86];      // Natural Forest Green (Land)
-const ATMOSPHERE_BLUE = [0.2, 0.7, 0.8];  // Atmospheric Sky Blue (Glow)
-const HIGHLIGHT_WHITE = [1.0, 1.0, 1.0];  // Cloud Highlights (Markers)
+// Image-Specific Colors (Bright Cyan on Dark Globe)
+const IMAGE_LAND_COLOR = [0.2, 0.9, 0.8]; // Bright Cyan-Teal
+const IMAGE_GLOW_COLOR = [0.1, 0.5, 0.5]; // Deep Teal Glow
+const IMAGE_MARKER_COLOR = [1.0, 1.0, 1.0]; // White markers if any
 
 const Earth = ({
   className,
-  theta = 0.55,
-  dark = 2,
+  theta = 0.25,
+  dark = 1,
   scale = 1.1,
   diffuse = 1.2,
-  mapSamples = 4000,
-  mapBrightness = 9,
-  baseColor = EARTH_GREEN,
-  glowColor = ATMOSPHERE_BLUE,
-  markerColor = HIGHLIGHT_WHITE,
+  mapSamples = 40000,
+  mapBrightness = 6,
+  baseColor = IMAGE_LAND_COLOR,
+  glowColor = IMAGE_GLOW_COLOR,
+  markerColor = IMAGE_MARKER_COLOR,
 }) => {
   const canvasRef = useRef(null);
-  const rotationSpeed = useRef(0.003);
-  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     let width = 0;
@@ -59,7 +56,7 @@ const Earth = ({
       markers: [],
       onRender: (state) => {
         state.phi = phi;
-        phi += rotationSpeed.current;
+        phi += 0.003;
       },
     });
 
@@ -69,20 +66,12 @@ const Earth = ({
     };
   }, [theta, dark, scale, diffuse, mapSamples, mapBrightness, baseColor, glowColor, markerColor]);
 
-  useEffect(() => {
-    rotationSpeed.current = isHovered ? 0.012 : 0.003;
-  }, [isHovered]);
-
   return (
-    <motion.div
+    <div
       className={cn(
-        "z-[10] mx-auto flex w-full max-w-[350px] items-center justify-center cursor-pointer",
+        "z-[10] mx-auto flex w-full max-w-[350px] items-center justify-center",
         className
       )}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      animate={{ scale: isHovered ? 1.05 : 1 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
       <canvas
         ref={canvasRef}
@@ -91,13 +80,10 @@ const Earth = ({
           height: "100%",
           maxWidth: "100%",
           aspectRatio: "1",
-          filter: isHovered ? "drop-shadow(0 0 20px rgba(147, 180, 234, 0.4))" : "none",
-          transition: "filter 0.3s ease",
         }}
       />
-    </motion.div>
+    </div>
   );
 };
 
 export default Earth;
-

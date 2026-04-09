@@ -80,10 +80,10 @@ const Home = () => {
       >
         <section
           id="impact"
-          className="py-12 px-4 bg-white relative overflow-hidden"
+          className="py-12 px-4 bg-gradient-to-b from-[#05877a]/5 to-white relative overflow-hidden"
         >
           <div className="max-w-7xl mx-auto">
-            <div className="bg-[#f2f9f7] rounded-[2rem] lg:rounded-[3rem] 2xl:rounded-[3.5rem] p-6 md:p-10 lg:p-12 2xl:p-16 relative overflow-hidden border border-slate-100 shadow-sm">
+            <div className="bg-gradient-to-br from-[#05877a]/10 via-white to-white rounded-[2rem] lg:rounded-[3rem] 2xl:rounded-[3.5rem] p-6 md:p-10 lg:p-12 2xl:p-16 relative overflow-hidden border border-slate-100 shadow-sm">
               {/* LEFT: Sparkles Background */}
               <div className="absolute left-0 top-0 w-1/2 h-full pointer-events-none">
                 <Suspense fallback={null}>
@@ -204,9 +204,9 @@ const Home = () => {
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
-                    className="relative h-[380px] md:h-[450px] 2xl:h-[550px] overflow-hidden rounded-[2rem] 2xl:rounded-[3rem] bg-gradient-to-br from-[#cef0ea] via-[#f2e4b3] to-white p-6 md:p-10 2xl:p-14 text-slate-800 shadow-xl border border-white/50 flex flex-col justify-start"
+                    className="relative h-[420px] md:h-[480px] 2xl:h-[580px] overflow-hidden rounded-[2rem] 2xl:rounded-[3rem] bg-gradient-to-br from-[#05877a] via-[#05877a]/90 to-white p-6 md:p-10 2xl:p-14 text-white shadow-xl border border-white/10 flex flex-col justify-start"
                   >
-                    <h3 className="relative z-20 text-3xl md:text-4xl lg:text-4xl 2xl:text-6xl font-bold tracking-tight leading-[1.1] text-slate-800">
+                    <h3 className="relative z-20 text-3xl md:text-4xl lg:text-4xl 2xl:text-6xl font-bold tracking-tight leading-[1.1] text-white">
                       Advancing <br />
                       knowledge <br />
                       through <br />
@@ -223,7 +223,7 @@ const Home = () => {
                         <Earth
                           className="w-full h-full"
                           scale={1.2}
-                          dark={0.8}
+                          dark={1}
                         />
                       </Suspense>
                     </div>
