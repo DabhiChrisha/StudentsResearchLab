@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import SpotlightCard from '../SpotlightCard';
+import { ArrowUpRight, Github, Linkedin, Mail, ScrollText, Target, Zap, Activity } from 'lucide-react';
+
+const Metric = ({ icon: Icon, value, label }) => (
+    <div className="flex flex-col items-center gap-0.5 group/m cursor-help">
+        <div className="flex items-center gap-1 transition-transform group-hover/m:-translate-y-0.5">
+            <Icon size={11} className="text-secondary opacity-60 group-hover/m:opacity-100 transition-opacity" />
+            <span className="text-[10px] font-black text-slate-700 tabular-nums">{value}</span>
+        </div>
+        <span className="text-[7px] font-black uppercase text-slate-400 tracking-wider transition-colors group-hover/m:text-secondary">{label}</span>
+    </div>
+);
 
 const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
     const [loadedImages, setLoadedImages] = useState({});
@@ -25,34 +35,29 @@ const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
 
     if (isLoading) {
         return (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                 {[...Array(10)].map((_, index) => (
                     <div
                         key={index}
-                        className="group relative flex flex-col overflow-hidden rounded-[2rem] bg-gray-200/50 animate-pulse border border-gray-100"
+                        className="group relative flex flex-col overflow-hidden rounded-[2.5rem] bg-slate-50 border border-slate-100 animate-shimmer"
                     >
                         {/* Top: Image Box Skeleton */}
-                        <div className="p-3">
-                            <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-gray-300"></div>
+                        <div className="p-4">
+                            <div className="relative aspect-[4/5] w-full rounded-[2rem] bg-slate-200 animate-pulse"></div>
                         </div>
 
                         {/* Bottom: Info Section Skeleton */}
-                        <div className="px-4 pb-5 pt-2 flex flex-col gap-2">
-                            {/* Title Skeleton */}
-                            <div className="h-6 bg-gray-300 rounded-md w-3/4"></div>
-                            {/* Subtitle/Semester Skeleton */}
-                            <div className="h-4 bg-gray-300 rounded-md w-1/2 mb-2"></div>
+                        <div className="px-6 pb-6 pt-2 flex flex-col gap-3">
+                            <div className="h-6 bg-slate-200 rounded-lg w-3/4 animate-pulse"></div>
+                            <div className="h-3 bg-slate-100 rounded-md w-1/2 animate-pulse"></div>
 
-                            {/* Icons and Metrics Skeleton */}
-                            <div className="mt-4 flex items-center justify-between gap-4 border-t border-gray-300/40 pt-4">
-                                <div className="flex gap-3">
-                                    <div className="w-6 h-6 bg-gray-300 rounded-lg"></div>
-                                    <div className="w-6 h-6 bg-gray-300 rounded-lg"></div>
-                                </div>
+                            <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
                                 <div className="flex gap-4">
-                                    <div className="w-8 h-8 rounded-full bg-gray-300 outline outline-2 outline-gray-200/50 outline-offset-[2px]"></div>
-                                    <div className="w-8 h-8 rounded-full bg-gray-300 outline outline-2 outline-gray-200/50 outline-offset-[2px]"></div>
+                                    <div className="w-8 h-4 bg-slate-100 rounded animate-pulse"></div>
+                                    <div className="w-8 h-4 bg-slate-100 rounded animate-pulse"></div>
+                                    <div className="w-8 h-4 bg-slate-100 rounded animate-pulse"></div>
                                 </div>
+                                <div className="w-8 h-8 rounded-xl bg-slate-100 animate-pulse"></div>
                             </div>
                         </div>
                     </div>
@@ -62,16 +67,17 @@ const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
     }
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3 sm:gap-4">
             {items.map((item, index) => (
                 <div
                     key={index}
-                    className="group relative flex flex-col overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#fbe8c1] via-[#fbe8c1] to-[#5ba4a4] transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer"
+                    style={{ background: item.gradient }}
+                    className="group relative flex flex-col overflow-hidden rounded-[1.5rem] border border-slate-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition-all duration-700 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_-10px_rgba(11,61,58,0.1)] cursor-pointer"
                     onClick={() => onImageClick(item)}
                 >
-                    {/* Top: Image Section with Padding */}
-                    <div className="p-3">
-                        <div className="relative aspect-square w-full rounded-2xl overflow-hidden shadow-sm border border-black/5 bg-gray-200">
+                    {/* Top: Image Section */}
+                    <div className="p-2">
+                        <div className="relative aspect-[1/1] w-full rounded-[1rem] overflow-hidden shadow-inner bg-slate-100/50">
                             {!failedImages[index] && item.image ? (
                                 <>
                                     <img loading="lazy" decoding="async"
@@ -79,100 +85,59 @@ const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
                                         alt={item.title}
                                         onLoad={() => handleImageLoad(index)}
                                         onError={() => handleImageError(index, item)}
-                                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        className="h-full w-full object-cover transition-all duration-1000 group-hover:scale-110"
                                     />
-                                    <div className="absolute inset-0 rounded-2xl bg-slate-900/25 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                        <span className="text-sm font-bold text-white uppercase tracking-wider px-4 py-2 rounded-full bg-black/30">
-                                            View profile
-                                        </span>
+                                    {/* Overlay on hover */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-secondary/80 via-secondary/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 flex flex-col justify-end p-4 backdrop-blur-[1px]">
+                                        <div className="transform translate-y-4 group-hover:translate-y-0 transition-all duration-700 delay-100">
+                                            <span className="inline-block text-[9px] font-black text-white uppercase tracking-[0.2em] bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/30 shadow-xl">
+                                                View Profile
+                                            </span>
+                                        </div>
                                     </div>
                                 </>
                             ) : (
-                                <div className="h-full w-full flex items-center justify-center bg-gray-300 text-gray-600 text-xs text-center p-2">
-                                    {!item.image ? 'No photo' : 'Image not found'}
+                                <div className="h-full w-full flex items-center justify-center bg-slate-200 text-slate-400 text-[10px] font-bold uppercase tracking-widest text-center p-4">
+                                    {!item.image ? 'Profile Missing' : 'Network Error'}
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    {/* Bottom: Info Section (Teal Background Area) */}
-                    <div className="px-4 pb-5 pt-2">
-                        <h4 className="text-xl font-black text-white mb-0.5 tracking-tight line-clamp-1">
-                            {item.title}
-                        </h4>
-                        <p className="text-xs font-bold text-white uppercase tracking-widest mb-2">
-                            {item.subtitle}
-                        </p>
-
-                        {/* Hackathons List */}
-                        {item.hackathons && item.hackathons.length > 0 && (
-                            <div className="flex flex-col gap-1.5 mb-2 text-center sm:text-left">
-                                <p className="text-[9px] font-black uppercase tracking-[0.15em] text-white/50 mb-1">Hackathons</p>
-                                <div className="flex flex-col gap-1">
-                                    {item.hackathons.slice(0, 2).map((hack, hIdx) => (
-                                        <div key={hIdx} className="flex items-center gap-1.5 group/hack">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-white shrink-0 shadow-sm" />
-                                            <span className="text-[11px] font-bold text-white line-clamp-1 truncate tracking-tight">
-                                                {hack}
-                                            </span>
-                                        </div>
-                                    ))}
-                                    {item.hackathons.length > 2 && (
-                                        <p className="text-[10px] font-black text-white/60 pl-3 uppercase tracking-widest">
-                                            +{item.hackathons.length - 2} More
-                                        </p>
-                                    )}
-                                </div>
+                    {/* Bottom: Info Section */}
+                    <div className="px-3 pb-3 pt-0.5 flex-1 flex flex-col">
+                        <div className="mb-2">
+                            <h4 className="text-sm font-black text-slate-900 mb-0.5 tracking-tight leading-tight group-hover:text-secondary transition-colors duration-500 line-clamp-1">
+                                {item.title}
+                            </h4>
+                            <div className="flex items-center gap-1">
+                                <span className="text-[7px] font-black text-secondary uppercase tracking-[0.1em] px-1 py-0.5 rounded bg-secondary/5">
+                                    Sem {item.semester}
+                                </span>
+                                <span className="text-[7px] font-bold text-slate-400 uppercase tracking-widest truncate max-w-[80px]">
+                                    {item.department}
+                                </span>
                             </div>
-                        )}
+                        </div>
 
+                        {/* Quick Stats Badges */}
+                        <div className="flex flex-wrap gap-1 mb-3">
+                            {(item.research_areas || []).slice(0, 1).map((area, aIdx) => (
+                                <span key={aIdx} className="text-[7px] font-bold text-slate-500 bg-slate-50 border border-slate-100 px-1.5 py-0.5 rounded-md">
+                                    {area}
+                                </span>
+                            ))}
+                        </div>
 
-                        {/* Bottom Row: Icons + Metrics in one line */}
-                        <div className="mt-4 flex items-center justify-between gap-4 border-t border-white/40 pt-4">
-                            {/* Social Icons */}
-                            <div className="flex gap-3 shrink-0">
-                                {item.email && (
-                                    <a
-                                        href={`mailto:${item.email}`}
-                                        onClick={(e) => e.stopPropagation()}
-                                        className="text-white hover:text-black transition-all transform hover:scale-110 relative z-10"
-                                        title={`Email: ${item.email}`}
-                                    >
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                                            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                        </svg>
-                                    </a>
-                                )}
-                                {item.linkedin && (
-                                    <a
-                                        href={item.linkedin}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        onClick={(e) => e.stopPropagation()}
-                                        className="text-white hover:text-black transition-all transform hover:scale-110 relative z-10"
-                                        title="LinkedIn Profile"
-                                    >
-                                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.041 0 3.604 2.002 3.604 4.604v5.592z" />
-                                        </svg>
-                                    </a>
-                                )}
+                        {/* Bottom Row: Metrics & Actions */}
+                        <div className="mt-auto pt-5 border-t border-slate-50 flex items-center justify-between">
+                            <div className="flex gap-4 lg:gap-3 flex-wrap">
+                                <Metric icon={Activity} value={item.ongoingProjectsCount} label="Ongoing" />
+                                <Metric icon={Zap} value={item.hackathonsCount} label="Hacks" />
+                                <Metric icon={ScrollText} value={item.papersPublishedCount} label="Papers" />
                             </div>
-
-                            {/* Metrics Strip */}
-                            <div className="flex flex-1 items-center justify-end gap-4 text-white">
-                                <div className="flex items-center gap-1.5" title="Research Works">
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                                    <span className="text-base font-black">{item.researchWorksCount ?? "--"}</span>
-                                </div>
-                                <div className="flex items-center gap-1.5" title="Hackathons">
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
-                                    <span className="text-base font-black">{item.hackathonsCount ?? "--"}</span>
-                                </div>
-                                <div className="flex items-center gap-1.5" title="Papers Published">
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.247 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-                                    <span className="text-base font-black">{item.papersPublishedCount ?? "--"}</span>
-                                </div>
+                            <div className="shrink-0 w-7 h-7 rounded-lg bg-white/50 flex items-center justify-center text-slate-400 group-hover:bg-secondary group-hover:text-white transition-all duration-500">
+                                <ArrowUpRight size={14} />
                             </div>
                         </div>
                     </div>

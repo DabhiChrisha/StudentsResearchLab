@@ -1125,3 +1125,22 @@ const updatedStudents = studentsData.map(student => {
 
 fs.writeFileSync(studentsFilePath, JSON.stringify(updatedStudents, null, 4));
 console.log(`Successfully added achievements for ${updatedCount} students.`);
+
+// --- BACKEND SYNC ---
+const syncToBackend = async () => {
+    try {
+        console.log("\n🚀 Syncing achievements to backend...");
+        const response = await fetch('http://localhost:8000/api/researchers/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: 'achievements', data: achievementsData })
+        });
+        const result = await response.json();
+        console.log("✅ Backend Sync SUCCESS:", result.message);
+    } catch (err) {
+        console.error("❌ Backend Sync FAILED:", err.message);
+        console.log("   (Make sure the backend is running at http://localhost:8000)");
+    }
+};
+
+syncToBackend();

@@ -37,7 +37,7 @@ router.get("/papers/:studentName", async (req, res, next) => {
     if (enrollmentNo) {
       const { data: pubRows, error: pubError } = await supabase
         .from("publications")
-        .select("title, enrollment_nos")
+        .select("title, enrollment_nos, category")
         .ilike("enrollment_nos", `%${enrollmentNo}%`);
 
       if (pubError) throw pubError;
@@ -45,7 +45,11 @@ router.get("/papers/:studentName", async (req, res, next) => {
       // Double-check the match is exact (avoid "30144" matching "30144X")
       const enrollPattern = new RegExp(`(^|,)${enrollmentNo}(,|$)`);
       paperTitles = (pubRows || [])
-        .filter((row) => enrollPattern.test(row.enrollment_nos || ""))
+        .filter((row) => {
+          const isMatch = enrollPattern.test(row.enrollment_nos || "");
+          const isUnderReview = (row.category || "").toLowerCase().includes("under review");
+          return isMatch && !isUnderReview;
+        })
         .map((row) => row.title);
     }
 

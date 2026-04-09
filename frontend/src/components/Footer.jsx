@@ -89,7 +89,7 @@ const Footer = () => {
                   onClick={scrollToTop}
                   className="hover:underline"
                 >
-                  Publications
+                  Repository
                 </Link>
 
                 <Link

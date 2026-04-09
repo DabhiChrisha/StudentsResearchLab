@@ -140,8 +140,8 @@ const Home = () => {
                       {
                         label: "Hackathon",
                         isHackathon: true,
-                        winners: "10",
-                        finalists: "20",
+                        winners: "12",
+                        finalists: "38",
                       },
                     ].map((stat, i) => (
                       <motion.div
@@ -159,7 +159,7 @@ const Home = () => {
                                 <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none">
                                   {stat.winners}
                                 </div>
-                                <div className="text-slate-500 text-[11px] sm:text-[13px] font-bold uppercase tracking-wide mt-1">
+                                <div className="text-slate-400 text-[11px] sm:text-[13px] font-bold uppercase tracking-wide mt-1">
                                   Winners
                                 </div>
                               </div>
@@ -168,13 +168,13 @@ const Home = () => {
                                 <div className="text-4xl sm:text-5xl font-bold font-display text-teal-800 leading-none">
                                   {stat.finalists}
                                 </div>
-                                <div className="text-slate-500 text-[11px] sm:text-[13px] font-bold uppercase tracking-wide mt-1">
+                                <div className="text-slate-400 text-[11px] sm:text-[13px] font-bold uppercase tracking-wide mt-1">
                                   Finalists
                                 </div>
                               </div>
                             </div>
                             <div className="mt-4 pt-3 border-t border-slate-100 w-full text-center">
-                              <span className="text-slate-900 text-[14px] sm:text-[16px] font-black uppercase tracking-[0.2em]">
+                              <span className="text-slate-800 text-[14px] sm:text-[16px] font-black uppercase tracking-[0.2em]">
                                 Hackathons
                               </span>
                             </div>
