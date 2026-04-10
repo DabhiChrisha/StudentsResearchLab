@@ -2,10 +2,7 @@ const express = require("express");
 const cors = require("cors");
 
 // Import routes
-const studentsRouter = require("./routes/students");
-const attendanceRouter = require("./routes/attendance");
 const sessionsRouter = require("./routes/sessions");
-const scoresRouter = require("./routes/scores");
 const timelineRouter = require("./routes/timeline");
 const joinUsRouter = require("./routes/join_us");
 const publicationsRouter = require("./routes/publications");
@@ -14,7 +11,6 @@ const papersRouter = require("./routes/papers");
 const activitiesRouter = require("./routes/activities");
 const leaderboardRouter = require("./routes/leaderboard");
 const batchStatsRouter = require("./routes/batch_stats");
-const metricsRouter = require("./routes/metrics");
 const achievementsRouter = require("./routes/achievements");
 const researchersRouter = require("./routes/researchers");
 
@@ -62,10 +58,7 @@ app.get("/api/health", (req, res) => {
 });
 
 // Register routes
-app.use("/api", studentsRouter);
-app.use("/api", attendanceRouter);
 app.use("/api", sessionsRouter);
-app.use("/api", scoresRouter);
 app.use("/api", timelineRouter);
 app.use("/api", joinUsRouter);
 app.use("/api", publicationsRouter);
@@ -74,7 +67,6 @@ app.use("/api", papersRouter);
 app.use("/api", activitiesRouter);
 app.use("/api", leaderboardRouter);
 app.use("/api", batchStatsRouter);
-app.use("/api", metricsRouter);
 app.use("/api", achievementsRouter);
 app.use("/api", researchersRouter);
 

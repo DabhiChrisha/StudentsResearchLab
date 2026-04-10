@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { API_HEADERS } from '../config/apiConfig';
 
 /**
- * Custom hook for consistent and reliable Supabase data fetching with retry and timeout logic.
+ * Generic data fetching hook with retry and timeout logic.
  */
-export const useSupabaseQuery = (fetchFn, dependencies = [], maxRetries = 3, retryInterval = 3000) => {
+export const useFetch = (fetchFn, dependencies = [], maxRetries = 3, retryInterval = 3000) => {
     const [data, setData] = useState(undefined);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [retryCount, setRetryCount] = useState(0);
 
-    // Stable reference to fetchFn to prevent infinite loops if fetchFn is not memoized
     const fetchFnRef = useRef(fetchFn);
     useEffect(() => {
         fetchFnRef.current = fetchFn;
@@ -25,7 +25,7 @@ export const useSupabaseQuery = (fetchFn, dependencies = [], maxRetries = 3, ret
             }
         } catch (err) {
             console.warn(`Fetch attempt ${currentRetry + 1} failed:`, err.message);
-            
+
             if (currentRetry < maxRetries && isMounted) {
                 setTimeout(() => {
                     if (isMounted) setRetryCount(prev => prev + 1);
@@ -37,7 +37,6 @@ export const useSupabaseQuery = (fetchFn, dependencies = [], maxRetries = 3, ret
         }
     }, [maxRetries, retryInterval]);
 
-    // Effect for handling initial fetch and dependency changes
     useEffect(() => {
         let isMounted = true;
         setLoading(true);
@@ -47,7 +46,6 @@ export const useSupabaseQuery = (fetchFn, dependencies = [], maxRetries = 3, ret
         return () => { isMounted = false; };
     }, dependencies);
 
-    // Effect for handling retries
     useEffect(() => {
         if (retryCount === 0) return;
         let isMounted = true;
@@ -66,15 +64,16 @@ export const useSupabaseQuery = (fetchFn, dependencies = [], maxRetries = 3, ret
 };
 
 /**
- * Global fetch wrapper with timeout
+ * fetch wrapper with timeout support
  */
 export const fetchWithTimeout = async (url, options = {}, timeout = 10000) => {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeout);
-    
+
     try {
         const response = await fetch(url, {
             ...options,
+            headers: { ...API_HEADERS, ...(options.headers || {}) },
             signal: controller.signal,
         });
         clearTimeout(id);

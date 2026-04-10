@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import SplashCursorCard from "../components/SplashCursorCard";
+import { getImageUrl } from "../lib/imageUrl";
 
 const objectives = [
     {
@@ -283,7 +284,7 @@ inset 0 0 10px #10b98144
 ` }}
                         >
                             <img loading="lazy" decoding="async"
-                                src="/innovation1.jpg"
+                                src={getImageUrl("/innovation1.jpg")}
                                 alt="innovation"
                                 className={isMobile ? "w-[75px] object-contain" : "w-[125px] h-[125px] object-contain"}
                             />

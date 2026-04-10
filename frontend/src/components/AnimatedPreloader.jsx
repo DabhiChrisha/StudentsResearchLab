@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import "./AnimatedPreloader.css";
 import { motion } from "framer-motion";
+import { getImageUrl } from "../lib/imageUrl";
 
 export default function AnimatedPreloader({ finishLoading }) {
     useEffect(() => {
@@ -27,7 +28,7 @@ export default function AnimatedPreloader({ finishLoading }) {
 
                 {/* Center logo */}
                 <div className="logo-wrapper">
-                    <img loading="lazy" decoding="async" src="/SRL.svg" alt="SRL Logo" className="animated-logo" />
+                    <img loading="lazy" decoding="async" src={getImageUrl("/SRL.svg")} alt="SRL Logo" className="animated-logo" />
                     {/* Pulse effect */}
                     <div className="pulse-ring"></div>
                 </div>

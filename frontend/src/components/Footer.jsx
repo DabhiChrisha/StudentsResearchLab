@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { getImageUrl } from "../lib/imageUrl";
 
 const Footer = () => {
   const location = useLocation();
@@ -38,7 +39,7 @@ const Footer = () => {
               <img
                 loading="lazy"
                 decoding="async"
-                src="/SRL.svg"
+                src={getImageUrl("/SRL.svg")}
                 alt="Student Research Lab"
                 className="h-24 w-auto mb-4"
               />

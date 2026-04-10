@@ -1,7 +1,7 @@
 import { useState, lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { API_BASE_URL } from './config/apiConfig';
+import { API_BASE_URL, API_HEADERS } from './config/apiConfig';
 
 // Layout & UI Components
 import Navbar from './components/Navbar';
@@ -33,13 +33,13 @@ function App() {
 
   useEffect(() => {
     // Wake up Render backend immediately on app load
-    fetch(`${API_BASE_URL}/api/health`)
+    fetch(`${API_BASE_URL}/api/health`, { headers: API_HEADERS })
       .then(() => console.log('✅ Backend is awake'))
       .catch(() => console.log('⚠️ Backend is waking up, please wait...'));
 
     // Keep it awake every 14 minutes
     const keepAlive = setInterval(() => {
-      fetch(`${API_BASE_URL}/api/health`).catch(() => {});
+      fetch(`${API_BASE_URL}/api/health`, { headers: API_HEADERS }).catch(() => {});
     }, 14 * 60 * 1000);
 
     return () => clearInterval(keepAlive);
