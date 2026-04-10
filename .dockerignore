@@ -1,0 +1,59 @@
+# Root .dockerignore (for frontend Dockerfile build context)
+
+# Dependencies
+frontend/node_modules/
+backend/node_modules/
+
+# Git
+.git
+.gitignore
+
+# Backend (has its own Dockerfile)
+backend/
+
+# Environment files (passed at runtime, not baked into image)
+.env
+.env.*
+frontend/.env
+frontend/.env.*
+
+# IDE and editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Build artifacts
+frontend/dist/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+*.md
+frontend/Researchers_c7.jsx
+frontend/Researchers_db.jsx
+frontend/StudentsResearchLab/
+
+# Docker build configs
+Dockerfile
+*Dockerfile*
+docker-compose.yml
+docker-compose.*.yml
+.dockerignore
+
+# Python execution caches
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+backend/venv/
+.pytest_cache/
+.coverage
+
+# Node.js
+**/npm-debug.log*

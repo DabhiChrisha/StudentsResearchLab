@@ -1,0 +1,370 @@
+[
+  {
+    "student_name": "Aayush Viral Pandya",
+    "enrollment_no": "24BECE30541",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "KDSH 2026 - Participated",
+      "Cognivia - 2nd Runner Up (Finalist)",
+      "Odoo x GV - Runner Up",
+      "AISEHack 2026 - Shortlisted → FINALIST"
+    ]
+  },
+  {
+    "student_name": "Antra Gajjar",
+    "enrollment_no": "24BECE30081",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "KDSH 2026 - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Banshari Patel",
+    "enrollment_no": "23BECE30168",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "Sampark DSC 3.0 - Shortlisted",
+      "KDSH 2026 - Participated",
+      "Cognivia - Participated",
+      "Odoo x GV - Runner Up",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted → FINALIST"
+    ]
+  },
+  {
+    "student_name": "Bhagyashree Jadeja",
+    "enrollment_no": "24BECE30099",
+    "hackathons": [
+      "Odoo x GV - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Charmi Padh",
+    "enrollment_no": "23BECE30144",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "Cognivia - Participated",
+      "Odoo x GV - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Chrisha Manish Dabhi",
+    "enrollment_no": "24BECE30489",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "KDSH 2026 - Participated",
+      "Cognivia - Participated",
+      "Odoo x GV - Participated",
+      "AISEHack 2026 - Shortlisted → FINALIST"
+    ]
+  },
+  {
+    "student_name": "Dev Kansara",
+    "enrollment_no": "24BECE30114",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Hemant Pande",
+    "enrollment_no": "23BECE30493",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "KDSH 2026 - Participated",
+      "Cognivia - Participated",
+      "Odoo x GV - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted → FINALIST"
+    ]
+  },
+  {
+    "student_name": "Henit Panchal",
+    "enrollment_no": "23BECE30490",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "Cognivia - Participated",
+      "Odoo x GV - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Heny Patel",
+    "enrollment_no": "23BECE30521",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "Cognivia - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Hetvi Hinsu",
+    "enrollment_no": "23BECE30449",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "Cognivia - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Honey Modha",
+    "enrollment_no": "224SBECE30016",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "KDSH 2026 - Participated",
+      "Cognivia - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Jainee Patel",
+    "enrollment_no": "23BECE30203",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "Sampark DSC 3.0 - Shortlisted",
+      "KDSH 2026 - Participated",
+      "Cognivia - Participated",
+      "Odoo x GV - Runner Up",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted → FINALIST"
+    ]
+  },
+  {
+    "student_name": "Janki Chitroda",
+    "enrollment_no": "23BECE30040",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "KDSH 2026 - Participated",
+      "Cognivia - Participated",
+      "Odoo x GV - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Participated"
+    ]
+  },
+  {
+    "student_name": "Jenish Sorathiya",
+    "enrollment_no": "23BEIT54020",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "KDSH 2026 - Participated",
+      "Cognivia - 2nd Runner Up (Finalist)",
+      "Odoo x GV - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Kandarp Gajjar",
+    "enrollment_no": "22BECE30091",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "Cognivia - 2nd Runner Up (Finalist)",
+      "Odoo x GV - Shortlisted (Finalist)",
+      "TIGC La Trobe - Participated"
+    ]
+  },
+  {
+    "student_name": "Kanksha Buch",
+    "enrollment_no": "23BECE30029",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "KDSH 2026 - Participated",
+      "Cognivia - Participated",
+      "Odoo x GV - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Participated"
+    ]
+  },
+  {
+    "student_name": "Krishna Bhatt",
+    "enrollment_no": "23BECE30023",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "Cognivia - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Krish Patel",
+    "enrollment_no": "23BECE30532",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "KDSH 2026 - Participated",
+      "Cognivia - Participated",
+      "Odoo x GV - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Mahi Parmar",
+    "enrollment_no": "24BECE30548",
+    "hackathons": [
+      "InnovAItion - Participated",
+      "KDSH 2026 - Participated",
+      "Cognivia - Participated",
+      "Odoo x GV - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Mihir Patel",
+    "enrollment_no": "23BECE30542",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "Cognivia - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Nancy Patel",
+    "enrollment_no": "22BEIT30123",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "Odoo x GV - Shortlisted (Finalist)",
+      "TIGC La Trobe - Participated"
+    ]
+  },
+  {
+    "student_name": "Parva Kumar",
+    "enrollment_no": "22BECE30153",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "Cognivia - Participated",
+      "Odoo x GV - Participated",
+      "TIGC La Trobe - Participated"
+    ]
+  },
+  {
+    "student_name": "Krutika Patel",
+    "enrollment_no": "22BEIT30118",
+    "hackathons": [
+      "InnovAItion - Participated"
+    ]
+  },
+  {
+    "student_name": "Ridham Patel",
+    "enrollment_no": "22BEIT30133",
+    "hackathons": [
+      "InnovAItion - Participated",
+      "Odoo x GV - Shortlisted (Finalist)"
+    ]
+  },
+  {
+    "student_name": "Poojan Ghetiya",
+    "enrollment_no": "-",
+    "hackathons": [
+      "InnovAItion - Participated",
+      "Cognivia - 2nd Runner Up (Finalist)",
+      "Odoo x GV - Participated"
+    ]
+  },
+  {
+    "student_name": "Pragati Varu",
+    "enrollment_no": "24BECE30436",
+    "hackathons": [
+      "InnovAItion - Participated",
+      "Cognivia - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Prem Raichura",
+    "enrollment_no": "224SBECE30059",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "Cognivia - Participated",
+      "Odoo x GV - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Rachita Devda",
+    "enrollment_no": "23BECE30059",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "Cognivia - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Rohan Thakar",
+    "enrollment_no": "23BECE30364",
+    "hackathons": [
+      "InnovAItion - Participated",
+      "KDSH 2026 - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Rudr Halvadiya",
+    "enrollment_no": "24BECE30094",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "KDSH 2026 - Participated",
+      "Odoo x GV - Runner Up",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Yajurshi Velani",
+    "enrollment_no": "24BECE30441",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "KDSH 2026 - Participated",
+      "Cognivia - Participated",
+      "Odoo x GV - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Yash Kumavat",
+    "enrollment_no": "24BECE30122",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Yashvi Chavda",
+    "enrollment_no": "23BECE30036",
+    "hackathons": [
+      "InnovAItion - Shortlisted",
+      "KDSH 2026 - Participated",
+      "Cognivia - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Zeel Kanudawala",
+    "enrollment_no": "23BECE30101",
+    "hackathons": [
+      "Cognivia - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  },
+  {
+    "student_name": "Zenisha Devani",
+    "enrollment_no": "23BECE30058",
+    "hackathons": [
+      "InnovAItion - Participated",
+      "KDSH 2026 - Participated",
+      "TIGC La Trobe - Participated",
+      "AISEHack 2026 - Shortlisted"
+    ]
+  }
+]
