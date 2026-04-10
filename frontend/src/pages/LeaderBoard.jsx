@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Medal, Star, Target, Zap, Clock, TrendingUp, Users, Award, BookOpen, Crown, Search, Calendar, Timer } from "lucide-react";
 import { useState, useEffect } from 'react';
-import { useSupabaseQuery, fetchWithTimeout } from '../hooks/useSupabaseQuery';
+import { useFetch, fetchWithTimeout } from '../hooks/useFetch';
 import { API_BASE_URL as API_BASE } from '../config/apiConfig';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { getImageUrl } from '../lib/imageUrl';
@@ -88,7 +88,7 @@ const LeaderBoard = () => {
     const [sortKey, setSortKey] = useState(null);   // null | 'rank' | 'name' | 'attendance' | 'hours' | 'score'
     const [sortDir, setSortDir] = useState('desc');
 
-    const { loading, error } = useSupabaseQuery(async () => {
+    const { loading, error } = useFetch(async () => {
         const [overallJson, monthlyJson, hoursJson] = await Promise.all([
             fetchWithTimeout(`${API_BASE}/api/leaderboard`),
             fetchWithTimeout(`${API_BASE}/api/leaderboard/monthly`),

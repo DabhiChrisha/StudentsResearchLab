@@ -1,23 +1,34 @@
-node_modules/
+# ── Backend .gitignore ──
 
-# Keep environment variables out of version control
+# Environment variables
 .env
 .env.*
 *.local
 
-/dist/
-/build/
-/coverage/
-
-/generated/prisma
-
-logs/
-*.log
+# Node.js
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Build output
+dist/
+build/
+coverage/
+
+# Prisma generated client
+/generated/
+/src/generated/
+
+# Logs
+logs/
+*.log
+
+# One-off scripts
+scripts/
+
+# Python
 __pycache__/
 *.pyc
 *.pyo

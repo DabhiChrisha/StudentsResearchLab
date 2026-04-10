@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { motion } from "framer-motion";
 import Tree from './tree';
 import GradientText from './react-bits/GradientText';
-import { useSupabaseQuery, fetchWithTimeout } from '../hooks/useSupabaseQuery';
+import { useFetch, fetchWithTimeout } from '../hooks/useFetch';
 import { API_BASE_URL } from '../config/apiConfig';
 import { getImageUrl } from '../lib/imageUrl';
 
@@ -139,7 +139,7 @@ const TimelineSkeleton = () => {
 function Timeline() {
   const scrollContainerRef = useRef(null);
 
-  const { data: timelineSteps = [], loading, error, retry } = useSupabaseQuery(async () => {
+  const { data: timelineSteps = [], loading, error, retry } = useFetch(async () => {
     const json = await fetchWithTimeout(`${API_BASE_URL}/api/timeline`);
     const timelineData = json?.data || json?.sessions || json?.timeline || [];
 
@@ -231,7 +231,7 @@ function Timeline() {
                     </button>
                   </div>
                 )}
-                {!loading && !error && timelineSteps.length === 0 && (<div className="text-center text-slate-500 py-8">No data available 📭</div>)}
+                {!loading && !error && timelineSteps.length === 0 && (<div className="text-center text-slate-500 py-8">Every journey has a beginning - ours will unfold here soon.</div>)}
                 {!loading && !error && timelineSteps.map((item, index) => (
                   <TimelineItem key={item.id || index} item={item} index={index} scrollRoot={scrollContainerRef} isLast={index === timelineSteps.length - 1} />
                 ))}

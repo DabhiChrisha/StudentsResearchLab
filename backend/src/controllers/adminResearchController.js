@@ -74,28 +74,18 @@ exports.updateResearch = async (req, res, next) => {
 
     const updateData = {};
     if (title) updateData.title = title;
-    if (file_url) updateData.file_url = file_url;
-    if (status) updateData.status = status;
+    if (file_url) updateData.link_to_paper = file_url;
 
-    const { data, error } = await supabase
-      .from("papers")
-      .update(updateData)
-      .eq("id", id)
-      .select();
-
-    if (error) throw error;
-
-    if (!data || data.length === 0) {
-      return res.status(404).json({
-        error: "Not found",
-        message: "Research paper not found",
-      });
-    }
+    const paper = await prisma.researchPaper.update({
+      where: { id: parseInt(id) },
+      data: updateData,
+      include: { paper_authors: true },
+    });
 
     res.json({
       success: true,
       message: "Research paper updated successfully",
-      data: data[0],
+      data: paper,
     });
   } catch (error) {
     console.error("Update research error:", error);

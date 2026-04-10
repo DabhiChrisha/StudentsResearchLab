@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from "../config/apiConfig";
+import { API_BASE_URL, API_HEADERS } from "../config/apiConfig";
 import { getImageUrl } from "../lib/imageUrl";
 
 /* Image Carousel for photo-type sessions */
@@ -52,7 +52,7 @@ const Sessions = () => {
   const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/sessions`)
+    fetch(`${API_BASE_URL}/api/sessions`, { headers: API_HEADERS })
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
@@ -174,7 +174,7 @@ const Sessions = () => {
 
         {!loading && !error && filteredSessions.length === 0 && (
           <div className="text-center text-slate-500 mt-20">
-            No sessions to display.
+            No sessions available at the moment.
           </div>
         )}
       </div>

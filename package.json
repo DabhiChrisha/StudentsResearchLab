@@ -8,12 +8,6 @@
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:backend": "npm --prefix backend run dev"
   },
-  "dependencies": {
-    "cloudinary": "^2.9.0",
-    "dotenv": "^17.4.1",
-    "motion": "^12.35.1",
-    "puppeteer": "^24.39.1"
-  },
   "devDependencies": {
     "concurrently": "^9.2.1"
   }

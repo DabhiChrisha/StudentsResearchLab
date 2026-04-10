@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-import { API_BASE_URL } from "../config/apiConfig";
+import { API_BASE_URL, API_HEADERS } from "../config/apiConfig";
 import { getImageUrl } from "../lib/imageUrl";
 
 /* 🎊 Confetti helper */
@@ -99,7 +99,7 @@ const Achievements = () => {
   const hadSelectionRef = useRef(false);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/achievements`)
+    fetch(`${API_BASE_URL}/api/achievements`, { headers: API_HEADERS })
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
@@ -344,7 +344,7 @@ const Achievements = () => {
 
         {!loading && data.length === 0 && (
           <div className="text-center text-slate-500 mt-20">
-            No achievements to display.
+            Great things are on the way - achievements will be showcased here soon.
           </div>
         )}
       </div>

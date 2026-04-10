@@ -1,9 +1,17 @@
 const express = require("express");
-const { getAchievements } = require("../controllers/achievementsController");
+const prisma = require("../config/prisma");
 
 const router = express.Router();
 
-// GET /api/achievements — full achievement content ordered newest first
-router.get("/achievements", getAchievements);
+router.get("/achievements", async (req, res, next) => {
+  try {
+    const data = await prisma.achievementContent.findMany({
+      orderBy: { serial_no: "desc" },
+    });
+    res.json({ achievements: data || [] });
+  } catch (err) {
+    next(err);
+  }
+});
 
 module.exports = router;

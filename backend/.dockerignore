@@ -1,25 +1,24 @@
-__pycache__/
-*.pyc
-*.pyo
+# ── Backend .dockerignore ──
 
+# Dependencies (installed fresh in Docker)
 node_modules/
-dist/
-build/
-coverage/
 
+# Environment (injected at runtime)
 .env
 .env.*
 *.local
 
-.git
+# Git
+.git/
 .gitignore
+.dockerignore
 
+# IDE / Editor
 .vscode/
 .idea/
-.DS_Store
-Thumbs.db
-Desktop.ini
+*.sw?
 
+# Logs
 logs/
 *.log
 npm-debug.log*
@@ -27,4 +26,27 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Build artifacts
+dist/
+build/
+coverage/
+
+# Prisma generated client (regenerated inside Docker)
+/generated/
+/src/generated/
+
+# One-off scripts (not needed in production)
+scripts/
+
+# Docs
 *.md
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Python
+__pycache__/
+*.pyc
+*.pyo

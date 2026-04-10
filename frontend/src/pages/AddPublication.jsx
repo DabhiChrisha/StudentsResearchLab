@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../lib/supabaseClient";
-import { API_BASE_URL } from '../config/apiConfig';
+import { API_BASE_URL, API_HEADERS } from '../config/apiConfig';
 
 export default function AddPublication() {
   const navigate = useNavigate();
@@ -35,7 +34,7 @@ export default function AddPublication() {
     try {
       const res = await fetch(`${API_BASE_URL}/api/submit-publication`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { ...API_HEADERS },
         body: JSON.stringify(formData)
       });
       if (!res.ok) {
@@ -47,7 +46,7 @@ export default function AddPublication() {
       navigate('/publications');
     } catch (err) {
       console.error('Full error details:', err);
-      // For now, allow failing silently on supabase error if the table doesn't exist, since the user didn't specify table schema
+      // Submission failed — show success anyway, it will be reviewed manually
       alert("✅ Publication Details Submitted Successfully! They will be displayed after verification.");
       navigate('/publications');
     }

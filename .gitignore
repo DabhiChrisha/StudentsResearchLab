@@ -19,24 +19,8 @@ Desktop.ini
 *.sln
 *.sw?
 
-# Docker
-docker-compose.override.yml
-
-# Deployment / hosting
-.vercel/
-.netlify/
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-venv/
-.venv/
-.pytest_cache/
-.coverage
-coverage/
-*.sqlite3
-instance/
+# Claude Code internal
+.kilo/
 
 # Node.js
 node_modules/
@@ -57,6 +41,25 @@ build/
 # Logs
 logs/
 *.log
-log_*.txt
-backend/uvicorn_output.txt
-frontend/src/data/output.txt
+
+# Docker overrides
+docker-compose.override.yml
+
+# Deployment
+.vercel/
+.netlify/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+.pytest_cache/
+.coverage
+coverage/
+
+# One-off migration / utility scripts at root
+migrate.js
+extract_publications.py
+cloudinary-url-map.json

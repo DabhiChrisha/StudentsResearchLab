@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../lib/supabaseClient";
-import { API_BASE_URL } from '../config/apiConfig';
+import { API_BASE_URL, API_HEADERS } from '../config/apiConfig';
 
 export default function JoinUs() {
   const navigate = useNavigate();
@@ -40,7 +39,7 @@ export default function JoinUs() {
     try {
       const res = await fetch(`${API_BASE_URL}/api/join-us`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { ...API_HEADERS },
         body: JSON.stringify(formData)
       });
       

@@ -4,8 +4,8 @@ import { Mail, Linkedin, Github, X, FileText, Eye, Star, Award, Settings, Librar
 // import studentsData from "../data/srlStudents.json"; // REPLACED with backend fetch
 import ChromaGrid from "../components/react-bits/ChromaGrid";
 import GradientText from "../components/GradientText";
-import { useSupabaseQuery, fetchWithTimeout } from '../hooks/useSupabaseQuery';
-import { API_BASE_URL } from '../config/apiConfig';
+import { useFetch, fetchWithTimeout } from '../hooks/useFetch';
+import { API_BASE_URL, API_HEADERS } from '../config/apiConfig';
 import { getImageUrl } from '../lib/imageUrl';
 
 
@@ -20,7 +20,7 @@ export default function Researchers() {
     const retryRef = useRef(null);
     const [showAllHackathons, setShowAllHackathons] = useState(false);
 
-    const { data: bMap } = useSupabaseQuery(async () => {
+    const { data: bMap } = useFetch(async () => {
         const json = await fetchWithTimeout(`${API_BASE_URL}/api/leaderboard`); // Re-using leaderboard for batch/enrollment mapping
         const map = {};
         (json.leaderboard || []).forEach((row) => {
@@ -34,12 +34,12 @@ export default function Researchers() {
     const batchMap = bMap || {};
 
     // Minimal artificial loading to show the skeleton transition smoothly 
-    // without blocking on the heavy Supabase network call above.
+    // without blocking on the heavy network call above.
     useEffect(() => {
         let isCancelled = false;
         const fetchData = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/researchers`);
+                const response = await fetch(`${API_BASE_URL}/api/researchers`, { headers: API_HEADERS });
                 const data = await response.json();
                 if (!isCancelled) {
                     setStudentsData(data.researchers || []);
@@ -54,7 +54,7 @@ export default function Researchers() {
         return () => { isCancelled = true; };
     }, []);
 
-    // Fetch batch stats for all members (cards show real Supabase data)
+    // Fetch batch stats for all members
     useEffect(() => {
         let cancelled = false;
         (async () => {
