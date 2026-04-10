@@ -74,7 +74,7 @@ export default function Researchers() {
 
         // Filter out "admin" card
         const filtered = studentsData.filter(s => (s.student_name || "").toLowerCase() !== "admin");
-        
+
         const copy = [...filtered];
         copy.sort((a, b) => {
             // Exception: Poojan Ghetiya always goes to the bottom
@@ -82,7 +82,7 @@ export default function Researchers() {
             const bName = (b.student_name || "").toLowerCase();
             const aIsPoojan = aName.includes("poojan") && aName.includes("ghetiya");
             const bIsPoojan = bName.includes("poojan") && bName.includes("ghetiya");
-            
+
             if (aIsPoojan && !bIsPoojan) return 1;
             if (!aIsPoojan && bIsPoojan) return -1;
 
@@ -295,8 +295,7 @@ export default function Researchers() {
                         The Minds Behind <br /><span className="text-secondary">Innovation</span>
                     </h1>
                     <p className="text-slate-500 text-lg leading-relaxed font-light max-w-2xl mx-auto">
-                        Our lab is powered by curious minds dedicated to solving real-world challenges through systematic research, mentorship, and cross-functional collaboration.
-                    </p>
+                        Our lab is ignited by curious minds committed to tackling real-world challenges through high-impact research, mentorship, and synergistic collaboration.                     </p>
                 </div>
 
                 {/* Research Assistants — Highlighted */}
@@ -488,7 +487,7 @@ export default function Researchers() {
                             <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-secondary/10 blur-[150px] -mr-96 -mt-96 rounded-full animate-pulse pointer-events-none" />
                             <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-amber-500/5 blur-[120px] -ml-64 -mb-64 rounded-full pointer-events-none" />
                             <div className="absolute inset-0 bg-[radial-gradient(#0b3d3a_1px,transparent_1px)] [background-size:30px_30px] opacity-[0.05] pointer-events-none" />
-                            
+
                             {/* Science/Tech Watermark */}
                             <div className="absolute bottom-10 right-10 text-[10rem] font-black text-secondary/[0.02] select-none pointer-events-none tracking-tighter uppercase leading-none">
                                 Research
@@ -510,7 +509,7 @@ export default function Researchers() {
                                         <div className="lg:sticky lg:top-0 space-y-10">
                                             {/* Design Accent */}
                                             <div className="w-16 h-1 bg-teal-500/40 rounded-full mb-2" />
-                                            
+
                                             <div className="relative group/profile mx-auto lg:mx-0 w-max">
                                                 <div className="absolute -inset-6 bg-teal-500/10 blur-[60px] rounded-full opacity-60 group-hover/profile:opacity-100 transition-opacity duration-700" />
                                                 <div className="relative w-48 h-48 lg:w-56 lg:h-56 rounded-[3rem] overflow-hidden border-[8px] border-white shadow-2xl transition-transform duration-700 group-hover/profile:scale-[1.03]">
@@ -531,7 +530,7 @@ export default function Researchers() {
                                                         Researcher, SEM {activeStudent.semester}
                                                     </p>
                                                 </div>
-                                                
+
                                                 {activeStudent.reflection && (
                                                     <div className="pt-6 border-t border-black/5">
                                                         <h4 className="text-[12px] font-black text-slate-900 uppercase tracking-widest mb-3">Reflection:</h4>
@@ -586,7 +585,7 @@ export default function Researchers() {
                                                 </h4>
                                                 <ul className="space-y-4">
                                                     {((activeMetrics?.hackathons || []).length > 0) ? (
-                                                        (showAllHackathons 
+                                                        (showAllHackathons
                                                             ? (activeMetrics?.hackathons || [])
                                                             : (activeMetrics?.hackathons || []).slice(0, 4)
                                                         ).map((h, i) => (
@@ -601,7 +600,7 @@ export default function Researchers() {
                                                 </ul>
 
                                                 {(activeMetrics?.hackathons || []).length > 4 && (
-                                                    <button 
+                                                    <button
                                                         onClick={() => setShowAllHackathons(!showAllHackathons)}
                                                         className="mt-6 text-[11px] font-black text-teal-600 uppercase tracking-widest hover:text-teal-700 transition-colors flex items-center gap-2"
                                                     >
@@ -671,10 +670,10 @@ export default function Researchers() {
                                                         </div>
                                                     ))}
                                                 </div>
-                                                
+
                                                 {/* Contact Me Button at the bottom of the right panel, or centered */}
                                                 <div className="mt-auto pt-10 flex justify-center">
-                                                    <button 
+                                                    <button
                                                         onClick={() => window.location.href = `mailto:${activeStudent.email}`}
                                                         className="px-12 py-4 rounded-full bg-teal-800 text-white text-[12px] font-black uppercase tracking-[0.3em] hover:bg-teal-900 hover:scale-105 transition-all shadow-xl shadow-teal-900/20"
                                                     >

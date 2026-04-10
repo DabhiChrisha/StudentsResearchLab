@@ -81,9 +81,9 @@ export const organizationData = {
       { label: "Teachers", value: "5000+", icon: "GraduationCap" },
     ],
     // mission:
-    //   "To deliver need-based education relevant to contemporary times, promote excellence in research and innovation, and cultivate an inclusive and welcoming environment for all students.",
+    //   "To deliver dynamic, need-based education relevant to contemporary times, promote pioneering excellence in research and innovation, and cultivate an inclusive and welcoming community for all students.",
     // vision:
-    //   "To be a leading university that provides quality education and research opportunities to students from all backgrounds, contributing significantly to the social, economic, and cultural development of society.",
+    //   "To be a leading university that provides distinguished quality education and research opportunities to students from all backgrounds, contributing transformatively to the social, economic, and cultural advancement of society.",
     features: [
       // "UGC Approved University",
       // "Inclusive & Equitable Education",

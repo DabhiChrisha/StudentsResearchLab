@@ -195,14 +195,14 @@ const publicationsData = {
     }
   ],
   "MIHIR PATEL": [
-      {
-        "title": "Intelligent Bending Parameter Optimizer",
-        "venue": "National-level 3rd Project Advisor Group (PAG) Meeting of the DST–Technology Enabling Centre (DST-TEC)",
-        "type": "Poster Presentation",
-        "category": "Poster Presentation",
-        "date": "06-Feb-26",
-        "conferenceGrant": false
-      }
+    {
+      "title": "Intelligent Bending Parameter Optimizer",
+      "venue": "National-level 3rd Project Advisor Group (PAG) Meeting of the DST–Technology Enabling Centre (DST-TEC)",
+      "type": "Poster Presentation",
+      "category": "Poster Presentation",
+      "date": "06-Feb-26",
+      "conferenceGrant": false
+    }
   ],
   "NANCY RAJESH PATEL": [
     {
@@ -242,23 +242,23 @@ const publicationsData = {
     }
   ],
   "PANCHAL HENIT SHAILESHBHAI": [
-      {
-        "title": "Intelligent Bending Parameter Optimizer",
-        "venue": "National-level 3rd Project Advisor Group (PAG) Meeting of the DST–Technology Enabling Centre (DST-TEC)",
-        "type": "Poster Presentation",
-        "category": "Poster Presentation",
-        "date": "06-Feb-26",
-        "conferenceGrant": false
-      },
-      {
-        "title": "Generative AI as a Catalyst in Indian Education Ecosystems",
-        "venue": "Advancing AI and ML Across Disciplines, Gwailor, India",
-        "type": "Conference",
-        "category": "Scopus Paper Publication",
-        "date": "23-Dec-25",
-        "conferenceGrant": false,
-        "studentPresenter": "Henit Panchal"
-      }
+    {
+      "title": "Intelligent Bending Parameter Optimizer",
+      "venue": "National-level 3rd Project Advisor Group (PAG) Meeting of the DST–Technology Enabling Centre (DST-TEC)",
+      "type": "Poster Presentation",
+      "category": "Poster Presentation",
+      "date": "06-Feb-26",
+      "conferenceGrant": false
+    },
+    {
+      "title": "Generative AI as a Catalyst in Indian Education Ecosystems",
+      "venue": "Advancing AI and ML Across Disciplines, Gwailor, India",
+      "type": "Conference",
+      "category": "Scopus Paper Publication",
+      "date": "23-Dec-25",
+      "conferenceGrant": false,
+      "studentPresenter": "Henit Panchal"
+    }
   ],
   "PANDE HEMANT RAMESHWARKUMAR": [
     {
@@ -376,23 +376,23 @@ const publicationsData = {
     }
   ],
   "PATEL HENCY MUKESH": [
-      {
-        "title": "Intelligent Bending Parameter Optimizer",
-        "venue": "National-level 3rd Project Advisor Group (PAG) Meeting of the DST–Technology Enabling Centre (DST-TEC)",
-        "type": "Poster Presentation",
-        "category": "Poster Presentation",
-        "date": "06-Feb-26",
-        "conferenceGrant": false
-      },
-      {
-        "title": "Generative AI as a Catalyst in Indian Education Ecosystems",
-        "venue": "Advancing AI and ML Across Disciplines, Gwailor, India",
-        "type": "Conference",
-        "category": "Scopus Paper Publication",
-        "date": "23-Dec-25",
-        "conferenceGrant": false,
-        "studentPresenter": "Henit Panchal"
-      }
+    {
+      "title": "Intelligent Bending Parameter Optimizer",
+      "venue": "National-level 3rd Project Advisor Group (PAG) Meeting of the DST–Technology Enabling Centre (DST-TEC)",
+      "type": "Poster Presentation",
+      "category": "Poster Presentation",
+      "date": "06-Feb-26",
+      "conferenceGrant": false
+    },
+    {
+      "title": "Generative AI as a Catalyst in Indian Education Ecosystems",
+      "venue": "Advancing AI and ML Across Disciplines, Gwailor, India",
+      "type": "Conference",
+      "category": "Scopus Paper Publication",
+      "date": "23-Dec-25",
+      "conferenceGrant": false,
+      "studentPresenter": "Henit Panchal"
+    }
   ],
   "PATEL JAINEE HASMUKHBHAI": [
     {
@@ -615,54 +615,54 @@ const studentsFilePath = path.join(__dirname, 'srlStudents.json');
 const studentsData = JSON.parse(fs.readFileSync(studentsFilePath, 'utf8'));
 
 const nameOverrides = {
-    "Yashvi Chavda": "CHAVADA YASHVI SURENDRASINH"
+  "Yashvi Chavda": "CHAVADA YASHVI SURENDRASINH"
 };
 
 let updatedCount = 0;
 const updatedStudents = studentsData.map(student => {
   let name = student.student_name;
   if (nameOverrides[name]) {
-      name = nameOverrides[name];
+    name = nameOverrides[name];
   }
   name = name.toUpperCase();
-  
+
   // Improved matching logic:
   // 1. Exact match (case insensitive)
   // 2. Both first and last name match (case insensitive)
   let matchName = Object.keys(publicationsData).find(key => {
-      const k = key.toUpperCase();
-      const n = name.toUpperCase();
-      if (k === n) return true;
-      
-      const kParts = k.split(' ').filter(p => p.length > 2); // ignore short parts like initials
-      const nParts = n.split(' ').filter(p => p.length > 2);
-      
-      // Check if the most important parts (usually first and last) match
-      // For example, "RUDR JAYESHKUMAR HALVADIYA" and "RUDR HALVADIYA"
-      // "RUDR" and "HALVADIYA" are in both.
-      // Lenient matching: check if any 2 significant words match
-      const common = kParts.filter(p => {
-          // Check for exact match or very similar (e.g. CHAVADA and CHAVDA)
-          return nParts.some(np => np.includes(p) || p.includes(np));
-      });
-      if (common.length >= 2) return true;
+    const k = key.toUpperCase();
+    const n = name.toUpperCase();
+    if (k === n) return true;
 
-      return false;
+    const kParts = k.split(' ').filter(p => p.length > 2); // ignore short parts like initials
+    const nParts = n.split(' ').filter(p => p.length > 2);
+
+    // Check if the most important parts (usually first and last) match
+    // For example, "RUDR JAYESHKUMAR HALVADIYA" and "RUDR HALVADIYA"
+    // "RUDR" and "HALVADIYA" are in both.
+    // Lenient matching: check if any 2 significant words match
+    const common = kParts.filter(p => {
+      // Check for exact match or very similar (e.g. CHAVADA and CHAVDA)
+      return nParts.some(np => np.includes(p) || p.includes(np));
+    });
+    if (common.length >= 2) return true;
+
+    return false;
   });
 
   if (matchName) {
     const newPubs = publicationsData[matchName];
     if (newPubs && newPubs.length > 0) {
-        // Merge publications based on title to avoid duplicates
-        const existingPubs = student.srlPublications || [];
-        const mergedMap = new Map();
-        
-        existingPubs.forEach(p => mergedMap.set(`${p.title.trim().toLowerCase()}-${(p.venue || p.event || "").trim().toLowerCase()}`, p));
-        newPubs.forEach(p => mergedMap.set(`${p.title.trim().toLowerCase()}-${(p.venue || p.event || p['Event/Journal'] || "").trim().toLowerCase()}`, p));
-        
-        student.srlPublications = Array.from(mergedMap.values());
-        updatedCount++;
-        console.log(`Updated publications for: ${student.student_name} (Merged ${newPubs.length} new entries)`);
+      // Merge publications based on title to avoid duplicates
+      const existingPubs = student.srlPublications || [];
+      const mergedMap = new Map();
+
+      existingPubs.forEach(p => mergedMap.set(`${p.title.trim().toLowerCase()}-${(p.venue || p.event || "").trim().toLowerCase()}`, p));
+      newPubs.forEach(p => mergedMap.set(`${p.title.trim().toLowerCase()}-${(p.venue || p.event || p['Event/Journal'] || "").trim().toLowerCase()}`, p));
+
+      student.srlPublications = Array.from(mergedMap.values());
+      updatedCount++;
+      console.log(`Updated publications for: ${student.student_name} (Merged ${newPubs.length} new entries)`);
     }
   } else {
     console.log(`MISSING: No publications matched for: ${student.student_name}`);
@@ -675,19 +675,19 @@ console.log(`Successfully updated ${updatedCount} students.`);
 
 // --- BACKEND SYNC ---
 const syncToBackend = async () => {
-    try {
-        console.log("\n🚀 Syncing publications to backend...");
-        const response = await fetch('http://localhost:8000/api/researchers/sync', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type: 'publications', data: publicationsData })
-        });
-        const result = await response.json();
-        console.log("✅ Backend Sync SUCCESS:", result.message);
-    } catch (err) {
-        console.error("❌ Backend Sync FAILED:", err.message);
-        console.log("   (Make sure the backend is running at http://localhost:8000)");
-    }
+  try {
+    console.log("\n🚀 Syncing publications to backend...");
+    const response = await fetch('http://localhost:8000/api/researchers/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'publications', data: publicationsData })
+    });
+    const result = await response.json();
+    console.log("✅ Backend Sync SUCCESS:", result.message);
+  } catch (err) {
+    console.error("❌ Backend Sync FAILED:", err.message);
+    console.log("   (Make sure the backend is running at http://localhost:8000)");
+  }
 };
 
 syncToBackend();
