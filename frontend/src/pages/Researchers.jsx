@@ -43,7 +43,7 @@ export default function Researchers() {
                 if (!isCancelled) {
                     setStudentsData(data.researchers || []);
                     setIsLoading(false);
-                }
+                } n
             } catch (err) {
                 console.error("Failed to fetch researchers:", err);
                 if (!isCancelled) setIsLoading(false);
