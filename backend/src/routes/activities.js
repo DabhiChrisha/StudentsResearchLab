@@ -1,20 +1,8 @@
 const express = require("express");
-const supabase = require("../supabase");
+const { getActivities } = require("../controllers/activitiesController");
 
 const router = express.Router();
 
-router.get("/activities", async (req, res, next) => {
-  try {
-    const { data: activities, error } = await supabase
-      .from("activities")
-      .select("*");
-
-    if (error) throw error;
-
-    res.json({ data: activities });
-  } catch (err) {
-    res.status(500).json({ detail: err.message });
-  }
-});
+router.get("/activities", getActivities);
 
 module.exports = router;
