@@ -5,7 +5,10 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "db:pull": "npx prisma db pull",
-    "db:generate": "npx prisma generate"
+    "db:generate": "npx prisma generate",
+    "db:migrate": "npx prisma migrate dev",
+    "db:seed": "node prisma/seed.js",
+    "db:reset": "npx prisma migrate reset --force && node prisma/seed.js"
   },
   "description": "This directory contains the Python-based backend service for the Students Research Lab application.",
   "version": "1.0.0",
@@ -14,10 +17,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@supabase/supabase-js": "^2.102.1",
-    "cors": "^2.8.6",
-    "dotenv": "^17.4.1",
-    "express": "^5.2.1",
-    "nodemon": "^3.1.14"
+    "@prisma/client": "^5.8.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "nodemon": "^3.0.1"
+  },
+  "devDependencies": {
+    "prisma": "^5.8.0"
+  },
+  "prisma": {
+    "seed": "node prisma/seed-direct.js"
   }
 }

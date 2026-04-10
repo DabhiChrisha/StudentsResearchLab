@@ -18,6 +18,15 @@ const metricsRouter = require("./routes/metrics");
 const achievementsRouter = require("./routes/achievements");
 const researchersRouter = require("./routes/researchers");
 
+// Import admin routes
+const adminAuthRouter = require("./routes/admin");
+const adminStudentsRouter = require("./routes/adminStudents");
+const adminActivitiesRouter = require("./routes/adminActivities");
+const adminScoresRouter = require("./routes/adminScores");
+const adminAttendanceRouter = require("./routes/adminAttendance");
+const adminTimelineRouter = require("./routes/adminTimeline");
+const adminResearchRouter = require("./routes/adminResearch");
+
 const app = express();
 const ALLOWED_ORIGINS = [
   "http://localhost:5173",
@@ -68,6 +77,15 @@ app.use("/api", batchStatsRouter);
 app.use("/api", metricsRouter);
 app.use("/api", achievementsRouter);
 app.use("/api", researchersRouter);
+
+// Register admin routes
+app.use("/api", adminAuthRouter);
+app.use("/api", adminStudentsRouter);
+app.use("/api", adminActivitiesRouter);
+app.use("/api", adminScoresRouter);
+app.use("/api", adminAttendanceRouter);
+app.use("/api", adminTimelineRouter);
+app.use("/api", adminResearchRouter);
 
 // Global error handler — must be after all routes
 app.use((err, req, res, next) => {

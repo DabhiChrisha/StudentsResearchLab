@@ -1,40 +1,8 @@
 const express = require('express');
-const supabase = require('../supabase');
+const { getTimeline } = require('../controllers/timelineController');
 
 const router = express.Router();
 
-const mapTimelineIcon = (row, index) => {
-  if (index === 0) return 'beginning';
-  if (row?.category === 'success') return 'alumni';
-  if (row?.category === 'learning') return 'theory';
-  return 'impactthon';
-};
-
-router.get('/timeline', async (req, res, next) => {
-  try {
-    const { data, error } = await supabase
-      .from('session_content')
-      .select('id, serial_no, title, description, category, type, date_raw, session_date')
-      .order('serial_no', { ascending: true });
-
-    if (error) throw error;
-
-    const timeline = (data || []).map((row, index) => ({
-      id: row.id,
-      step: row.serial_no,
-      title: row.title,
-      description: row.description || '',
-      icon: mapTimelineIcon(row, index),
-      category: row.category,
-      type: row.type,
-      date_raw: row.date_raw,
-      session_date: row.session_date,
-    }));
-
-    res.json({ data: timeline });
-  } catch (err) {
-    next(err);
-  }
-});
+router.get('/timeline', getTimeline);
 
 module.exports = router;
