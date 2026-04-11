@@ -1,4 +1,5 @@
 const prisma = require('../lib/prisma');
+const { EXCLUDED_TEST_USERS, ADMIN_EMAIL, isExcludedStudent } = require('../lib/adminUtils');
 
 function parseArrayField(val) {
   if (!val || val === "-") return [];
@@ -20,11 +21,71 @@ function parseArrayField(val) {
   return [];
 }
 
+// Check if enrollment should be excluded
+async function isExcludedEnrollment(enrollmentNo) {
+  const student = await prisma.studentsDetail.findFirst({
+    where: {
+      enrollment_no: {
+        equals: enrollmentNo,
+        mode: 'insensitive',
+      },
+    },
+    select: {
+      member_type: true,
+      is_admin: true,
+      email: true,
+      student_name: true,
+    },
+  });
+
+  if (!student) return false;
+
+  // Exclude admin users
+  if (student.member_type === "admin" || student.is_admin === true) return true;
+
+  // Exclude admin email
+  if (student.email && student.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) return true;
+
+  // Exclude test users by name
+  if (student.student_name) {
+    const nameNormalized = (student.student_name || "").trim().toLowerCase();
+    if (EXCLUDED_TEST_USERS.names.some(name => name.toLowerCase() === nameNormalized)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 // GET /api/papers/:studentName
 exports.getPapersByStudent = async (req, res, next) => {
   try {
     const studentName = (req.params.studentName || "").trim();
     const enrollmentNo = (req.query.enrollment_no || "").toString().trim().toUpperCase();
+
+    // Check if student name is excluded
+    if (studentName && isExcludedStudent(studentName)) {
+      return res.json({
+        research_works_count: 0,
+        papers_published_count: 0,
+        hackathons_count: 0,
+        research_areas: [],
+        hackathons: [],
+        papers: [],
+      });
+    }
+
+    // Check if enrollment is excluded
+    if (enrollmentNo && (await isExcludedEnrollment(enrollmentNo))) {
+      return res.json({
+        research_works_count: 0,
+        papers_published_count: 0,
+        hackathons_count: 0,
+        research_areas: [],
+        hackathons: [],
+        papers: [],
+      });
+    }
 
     // --- Papers: query publications table by enrollment number ---
     let paperTitles = [];

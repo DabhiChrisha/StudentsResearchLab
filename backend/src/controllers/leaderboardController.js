@@ -1,11 +1,7 @@
 const prisma = require('../lib/prisma');
+const { isExcludedStudent } = require('../lib/adminUtils');
 
 // ── Constants ─────────────────────────────────────────────────────────────
-
-const EXCLUDED_NAMES = new Set([
-  "kandarp dipakkumar gajjar",
-  "nancy rajesh patel",
-]);
 
 // Max observed attendance per period (used to compute attendance_percentage)
 const PERIOD_MAX_ATT = {
@@ -65,7 +61,7 @@ async function buildLeaderboard(period) {
   const maxAtt = PERIOD_MAX_ATT[period] || 1;
 
   let students = (statsRows || [])
-    .filter((r) => !EXCLUDED_NAMES.has((r.student_name || "").trim().toLowerCase()))
+    .filter((r) => !isExcludedStudent(r.student_name))
     .map((r) => {
       const en = (r.enrollment_no || "").trim().toUpperCase();
       const detail = detailMap[en] || {};
