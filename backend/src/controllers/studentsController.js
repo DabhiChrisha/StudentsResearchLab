@@ -1,4 +1,5 @@
 const prisma = require('../lib/prisma');
+const { isExcludedStudent } = require('../lib/adminUtils');
 
 // GET /api/students
 exports.getStudents = async (req, res, next) => {
@@ -40,10 +41,17 @@ exports.getStudents = async (req, res, next) => {
 
     const result = [];
     for (const [en, total] of Object.entries(pointsMap)) {
+      const studentName = nameMap[en] || "Unknown Student";
+      
+      // Filter out test and admin users
+      if (isExcludedStudent(studentName)) {
+        continue;
+      }
+
       result.push({
         id: en,
         enrollment_no: en,
-        name: nameMap[en] || "Unknown Student",
+        name: studentName,
         attendance_percentage: 0.0,
         total_score: total,
       });

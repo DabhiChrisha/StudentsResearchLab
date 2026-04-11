@@ -24,7 +24,7 @@ exports.getActivities = async (req, res, next) => {
  */
 exports.createActivity = async (req, res, next) => {
   try {
-    const { title, description, category, date, link, brief, photo } = req.body;
+    const { title, description, date, link, brief, photo } = req.body;
 
     if (!title) {
       return res.status(400).json({
@@ -37,7 +37,6 @@ exports.createActivity = async (req, res, next) => {
       data: {
         title,
         description: description || null,
-        category: category || null,
         date: date || null,
         link: link || null,
         brief: brief || null,
@@ -62,12 +61,11 @@ exports.createActivity = async (req, res, next) => {
 exports.updateActivity = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { title, description, category, date, link, brief, photo } = req.body;
+    const { title, description, date, link, brief, photo } = req.body;
 
     const updateData = {};
     if (title !== undefined) updateData.title = title;
     if (description !== undefined) updateData.description = description;
-    if (category !== undefined) updateData.category = category;
     if (date !== undefined) updateData.date = date;
     if (link !== undefined) updateData.link = link;
     if (brief !== undefined) updateData.brief = brief;
