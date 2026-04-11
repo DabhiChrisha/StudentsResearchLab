@@ -64,4 +64,3 @@ cloudinary-url-map.json
 # Docker config files
 Dockerfile*
 docker-compose*.yml
-nginx.conf
