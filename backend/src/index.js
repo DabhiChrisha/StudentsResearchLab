@@ -22,6 +22,8 @@ const adminScoresRouter = require("./routes/adminScores");
 const adminAttendanceRouter = require("./routes/adminAttendance");
 const adminTimelineRouter = require("./routes/adminTimeline");
 const adminResearchRouter = require("./routes/adminResearch");
+const adminAchievementsRouter = require("./routes/adminAchievements");
+const imageUploadRouter = require("./routes/imageUpload");
 
 const app = express();
 const ALLOWED_ORIGINS = [
@@ -78,6 +80,8 @@ app.use("/api", adminScoresRouter);
 app.use("/api", adminAttendanceRouter);
 app.use("/api", adminTimelineRouter);
 app.use("/api", adminResearchRouter);
+app.use("/api", adminAchievementsRouter);
+app.use("/api", imageUploadRouter);
 
 // Global error handler — must be after all routes
 app.use((err, req, res, next) => {

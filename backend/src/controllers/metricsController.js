@@ -1,4 +1,5 @@
 const prisma = require('../lib/prisma');
+const { EXCLUDED_TEST_USERS, ADMIN_EMAIL } = require('../lib/adminUtils');
 
 function parseArrayField(val) {
   if (!val || val === "-") return [];
@@ -21,10 +22,57 @@ function parseArrayField(val) {
   return [];
 }
 
+// Check if enrollment should be excluded
+async function isExcludedEnrollment(enrollmentNo) {
+  const student = await prisma.studentsDetail.findFirst({
+    where: {
+      enrollment_no: {
+        equals: enrollmentNo,
+        mode: 'insensitive',
+      },
+    },
+    select: {
+      member_type: true,
+      is_admin: true,
+      email: true,
+      student_name: true,
+    },
+  });
+
+  if (!student) return false;
+
+  // Exclude admin users
+  if (student.member_type === "admin" || student.is_admin === true) return true;
+
+  // Exclude admin email
+  if (student.email && student.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) return true;
+
+  // Exclude test users by name
+  if (student.student_name) {
+    const nameNormalized = (student.student_name || "").trim().toLowerCase();
+    if (EXCLUDED_TEST_USERS.names.some(name => name.toLowerCase() === nameNormalized)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 // GET /api/member-metrics/:enrollment_no
 exports.getMemberMetrics = async (req, res, next) => {
   try {
     const lookup = req.params.enrollment_no.trim().toUpperCase();
+
+    // Check if this enrollment is excluded
+    if (await isExcludedEnrollment(lookup)) {
+      return res.json({
+        research_areas: [],
+        research_papers: [],
+        hackathons: [],
+        patents: [],
+        projects: [],
+      });
+    }
 
     const rows = await prisma.memberCvProfile.findMany({
       where: {

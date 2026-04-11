@@ -1,10 +1,14 @@
 const prisma = require('../lib/prisma');
+const { filterOutTestAndAdminUsers } = require('../lib/adminUtils');
 
 // GET /api/researchers
 exports.getResearchers = async (req, res, next) => {
     try {
         // Fetch all student details
         const details = await prisma.studentsDetail.findMany();
+
+        // Filter out admin and test users from details
+        const filteredDetails = filterOutTestAndAdminUsers(details);
 
         // Fetch all CV profiles for extended info
         const profiles = await prisma.memberCvProfile.findMany();
@@ -23,7 +27,7 @@ exports.getResearchers = async (req, res, next) => {
             profileMap[en] = p;
         });
 
-        const researchers = (details || []).map(s => {
+        const researchers = (filteredDetails || []).map(s => {
             const en = (s.enrollment_no || "").trim().toUpperCase();
             const prof = profileMap[en] || {};
             
