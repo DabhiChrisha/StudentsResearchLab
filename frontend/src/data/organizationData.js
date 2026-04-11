@@ -5,7 +5,7 @@ export const organizationData = {
     title: "Sarva Vidyalaya Kelavani Mandal",
     subtitle: "કર ભલા હોગા ભલા.",
     image: getImageUrl("/SVKM.svg"),
-    heroImage: getImageUrl("frontend/src/assets/svkm_campus.jpg"),
+    heroImage: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754490/my-project/frontend/src/assets/svkm_campus.jpg",
     website: "https://svkm.org.in/",
     description: [
       `Sarva Vidyalaya Kelavani Mandal (SVKM) was established in 1919 by the philanthropist Pujya Chhaganbha. His guiding principle, "કર ભલા, હોગા ભલા" (Do good, and good will come), has driven the trust's growth in education. What began with just six students has now expanded to educating more than 54,000 students across various schools and colleges in Kadi and Gandhinagar.
@@ -29,12 +29,12 @@ export const organizationData = {
     founders: [
       {
         name: "Pujya Chhaganbha",
-        image: getImageUrl("frontend/src/assets/pujya_chhaganbha.jpg"),
+        image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754486/my-project/frontend/src/assets/pujya_chhaganbha.jpg",
         quote: "કર ભલા હોગા ભલા.",
       },
       {
         name: "Shri Maneklal M. Patel",
-        image: getImageUrl("frontend/src/assets/shri_maneklal_patel.jpg"),
+        image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754487/my-project/frontend/src/assets/shri_maneklal_patel.jpg",
         quote: "શિક્ષણ એ જ સાચી સેવા છે.",
       },
     ],
@@ -58,7 +58,7 @@ export const organizationData = {
     title: "Kadi Sarva Vishwavidyalaya",
     subtitle: "કર ભલા હોગા ભલા.",
     image: getImageUrl("/KSV.svg"),
-    heroImage: getImageUrl("frontend/src/assets/ksv_campus.jpg"),
+    heroImage: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754482/my-project/frontend/src/assets/ksv_campus.jpg",
     website: "https://ksv.ac.in/",
     description: [
       "Kadi Sarva Vishwavidyalaya (KSV) was established through the Gujarat State Government Act 21 of 2007 in May 2007 and is approved by the UGC (Ref F.9-18/2008(cpp-1) March 19, 2009).",
@@ -98,7 +98,7 @@ export const organizationData = {
     subtitle: "For the students, By the students, Of the students!",
     website: "https://www.mmpsrpc.in/",
     image: getImageUrl("/MMPSRPC.svg"),
-    heroImage: getImageUrl("frontend/src/assets/mmpsrpc_campus.jpeg"),
+    heroImage: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754484/my-project/frontend/src/assets/mmpsrpc_campus.jpg",
     description: [
       "Founded in 2024, M. M. Patel Students Research Project Cell has been at the forefront of fostering academic excellence and innovative research among students at KSV University. Our journey began with a vision to create a platform where students could explore their research potential and contribute to the academic community.",
       "Over the years, we have grown from a small group of enthusiastic researchers to a vibrant community of researchers, mentors, and faculty members. Our commitment to nurturing talent and pushing the boundaries of knowledge has remained unwavering throughout our journey.",
@@ -119,7 +119,7 @@ export const organizationData = {
         name: "Shri Vallabhbhai M. Patel",
         designation:
           "Chairman, Sarva Vidyalaya Kelvani Mandal, Kadi & Gandhinagar. President, Kadi Sarva Vishwavidyalaya Gandhinagar.",
-        image: getImageUrl("frontend/src/assets/chairman.png"),
+        image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754473/my-project/frontend/src/assets/chairman.jpg",
         cardQuote:
           "Knowledge is valuable, but wisdom with compassion, that's what truly builds a better tomorrow.",
         mainQuote:
@@ -133,7 +133,7 @@ export const organizationData = {
         header: "Message from Head of MMPSRPC, KSV",
         name: "Dr. Himani Trivedi",
         designation: "Head of M. M. Patel Students Research Project Cell",
-        image: getImageUrl("frontend/src/assets/Dr.Himani Trivedi Ma'am.png"),
+        image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775852810/my-project/frontend/src/assets/DrHimani-Trivedi-Maam.jpg",
         cardQuote:
           "Growth comes from steady effort, continuous learning, and discipline.",
         mainQuote:
@@ -191,7 +191,7 @@ export const organizationData = {
     title: "IEEE Student Branch\nKadi Sarva Vishwavidyalaya",
     subtitle: "Empowering Students through Innovation and Leadership",
     image: "https://ieee-ksv-sb.mmpsrpc.in/Pasted-Graphic.svg",
-    heroImage: getImageUrl("frontend/src/assets/IEEE KSV.jpeg"),
+    heroImage: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775852815/my-project/frontend/src/assets/IEEE-KSV.jpg",
     website: "https://ieee-ksv-sb.mmpsrpc.in/",
     sections: {
       intro: [

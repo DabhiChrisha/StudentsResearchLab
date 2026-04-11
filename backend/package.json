@@ -2,6 +2,8 @@
   "name": "studentsresearchlab-backend-runner",
   "private": true,
   "scripts": {
+    "build": "prisma generate",
+    "postinstall": "prisma generate",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "db:pull": "npx prisma db pull",
@@ -24,9 +26,8 @@
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.1.1",
     "nodemon": "^3.1.14",
+    "pg": "^8.20.0",
     "prisma": "^7.7.0"
   },
-  "devDependencies": {
-    "pg": "^8.20.0"
-  }
+  "devDependencies": {}
 }

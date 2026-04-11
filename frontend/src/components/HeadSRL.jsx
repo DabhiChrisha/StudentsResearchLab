@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Mail, MapPin } from "lucide-react";
 import { getImageUrl } from "../lib/imageUrl";
 
-const mamPhoto = getImageUrl("frontend/src/assets/Ma'am Photo.png");
+const mamPhoto = "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775852817/my-project/frontend/src/assets/Maam-Photo.png";
 
 export default function HeadSRL() {
   return (
