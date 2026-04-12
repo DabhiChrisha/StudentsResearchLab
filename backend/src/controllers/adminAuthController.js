@@ -1,9 +1,9 @@
 const prisma = require("../lib/prisma");
-const { generateAdminToken, isAdminEmail } = require("../lib/adminUtils");
+const { generateAdminToken } = require("../lib/adminUtils");
 
 /**
  * Admin Login - POST /api/admin/login
- * Authenticates admin user and returns JWT token
+ * Authenticates admin user from authorization table and returns JWT token
  */
 exports.adminLogin = async (req, res, next) => {
   try {
@@ -20,28 +20,20 @@ exports.adminLogin = async (req, res, next) => {
     const normalizedEmail = String(email).trim().toLowerCase();
     const passwordValue = String(password).trim();
 
-    // Check if email is admin
-    if (!isAdminEmail(normalizedEmail)) {
-      return res.status(401).json({
-        error: "Unauthorized",
-        message: "Invalid credentials",
-      });
-    }
-
-    // Get admin user from students_details using Prisma
-    const adminUser = await prisma.studentsDetail.findUnique({
-      where: { email: normalizedEmail },
+    // Find user in authorization table by user_ID (email)
+    const authUser = await prisma.authorization.findUnique({
+      where: { user_ID: normalizedEmail },
     });
 
-    if (!adminUser) {
+    if (!authUser) {
       return res.status(401).json({
         error: "Unauthorized",
         message: "Invalid credentials",
       });
     }
 
-    // Verify password from login_password field
-    const storedPassword = String(adminUser.login_password || "").trim();
+    // Verify password
+    const storedPassword = String(authUser.password || "").trim();
 
     if (!storedPassword || storedPassword !== passwordValue) {
       return res.status(401).json({
@@ -50,8 +42,14 @@ exports.adminLogin = async (req, res, next) => {
       });
     }
 
-    const adminName = adminUser.student_name || "Admin";
-    const enrollmentNo = adminUser.enrollment_no || "";
+    // Try to get additional info from students_details
+    const studentInfo = await prisma.studentsDetail.findUnique({
+      where: { email: normalizedEmail },
+      select: { student_name: true, enrollment_no: true },
+    });
+
+    const adminName = studentInfo?.student_name || "Admin";
+    const enrollmentNo = studentInfo?.enrollment_no || "";
 
     // Generate JWT token
     const token = generateAdminToken(normalizedEmail, enrollmentNo, adminName);
