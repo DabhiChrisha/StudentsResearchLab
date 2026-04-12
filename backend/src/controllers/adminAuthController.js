@@ -1,15 +1,15 @@
 const prisma = require("../lib/prisma");
-const { generateAdminToken, isAdminEmail } = require("../lib/adminUtils");
+const { generateAdminToken } = require("../lib/adminUtils");
 
 /**
  * Admin Login - POST /api/admin/login
- * Authenticates admin user and returns JWT token
+ * Authenticates admin user using the `authorization` table.
+ * Uses raw SQL because the table has no PK (@@ignore in Prisma schema).
  */
 exports.adminLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Validate input
     if (!email || !password) {
       return res.status(400).json({
         error: "Invalid input",
@@ -20,17 +20,14 @@ exports.adminLogin = async (req, res, next) => {
     const normalizedEmail = String(email).trim().toLowerCase();
     const passwordValue = String(password).trim();
 
-    // Check if email is admin
-    if (!isAdminEmail(normalizedEmail)) {
-      return res.status(401).json({
-        error: "Unauthorized",
-        message: "Invalid credentials",
-      });
-    }
-
-    // Get admin user from students_details using Prisma
-    const adminUser = await prisma.studentsDetail.findUnique({
-      where: { email: normalizedEmail },
+    // Query the authorization table using Prisma ORM
+    const adminUser = await prisma.authorization.findFirst({
+      where: {
+        user_ID: {
+          equals: normalizedEmail,
+          mode: 'insensitive'
+        }
+      }
     });
 
     if (!adminUser) {
@@ -40,8 +37,7 @@ exports.adminLogin = async (req, res, next) => {
       });
     }
 
-    // Verify password from login_password field
-    const storedPassword = String(adminUser.login_password || "").trim();
+    const storedPassword = String(adminUser.password || "").trim();
 
     if (!storedPassword || storedPassword !== passwordValue) {
       return res.status(401).json({
@@ -50,19 +46,15 @@ exports.adminLogin = async (req, res, next) => {
       });
     }
 
-    const adminName = adminUser.student_name || "Admin";
-    const enrollmentNo = adminUser.enrollment_no || "";
-
     // Generate JWT token
-    const token = generateAdminToken(normalizedEmail, enrollmentNo, adminName);
+    const token = generateAdminToken(normalizedEmail, "", "Admin");
 
     return res.json({
       success: true,
       token,
       user: {
         email: normalizedEmail,
-        name: adminName,
-        enrollmentNo,
+        name: "Admin",
         role: "admin",
       },
     });

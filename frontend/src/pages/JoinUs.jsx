@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL, API_HEADERS } from '../config/apiConfig';
 
 export default function JoinUs() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const formTopRef = useRef(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -12,13 +13,23 @@ export default function JoinUs() {
     semester: "",
     division: "",
     branch: "",
+    department: "",
     college: "",
     contact: "",
     email: "",
     batch: "",
-    source: "",
-    reference_name: "",
+    after_ug: "",
+    cpi: "",
+    ieee_member_2026: "",
+    ieee_membership: "",
+    resume_link: "",
+    research_expertise: [],
+    published_research: "",
+    ongoing_research: "",
+    source: "Website",
   });
+
+  const [submitStatus, setSubmitStatus] = useState({ type: null, message: "" });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,28 +70,43 @@ export default function JoinUs() {
         semester: "",
         division: "",
         branch: "",
+        department: "",
         college: "",
         contact: "",
         email: "",
         batch: "",
-        source: "",
-        reference_name: "",
+        after_ug: "",
+        cpi: "",
+        ieee_member_2026: "",
+        ieee_membership: "",
+        resume_link: "",
+        research_expertise: [],
+        published_research: "",
+        ongoing_research: "",
+        source: "Website",
       });
 
-      // Show success message and redirect to home
-      alert("✅ Application Submitted Successfully! Welcome to the SRL community! 🎉");
-      navigate('/');
+      setSubmitStatus({ 
+        type: 'success', 
+        message: "Your application has been submitted successfully! We will review it and get back to you soon." 
+      });
+
+      // Scroll to top so the success message is visible
+      formTopRef.current?.scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
       console.error('Full error details:', err);
+      let errMsg = err.message || 'Unknown error occurred';
       
-      // Check for specific errors
-      if (err.message && err.message.includes('unique_enrollment')) {
-        alert('❌ This enrollment number is already registered. Please check your enrollment number or contact support if you believe this is an error.');
-      } else if (err.message && err.message.includes('duplicate key')) {
-        alert('❌ A record with this information already exists in the database.');
-      } else {
-        alert(`❌ Error submitting form: ${err.message || 'Unknown error occurred'}`);
+      if (errMsg.includes('unique_enrollment')) {
+        errMsg = 'This enrollment number is already registered.';
+      } else if (errMsg.includes('duplicate key')) {
+        errMsg = 'A record with this information already exists.';
       }
+
+      setSubmitStatus({ 
+        type: 'error', 
+        message: `❌ Error: ${errMsg}` 
+      });
     }
 
     setLoading(false);
@@ -93,18 +119,27 @@ export default function JoinUs() {
       semester: "",
       division: "",
       branch: "",
+      department: "",
       college: "",
       contact: "",
       email: "",
       batch: "",
-      source: "",
-      reference_name: "",
+      after_ug: "",
+      cpi: "",
+      ieee_member_2026: "",
+      ieee_membership: "",
+      resume_link: "",
+      research_expertise: [],
+      published_research: "",
+      ongoing_research: "",
+      source: "Website",
     });
+    setSubmitStatus({ type: null, message: "" });
     navigate("/");
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 pt-16 lg:pt-20 pb-12">
+    <div className="max-w-4xl mx-auto px-4 pt-16 lg:pt-20 pb-12" ref={formTopRef}>
       <div className="bg-white rounded-2xl shadow-lg p-5 sm:p-8 md:p-12 relative">
         {/* Close Button */}
         <button
@@ -123,6 +158,25 @@ export default function JoinUs() {
         <p className="text-gray-600 mb-8">
           Fill out the form to join the Students Research Lab
         </p>
+
+        {/* Status Messages */}
+        {submitStatus.message && (
+          <div className={`mb-8 p-4 rounded-xl flex items-start gap-3 ${
+            submitStatus.type === 'success' 
+              ? 'bg-green-50 border border-green-300 text-green-800' 
+              : 'bg-red-50 border border-red-200 text-red-700'
+          }`}>
+            <span className="text-2xl mt-0.5">
+              {submitStatus.type === 'success' ? '✅' : '❌'}
+            </span>
+            <div>
+              {submitStatus.type === 'success' && (
+                <p className="font-bold text-green-900 mb-1">Application Submitted!</p>
+              )}
+              <p className="font-medium">{submitStatus.message}</p>
+            </div>
+          </div>
+        )}
 
         {/* Important Instructions */}
         <div className="bg-blue-50 border-l-4 border-[#05877a] p-6 mb-8 rounded-md">
@@ -283,11 +337,11 @@ export default function JoinUs() {
               <label className="block text-sm font-semibold text-gray-700 mb-2">Are you an IEEE Member in year 2026? <span className="text-red-500">*</span></label>
               <div className="flex gap-6">
                 <label className="flex items-center gap-2">
-                  <input type="checkbox" name="ieee_member_2026" value="Yes" checked={formData.ieee_member_2026 === "Yes"} onChange={e => setFormData(prev => ({ ...prev, ieee_member_2026: e.target.checked ? "Yes" : "" }))} required />
+                  <input type="radio" name="ieee_member_2026" value="Yes" checked={formData.ieee_member_2026 === "Yes"} onChange={handleChange} required />
                   Yes
                 </label>
                 <label className="flex items-center gap-2">
-                  <input type="checkbox" name="ieee_member_2026" value="No" checked={formData.ieee_member_2026 === "No"} onChange={e => setFormData(prev => ({ ...prev, ieee_member_2026: e.target.checked ? "No" : "" }))} required />
+                  <input type="radio" name="ieee_member_2026" value="No" checked={formData.ieee_member_2026 === "No"} onChange={handleChange} required />
                   No
                 </label>
               </div>
@@ -371,11 +425,11 @@ export default function JoinUs() {
               <label className="block text-sm font-semibold text-gray-700 mb-2">Have you published any research publication yet? <span className="text-red-500">*</span></label>
               <div className="flex gap-6">
                 <label className="flex items-center gap-2">
-                  <input type="checkbox" name="published_research" value="Yes" checked={formData.published_research === "Yes"} onChange={e => setFormData(prev => ({ ...prev, published_research: e.target.checked ? "Yes" : "" }))} required />
+                  <input type="radio" name="published_research" value="Yes" checked={formData.published_research === "Yes"} onChange={handleChange} required />
                   Yes
                 </label>
                 <label className="flex items-center gap-2">
-                  <input type="checkbox" name="published_research" value="No" checked={formData.published_research === "No"} onChange={e => setFormData(prev => ({ ...prev, published_research: e.target.checked ? "No" : "" }))} required />
+                  <input type="radio" name="published_research" value="No" checked={formData.published_research === "No"} onChange={handleChange} required />
                   No
                 </label>
               </div>
@@ -386,11 +440,11 @@ export default function JoinUs() {
               <label className="block text-sm font-semibold text-gray-700 mb-2">Is there any research work ongoing? <span className="text-red-500">*</span></label>
               <div className="flex gap-6">
                 <label className="flex items-center gap-2">
-                  <input type="checkbox" name="ongoing_research" value="Yes" checked={formData.ongoing_research === "Yes"} onChange={e => setFormData(prev => ({ ...prev, ongoing_research: e.target.checked ? "Yes" : "" }))} required />
+                  <input type="radio" name="ongoing_research" value="Yes" checked={formData.ongoing_research === "Yes"} onChange={handleChange} required />
                   Yes
                 </label>
                 <label className="flex items-center gap-2">
-                  <input type="checkbox" name="ongoing_research" value="No" checked={formData.ongoing_research === "No"} onChange={e => setFormData(prev => ({ ...prev, ongoing_research: e.target.checked ? "No" : "" }))} required />
+                  <input type="radio" name="ongoing_research" value="No" checked={formData.ongoing_research === "No"} onChange={handleChange} required />
                   No
                 </label>
               </div>

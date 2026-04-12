@@ -112,6 +112,8 @@ model JoinUs {
   email                String
   batch                String
   source               String
+  department           String?
+  after_ug             String?
   created_at           DateTime? @default(now()) @db.Timestamptz(6)
   cpi                  String?   @db.VarChar(10)
   ieee_member_2026     String?   @db.VarChar(3)
@@ -211,12 +213,9 @@ model Activity {
   @@map("activities")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model authorization {
-  user_ID  String? @db.VarChar(150)
+  user_ID  String @id @db.VarChar(150)
   password String? @db.VarChar(20)
-
-  @@ignore
 }
 
 model research_project_members {
