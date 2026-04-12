@@ -36,7 +36,7 @@ const ALLOWED_ORIGINS = [
   "http://127.0.0.1:5175",
   "http://127.0.0.1:3000",
   "https://students-research-lab-srl.vercel.app",
-  "https://students-research-lab-srl-admin.vercel.app",
+  "https://students-research-lab-admin-portal.vercel.app", // actual admin portal
 ];
 
 app.use(
