@@ -20,22 +20,24 @@ exports.adminLogin = async (req, res, next) => {
     const normalizedEmail = String(email).trim().toLowerCase();
     const passwordValue = String(password).trim();
 
-    // Query the authorization table directly via raw SQL
-    const rows = await prisma.$queryRaw`
-      SELECT user_ID, password
-      FROM authorization
-      WHERE LOWER(user_ID) = ${normalizedEmail}
-      LIMIT 1
-    `;
+    // Query the authorization table using Prisma ORM
+    const adminUser = await prisma.authorization.findFirst({
+      where: {
+        user_ID: {
+          equals: normalizedEmail,
+          mode: 'insensitive'
+        }
+      }
+    });
 
-    if (!rows || rows.length === 0) {
+    if (!adminUser) {
       return res.status(401).json({
         error: "Unauthorized",
         message: "Invalid credentials",
       });
     }
 
-    const storedPassword = String(rows[0].password || "").trim();
+    const storedPassword = String(adminUser.password || "").trim();
 
     if (!storedPassword || storedPassword !== passwordValue) {
       return res.status(401).json({

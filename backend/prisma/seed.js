@@ -76,23 +76,23 @@ async function main() {
 
     // ==================== SEED LEADERBOARD_STATS ====================
     console.log('📊 Seeding 190 leaderboard records...');
-    // Using raw SQL insert for speed - too many records for individual upserts
-    const leaderboardInsertSQL = `
-      INSERT INTO "public"."leaderboard_stats" (id, serial_no, student_name, enrollment_no, period, attendance, hours, debate_score, created_at)
-      VALUES 
-      (1,1,'Aayush Viral Pandya','24BECE30541','Dec 2025',16,'41.0000',87,'2026-04-07T20:38:13.328Z'),
-      (2,1,'Aayush Viral Pandya','24BECE30541','Jan 2026',11,'25.5000',25,'2026-04-07T20:38:13.328Z'),
-      (3,1,'Aayush Viral Pandya','24BECE30541','Feb 2026',15,'39.0000',59,'2026-04-07T20:38:13.328Z'),
-      (4,1,'Aayush Viral Pandya','24BECE30541','Mar 2026',9,'19.5000',-1,'2026-04-07T20:38:13.328Z'),
-      (5,1,'Aayush Viral Pandya','24BECE30541','All Time',51,'125.0000',170,'2026-04-07T20:38:13.328Z'),
-      (6,2,'Arnab Ghosh','23BECE54003','Dec 2025',0,'0.0000',0,'2026-04-07T20:38:13.328Z'),
-      (7,2,'Arnab Ghosh','23BECE54003','Jan 2026',0,'0.0000',0,'2026-04-07T20:38:13.328Z'),
-      (8,2,'Arnab Ghosh','23BECE54003','Feb 2026',0,'0.0000',0,'2026-04-07T20:38:13.328Z'),
-      (9,2,'Arnab Ghosh','23BECE54003','Mar 2026',4,'2.0000',0,'2026-04-07T20:38:13.328Z'),
-      (10,2,'Arnab Ghosh','23BECE54003','All Time',4,'2.0000',0,'2026-04-07T20:38:13.328Z')
-      ON CONFLICT (id) DO NOTHING;
-    `;
-    await prisma.$executeRawUnsafe(leaderboardInsertSQL);
+    // Using Prisma createMany for speed
+    const leaderboardData = [
+      { id: 1, serial_no: 1, student_name: 'Aayush Viral Pandya', enrollment_no: '24BECE30541', period: 'Dec 2025', attendance: 16, hours: 41.0000, debate_score: 87, created_at: new Date('2026-04-07T20:38:13.328Z') },
+      { id: 2, serial_no: 1, student_name: 'Aayush Viral Pandya', enrollment_no: '24BECE30541', period: 'Jan 2026', attendance: 11, hours: 25.5000, debate_score: 25, created_at: new Date('2026-04-07T20:38:13.328Z') },
+      { id: 3, serial_no: 1, student_name: 'Aayush Viral Pandya', enrollment_no: '24BECE30541', period: 'Feb 2026', attendance: 15, hours: 39.0000, debate_score: 59, created_at: new Date('2026-04-07T20:38:13.328Z') },
+      { id: 4, serial_no: 1, student_name: 'Aayush Viral Pandya', enrollment_no: '24BECE30541', period: 'Mar 2026', attendance: 9, hours: 19.5000, debate_score: -1, created_at: new Date('2026-04-07T20:38:13.328Z') },
+      { id: 5, serial_no: 1, student_name: 'Aayush Viral Pandya', enrollment_no: '24BECE30541', period: 'All Time', attendance: 51, hours: 125.0000, debate_score: 170, created_at: new Date('2026-04-07T20:38:13.328Z') },
+      { id: 6, serial_no: 2, student_name: 'Arnab Ghosh', enrollment_no: '23BECE54003', period: 'Dec 2025', attendance: 0, hours: 0.0000, debate_score: 0, created_at: new Date('2026-04-07T20:38:13.328Z') },
+      { id: 7, serial_no: 2, student_name: 'Arnab Ghosh', enrollment_no: '23BECE54003', period: 'Jan 2026', attendance: 0, hours: 0.0000, debate_score: 0, created_at: new Date('2026-04-07T20:38:13.328Z') },
+      { id: 8, serial_no: 2, student_name: 'Arnab Ghosh', enrollment_no: '23BECE54003', period: 'Feb 2026', attendance: 0, hours: 0.0000, debate_score: 0, created_at: new Date('2026-04-07T20:38:13.328Z') },
+      { id: 9, serial_no: 2, student_name: 'Arnab Ghosh', enrollment_no: '23BECE54003', period: 'Mar 2026', attendance: 4, hours: 2.0000, debate_score: 0, created_at: new Date('2026-04-07T20:38:13.328Z') },
+      { id: 10, serial_no: 2, student_name: 'Arnab Ghosh', enrollment_no: '23BECE54003', period: 'All Time', attendance: 4, hours: 2.0000, debate_score: 0, created_at: new Date('2026-04-07T20:38:13.328Z') }
+    ];
+    await prisma.leaderboardStat.createMany({
+      data: leaderboardData,
+      skipDuplicates: true,
+    });
     console.log(`✅ Seeded 10 leaderboard records (sample - add remaining 180 via direct SQL if needed)\n`);
 
     // ==================== SEED JOIN_US ====================

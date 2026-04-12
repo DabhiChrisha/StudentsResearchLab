@@ -213,12 +213,9 @@ model Activity {
   @@map("activities")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model authorization {
-  user_ID  String? @db.VarChar(150)
+  user_ID  String @id @db.VarChar(150)
   password String? @db.VarChar(20)
-
-  @@ignore
 }
 
 model research_project_members {
