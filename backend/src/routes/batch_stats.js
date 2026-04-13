@@ -20,7 +20,7 @@ function parseArrayField(val) {
   return [];
 }
 
-router.get("/batch-member-stats", async (req, res, next) => {
+router.get("/api/batch-member-stats", async (req, res, next) => {
   try {
     const [paperRows, profileRows] = await Promise.all([
       prisma.paperAuthor.findMany({

@@ -3,7 +3,7 @@ const prisma = require("../config/prisma");
 
 const router = express.Router();
 
-router.post("/join-us", async (req, res, next) => {
+router.post("/api/join-us", async (req, res, next) => {
   try {
     const {
       name,

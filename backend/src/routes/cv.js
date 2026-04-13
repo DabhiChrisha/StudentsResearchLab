@@ -3,7 +3,7 @@ const prisma = require("../config/prisma");
 
 const router = express.Router();
 
-router.get("/cv/:enrollment_no", async (req, res, next) => {
+router.get("/api/cv/:enrollment_no", async (req, res, next) => {
   try {
     const { enrollment_no } = req.params;
 

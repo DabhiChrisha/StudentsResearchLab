@@ -5,9 +5,9 @@ const { adminAuthMiddleware } = require("../middleware/adminAuth");
 const router = express.Router();
 
 // Public routes
-router.post("/admin/login", adminLogin);
+router.post("/api/admin/login", adminLogin);
 
 // Protected routes
-router.post("/admin/verify", adminAuthMiddleware, verifyAdminToken);
+router.post("/api/admin/verify", adminAuthMiddleware, verifyAdminToken);
 
 module.exports = router;

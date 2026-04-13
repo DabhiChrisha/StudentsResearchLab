@@ -61,28 +61,28 @@ app.get("/api/health", (req, res) => {
 });
 
 // Register routes
-app.use("/api", sessionsRouter);
-app.use("/api", timelineRouter);
-app.use("/api", joinUsRouter);
-app.use("/api", publicationsRouter);
-app.use("/api", cvRouter);
-app.use("/api", papersRouter);
-app.use("/api", activitiesRouter);
-app.use("/api", leaderboardRouter);
-app.use("/api", batchStatsRouter);
-app.use("/api", achievementsRouter);
-app.use("/api", researchersRouter);
+app.use(sessionsRouter);
+app.use(timelineRouter);
+app.use(joinUsRouter);
+app.use(publicationsRouter);
+app.use(cvRouter);
+app.use(papersRouter);
+app.use(activitiesRouter);
+app.use(leaderboardRouter);
+app.use(batchStatsRouter);
+app.use(achievementsRouter);
+app.use(researchersRouter);
 
 // Register admin routes
-app.use("/api", adminAuthRouter);
-app.use("/api", adminStudentsRouter);
-app.use("/api", adminActivitiesRouter);
-app.use("/api", adminScoresRouter);
-app.use("/api", adminAttendanceRouter);
-app.use("/api", adminTimelineRouter);
-app.use("/api", adminResearchRouter);
-app.use("/api", adminAchievementsRouter);
-app.use("/api", imageUploadRouter);
+app.use(adminAuthRouter);
+app.use(adminStudentsRouter);
+app.use(adminActivitiesRouter);
+app.use(adminScoresRouter);
+app.use(adminAttendanceRouter);
+app.use(adminTimelineRouter);
+app.use(adminResearchRouter);
+app.use(adminAchievementsRouter);
+app.use(imageUploadRouter);
 
 // Global error handler — must be after all routes
 app.use((err, req, res, next) => {

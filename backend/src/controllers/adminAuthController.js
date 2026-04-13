@@ -56,7 +56,6 @@ exports.adminLogin = async (req, res, next) => {
         email: normalizedEmail,
         name: "Admin",
         role: "admin",
-        enrollmentNo: "",
       },
     });
   } catch (error) {

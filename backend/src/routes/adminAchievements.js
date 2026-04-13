@@ -13,15 +13,15 @@ const router = express.Router();
 router.use(adminAuthMiddleware);
 
 // GET /api/admin/achievements
-router.get("/admin/achievements", getAchievements);
+router.get("/api/admin/achievements", getAchievements);
 
 // POST /api/admin/achievements
-router.post("/admin/achievements", createAchievement);
+router.post("/api/admin/achievements", createAchievement);
 
 // PUT /api/admin/achievements/:id
-router.put("/admin/achievements/:id", updateAchievement);
+router.put("/api/admin/achievements/:id", updateAchievement);
 
 // DELETE /api/admin/achievements/:id
-router.delete("/admin/achievements/:id", deleteAchievement);
+router.delete("/api/admin/achievements/:id", deleteAchievement);
 
 module.exports = router;

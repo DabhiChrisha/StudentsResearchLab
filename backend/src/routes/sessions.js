@@ -3,7 +3,7 @@ const prisma = require("../config/prisma");
 
 const router = express.Router();
 
-router.get("/sessions", async (req, res, next) => {
+router.get("/api/sessions", async (req, res, next) => {
   try {
     const data = await prisma.sessionContent.findMany({
       orderBy: { serial_no: "desc" },

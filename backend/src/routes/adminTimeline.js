@@ -12,9 +12,9 @@ const router = express.Router();
 // All routes require admin authentication
 router.use(adminAuthMiddleware);
 
-router.get("/admin/timeline", getTimeline);
-router.post("/admin/timeline", createTimelineEntry);
-router.put("/admin/timeline/:id", updateTimelineEntry);
-router.delete("/admin/timeline/:id", deleteTimelineEntry);
+router.get("/api/admin/timeline", getTimeline);
+router.post("/api/admin/timeline", createTimelineEntry);
+router.put("/api/admin/timeline/:id", updateTimelineEntry);
+router.delete("/api/admin/timeline/:id", deleteTimelineEntry);
 
 module.exports = router;

@@ -3,7 +3,7 @@ const prisma = require("../config/prisma");
 
 const router = express.Router();
 
-router.get("/achievements", async (req, res, next) => {
+router.get("/api/achievements", async (req, res, next) => {
   try {
     const data = await prisma.achievementContent.findMany({
       orderBy: { serial_no: "desc" },
