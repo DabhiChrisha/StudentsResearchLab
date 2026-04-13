@@ -129,13 +129,23 @@ exports.getJoinRequests = async (req, res, next) => {
       orderBy: { created_at: "desc" },
     });
 
+    // Convert BigInt to string for JSON serialization
+    const serializedRequests = (requests || []).map(req => ({
+      ...req,
+      id: req.id ? String(req.id) : null,
+    }));
+
     res.json({
       success: true,
-      data: requests || [],
+      data: serializedRequests,
     });
   } catch (error) {
     console.error("Get join requests error:", error);
-    next(error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      data: [],
+    });
   }
 };
 

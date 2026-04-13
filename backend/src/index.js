@@ -23,6 +23,7 @@ const adminAttendanceRouter = require("./routes/adminAttendance");
 const adminTimelineRouter = require("./routes/adminTimeline");
 const adminResearchRouter = require("./routes/adminResearch");
 const adminAchievementsRouter = require("./routes/adminAchievements");
+const adminCvRouter = require("./routes/adminCv");
 const imageUploadRouter = require("./routes/imageUpload");
 
 const app = express();
@@ -36,7 +37,12 @@ const ALLOWED_ORIGINS = [
   "http://127.0.0.1:5175",
   "http://127.0.0.1:3000",
   "https://students-research-lab-srl.vercel.app",
+<<<<<<< HEAD
+  "https://students-research-lab-srl-admin.vercel.app",
+  "https://students-research-lab-admin-portal.vercel.app",
+=======
   "https://students-research-lab-admin-portal.vercel.app", // actual admin portal
+>>>>>>> 2fa7a3745d33d09cc5e6af0c962a1b353dfeb748
 ];
 
 app.use(
@@ -74,6 +80,18 @@ app.use(achievementsRouter);
 app.use(researchersRouter);
 
 // Register admin routes
+<<<<<<< HEAD
+app.use("/api", adminAuthRouter);
+app.use("/api", adminStudentsRouter);
+app.use("/api", adminActivitiesRouter);
+app.use("/api", adminScoresRouter);
+app.use("/api", adminAttendanceRouter);
+app.use("/api", adminTimelineRouter);
+app.use("/api", adminResearchRouter);
+app.use("/api", adminAchievementsRouter);
+app.use("/api", adminCvRouter);
+app.use("/api", imageUploadRouter);
+=======
 app.use(adminAuthRouter);
 app.use(adminStudentsRouter);
 app.use(adminActivitiesRouter);
@@ -83,6 +101,7 @@ app.use(adminTimelineRouter);
 app.use(adminResearchRouter);
 app.use(adminAchievementsRouter);
 app.use(imageUploadRouter);
+>>>>>>> 2fa7a3745d33d09cc5e6af0c962a1b353dfeb748
 
 // Global error handler — must be after all routes
 app.use((err, req, res, next) => {

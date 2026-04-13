@@ -215,7 +215,13 @@ model Activity {
 
 model authorization {
   user_ID  String @id @db.VarChar(150)
+<<<<<<< HEAD
+  password String @db.VarChar(20)
+
+  @@map("authorization")
+=======
   password String? @db.VarChar(20)
+>>>>>>> 2fa7a3745d33d09cc5e6af0c962a1b353dfeb748
 }
 
 model research_project_members {
