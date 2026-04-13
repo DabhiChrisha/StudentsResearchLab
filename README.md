@@ -1,6 +1,8 @@
 # 🔬 Students Research Lab (SRL)
 
-A modern, full-stack web platform built for a university research lab to showcase its researchers, track attendance and performance, manage sessions, and engage students — all powered by **React 19**, **Node.js/Express**, and **Supabase**.
+A modern, full-stack web platform for the **Students Research Lab** at KSV University — showcasing researchers, tracking performance, managing sessions, publishing research, and engaging students. Built with **React 19**, **Node.js/Express**, **Prisma ORM**, and **Neon PostgreSQL**.
+
+> 🌐 **Live:** [students-research-lab-srl.vercel.app](https://students-research-lab-srl.vercel.app)
 
 ---
 
@@ -31,71 +33,74 @@ A modern, full-stack web platform built for a university research lab to showcas
 | **Framer Motion** | Declarative animations and page transitions |
 | **Lucide React** | Modern, customizable icon library |
 | **Swiper** | Touch-friendly carousels and sliders |
+| **tsParticles** | Animated particle backgrounds |
 | **Canvas Confetti** | Celebratory confetti effects (leaderboard, achievements) |
 | **clsx + tailwind-merge** | Conditional and conflict-free class name merging |
+| **XLSX** | Excel data import/export support |
 
 ### Backend
 
 | Technology | Purpose |
 |---|---|
-| **Node.js** | JavaScript runtime (v20+) |
-| **Express.js** | Lightweight HTTP server and API framework |
-| **Supabase JS** | Client for querying the Supabase PostgreSQL database |
-| **dotenv** | Environment variable management from `.env` files |
+| **Node.js 20** | JavaScript runtime |
+| **Express.js 5** | Lightweight HTTP server and REST API framework |
+| **Prisma ORM v7** | Type-safe database client and schema management |
+| **@prisma/adapter-pg** | PostgreSQL driver adapter for Prisma |
+| **pg (node-postgres)** | PostgreSQL connection pooling |
+| **jsonwebtoken** | JWT-based admin authentication |
+| **Cloudinary** | Cloud media (image/video) storage and delivery |
+| **Multer** | Multipart form-data handling for file uploads |
+| **dotenv** | Environment variable management |
 | **Nodemon** | Auto-reloading development server |
 
-### Database / BaaS
+### Database & Hosting
 
 | Technology | Purpose |
 |---|---|
-| **Supabase** | Backend-as-a-Service built on PostgreSQL |
-| PostgreSQL (via Supabase) | Relational database for all application data |
-| Supabase Auth | User authentication and access control |
-| Supabase Storage | File and image storage for public assets |
-
-### Dev Tooling & Infrastructure
-
-| Technology | Purpose |
-|---|---|
-| **Docker** | Containerization for consistent dev/prod environments |
-| **ESLint** | JavaScript/React code linting and quality enforcement |
-| **PostCSS + Autoprefixer** | CSS processing and cross-browser compatibility |
+| **Neon PostgreSQL** | Serverless PostgreSQL (production database) |
+| **Prisma Migrations** | Schema versioning and database migrations |
+| **Vercel** | Frontend hosting with CI/CD from GitHub |
+| **Render / Railway** | Backend hosting |
+| **Docker** | Containerized backend deployment |
+| **Cloudinary** | CDN-backed media asset storage |
 
 ---
 
 ## 🏗 Architecture
 
 ```
-┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
-│                 │       │                 │       │                 │
-│   React SPA     │──────▶│  Express.js API  │──────▶│    Supabase     │
-│   (Vite)        │  API  │  (Node.js)      │ REST  │  (PostgreSQL)   │
-│                 │◀──────│                 │◀──────│                 │
-└─────────────────┘       └─────────────────┘       └─────────────────┘
-     Frontend                  Backend                   Database
+┌──────────────────┐       ┌──────────────────────┐       ┌───────────────────┐
+│                  │       │                      │       │                   │
+│   React SPA      │──────▶│   Express.js API     │──────▶│  Neon PostgreSQL  │
+│   (Vite + Vercel)│  API  │   (Node.js)          │Prisma │  (Serverless DB)  │
+│                  │◀──────│                      │◀──────│                   │
+└──────────────────┘       └──────────────────────┘       └───────────────────┘
+      Frontend                   Backend (Docker)                Database
 ```
 
 **How it works:**
 
-1. **React Frontend** — Renders the UI and sends API requests to the Express backend.
-2. **Express Backend** — Handles complex data aggregation (leaderboard rankings, attendance calculations, tie-breaking logic) and serves optimized responses to the frontend. Keeps Supabase credentials off the client.
-3. **Supabase** — Hosts the PostgreSQL database with tables for students, attendance, debate scores, sessions, publications, and achievements.
+1. **React Frontend** — Renders the UI, sends API requests to the Express backend, and keeps the backend alive with periodic health-check pings.
+2. **Express Backend** — Handles authentication, complex data aggregation (leaderboard rankings, attendance calculations), CRUD for admin operations, and file uploads to Cloudinary.
+3. **Neon PostgreSQL** — Hosts all relational data. Managed through **Prisma ORM** with a defined schema and migration history.
 
 ---
 
 ## ✨ Key Features
 
-- **🏠 Home & Landing** — Animated hero section, about section, objectives, and timeline
-- **👥 Researchers Directory** — Searchable researcher profiles with student CV pages
-- **🏆 Leaderboard** — Ranked podium display with debate scores and attendance metrics
-- **📅 Sessions** — Carousel-based view of all research lab sessions
+- **🏠 Home & Landing** — Animated hero, particle effects, about section, interactive timeline, and institute showcase
+- **👥 Researchers Directory** — Searchable profiles with individual student CV pages
+- **🏆 Leaderboard** — Ranked performance display with debate scores, attendance, and hours metrics; monthly and all-time views
+- **📅 Sessions** — Carousel-based view of all research lab sessions with media links
 - **🏅 Achievements** — Showcase of lab accomplishments and milestones
-- **📊 Attendance Tracking** — Per-student attendance percentage and SRL session attendance
-- **📝 Join Us** — Application form for prospective members with success confirmation
-- **📆 Appointment Booking** — Schedule consultations with the lab
-- **🏛 Organization Details** — Detailed pages for partner organizations
-- **🎨 Premium UI** — Animated preloader, page transitions, gradient text effects, spotlight cards, and confetti celebrations
-- **📱 Fully Responsive** — Mobile-first design with Tailwind CSS
+- **📰 Publications** — Library of research papers (journal and conference) with filter by year and category
+- **📊 Batch Stats** — Per-batch student statistics and performance comparison
+- **📝 Join Us** — Multi-step application form for prospective members
+- **📆 Appointment** — Book consultations with lab coordinators
+- **🏛 Organization Details** — Detailed profiles for partner institutes
+- **🛡 Admin Panel** — JWT-secured admin routes for managing students, activities, research, attendance, timeline, and scores
+- **☁️ Cloudinary Media** — All images and videos served from Cloudinary CDN
+- **🎨 Premium UI** — Animated preloader, page transitions, gradient text, glow effects, spotlight cards, and confetti
 
 ---
 
@@ -103,69 +108,90 @@ A modern, full-stack web platform built for a university research lab to showcas
 
 ```
 StudentsResearchLab/
-├── backend/                        # Node.js/Express backend
+├── backend/                         # Node.js / Express backend
+│   ├── prisma/
+│   │   ├── schema.prisma            # Prisma data models
+│   │   ├── migrations/              # SQL migration history
+│   │   └── seed.js                  # Database seeding scripts
 │   ├── src/
-│   │   ├── index.js                # Express app entry point, CORS & route setup
-│   │   ├── supabase.js             # Supabase client initialization
-│   │   └── routes/                 # API route handlers
-│   │       ├── leaderboard.js
-│   │       ├── students.js
-│   │       ├── publications.js
-│   │       ├── achievements.js
-│   │       ├── sessions.js
-│   │       ├── attendance.js
-│   │       ├── scores.js
-│   │       ├── join_us.js
-│   │       ├── metrics.js
-│   │       └── ...
-│   ├── migrations/                 # SQL migration files
-│   ├── assets/                     # CSV data files
-│   ├── scripts/                    # Utility scripts
+│   │   ├── index.js                 # Server entry point, CORS & route registration
+│   │   ├── config/
+│   │   │   └── prisma.js            # Prisma client initialization (with pg adapter)
+│   │   ├── routes/                  # Public API route handlers
+│   │   │   ├── sessions.js
+│   │   │   ├── timeline.js
+│   │   │   ├── join_us.js
+│   │   │   ├── publications.js
+│   │   │   ├── cv.js
+│   │   │   ├── papers.js
+│   │   │   ├── activities.js
+│   │   │   ├── leaderboard.js
+│   │   │   ├── batch_stats.js
+│   │   │   ├── achievements.js
+│   │   │   └── researchers.js
+│   │   ├── routes/                  # Admin-only API routes (JWT protected)
+│   │   │   ├── admin.js             # Auth login
+│   │   │   ├── adminStudents.js
+│   │   │   ├── adminActivities.js
+│   │   │   ├── adminScores.js
+│   │   │   ├── adminAttendance.js
+│   │   │   ├── adminTimeline.js
+│   │   │   └── adminResearch.js
+│   │   ├── middleware/              # Auth and validation middleware
+│   │   └── utils/                  # Helper utilities
+│   ├── migrations/                  # Legacy/standalone SQL files
+│   ├── assets/                      # CSV data files used for seeding
+│   ├── prisma.config.ts             # Prisma v7 config (datasource URL)
 │   ├── package.json
 │   ├── Dockerfile
-│   └── README_NEW.md
+│   └── README.md
 │
-├── frontend/                       # React + Vite application
-│   ├── public/                     # Static assets (images, logos)
-│   │   ├── Achievements/
-│   │   ├── Sessions/
-│   │   ├── students/               # Student profile photos
-│   │   └── SRL.svg                 # Lab logo
-│   │
+├── frontend/                        # React + Vite application
+│   ├── public/                      # Static assets served from root
 │   ├── src/
-│   │   ├── components/             # Reusable UI components
+│   │   ├── components/              # Reusable UI components
 │   │   │   ├── Navbar.jsx
 │   │   │   ├── Footer.jsx
-│   │   │   ├── Hero.jsx
-│   │   │   └── ...
-│   │   │
-│   │   ├── config/
-│   │   │   └── apiConfig.js        # API endpoint configuration
-│   │   │
-│   │   ├── lib/                    # Utility functions & Supabase client
-│   │   │
-│   │   ├── pages/                  # Route-level page components
+│   │   │   ├── MobileDock.jsx
+│   │   │   ├── AnimatedPreloader.jsx
+│   │   │   ├── PageTransitionWrapper.jsx
+│   │   │   ├── ScrollToTop.jsx
+│   │   │   └── ErrorBoundary.jsx
+│   │   ├── pages/                   # Route-level page components
 │   │   │   ├── Home.jsx
-│   │   │   ├── Researchers.jsx
-│   │   │   ├── LeaderBoard.jsx
 │   │   │   ├── Sessions.jsx
 │   │   │   ├── Achievements.jsx
-│   │   │   └── ...
-│   │   │
-│   │   ├── App.jsx                 # Root component with routing
-│   │   ├── main.jsx                # Entry point
-│   │   └── index.css               # Global styles
-│   │
+│   │   │   ├── Activities.jsx
+│   │   │   ├── Publications.jsx
+│   │   │   ├── Researchers.jsx
+│   │   │   ├── LeaderBoard.jsx
+│   │   │   ├── JoinUs.jsx
+│   │   │   ├── JoinUsSuccess.jsx
+│   │   │   ├── Appointment.jsx
+│   │   │   ├── OrganizationDetails.jsx
+│   │   │   ├── StudentCV.jsx
+│   │   │   └── AddPublication.jsx
+│   │   ├── config/
+│   │   │   └── apiConfig.js         # API base URL and request headers
+│   │   ├── hooks/                   # Custom React hooks
+│   │   ├── lib/                     # Utility functions
+│   │   ├── data/                    # Static JSON data (institutes, etc.)
+│   │   ├── App.jsx                  # Root component with routing
+│   │   ├── main.jsx                 # Entry point
+│   │   └── index.css                # Global styles
 │   ├── index.html
 │   ├── package.json
 │   ├── vite.config.js
 │   ├── tailwind.config.js
 │   ├── vercel.json
-│   └── README_NEW.md
+│   └── README.md
 │
-├── docker-compose.yml              # Multi-service orchestration
+├── docker-compose.yml               # Multi-service orchestration
+├── Dockerfile                       # Root Dockerfile (frontend nginx)
+├── nginx.conf                       # Nginx reverse-proxy config
+├── package.json                     # Workspace scripts (concurrently)
 ├── .gitignore
-└── README.md
+└── README.md                        ← You are here
 ```
 
 ---
@@ -175,8 +201,9 @@ StudentsResearchLab/
 ### Prerequisites
 
 - **Node.js** ≥ 20.x and **npm** ≥ 10.x
-- **Docker** and **Docker Compose** (for containerized setup)
-- A **Supabase** project ([supabase.com](https://supabase.com))
+- **Docker** and **Docker Compose** (optional, for containerized setup)
+- A **Neon PostgreSQL** connection string ([neon.tech](https://neon.tech))
+- A **Cloudinary** account for media uploads ([cloudinary.com](https://cloudinary.com))
 
 ### 1. Clone the Repository
 
@@ -185,19 +212,24 @@ git clone https://github.com/DabhiChrisha/StudentsResearchLab.git
 cd StudentsResearchLab
 ```
 
-### 2. Frontend Setup
+### 2. Install All Dependencies
 
 ```bash
-cd frontend
+# Install workspace-level dependencies
 npm install
-cd ..
+
+# Install frontend dependencies
+npm install --prefix frontend
+
+# Install backend dependencies
+npm install --prefix backend
 ```
 
-### 3. Backend Setup
+### 3. Generate Prisma Client
 
 ```bash
 cd backend
-npm install
+npx prisma generate
 cd ..
 ```
 
@@ -208,100 +240,128 @@ cd ..
 ### Frontend — `frontend/.env`
 
 ```bash
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
+# Backend API endpoint (local dev or deployed URL)
 VITE_API_BASE_URL=http://127.0.0.1:8000
 ```
+
+> ⚠️ For production, set `VITE_API_BASE_URL` to your deployed backend URL in your hosting dashboard (e.g., Vercel environment variables).
 
 ### Backend — `backend/.env`
 
 ```bash
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
-PORT=8000
-NODE_ENV=development
+# Neon PostgreSQL connection string
+DATABASE_URL="postgresql://<user>:<password>@<host>/<dbname>?sslmode=require"
+
+# Cloudinary credentials
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
+# Admin authentication
+ADMIN_EMAIL=your_admin_email@example.com
+JWT_SECRET=your_jwt_secret_here
 ```
 
-> ⚠️ **Never commit `.env` files to version control.** They are already ignored via `.gitignore`.
+> ⚠️ **Never commit `.env` files to version control.** They are already excluded via `.gitignore`.
 
 ---
 
 ## 🏃 Running Locally
 
-### Terminal 1 — Backend (Express)
+### Option A — Run Both Together (Recommended)
+
+From the project root, using the workspace script:
+
+```bash
+npm run dev
+```
+
+This starts both frontend and backend concurrently.
+
+### Option B — Run Separately
+
+**Terminal 1 — Backend (Express on port 8000):**
 
 ```bash
 cd backend
 npm run dev
 ```
 
-> API will be available at `http://127.0.0.1:8000`.
-
-### Terminal 2 — Frontend (React + Vite)
+**Terminal 2 — Frontend (Vite on port 5173/5174):**
 
 ```bash
 cd frontend
 npm run dev
 ```
 
-> App will be available at `http://localhost:5173`.
+| Service | URL |
+|---|---|
+| Frontend | `http://localhost:5173` |
+| Backend API | `http://127.0.0.1:8000` |
+| API Health | `http://127.0.0.1:8000/api/health` |
 
 ---
 
-## 🐳 Run With Docker (Optional)
+## 🐳 Docker
 
-Docker is great for testing the production build locally or running everything with zero local dependencies.
+Docker is recommended for deploying the backend or testing the production build.
 
 ### Quick Start
 
 ```bash
-# 1. Ensure frontend and backend .env files are created as above.
-
-# 2. Build and start all services
+# Build and start backend container
 docker compose up --build
 
-# 3. Open the app
-#    → http://localhost:3000
+# App runs at http://localhost:3000 (nginx proxy)
 ```
 
-### Docker Commands
+### Useful Commands
 
 | Goal | Command |
 |---|---|
-| Run in background | `docker compose up --build -d` |
-| View active logs | `docker compose logs -f` |
-| Stop all services | `docker compose down` |
+| Start in background | `docker compose up --build -d` |
+| View logs | `docker compose logs -f` |
+| Stop all | `docker compose down` |
+| Rebuild backend only | `docker compose up --build backend` |
+
+> 💡 The `DATABASE_URL` and other secrets must be set in your environment or passed via `docker compose` env configuration.
 
 ---
 
 ## 🌐 Deployment
 
-### Frontend — Vercel (Recommended)
+### Frontend — Vercel
 
-1. Connect the repository to Vercel
-2. Set root directory to `frontend/`
-3. Set environment variables in the Vercel dashboard
-4. Vercel auto-deploys on push to `main`
+1. Push code to GitHub
+2. Connect repository to [Vercel](https://vercel.com)
+3. Set **root directory** to `frontend/`
+4. Set environment variable `VITE_API_BASE_URL` to your deployed backend URL
+5. Vercel auto-deploys on push to `main`
 
-### Backend — Any Node.js Host (Render, Railway, etc.)
+### Backend — Render / Railway / any Node.js host
+
+**Build command:**
+```bash
+npm install && npx prisma generate
+```
 
 **Start command:**
 ```bash
 npm start
 ```
 
-**Environment variables to set:**
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
-- `NODE_ENV=production`
+**Required environment variables:**
+- `DATABASE_URL` — Neon PostgreSQL connection string
+- `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
+- `ADMIN_EMAIL`, `JWT_SECRET`
 
-> 💡 After deploying the backend, update `VITE_API_BASE_URL` in the frontend environment to point to the production backend URL.
+> After deploying the backend, update `VITE_API_BASE_URL` in Vercel to point to your production backend URL.
 
 ---
 
 ## 📄 License
 
-This project is private and intended for educational use within the Students Research Lab.
+This project is private and intended for use within the **Students Research Lab** at KSV University.
 
 ---
 

@@ -86,7 +86,7 @@ async function buildLeaderboard(period) {
   return students;
 }
 
-router.get("/leaderboard", async (req, res, next) => {
+router.get("/api/leaderboard", async (req, res, next) => {
   try {
     const students = await buildLeaderboard("All Time");
     res.json({ leaderboard: students });
@@ -95,7 +95,7 @@ router.get("/leaderboard", async (req, res, next) => {
   }
 });
 
-router.get("/leaderboard/monthly", async (req, res, next) => {
+router.get("/api/leaderboard/monthly", async (req, res, next) => {
   try {
     const now = new Date();
     const month = parseInt(req.query.month) || now.getMonth() + 1;
@@ -117,7 +117,7 @@ router.get("/leaderboard/monthly", async (req, res, next) => {
   }
 });
 
-router.get("/leaderboard/top-hours", async (req, res, next) => {
+router.get("/api/leaderboard/top-hours", async (req, res, next) => {
   try {
     const now = new Date();
     const month = now.getMonth() + 1;

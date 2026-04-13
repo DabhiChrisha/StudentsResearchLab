@@ -12,9 +12,9 @@ const router = express.Router();
 // All routes require admin authentication
 router.use(adminAuthMiddleware);
 
-router.get("/admin/activities", getActivities);
-router.post("/admin/activities", createActivity);
-router.put("/admin/activities/:id", updateActivity);
-router.delete("/admin/activities/:id", deleteActivity);
+router.get("/api/admin/activities", getActivities);
+router.post("/api/admin/activities", createActivity);
+router.put("/api/admin/activities/:id", updateActivity);
+router.delete("/api/admin/activities/:id", deleteActivity);
 
 module.exports = router;

@@ -10,7 +10,7 @@ const mapTimelineIcon = (row, index) => {
   return "impactthon";
 };
 
-router.get("/timeline", async (req, res, next) => {
+router.get("/api/timeline", async (req, res, next) => {
   try {
     const data = await prisma.sessionContent.findMany({
       select: {

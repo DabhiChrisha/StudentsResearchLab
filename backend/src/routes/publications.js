@@ -3,7 +3,7 @@ const prisma = require("../config/prisma");
 
 const router = express.Router();
 
-router.get("/publications", async (req, res, next) => {
+router.get("/api/publications", async (req, res, next) => {
   try {
     const { search, event_type, year, category } = req.query;
 
@@ -33,7 +33,7 @@ router.get("/publications", async (req, res, next) => {
 
 // publications_submissions table does not exist in Neon DB.
 // Submissions are stored directly in the publications table pending review.
-router.post("/submit-publication", async (req, res, next) => {
+router.post("/api/submit-publication", async (req, res, next) => {
   try {
     const {
       first_author,

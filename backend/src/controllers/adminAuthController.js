@@ -3,13 +3,17 @@ const { generateAdminToken } = require("../lib/adminUtils");
 
 /**
  * Admin Login - POST /api/admin/login
+<<<<<<< HEAD
  * Authenticates admin user from authorization table and returns JWT token
+=======
+ * Authenticates admin user using the `authorization` table.
+ * Uses raw SQL because the table has no PK (@@ignore in Prisma schema).
+>>>>>>> 2fa7a3745d33d09cc5e6af0c962a1b353dfeb748
  */
 exports.adminLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Validate input
     if (!email || !password) {
       return res.status(400).json({
         error: "Invalid input",
@@ -20,9 +24,20 @@ exports.adminLogin = async (req, res, next) => {
     const normalizedEmail = String(email).trim().toLowerCase();
     const passwordValue = String(password).trim();
 
+<<<<<<< HEAD
     // Find user in authorization table by user_ID (email)
     const authUser = await prisma.authorization.findUnique({
       where: { user_ID: normalizedEmail },
+=======
+    // Query the authorization table using Prisma ORM
+    const adminUser = await prisma.authorization.findFirst({
+      where: {
+        user_ID: {
+          equals: normalizedEmail,
+          mode: 'insensitive'
+        }
+      }
+>>>>>>> 2fa7a3745d33d09cc5e6af0c962a1b353dfeb748
     });
 
     if (!authUser) {
@@ -32,8 +47,12 @@ exports.adminLogin = async (req, res, next) => {
       });
     }
 
+<<<<<<< HEAD
     // Verify password
     const storedPassword = String(authUser.password || "").trim();
+=======
+    const storedPassword = String(adminUser.password || "").trim();
+>>>>>>> 2fa7a3745d33d09cc5e6af0c962a1b353dfeb748
 
     if (!storedPassword || storedPassword !== passwordValue) {
       return res.status(401).json({
@@ -42,6 +61,7 @@ exports.adminLogin = async (req, res, next) => {
       });
     }
 
+<<<<<<< HEAD
     // Try to get additional info from students_details
     const studentInfo = await prisma.studentsDetail.findUnique({
       where: { email: normalizedEmail },
@@ -51,16 +71,17 @@ exports.adminLogin = async (req, res, next) => {
     const adminName = studentInfo?.student_name || "Admin";
     const enrollmentNo = studentInfo?.enrollment_no || "";
 
+=======
+>>>>>>> 2fa7a3745d33d09cc5e6af0c962a1b353dfeb748
     // Generate JWT token
-    const token = generateAdminToken(normalizedEmail, enrollmentNo, adminName);
+    const token = generateAdminToken(normalizedEmail, "", "Admin");
 
     return res.json({
       success: true,
       token,
       user: {
         email: normalizedEmail,
-        name: adminName,
-        enrollmentNo,
+        name: "Admin",
         role: "admin",
       },
     });

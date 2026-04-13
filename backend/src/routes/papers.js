@@ -20,7 +20,7 @@ function parseArrayField(val) {
   return [];
 }
 
-router.get("/papers/:studentName", async (req, res, next) => {
+router.get("/api/papers/:studentName", async (req, res, next) => {
   try {
     const studentName = (req.params.studentName || "").trim();
     const enrollmentNo = (req.query.enrollment_no || "").toString().trim().toUpperCase();

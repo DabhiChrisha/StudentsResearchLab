@@ -37,8 +37,12 @@ const ALLOWED_ORIGINS = [
   "http://127.0.0.1:5175",
   "http://127.0.0.1:3000",
   "https://students-research-lab-srl.vercel.app",
+<<<<<<< HEAD
   "https://students-research-lab-srl-admin.vercel.app",
   "https://students-research-lab-admin-portal.vercel.app",
+=======
+  "https://students-research-lab-admin-portal.vercel.app", // actual admin portal
+>>>>>>> 2fa7a3745d33d09cc5e6af0c962a1b353dfeb748
 ];
 
 app.use(
@@ -63,19 +67,20 @@ app.get("/api/health", (req, res) => {
 });
 
 // Register routes
-app.use("/api", sessionsRouter);
-app.use("/api", timelineRouter);
-app.use("/api", joinUsRouter);
-app.use("/api", publicationsRouter);
-app.use("/api", cvRouter);
-app.use("/api", papersRouter);
-app.use("/api", activitiesRouter);
-app.use("/api", leaderboardRouter);
-app.use("/api", batchStatsRouter);
-app.use("/api", achievementsRouter);
-app.use("/api", researchersRouter);
+app.use(sessionsRouter);
+app.use(timelineRouter);
+app.use(joinUsRouter);
+app.use(publicationsRouter);
+app.use(cvRouter);
+app.use(papersRouter);
+app.use(activitiesRouter);
+app.use(leaderboardRouter);
+app.use(batchStatsRouter);
+app.use(achievementsRouter);
+app.use(researchersRouter);
 
 // Register admin routes
+<<<<<<< HEAD
 app.use("/api", adminAuthRouter);
 app.use("/api", adminStudentsRouter);
 app.use("/api", adminActivitiesRouter);
@@ -86,6 +91,17 @@ app.use("/api", adminResearchRouter);
 app.use("/api", adminAchievementsRouter);
 app.use("/api", adminCvRouter);
 app.use("/api", imageUploadRouter);
+=======
+app.use(adminAuthRouter);
+app.use(adminStudentsRouter);
+app.use(adminActivitiesRouter);
+app.use(adminScoresRouter);
+app.use(adminAttendanceRouter);
+app.use(adminTimelineRouter);
+app.use(adminResearchRouter);
+app.use(adminAchievementsRouter);
+app.use(imageUploadRouter);
+>>>>>>> 2fa7a3745d33d09cc5e6af0c962a1b353dfeb748
 
 // Global error handler — must be after all routes
 app.use((err, req, res, next) => {

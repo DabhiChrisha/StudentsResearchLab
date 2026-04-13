@@ -9,21 +9,6 @@ const JWT_SECRET = process.env.JWT_SECRET || "admin-secret-key-change-in-product
  */
 const adminAuthMiddleware = (req, res, next) => {
   try {
-    // Development mode bypass (if not explicitly production)
-    const isProduction = process.env.NODE_ENV === "production";
-    const isDev = !isProduction;
-    
-    if (isDev && req.headers["x-dev-token"] === "dev-bypass") {
-      req.admin = {
-        email: "adminsrl@gmail.com",
-        enrollmentNo: "Admin@SRL",
-        name: "Admin",
-        isAdmin: true,
-      };
-      console.log("[AUTH] Development bypass activated");
-      return next();
-    }
-
     const authHeader = req.headers.authorization;
     
     if (!authHeader || !authHeader.startsWith("Bearer ")) {

@@ -1,5 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -110,6 +112,8 @@ model JoinUs {
   email                String
   batch                String
   source               String
+  department           String?
+  after_ug             String?
   created_at           DateTime? @default(now()) @db.Timestamptz(6)
   cpi                  String?   @db.VarChar(10)
   ieee_member_2026     String?   @db.VarChar(3)
@@ -209,12 +213,15 @@ model Activity {
   @@map("activities")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model authorization {
   user_ID  String @id @db.VarChar(150)
+<<<<<<< HEAD
   password String @db.VarChar(20)
 
   @@map("authorization")
+=======
+  password String? @db.VarChar(20)
+>>>>>>> 2fa7a3745d33d09cc5e6af0c962a1b353dfeb748
 }
 
 model research_project_members {
