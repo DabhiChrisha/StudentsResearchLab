@@ -3,7 +3,7 @@ const prisma = require("../config/prisma");
 
 const router = express.Router();
 
-router.get("/researchers", async (req, res, next) => {
+router.get("/api/researchers", async (req, res, next) => {
   try {
     const [details, profiles, allPubs] = await Promise.all([
       prisma.studentsDetail.findMany(),
@@ -64,7 +64,7 @@ router.get("/researchers", async (req, res, next) => {
   }
 });
 
-router.post("/researchers/sync", async (req, res, next) => {
+router.post("/api/researchers/sync", async (req, res, next) => {
   try {
     const { type, data } = req.body;
 

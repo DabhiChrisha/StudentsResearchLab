@@ -16,14 +16,14 @@ const router = express.Router();
 router.use(adminAuthMiddleware);
 
 // Research/Papers routes
-router.get("/admin/research", getResearch);
-router.post("/admin/research", createResearch);
-router.put("/admin/research/:id", updateResearch);
-router.delete("/admin/research/:id", deleteResearch);
+router.get("/api/admin/research", getResearch);
+router.post("/api/admin/research", createResearch);
+router.put("/api/admin/research/:id", updateResearch);
+router.delete("/api/admin/research/:id", deleteResearch);
 
 // Join requests routes
-router.get("/admin/join-requests", getJoinRequests);
-router.put("/admin/join-requests/:id", updateJoinRequest);
-router.delete("/admin/join-requests/:id", deleteJoinRequest);
+router.get("/api/admin/join-requests", getJoinRequests);
+router.put("/api/admin/join-requests/:id", updateJoinRequest);
+router.delete("/api/admin/join-requests/:id", deleteJoinRequest);
 
 module.exports = router;

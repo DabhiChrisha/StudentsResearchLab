@@ -13,10 +13,10 @@ const router = express.Router();
 // All routes require admin authentication
 router.use(adminAuthMiddleware);
 
-router.get("/admin/attendance", getAttendance);
-router.get("/admin/attendance/student/:enrollmentNo", getAttendanceByStudent);
-router.post("/admin/attendance", markAttendance);
-router.put("/admin/attendance/:id", updateAttendance);
-router.delete("/admin/attendance/:id", deleteAttendance);
+router.get("/api/admin/attendance", getAttendance);
+router.get("/api/admin/attendance/student/:enrollmentNo", getAttendanceByStudent);
+router.post("/api/admin/attendance", markAttendance);
+router.put("/api/admin/attendance/:id", updateAttendance);
+router.delete("/api/admin/attendance/:id", deleteAttendance);
 
 module.exports = router;

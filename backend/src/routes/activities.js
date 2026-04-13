@@ -6,7 +6,7 @@ const { uploadMedia } = require("../utils/upload");
 const router = express.Router();
 
 // GET /api/activities
-router.get("/activities", async (req, res, next) => {
+router.get("/api/activities", async (req, res, next) => {
   try {
     const activities = await prisma.activity.findMany({
       orderBy: { sequence: "asc" },
@@ -18,7 +18,7 @@ router.get("/activities", async (req, res, next) => {
 });
 
 // POST /api/activities/:id/photo — upload/replace photo for an activity
-router.post("/activities/:id/photo", upload.single("file"), async (req, res, next) => {
+router.post("/api/activities/:id/photo", upload.single("file"), async (req, res, next) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });

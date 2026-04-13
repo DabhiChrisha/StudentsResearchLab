@@ -6,7 +6,7 @@ const { adminAuthMiddleware } = require("../middleware/adminAuth");
 const router = express.Router();
 
 // Health check endpoint (public - no auth required)
-router.get("/health/upload-status", (req, res) => {
+router.get("/api/health/upload-status", (req, res) => {
   res.json({
     success: true,
     message: "Image upload service is running",
@@ -23,7 +23,7 @@ router.post(
 );
 
 // Error handling middleware for multer
-router.post("/admin/upload-image", (error, req, res, next) => {
+router.post("/api/admin/upload-image", (error, req, res, next) => {
   if (error instanceof multer.MulterError) {
     if (error.code === "LIMIT_FILE_SIZE") {
       return res.status(400).json({
