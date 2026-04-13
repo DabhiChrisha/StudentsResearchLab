@@ -23,6 +23,7 @@ const adminAttendanceRouter = require("./routes/adminAttendance");
 const adminTimelineRouter = require("./routes/adminTimeline");
 const adminResearchRouter = require("./routes/adminResearch");
 const adminAchievementsRouter = require("./routes/adminAchievements");
+const adminCvRouter = require("./routes/adminCv");
 const imageUploadRouter = require("./routes/imageUpload");
 
 const app = express();
@@ -83,6 +84,7 @@ app.use("/api", adminAttendanceRouter);
 app.use("/api", adminTimelineRouter);
 app.use("/api", adminResearchRouter);
 app.use("/api", adminAchievementsRouter);
+app.use("/api", adminCvRouter);
 app.use("/api", imageUploadRouter);
 
 // Global error handler — must be after all routes
