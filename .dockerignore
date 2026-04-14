@@ -60,6 +60,7 @@ Desktop.ini
 *.py
 migrate.js
 cloudinary-url-map.json
+*.csv
 
 # Docker config files
 Dockerfile*

@@ -79,7 +79,7 @@ const LeaderBoard = () => {
     const [activeTab, setActiveTab] = useState('overall'); // 'overall', 'monthly', 'hours'
 
     // Period selector state
-    const [selectedPeriod, setSelectedPeriod] = useState('Mar 2026');
+    const [selectedPeriod, setSelectedPeriod] = useState('Apr 2026');
     const [periodStudents, setPeriodStudents] = useState([]);
     const [periodLoading, setPeriodLoading] = useState(false);
 
@@ -124,6 +124,7 @@ const LeaderBoard = () => {
             'Jan 2026': { month: 1, year: 2026 },
             'Feb 2026': { month: 2, year: 2026 },
             'Mar 2026': { month: 3, year: 2026 },
+            'Apr 2026': { month: 4, year: 2026 },
         };
         const params = PERIOD_TO_PARAMS[selectedPeriod];
         if (!params) return;
@@ -507,6 +508,7 @@ const LeaderBoard = () => {
                                             <option value="Jan 2026">Jan 2026</option>
                                             <option value="Feb 2026">Feb 2026</option>
                                             <option value="Mar 2026">Mar 2026</option>
+                                            <option value="Apr 2026">Apr 2026</option>
                                         </select>
                                         <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 text-[10px]">▼</div>
                                         {periodLoading && (
