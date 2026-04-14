@@ -63,3 +63,7 @@ coverage/
 migrate.js
 extract_publications.py
 cloudinary-url-map.json
+
+# Data files
+*.csv
+*.xlsx

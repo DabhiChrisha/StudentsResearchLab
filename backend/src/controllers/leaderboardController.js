@@ -9,7 +9,8 @@ const PERIOD_MAX_ATT = {
   "Jan 2026": 12,
   "Feb 2026": 18,
   "Mar 2026": 16,
-  "All Time": 74,
+  "Apr 2026": 5,
+  "All Time": 78,
 };
 
 const MONTH_ABB = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -61,7 +62,7 @@ async function buildLeaderboard(period) {
   const maxAtt = PERIOD_MAX_ATT[period] || 1;
 
   let students = (statsRows || [])
-    .filter((r) => !isExcludedStudent(r.student_name))
+    .filter((r) => !isExcludedStudent(r.student_name, r.enrollment_no))
     .map((r) => {
       const en = (r.enrollment_no || "").trim().toUpperCase();
       const detail = detailMap[en] || {};
@@ -136,7 +137,7 @@ exports.getLeaderboardByPeriod = async (req, res, next) => {
 // GET /api/leaderboard-stats
 exports.getLeaderboardStats = async (req, res, next) => {
   try {
-    const periods = ["Dec 2025", "Jan 2026", "Feb 2026", "Mar 2026"];
+    const periods = ["Dec 2025", "Jan 2026", "Feb 2026", "Mar 2026", "Apr 2026"];
 
     const stats = {};
     for (const period of periods) {

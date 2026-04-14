@@ -10,12 +10,15 @@ const EXCLUDED_TEST_USERS = {
   names: [
     "kandarp dipakkumar gajjar",
     "nancy rajesh patel",
+    "kandarp gajjar",
+    "nancy patel",
   ],
   emails: [
     // Add test email patterns if needed
   ],
   enrollmentNos: [
-    // Add test enrollment numbers if needed
+    "22BECE30091",
+    "22BEIT30123",
   ],
 };
 
@@ -99,9 +102,15 @@ const filterOutTestAndAdminUsers = (users) => {
 /**
  * Check if a student name should be excluded (for leaderboard, etc.)
  */
-const isExcludedStudent = (studentName) => {
+const isExcludedStudent = (studentName, enrollmentNo) => {
+  if (enrollmentNo) {
+    const enrollNormalized = enrollmentNo.trim().toUpperCase();
+    if (EXCLUDED_TEST_USERS.enrollmentNos.some(en => en.toUpperCase() === enrollNormalized)) {
+      return true;
+    }
+  }
   if (!studentName) return false;
-  const nameNormalized = (studentName || "").trim().toLowerCase();
+  const nameNormalized = studentName.trim().toLowerCase();
   return EXCLUDED_TEST_USERS.names.some(name => name.toLowerCase() === nameNormalized);
 };
 

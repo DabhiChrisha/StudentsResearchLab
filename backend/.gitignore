@@ -32,3 +32,7 @@ scripts/
 __pycache__/
 *.pyc
 *.pyo
+
+# Data files
+*.csv
+*.xlsx

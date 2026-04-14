@@ -3,17 +3,15 @@ const prisma = require("../config/prisma");
 
 const router = express.Router();
 
-const EXCLUDED_NAMES = new Set([
-  "kandarp dipakkumar gajjar",
-  "nancy rajesh patel",
-]);
+const { isExcludedStudent } = require("../lib/adminUtils");
 
 const PERIOD_MAX_ATT = {
   "Dec 2025": 33,
   "Jan 2026": 12,
   "Feb 2026": 18,
   "Mar 2026": 16,
-  "All Time": 74,
+  "Apr 2026": 5,
+  "All Time": 78,
 };
 
 const MONTH_ABB = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -46,7 +44,7 @@ async function buildLeaderboard(period) {
   const maxAtt = PERIOD_MAX_ATT[period] || 1;
 
   let students = statsRows
-    .filter((r) => !EXCLUDED_NAMES.has((r.student_name || "").trim().toLowerCase()))
+    .filter((r) => !isExcludedStudent(r.student_name, r.enrollment_no))
     .map((r) => {
       const en = (r.enrollment_no || "").trim().toUpperCase();
       const detail = detailMap[en] || {};
@@ -106,9 +104,9 @@ router.get("/api/leaderboard/monthly", async (req, res, next) => {
     let students = await buildLeaderboard(period);
 
     if (students.length === 0) {
-      const fallbackPeriod = "Mar 2026";
+      const fallbackPeriod = "Apr 2026";
       students = await buildLeaderboard(fallbackPeriod);
-      return res.json({ leaderboard: students, period: fallbackPeriod, month: 3, year: 2026, monthName: "March" });
+      return res.json({ leaderboard: students, period: fallbackPeriod, month: 4, year: 2026, monthName: "April" });
     }
 
     res.json({ leaderboard: students, period, month, year, monthName });
@@ -128,8 +126,8 @@ router.get("/api/leaderboard/top-hours", async (req, res, next) => {
     let students = await buildLeaderboard(period);
 
     if (students.length === 0) {
-      period = "Mar 2026";
-      monthName = "March";
+      period = "Apr 2026";
+      monthName = "April";
       students = await buildLeaderboard(period);
     }
 
