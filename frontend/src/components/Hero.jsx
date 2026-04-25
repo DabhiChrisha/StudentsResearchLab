@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
+import { getImageUrl } from "../lib/imageUrl";
 
-// Slide 1 loads immediately (above-the-fold LCP image)
-import slide1 from "../assets/HERO.jpg";
-// Slides 2 & 3 are deferred — URLs resolved by Vite but src not set until needed
-const slide2Url = new URL("../assets/hero2.jpg", import.meta.url).href;
-const slide3Url = new URL("../assets/hero3.jpg", import.meta.url).href;
-import srlLogo from "/SRL.svg";
+const srlLogo = getImageUrl("/SRL.svg");
 
 export default function Hero() {
   const [current, setCurrent] = useState(0);
@@ -14,16 +10,16 @@ export default function Hero() {
 
   const slides = [
     {
-      image: slide1,
+      image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754477/my-project/frontend/src/assets/HERO.jpg",
       align:
         "items-center text-center justify-end pb-24 md:items-end md:text-right md:justify-end md:pb-12",
     },
     {
-      image: slide2Url,
+      image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754479/my-project/frontend/src/assets/hero2.jpg",
       align: "items-center text-center justify-start pt-10 md:pt-8",
     },
     {
-      image: slide3Url,
+      image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754480/my-project/frontend/src/assets/hero3.jpg",
       align: "items-center text-center justify-start pt-10 md:pt-8",
     },
   ];

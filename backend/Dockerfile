@@ -9,11 +9,12 @@ WORKDIR /app
 # Copy dependency manifests first (better layer caching)
 COPY package.json package-lock.json ./
 
-# Install dependencies
-RUN npm ci --ignore-scripts
-
-# Copy all application code
+# Copy all application code first (needed so prisma schema is present during install)
 COPY . .
+
+# Install dependencies - postinstall will run `prisma generate` automatically
+# DATABASE_URL dummy value is required because prisma.config.ts reads it at generate time
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npm ci
 
 EXPOSE 8000
 

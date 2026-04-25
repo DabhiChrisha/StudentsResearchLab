@@ -1,19 +1,11 @@
-import ksvCampus from "../assets/ksv_campus.jpg";
-import mmpsrpcCampus from "../assets/mmpsrpc_campus.jpeg";
-import svkmCampus from "../assets/svkm_campus.jpg";
-import chhaganbhaPhoto from "../assets/pujya_chhaganbha.jpg";
-import shriManeklal from "../assets/shri_maneklal_patel.jpg";
-import chairmanPhoto from "../assets/chairman.png";
-import mamPhoto from "../assets/Dr.Himani Trivedi Ma'am.png";
-import ieeeBackground from "../assets/IEEE KSV.jpeg";
-// import ieeeExecomPhoto from "../assets/ExeCom'26.png";
+import { getImageUrl } from "../lib/imageUrl";
 
 export const organizationData = {
   svkm: {
     title: "Sarva Vidyalaya Kelavani Mandal",
     subtitle: "કર ભલા હોગા ભલા.",
-    image: "/SVKM.svg",
-    heroImage: svkmCampus,
+    image: getImageUrl("/SVKM.svg"),
+    heroImage: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754490/my-project/frontend/src/assets/svkm_campus.jpg",
     website: "https://svkm.org.in/",
     description: [
       `Sarva Vidyalaya Kelavani Mandal (SVKM) was established in 1919 by the philanthropist Pujya Chhaganbha. His guiding principle, "કર ભલા, હોગા ભલા" (Do good, and good will come), has driven the trust's growth in education. What began with just six students has now expanded to educating more than 54,000 students across various schools and colleges in Kadi and Gandhinagar.
@@ -37,12 +29,12 @@ export const organizationData = {
     founders: [
       {
         name: "Pujya Chhaganbha",
-        image: chhaganbhaPhoto,
+        image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754486/my-project/frontend/src/assets/pujya_chhaganbha.jpg",
         quote: "કર ભલા હોગા ભલા.",
       },
       {
         name: "Shri Maneklal M. Patel",
-        image: shriManeklal,
+        image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754487/my-project/frontend/src/assets/shri_maneklal_patel.jpg",
         quote: "શિક્ષણ એ જ સાચી સેવા છે.",
       },
     ],
@@ -65,8 +57,8 @@ export const organizationData = {
   ksv: {
     title: "Kadi Sarva Vishwavidyalaya",
     subtitle: "કર ભલા હોગા ભલા.",
-    image: "/KSV.svg",
-    heroImage: ksvCampus,
+    image: getImageUrl("/KSV.svg"),
+    heroImage: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754482/my-project/frontend/src/assets/ksv_campus.jpg",
     website: "https://ksv.ac.in/",
     description: [
       "Kadi Sarva Vishwavidyalaya (KSV) was established through the Gujarat State Government Act 21 of 2007 in May 2007 and is approved by the UGC (Ref F.9-18/2008(cpp-1) March 19, 2009).",
@@ -105,8 +97,8 @@ export const organizationData = {
     title: "M. M. Patel Students Research Project Cell",
     subtitle: "For the students, By the students, Of the students!",
     website: "https://www.mmpsrpc.in/",
-    image: "/MMPSRPC.svg",
-    heroImage: mmpsrpcCampus,
+    image: getImageUrl("/MMPSRPC.svg"),
+    heroImage: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754484/my-project/frontend/src/assets/mmpsrpc_campus.jpg",
     description: [
       "Founded in 2024, M. M. Patel Students Research Project Cell has been at the forefront of fostering academic excellence and innovative research among students at KSV University. Our journey began with a vision to create a platform where students could explore their research potential and contribute to the academic community.",
       "Over the years, we have grown from a small group of enthusiastic researchers to a vibrant community of researchers, mentors, and faculty members. Our commitment to nurturing talent and pushing the boundaries of knowledge has remained unwavering throughout our journey.",
@@ -127,7 +119,7 @@ export const organizationData = {
         name: "Shri Vallabhbhai M. Patel",
         designation:
           "Chairman, Sarva Vidyalaya Kelvani Mandal, Kadi & Gandhinagar. President, Kadi Sarva Vishwavidyalaya Gandhinagar.",
-        image: chairmanPhoto,
+        image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754473/my-project/frontend/src/assets/chairman.jpg",
         cardQuote:
           "Knowledge is valuable, but wisdom with compassion, that's what truly builds a better tomorrow.",
         mainQuote:
@@ -141,7 +133,7 @@ export const organizationData = {
         header: "Message from Head of MMPSRPC, KSV",
         name: "Dr. Himani Trivedi",
         designation: "Head of M. M. Patel Students Research Project Cell",
-        image: mamPhoto,
+        image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775852810/my-project/frontend/src/assets/DrHimani-Trivedi-Maam.jpg",
         cardQuote:
           "Growth comes from steady effort, continuous learning, and discipline.",
         mainQuote:
@@ -199,7 +191,7 @@ export const organizationData = {
     title: "IEEE Student Branch\nKadi Sarva Vishwavidyalaya",
     subtitle: "Empowering Students through Innovation and Leadership",
     image: "https://ieee-ksv-sb.mmpsrpc.in/Pasted-Graphic.svg",
-    heroImage: ieeeBackground,
+    heroImage: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775852815/my-project/frontend/src/assets/IEEE-KSV.jpg",
     website: "https://ieee-ksv-sb.mmpsrpc.in/",
     sections: {
       intro: [
@@ -342,7 +334,7 @@ export const organizationData = {
         name: "Yash Kumavat",
         role: "Chairperson",
         group: "IEEE KSV SB",
-        image: "/students/Yash Kumavat.jpeg",
+        image: getImageUrl("/students/Yash Kumavat.jpeg"),
         linkedin: "https://www.linkedin.com/in/yash-kumavat-503a6a326/",
         email: "yashnkumavat2005@gmail.com",
       },
@@ -350,7 +342,7 @@ export const organizationData = {
         name: "Antra Gajjar",
         role: "Vice Chair",
         group: "IEEE KSV SB",
-        image: "/students/Gajjar Antra Ashvinkumar.jpeg",
+        image: getImageUrl("/students/Gajjar Antra Ashvinkumar.jpeg"),
         linkedin: "https://www.linkedin.com/in/antra-gajjar-957977330/",
         email: "gajjarantra03@gmail.com",
       },
@@ -358,7 +350,7 @@ export const organizationData = {
         name: "Rudr Halvadiya",
         role: "Secretary",
         group: "IEEE KSV SB",
-        image: "/students/Halvdadiya Rudr.jpeg",
+        image: getImageUrl("/students/Halvdadiya Rudr.jpeg"),
         linkedin: "https://www.linkedin.com/in/rudr-halvadiya",
         email: "rudrhalvadiya2000@gmail.com",
       },
@@ -366,7 +358,7 @@ export const organizationData = {
         name: "Dev Kansara",
         role: "Treasurer",
         group: "IEEE KSV SB",
-        image: "/students/Kansara Dev Dharmeshkumar.jpeg",
+        image: getImageUrl("/students/Kansara Dev Dharmeshkumar.jpeg"),
         linkedin: "https://www.linkedin.com/in/dev-kansara-37b37037a/",
         email: "kansaradev95@gmail.com",
       },
@@ -374,7 +366,7 @@ export const organizationData = {
         name: "Chrisha Dabhi",
         role: "Webmaster",
         group: "IEEE KSV SB",
-        image: "/students/Dabhi Chrisha Manish.png",
+        image: getImageUrl("/students/Dabhi Chrisha Manish.png"),
         linkedin: "https://www.linkedin.com/in/chrishadabhi",
         email: "chrishaadabhii0704@gmail.com",
       },
@@ -382,61 +374,61 @@ export const organizationData = {
         name: "Aayush Pandya",
         role: "Chairperson",
         group: "IEEE KSV SPS",
-        image: "/students/Pandya Aayush Viral.jpeg",
+        image: getImageUrl("/students/Pandya Aayush Viral.jpeg"),
       },
       {
         name: "Harsh Parekh",
         role: "Vice Chair",
         group: "IEEE KSV SPS",
-        image: "/students/Harsh Parekh.jpeg",
+        image: getImageUrl("/students/Harsh Parekh.jpeg"),
       },
       {
         name: "Yajurshi Velani",
         role: "Secretary",
         group: "IEEE KSV SPS",
-        image: "/students/Yajurshi Velani.png",
+        image: getImageUrl("/students/Yajurshi Velani.png"),
       },
       {
         name: "Pragati Varu",
         role: "Treasurer",
         group: "IEEE KSV SPS",
-        image: "/students/Pragati Varu.jpeg",
+        image: getImageUrl("/students/Pragati Varu.jpeg"),
       },
       {
         name: "Jenish Sorathiya",
         role: "Webmaster",
         group: "IEEE KSV SPS",
-        image: "/students/Jenish Sorathiya.jpeg",
+        image: getImageUrl("/students/Jenish Sorathiya.jpeg"),
       },
       {
         name: "Riyaben Solanki",
         role: "Chairperson",
         group: "IEEE KSV WIE",
-        image: "/students/Riya Solanki IEEE.png",
+        image: getImageUrl("/students/Riya Solanki IEEE.png"),
       },
       {
         name: "Divya Balchandani",
         role: "Vice-Chair",
         group: "IEEE KSV WIE",
-        image: "/students/Divya Balchandani.png",
+        image: getImageUrl("/students/Divya Balchandani.png"),
       },
       {
         name: "Honey Modha",
         role: "Secretary",
         group: "IEEE KSV WIE",
-        image: "/students/Honey Modha.jpeg",
+        image: getImageUrl("/students/Honey Modha.jpeg"),
       },
       {
         name: "Banshari Patel",
         role: "Treasurer",
         group: "IEEE KSV WIE",
-        image: "/students/Patel Banshari Rahulkumar.jpg",
+        image: getImageUrl("/students/Patel Banshari Rahulkumar.jpg"),
       },
       {
         name: "Mahi Parmar",
         role: "Webmaster",
         group: "IEEE KSV WIE",
-        image: "/students/Parmar Mahi Nitinchandra.jpeg",
+        image: getImageUrl("/students/Parmar Mahi Nitinchandra.jpeg"),
       },
     ],
     // execomPhoto: ieeeExecomPhoto,

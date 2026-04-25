@@ -1,8 +1,9 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useSupabaseQuery, fetchWithTimeout } from "../hooks/useSupabaseQuery";
+import { useFetch, fetchWithTimeout } from "../hooks/useFetch";
 import { API_BASE_URL } from "../config/apiConfig";
 import { ExternalLink, X } from "lucide-react";
+import { getImageUrl } from "../lib/imageUrl";
 
 const Activities = () => {
   const [modal, setModal] = useState(null); // activity object or null
@@ -12,7 +13,7 @@ const Activities = () => {
     data: activities = [],
     loading,
     error,
-  } = useSupabaseQuery(async () => {
+  } = useFetch(async () => {
     const json = await fetchWithTimeout(`${API_BASE_URL}/api/activities`);
     return json.data || [];
   });
@@ -78,7 +79,7 @@ const Activities = () => {
         {/* No Data */}
         {!loading && !error && activities.length === 0 && (
           <div className="text-center text-gray-400 py-20 text-lg">
-            No data available 📭
+            Nothing here yet - but exciting things are on the way!
           </div>
         )}
 
@@ -102,27 +103,19 @@ const Activities = () => {
                   <div className="w-full bg-gray-100 overflow-hidden rounded-2xl flex items-center justify-center aspect-[4/3]">
                     {(() => {
                       // Prefer signedPhotoUrl, fallback to public URL if not present
-                      let url = act.signedPhotoUrl;
-                      if (!url && act.Photo) {
-                        if (act.Photo.startsWith("http")) {
-                          url = act.Photo;
-                        } else {
-                          const cleanPhoto = act.Photo.replace(/ /g, "%20");
-                          url = `https://npdtneznlzganiolvhmw.supabase.co/storage/v1/object/public/Activity_images/${cleanPhoto}`;
-                        }
-                      }
+                      let url = act.Photo ? (act.Photo.startsWith("http") ? act.Photo : getImageUrl(act.Photo)) : null;
                       if (url) {
                         if (url.match(/\.(mp4|webm|ogg)(\?.*)?$/i)) {
                           return (
                             <video
-                              src={url}
+                              src={getImageUrl(url)}
                               className="object-contain w-full h-full mx-auto my-auto bg-black"
                               controls
                               autoPlay={false}
                               muted
                               playsInline
                               preload="metadata"
-                              poster="/video-poster.png"
+                              poster={getImageUrl("/video-poster.png")}
                             >
                               Sorry, your browser doesn't support embedded
                               videos.
@@ -137,7 +130,7 @@ const Activities = () => {
                             <img
                               loading="lazy"
                               decoding="async"
-                              src={url}
+                              src={getImageUrl(url)}
                               alt={act.title + " (debug: " + url + ")"}
                               className="object-contain w-full h-full mx-auto my-auto rounded-2xl"
                               style={{
@@ -153,7 +146,7 @@ const Activities = () => {
                             <img
                               loading="lazy"
                               decoding="async"
-                              src={url}
+                              src={getImageUrl(url)}
                               alt={act.title + " (debug: " + url + ")"}
                               className="object-contain w-full h-full mx-auto my-auto"
                               style={{
@@ -207,26 +200,18 @@ const Activities = () => {
                 {(modal?.signedPhotoUrl || modal?.Photo) && (
                   <div className="md:w-1/2 w-full bg-gray-100 flex items-center justify-center rounded-3xl overflow-hidden">
                     {(() => {
-                      let url = modal.signedPhotoUrl;
-                      if (!url && modal.Photo) {
-                        if (modal.Photo.startsWith("http")) {
-                          url = modal.Photo;
-                        } else {
-                          const cleanPhoto = modal.Photo.replace(/ /g, "%20");
-                          url = `https://npdtneznlzganiolvhmw.supabase.co/storage/v1/object/public/Activity_images/${cleanPhoto}`;
-                        }
-                      }
+                      let url = modal.Photo ? (modal.Photo.startsWith("http") ? modal.Photo : getImageUrl(modal.Photo)) : null;
                       if (url && url.match(/\.(mp4|webm|ogg)(\?.*)?$/i)) {
                         return (
                           <video
-                            src={url}
+                            src={getImageUrl(url)}
                             className="object-contain w-full h-full max-h-[340px] mx-auto my-auto bg-black"
                             controls
                             autoPlay={false}
                             muted
                             playsInline
                             preload="metadata"
-                            poster="/video-poster.png"
+                            poster={getImageUrl("/video-poster.png")}
                           >
                             Sorry, your browser doesn't support embedded videos.
                           </video>
@@ -239,7 +224,7 @@ const Activities = () => {
                           <img
                             loading="lazy"
                             decoding="async"
-                            src={url}
+                            src={getImageUrl(url)}
                             alt={modal.title + " (debug: " + url + ")"}
                             className="object-contain w-full h-full max-h-[340px] mx-auto my-auto rounded-3xl"
                             style={{
@@ -254,7 +239,7 @@ const Activities = () => {
                           <img
                             loading="lazy"
                             decoding="async"
-                            src={url}
+                            src={getImageUrl(url)}
                             alt={modal.title + " (debug: " + url + ")"}
                             className="object-contain w-full h-full max-h-[340px] mx-auto my-auto rounded-3xl"
                             style={{

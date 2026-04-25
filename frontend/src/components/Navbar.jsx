@@ -2,12 +2,13 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import { getImageUrl } from "../lib/imageUrl";
 
 // Logo assets (Paths from public directory)
-const srlLogo = "/SRL.svg";
-const mmpsrpcLogo = "/MMPSRPC.svg";
-const svkmLogo = "/SVKM.svg";
-const ksvLogo = "/KSV.svg";
+const srlLogo = getImageUrl("/SRL.svg");
+const mmpsrpcLogo = getImageUrl("/MMPSRPC.svg");
+const svkmLogo = getImageUrl("/SVKM.svg");
+const ksvLogo = getImageUrl("/KSV.svg");
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);

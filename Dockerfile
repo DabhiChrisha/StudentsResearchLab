@@ -37,12 +37,13 @@ FROM nginx:alpine AS production
 # Remove default nginx config
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Copy custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy custom nginx config as a TEMPLATE (envsubst will fill in $BACKEND_URL at runtime)
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
 # Copy built assets from Stage 1
 COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+# Run envsubst to inject env vars, then start nginx
+CMD ["/bin/sh", "-c", "envsubst '$BACKEND_URL' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]

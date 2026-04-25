@@ -2,10 +2,7 @@ const express = require("express");
 const cors = require("cors");
 
 // Import routes
-const studentsRouter = require("./routes/students");
-const attendanceRouter = require("./routes/attendance");
 const sessionsRouter = require("./routes/sessions");
-const scoresRouter = require("./routes/scores");
 const timelineRouter = require("./routes/timeline");
 const joinUsRouter = require("./routes/join_us");
 const publicationsRouter = require("./routes/publications");
@@ -14,9 +11,19 @@ const papersRouter = require("./routes/papers");
 const activitiesRouter = require("./routes/activities");
 const leaderboardRouter = require("./routes/leaderboard");
 const batchStatsRouter = require("./routes/batch_stats");
-const metricsRouter = require("./routes/metrics");
 const achievementsRouter = require("./routes/achievements");
 const researchersRouter = require("./routes/researchers");
+
+// Import admin routes
+const adminAuthRouter = require("./routes/admin");
+const adminStudentsRouter = require("./routes/adminStudents");
+const adminActivitiesRouter = require("./routes/adminActivities");
+const adminScoresRouter = require("./routes/adminScores");
+const adminAttendanceRouter = require("./routes/adminAttendance");
+const adminTimelineRouter = require("./routes/adminTimeline");
+const adminResearchRouter = require("./routes/adminResearch");
+const adminAchievementsRouter = require("./routes/adminAchievements");
+const imageUploadRouter = require("./routes/imageUpload");
 
 const app = express();
 const ALLOWED_ORIGINS = [
@@ -29,6 +36,7 @@ const ALLOWED_ORIGINS = [
   "http://127.0.0.1:5175",
   "http://127.0.0.1:3000",
   "https://students-research-lab-srl.vercel.app",
+  "https://students-research-lab-admin-portal.vercel.app", // actual admin portal
 ];
 
 app.use(
@@ -53,21 +61,28 @@ app.get("/api/health", (req, res) => {
 });
 
 // Register routes
-app.use("/api", studentsRouter);
-app.use("/api", attendanceRouter);
-app.use("/api", sessionsRouter);
-app.use("/api", scoresRouter);
-app.use("/api", timelineRouter);
-app.use("/api", joinUsRouter);
-app.use("/api", publicationsRouter);
-app.use("/api", cvRouter);
-app.use("/api", papersRouter);
-app.use("/api", activitiesRouter);
-app.use("/api", leaderboardRouter);
-app.use("/api", batchStatsRouter);
-app.use("/api", metricsRouter);
-app.use("/api", achievementsRouter);
-app.use("/api", researchersRouter);
+app.use(sessionsRouter);
+app.use(timelineRouter);
+app.use(joinUsRouter);
+app.use(publicationsRouter);
+app.use(cvRouter);
+app.use(papersRouter);
+app.use(activitiesRouter);
+app.use(leaderboardRouter);
+app.use(batchStatsRouter);
+app.use(achievementsRouter);
+app.use(researchersRouter);
+
+// Register admin routes
+app.use(adminAuthRouter);
+app.use(adminStudentsRouter);
+app.use(adminActivitiesRouter);
+app.use(adminScoresRouter);
+app.use(adminAttendanceRouter);
+app.use(adminTimelineRouter);
+app.use(adminResearchRouter);
+app.use(adminAchievementsRouter);
+app.use(imageUploadRouter);
 
 // Global error handler — must be after all routes
 app.use((err, req, res, next) => {

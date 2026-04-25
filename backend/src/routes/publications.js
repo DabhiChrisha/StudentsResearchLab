@@ -1,55 +1,29 @@
 const express = require("express");
-const supabase = require("../supabase");
+const prisma = require("../config/prisma");
 
 const router = express.Router();
 
-// GET /api/publications
-// Query params: ?search=   ?event_type=Conference   ?year=2025   ?category=Scopus
-router.get("/publications", async (req, res, next) => {
+router.get("/api/publications", async (req, res, next) => {
   try {
     const { search, event_type, year, category } = req.query;
 
-    let query = supabase
-      .from("publications")
-      .select("*")
-      .order("year", { ascending: false })
-      .order("id", { ascending: false });
+    const where = {};
 
-    if (year) {
-      query = query.eq("year", parseInt(year));
-    }
-
-    if (event_type) {
-      query = query.ilike("event_type", event_type);
-    }
-
-    if (category) {
-      query = query.ilike("category", `%${category}%`);
-    }
-
+    if (year) where.year = parseInt(year);
+    if (event_type) where.event_type = { equals: event_type, mode: "insensitive" };
+    if (category) where.category = { contains: category, mode: "insensitive" };
     if (search) {
-      query = query.or(
-        `title.ilike.%${search}%,student_authors.ilike.%${search}%,venue.ilike.%${search}%`
-      );
+      where.OR = [
+        { title: { contains: search, mode: "insensitive" } },
+        { student_authors: { contains: search, mode: "insensitive" } },
+        { venue: { contains: search, mode: "insensitive" } },
+      ];
     }
 
-    const { data, error } = await query;
-
-    if (error) {
-      const msg = (error.message || "").toLowerCase();
-      // Table doesn't exist yet — return empty list so the frontend doesn't crash.
-      // Fix: run migrations/create_publications_table.sql in Supabase SQL Editor.
-      if (
-        error.code === "42P01" ||
-        msg.includes("does not exist") ||
-        msg.includes("relation") ||
-        msg.includes("undefined table")
-      ) {
-        console.warn("[publications] Table not found — migration not yet run. Returning empty list.");
-        return res.json({ publications: [] });
-      }
-      throw error;
-    }
+    const data = await prisma.publication.findMany({
+      where,
+      orderBy: [{ year: "desc" }, { serial_no: "desc" }],
+    });
 
     res.json({ publications: data || [] });
   } catch (err) {
@@ -57,7 +31,9 @@ router.get("/publications", async (req, res, next) => {
   }
 });
 
-router.post("/submit-publication", async (req, res, next) => {
+// publications_submissions table does not exist in Neon DB.
+// Submissions are stored directly in the publications table pending review.
+router.post("/api/submit-publication", async (req, res, next) => {
   try {
     const {
       first_author,
@@ -66,35 +42,28 @@ router.post("/submit-publication", async (req, res, next) => {
       institution,
       title,
       event_type,
-      is_srl_member,
       paper_link,
       date,
       summary,
+      is_srl_member,
     } = req.body;
 
-    const { data: newSubmission, error } = await supabase
-      .from("publications_submissions")
-      .insert([
-        {
-          first_author,
-          co_authors: co_authors || "",
-          department,
-          institution,
-          title,
-          event_type,
-          is_srl_member: is_srl_member === "yes" || is_srl_member === true,
-          paper_link: paper_link || "",
-          date, 
-          summary,
-        },
-      ])
-      .select();
+    const data = await prisma.publication.create({
+      data: {
+        student_authors: first_author + (co_authors ? `, ${co_authors}` : ""),
+        department: department || null,
+        institute: institution || null,
+        title,
+        event_type,
+        is_srl_member: is_srl_member === "yes" || is_srl_member === true,
+        paper_url: paper_link || null,
+        date: date || null,
+        description: summary || null,
+        category: "Under Review",
+      },
+    });
 
-    if (error) {
-      return res.status(400).json({ detail: error.message });
-    }
-
-    res.json({ data: newSubmission });
+    res.json({ data: [data] });
   } catch (err) {
     res.status(500).json({ detail: err.message });
   }

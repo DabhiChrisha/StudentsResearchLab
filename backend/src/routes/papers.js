@@ -1,5 +1,5 @@
 const express = require("express");
-const supabase = require("../supabase");
+const prisma = require("../config/prisma");
 
 const router = express.Router();
 
@@ -15,36 +15,27 @@ function parseArrayField(val) {
     } catch (e) {
       // ignore
     }
-    return trimmed
-      .split(",")
-      .map((s) => s.trim())
-      .filter((s) => s && s !== "-");
+    return trimmed.split(",").map((s) => s.trim()).filter((s) => s && s !== "-");
   }
   return [];
 }
 
-// GET /api/papers/:studentName?enrollment_no=XXX
-// Returns papers, hackathons, research areas and counts for a single student.
-// Primary source: `publications` table (enrollment_nos column).
-// Fallback: `paper_authors` → `research_papers` join (legacy data).
-router.get("/papers/:studentName", async (req, res, next) => {
+router.get("/api/papers/:studentName", async (req, res, next) => {
   try {
     const studentName = (req.params.studentName || "").trim();
     const enrollmentNo = (req.query.enrollment_no || "").toString().trim().toUpperCase();
 
-    // --- Papers: query publications table by enrollment number ---
     let paperTitles = [];
+
+    // Primary: publications table by enrollment number
     if (enrollmentNo) {
-      const { data: pubRows, error: pubError } = await supabase
-        .from("publications")
-        .select("title, enrollment_nos, category")
-        .ilike("enrollment_nos", `%${enrollmentNo}%`);
+      const pubRows = await prisma.publication.findMany({
+        where: { enrollment_nos: { contains: enrollmentNo, mode: "insensitive" } },
+        select: { title: true, enrollment_nos: true, category: true },
+      });
 
-      if (pubError) throw pubError;
-
-      // Double-check the match is exact (avoid "30144" matching "30144X")
       const enrollPattern = new RegExp(`(^|,)${enrollmentNo}(,|$)`);
-      paperTitles = (pubRows || [])
+      paperTitles = pubRows
         .filter((row) => {
           const isMatch = enrollPattern.test(row.enrollment_nos || "");
           const isUnderReview = (row.category || "").toLowerCase().includes("under review");
@@ -53,37 +44,32 @@ router.get("/papers/:studentName", async (req, res, next) => {
         .map((row) => row.title);
     }
 
-    // --- Fallback: legacy paper_authors table (if publications table is empty for this student) ---
+    // Fallback: legacy paper_authors → research_papers join
     if (paperTitles.length === 0 && studentName) {
-      const { data: legacyRows } = await supabase
-        .from("paper_authors")
-        .select("author_name, research_papers ( id, title )")
-        .ilike("author_name", studentName);
+      const legacyRows = await prisma.paperAuthor.findMany({
+        where: { author_name: { contains: studentName, mode: "insensitive" } },
+        include: { research_papers: true },
+      });
 
       const seenIds = new Set();
-      (legacyRows || []).forEach((row) => {
-        const items = Array.isArray(row.research_papers)
-          ? row.research_papers
-          : [row.research_papers];
-        items.forEach((p) => {
-          if (p && p.id && p.title && !seenIds.has(p.id)) {
-            seenIds.add(p.id);
-            paperTitles.push(p.title.trim());
-          }
-        });
+      legacyRows.forEach((row) => {
+        const p = row.research_papers;
+        if (p && p.id && p.title && !seenIds.has(p.id)) {
+          seenIds.add(p.id);
+          paperTitles.push(p.title.trim());
+        }
       });
     }
 
-    // --- Hackathons + Research Areas: member_cv_profiles ---
+    // Hackathons + Research Areas from member_cv_profiles
     let hackathons = [];
     let researchAreas = [];
 
     if (enrollmentNo) {
-      const { data: profile } = await supabase
-        .from("member_cv_profiles")
-        .select("hackathons, research_area")
-        .eq("enrollment_no", enrollmentNo)
-        .single();
+      const profile = await prisma.memberCvProfile.findUnique({
+        where: { enrollment_no: enrollmentNo },
+        select: { hackathons: true, research_area: true },
+      });
 
       if (profile) {
         hackathons = parseArrayField(profile.hackathons);

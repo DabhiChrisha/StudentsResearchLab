@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowUpRight, Github, Linkedin, Mail, ScrollText, Target, Zap, Activity } from 'lucide-react';
+import { getImageUrl } from '../../lib/imageUrl';
 
 const Metric = ({ icon: Icon, value, label }) => (
     <div className="flex flex-col items-center gap-0.5 group/m cursor-help">
@@ -81,7 +82,7 @@ const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
                             {!failedImages[index] && item.image ? (
                                 <>
                                     <img loading="lazy" decoding="async"
-                                        src={item.image}
+                                        src={getImageUrl(item.image)}
                                         alt={item.title}
                                         onLoad={() => handleImageLoad(index)}
                                         onError={() => handleImageError(index, item)}

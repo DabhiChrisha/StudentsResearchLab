@@ -3,334 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { BookOpen, Calendar, ExternalLink, Download, Search, Users, ShieldCheck, FileText, Bookmark, PlusCircle, X, FileDown } from "lucide-react";
 import * as XLSX from 'xlsx';
+import { getImageUrl } from "../lib/imageUrl";
+import { API_BASE_URL, API_HEADERS } from "../config/apiConfig";
 
 /* ================= DATA ================= */
-const publicationsData = [
-  {
-    id: 1,
-    title: "Casebook on AI and Gender Empowerment",
-    authors: ["Janki Chitroda", "Yashvi Chavda", "Krishna Bhatt"],
-    venue: "IndiaAI Impact Summit in collaboration with UN Women India",
-    date: "Feb 2026",
-    category: "Book Chapter",
-    description: "Featured among the prestigious 23 global research works published in the Casebook on AI and Gender Empowerment. The research focuses on inclusive AI innovation and empowerment.",
-    link: "https://www.linkedin.com/posts/mmpsrpc_svkm-ksv-mmpsrpc-activity-7429466085311098880-XDnV",
-    tags: ["AI", "Gender Empowerment", "UN Women"],
-    publishers: [{ name: "UN Women", logo: "/UN%20Women.png" }, { name: "MeitY", logo: "/MeitY.png" }],
-  },
-  {
-    id: 2,
-    title: "EfficientNetB3 Adapted Hybrid UNet with Attention Guided Decoding for Urban Scene Segmentation",
-    authors: ["Ayushi Joddha", "Manasvi Shah", "Swayam Kalburgi"],
-    venue: "13th IEEE International Conference on Intelligent Systems and Embedded Design (ISED 2025)",
-    date: "Dec 2025",
-    category: "Conference",
-    description: "This paper proposes a novel adapted hybrid UNet using EfficientNetB3 to perform robust urban scene segmentation by selectively attending to salient spatial features.",
-    link: "https://www.linkedin.com/posts/mmpsrpc_ksv-ldrpitr-mmpsrpc-activity-7413814908217344000-JmvS",
-    tags: ["Computer Vision", "Segmentation", "IEEE Xplore"],
-    publishers: [{ name: "IEEE Xplore", logo: "/Xplore.png" }],
-    useContainBackground: true,
-  },
-  {
-    id: 3,
-    title: "Improving Urban Road Safety: Enhancing Pedestrian Safety Through Automated Traffic Signal Control and Law Enforcement",
-    authors: ["Students Research Lab"],
-    venue: "International Conference on Data Science, Computation and Security 2024 (Springer LNNS)",
-    date: "Nov 2024",
-    category: "Book Chapter",
-    description: "Proposed automated mechanisms using edge computing architectures integrated with urban traffic signal networks to improve pedestrian safety conditions and automate crosswalk law enforcement.",
-    link: "https://www.linkedin.com/posts/mmpsrpc_springer-researchpublication-datascience-activity-7368163507625746434-vjXc",
-    tags: ["Smart City", "Edge Computing", "Springer"],
-    publishers: [{ name: "Springer", logo: "/springer.png" }],
-    useContainBackground: true,
-  },
-  {
-    id: 4,
-    title: "Filed for Complete Patent",
-    authors: ["Nancy Patel", "Kandarp Gajjar", "Patel Ridham", "Patel Krutika"],
-    venue: "Status: Ongoing",
-    date: "Mar 2026",
-    category: "Patents",
-    description: "",
-    link: "#",
-    tags: [],
-    status: "Ongoing",
-    inventors: ["Nancy Patel", "Kandarp Gajjar", "Patel Ridham", "Patel Krutika"],
-    logoInfo: "/ksv.png",
-    supportedBy: [{ name: "KSV", logo: "/ksv.png" }, { name: "MMPSRPC", logo: "/mm.png" }],
-    ipo: { name: "IPO", logo: "/IPO.jpeg" },
-    backgroundImage: "/patent.jpeg",
-    useContainBackground: true
-  },
-  {
-    id: 5,
-    title: "Misinformation Detection using Large Language Models with Explainability",
-    authors: ["Jainee Patel", "Dr. Chintan M. Bhatt", "Dr. Himani Trivedi", "Dr. Thanh Thi Nguyen"],
-    venue: "8th International Conference on Algorithms, Computing and Artificial Intelligence (ACAI 2025), Nanjing, China",
-    date: "Mar 2026",
-    category: "Conference",
-    description: "Proposes a novel approach for detecting misinformation using Large Language Models with explainability techniques. The research integrates advanced NLP and XAI methods to enhance the transparency and reliability of misinformation detection systems.",
-    link: "https://ieeexplore.ieee.org/document/11406235",
-    tags: ["LLM", "Misinformation Detection", "XAI", "Scopus"],
-    publishers: [{ name: "IEEE Xplore", logo: "/Xplore.png" }],
-  },
-  {
-    id: 6,
-    title: "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI",
-    authors: ["Banshari Patel", "Jainee Patel", "Krish Patel", "Hemant Pande", "Dr. Himani Trivedi"],
-    venue: "2025 Artificial Intelligence and Smart Technologies for Sustainability Conference (AISTS 2025)",
-    date: "Nov 2025",
-    category: "Conference",
-    description: "An empirical study evaluating how Explainable AI interfaces shape human decision-making processes, cognitive dependency, and productivity in complex task environments.",
-    link: "https://ieeexplore.ieee.org/document/11232740",
-    tags: ["XAI", "Cognitive Computing", "Human-AI Interaction", "Scopus"],
-    publishers: [{ name: "IEEE Xplore", logo: "/Xplore.png" }],
-    backgroundImage: "/poster.png",
-    useContainBackground: true,
-  },
-  {
-    id: 7,
-    title: "From Theory to Practice a Survey and Case Based Analysis of Face Swapping Deepfake Detection Models",
-    authors: ["Charmi Padh", "Prem Raichura", "Rohan Thakar", "Zenisha Devani", "Swayam Kalburgi", "Zeel Kanudawala", "Dr. Chintan M. Bhatt", "Dr. Himani Trivedi"],
-    venue: "Multimedia Tools and Applications",
-    date: "Feb 2026",
-    category: "Journal",
-    description: "A comprehensive survey and case-based analysis of deepfake detection models, focusing on face-swapping techniques. The paper provides theoretical foundations and practical implementations for detecting fraudulent video content.",
-    link: "https://ieeexplore.ieee.org/document/11203522",
-    tags: ["Deepfake Detection", "Face Swapping", "Computer Vision", "Under Review"],
-    publishers: [{ name: "IEEE Xplore", logo: "/Xplore.png" }],
-    status: "Paper under Review",
-  },
-  {
-    id: 8,
-    title: "Early Epileptic Seizure Diagnosis Through Dilated Temporal Convolutional Networks on CHB-MIT Scalp EEG Signals",
-    authors: ["Hemant Pande", "Jainee Patel", "Banshari Patel", "Krish Patel", "Dr. Himani Trivedi"],
-    venue: "International Conference on Converging Intelligence (CICON 2026)",
-    date: "Mar 2026",
-    category: "Conference",
-    description: "Develops an advanced deep learning approach using dilated temporal convolutional networks to enable early diagnosis of epileptic seizures from scalp EEG signals. The model shows significant improvements in sensitivity and specificity.",
-    link: "https://drive.google.com/file/d/1mt1ZA1hYJpLCNmESQ2U5h7xN9GXRoVAD/view",
-    tags: ["Healthcare", "EEG Analysis", "Deep Learning", "Under Review"],
-    publishers: [{ name: "NASCENT MR", logo: "/Vmrfsalem.png" }],
-    status: "Paper under Review",
-    backgroundImage: "/book.png",
-    useContainBackground: true,
-  },
-  {
-    id: 9,
-    title: "Tracking Air Pollution using INSAT Satellite and Ground Data Fusion",
-    authors: ["Jainee Patel", "Banshari Patel", "Mahi Parmar"],
-    venue: "National Poster Competition on AI-Powered Research and Innovation",
-    date: "Sep 2025",
-    category: "Poster Presentation",
-    description: "An innovative approach to track and monitor air pollution levels by fusing satellite data from INSAT with ground-based sensors. The system provides real-time air quality assessment and predictive modeling.",
-    link: "https://drive.google.com/file/d/1Y4EJwUSobWPPwendmO7oJZY80-hAV86t/view",
-    tags: ["Environmental Monitoring", "Satellite Data", "Data Fusion", "Poster"],
-    publishers: [{ name: "National Poster Competition", logo: "/poster.png" }],
-    backgroundImage: "/air_pollution.png",
-    useContainBackground: true,
-  },
-  {
-    id: 10,
-    title: "Exploring AI's Influence on Human Thinking: Productivity, Learning, and Cognitive Skills in the Age of XAI - Poster Presentation",
-    authors: ["Banshari Patel", "Jainee Patel", "Krish Patel", "Hemant Pande", "Dr. Himani Trivedi"],
-    venue: "IGNITE 2.0 flagship event of IEEE SPS GS organized during AISTS 2025",
-    date: "Aug 2025",
-    category: "Poster Presentation",
-    description: "Poster presentation showcasing empirical findings on how AI interfaces influence human cognitive processes, learning outcomes, and professional productivity in diverse work environments.",
-    link: "https://drive.google.com/file/d/1YMtYf9HSIDIvpjz3GuK5YU6dlKatYAta/view",
-    tags: ["XAI", "Cognitive Skills", "Human-AI Interaction", "IEEE", "Poster"],
-    publishers: [{ name: "IEEE SPS", logo: "/IEEE.png" }],
-  },
-  {
-    id: 12,
-    title: "Bridging the Disconnect: Holistic Student Dropout Analysis in Schools through Data-Driven Machine Learning",
-    authors: ["Hemant Pande", "Ridham Patel", "Krish Patel", "Chrisha Dabhi", "Dr. Himani Trivedi"],
-    venue: "National Poster Competition on AI-Powered Research and Innovation",
-    date: "Sep 2025",
-    category: "Poster Presentation",
-    description: "Applies advanced machine learning algorithms to analyze and predict student dropout patterns. The research integrates demographic, academic, and socioeconomic data for comprehensive intervention strategies.",
-    link: "https://ieeexplore.ieee.org/document/11203360",
-    tags: ["Education Analytics", "Machine Learning", "Student Success", "Poster"],
-    publishers: [{ name: "NASCENT MR", logo: "/Vmrfsalem.png" }],
-  },
-  {
-    id: 13,
-    title: "Fusing Retrieval Techniques for Enhanced Personalized Community Question Answering",
-    authors: ["Students Research Lab"],
-    venue: "CEUR Workshop Series",
-    date: "2026",
-    category: "Conference",
-    description: "Develops an intelligent system that fuses multiple retrieval techniques to provide personalized, context-aware answers in community question answering platforms. The approach enhances user experience through semantic understanding.",
-    link: "https://ceur-ws.org/Vol-4054/T5-2.pdf",
-    tags: ["NLP", "Information Retrieval", "QA Systems", "Machine Learning"],
-    publishers: [{ name: "CEUR WS", logo: "/ceur.png" }],
-    backgroundImage: "/papers.png",
-    useContainBackground: true,
-  },
-  {
-    id: 14,
-    title: "Quantum Simulation Tools: A Comprehensive Survey",
-    authors: ["Zenisha Devani", "Rohan Thakar", "Zeel Kanudawala", "Charmi Padh", "Dr. Himani Trivedi"],
-    venue: "Contemporary Research in Mathematics from India",
-    date: "Oct 2025",
-    category: "Book Chapter",
-    description: "A comprehensive survey of quantum simulation tools and frameworks, covering theoretical foundations and practical applications. The chapter explores advanced computational techniques for quantum system modeling.",
-    link: "https://ieeexplore.ieee.org/document/10543438",
-    tags: ["Quantum Computing", "Simulation Tools", "Mathematics", "Scopus"],
-    publishers: [{ name: "Springer", logo: "/springer.png" }],
-    status: "Scopus Book Chapter Accepted",
-  },
-  {
-    id: 15,
-    title: "TrafficEye: Intelligent Traffic Optimization Using Deep Learning Approach",
-    authors: ["Zalak Vachhani", "Charmi Padh", "Prem Raichura", "Rohan Thakar", "Dr. Himani Trivedi"],
-    venue: "2nd IEEE International Conference on Artificial Intelligence and Machine Vision (AIMV 2025)",
-    date: "Oct 2025",
-    category: "Conference",
-    description: "A deep learning framework to optimize traffic flow operations dynamically. The system detects congestion points and intelligently redirects vehicle flows to minimize latency and reduce environmental impact.",
-    link: "https://link.springer.com/chapter/10.1007/978-3-032-10756-5_12",
-    tags: ["Deep Learning", "Smart City", "IoT", "Scopus"],
-    publishers: [{ name: "IEEE Xplore", logo: "/Xplore.png" }],
-    status: "Scopus Paper Publication",
-    useContainBackground: true,
-  },
-  {
-    id: 16,
-    title: "Thermalytix: Privacy-Preserving AI for Breast Cancer Screening",
-    authors: ["Chitroda Janki", "Chavada Yashvikuvarba", "Bhatt Krishna"],
-    venue: "India AI Impact Summit-2026",
-    date: "Feb 2026",
-    category: "Conference",
-    description: "An innovative privacy-preserving AI system for breast cancer screening that leverages federated learning and differential privacy. The approach maintains patient confidentiality while enabling accurate diagnosis.",
-    link: "https://ieeexplore.ieee.org/document/10425861",
-    tags: ["Healthcare", "Breast Cancer", "Privacy", "AI", "Case Study"],
-    publishers: [{ name: "India AI Impact Summit", logo: "/aiimpact.png" }],
-    status: "Case Study Publication",
-  },
-  {
-    id: 17,
-    title: "Generative AI as a Catalyst in Indian Education Ecosystems",
-    authors: ["Henit Panchal", "Hetvi Hinsu", "Heny Patel", "Dr. Shivani Trivedi", "Dr. Himani Trivedi"],
-    venue: "Advancing AI and ML Across Disciplines (AAMLAD 2025), Gwailor, India",
-    date: "Dec 2025",
-    category: "Conference",
-    description: "An analysis of how generative AI paradigms can be adopted to personalize learning paths, scale assessment models, and bridge educational disparities in India.",
-    link: "https://link.springer.com/chapter/10.1007/978-981-96-4880-1_29#:~:text=A%20dynamic%20signal%20control%20system,augmenting%20road%20safety%20and%20compliance.",
-    tags: ["Generative AI", "EdTech", "India", "Education", "Scopus"],
-    publishers: [{ name: "Springer", logo: "/springer.png" }],
-    status: "Scopus Paper Publication",
-    useContainBackground: true,
-  },
-  {
-    id: 18,
-    title: "Ensemble Intelligence for Model Classification in Next-Generation Smart Agriculture: Crop and Soil-Based Recommendation System",
-    authors: ["Dr. Himani Trivedi", "Hetal Chauhan", "Suresh Patel", "Mahendra N Patel", "Pradip Patel", "Mahi Parmar", "Chrisha Dabhi"],
-    venue: "Pertanika Journal of Science and Technology",
-    date: "Mar 2026",
-    category: "Journal",
-    description: "Develops an ensemble learning system for intelligent crop and soil classification in precision agriculture. The model integrates multiple AI techniques to provide actionable recommendations for farmers.",
-    link: "https://link.springer.com/chapter/10.1007/978-3-032-10670-4_17",
-    tags: ["Precision Agriculture", "Machine Learning", "Ensemble Methods", "IoT", "Under Review"],
-    publishers: [{ name: "Springer", logo: "/springer.png" }],
-    status: "Paper under Review",
-    useContainBackground: true,
-  },
-  {
-    id: 19,
-    title: "ZTA-Shield: A Zero Trust Approach for Multi-Tenant Clouds",
-    authors: ["Rohan Thakar", "Zenisha Devani", "Zeel Kanudawala", "Dr. Himani Trivedi"],
-    venue: "International Conference on Converging Intelligence (CICON 2026)",
-    date: "2026",
-    category: "Conference",
-    description: "Proposes a zero-trust security architecture specifically designed for multi-tenant cloud environments. The framework ensures continuous verification and minimizes security risks in shared cloud infrastructure.",
-    link: "https://ieeexplore.ieee.org/abstract/document/11405024",
-    tags: ["Cybersecurity", "Cloud Computing", "Zero Trust", "Architecture", "Under Review"],
-    publishers: [{ name: "IEEE Xplore", logo: "/Xplore.png" }],
-    status: "Paper under Review",
-  },
-  {
-    id: 20,
-    title: "SHAP-Enhanced Outbreak Forecasting: Interpretable Multi-Modal Learning for Waterborne Disease Prediction",
-    authors: ["Krish Patel", "Jenish Sorathiya", "Dr. Himani Trivedi"],
-    venue: "National Scientific Conference on Emerging Trends in Multidisciplinary Research (NASCENT MR 2025)",
-    date: "Dec 2025",
-    category: "Conference",
-    description: "Utilizes interpretable multi-modal learning approaches enhanced with SHAP values for explaining and predicting waterborne disease outbreak probabilities with high precision.",
-    link: "https://ieeexplore.ieee.org/document/11203360",
-    tags: ["Healthcare", "XAI", "Disease Forecasting", "Multi-Modal Learning"],
-    publishers: [{ name: "NASCENT MR", logo: "/Vmrfsalem.png" }],
-    status: "Non-Scopus Paper Publication",
-  },
-  {
-    id: 21,
-    title: "Enhancing Data Mining Techniques for Identifying Health Risk Patterns in Underserved Populations",
-    authors: ["Hemant Pande", "Honey Modha", "Dr. Himani Trivedi"],
-    venue: "National Scientific Conference on Emerging Trends in Multidisciplinary Research (NASCENT MR 2025)",
-    date: "Dec 2025",
-    category: "Conference",
-    description: "Focuses on advanced data mining strategies to uncover hidden health risk variables from unstructured clinical datasets representing underserved demographics.",
-    link: "https://www.inderscienceonline.com/doi/abs/10.1504/IJCVR.2025.147513",
-    tags: ["Data Mining", "Healthcare", "Analytics", "Health Equity"],
-    publishers: [{ name: "NASCENT MR", logo: "/Vmrfsalem.png" }],
-    status: "Non-Scopus Paper Publication",
-  },
-  {
-    id: 22,
-    title: "Introduction to Internet of Things",
-    authors: ["Hemant Pande", "Jainee Patel", "Banshari Patel", "Krish Patel", "Dr. Himani Trivedi"],
-    venue: "Contemporary Research in Mathematics from India",
-    date: "Oct 2025",
-    category: "Book Chapter",
-    description: "A comprehensive introduction to Internet of Things architectures, protocols, and applications. The chapter covers fundamental concepts and practical implementations in modern IoT systems.",
-    link: "https://link.springer.com/chapter/10.1007/978-3-032-10940-8_29",
-    tags: ["IoT", "Networking", "Smart Systems", "Scopus"],
-    publishers: [{ name: "Springer", logo: "/springer.png" }],
-    status: "Scopus Book Chapter Accepted",
-  },
-  {
-    id: 23,
-    title: "Intelligent Bending Parameter Optimizer",
-    authors: ["Henit Panchal", "Hetvi Hinsu", "Mihir Patel", "Heny Patel", "Dr. Himani Trivedi", "Prof. Parth Patel"],
-    venue: "National-level 3rd Project Advisor Group (PAG) Meeting of the DST–Technology Enabling Centre (DST-TEC)",
-    date: "Feb 2026",
-    category: "Poster Presentation",
-    description: "An advanced optimization system for manufacturing processes that intelligently adjusts bending parameters. The system uses ML to improve precision and reduce material waste in industrial production.",
-    link: "https://ieeexplore.ieee.org/document/11212073",
-    tags: ["Manufacturing", "Optimization", "Machine Learning", "Poster"],
-    publishers: [{ name: "DST-TEC", logo: "/dst.png" }],
-    status: "Poster Presentation",
-  },
-  {
-    id: 24,
-    title: "Effect of Class Imbalance and Resample on CNN Performance for Prostate Cancer Detection",
-    authors: ["Krish Patel", "Dr. Amit Thakkar", "Dr. Himani Trivedi"],
-    venue: "World Conference on Computational Science and Intelligence",
-    date: "Nov 2025",
-    category: "Conference",
-    description: "Analyzes the impact of class imbalance in medical imaging datasets and evaluates resampling techniques for improving CNN performance in prostate cancer detection.",
-    link: "https://expo.74ipc.com/posters",
-    tags: ["Healthcare", "Deep Learning", "Medical Imaging", "Class Imbalance"],
-    publishers: [],
-    status: "Non-Scopus Paper Accepted",
-    backgroundImage: "/poster.png",
-    useContainBackground: true,
-  },
-  {
-    id: 26,
-    title: "Explainable Edge Intelligence for WiFi Anomaly Detection in IoT Environments using TinyML",
-    authors: ["Parva Kumar", "Krenil Radadiya", "Trupesh Patel", "Radhika Wala"],
-    venue: "2026 International Conference on NextGen Data Science and Analytics (ICNDSA)",
-    date: "Mar 2026",
-    category: "Conference",
-    description: "An innovative approach combining edge computing, lightweight machine learning, and explainability techniques for detecting WiFi anomalies in IoT networks. The system operates efficiently on resource-constrained devices.",
-    link: "https://ieeexplore.ieee.org/document/11438568",
-    tags: ["IoT", "Edge Computing", "TinyML", "Anomaly Detection", "XAI", "Scopus"],
-    publishers: [{ name: "IEEE Xplore", logo: "/Xplore.png" }],
-    status: "Scopus Paper Acceptance",
-  },
-];
-
 const categories = ["All", "Conference", "Journal", "Book Chapter", "Poster Presentation", "Patents"];
 
 /* ================= COMPONENTS ================= */
@@ -405,7 +81,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
     const fetchImage = async () => {
       // Check if publication has custom background image - use it with highest priority
       if (pub.backgroundImage) {
-        setLinkedinImage(pub.backgroundImage);
+        setLinkedinImage(getImageUrl(pub.backgroundImage));
         return;
       }
 
@@ -561,7 +237,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
             background: fallbackGradient,
             // Show image on top
             ...(linkedinImage && {
-              backgroundImage: `url('${linkedinImage}')`,
+              backgroundImage: `url('${getImageUrl(linkedinImage)}')`,
               backgroundSize: pub.useContainBackground ? "contain" : (pub.link && pub.link.includes('ieeexplore') ? "cover" : "75%"),
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -629,7 +305,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
                     <span className="text-xs sm:text-sm font-semibold text-slate-700">By:</span>
                     {pub.ipo && (
                       <img
-                        src={pub.ipo.logo}
+                        src={getImageUrl(pub.ipo.logo)}
                         alt={pub.ipo.name}
                         className="h-8 object-contain"
                         title={pub.ipo.name}
@@ -667,7 +343,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
                     {pub.publishers.map((publisherItem, idx) => (
                       <img
                         key={idx}
-                        src={publisherItem.logo}
+                        src={getImageUrl(publisherItem.logo)}
                         alt={publisherItem.name}
                         className={`object-contain ${publisherItem.name === "Springer" ? "h-6" : publisherItem.name === "NASCENT MR" ? "h-14" : publisherItem.name === "74th IPC Pharma Exhibition" ? "h-10" : "h-6"}`}
                         title={publisherItem.name}
@@ -747,38 +423,67 @@ const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, b
           ))}
         </div>
 
-        {selectedYear && (
-          <button
-            onClick={() => {
-              onSelectYear(null);
-              onClose();
-            }}
-            className="w-full mt-3 py-2 bg-slate-200 text-slate-700 rounded-lg font-semibold hover:bg-slate-300 transition-colors text-sm"
-          >
-            Clear Selection
-          </button>
-        )}
-      </motion.div>
+          {selectedYear && (
+            <button
+              onClick={() => {
+                onSelectYear(null);
+                onClose();
+              }}
+              className="w-full mt-3 py-2 bg-slate-200 text-slate-700 rounded-lg font-semibold hover:bg-slate-300 transition-colors text-sm"
+            >
+              Clear Selection
+            </button>
+          )}
+        </motion.div>
     </>
   );
 };
 
+
+/* ================= MAIN ================= */
 const Publications = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedYear, setSelectedYear] = useState(null);
   const [showYearPicker, setShowYearPicker] = useState(false);
   const yearButtonRef = useRef(null);
+
+  // Extract all unique years from data (2020 to current year)
+  const allYears = Array.from({ length: new Date().getFullYear() - 2019 }, (_, i) => 2020 + i).reverse();
+  const [publications, setPublications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 600);
-    return () => clearTimeout(timer);
+    fetch(`${API_BASE_URL}/api/publications`, { headers: API_HEADERS })
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then(({ publications: data }) => {
+        setPublications(
+          (data || []).map((pub) => ({
+            id: pub.id,
+            title: pub.title,
+            authors: pub.student_authors
+              ? pub.student_authors.split(",").map((a) => a.trim()).filter(Boolean)
+              : [],
+            venue: pub.venue || "",
+            date: pub.date || (pub.year ? String(pub.year) : ""),
+            category: pub.event_type || "",
+            description: pub.description || "",
+            link: pub.paper_url || "#",
+            tags: Array.isArray(pub.tags) ? pub.tags : [],
+            status: pub.category || undefined,
+            year: pub.year || null,
+          }))
+        );
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }, []);
 
-  const allYears = Array.from({ length: new Date().getFullYear() - 2019 }, (_, i) => 2020 + i).reverse();
-
-  const filteredPublications = publicationsData.filter((pub) => {
+  const filteredPublications = publications.filter((pub) => {
     const matchesCat = activeCategory === "All" || pub.category === activeCategory;
     const searchLower = searchQuery.toLowerCase();
     const matchesQuery =
@@ -875,19 +580,20 @@ const Publications = () => {
           >
             Explore our latest research papers, journals, and book chapters driving innovation forward.
           </motion.p>
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-6"
+            className="mt-6 flex justify-center"
           >
-            <Link to="/add-publication" className="bg-teal-600 text-white px-6 py-3 rounded-full font-bold shadow-md hover:bg-teal-700 transition-colors inline-flex items-center gap-2 text-sm sm:text-base">
+            <Link to="/add-publication" className="bg-teal-600 text-white px-6 py-3 rounded-full font-bold shadow-md hover:bg-teal-700 transition-colors inline-flex items-center gap-2">
               <PlusCircle size={20} />
               Add Publications
             </Link>
           </motion.div>
         </div>
 
+        {/* Filters and Search Hub */}
         <div className="flex flex-col gap-2 mb-8">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-2 bg-slate-50/50 p-1.5 sm:p-2.5 rounded-3xl border border-slate-200 shadow-sm">
             <div className="flex items-center gap-1.5 overflow-x-auto lg:overflow-visible w-full lg:w-auto lg:scrollbar-hide py-0.5">
@@ -898,13 +604,14 @@ const Publications = () => {
                   className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-300 ${activeCategory === cat
                     ? "bg-teal-600 text-white shadow-md shadow-teal-600/20"
                     : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 hover:border-slate-300"
-                    }`}
+                  }`}
                 >
                   {cat}
                 </button>
               ))}
             </div>
 
+            {/* Search and Year Picker */}
             <div className="flex items-center gap-1.5 w-full lg:w-auto">
               <div className="relative flex-1 lg:flex-none lg:w-60">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -1015,9 +722,13 @@ const Publications = () => {
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm sm:text-base text-slate-600 font-medium mb-6">
             Loading publications...
           </motion.p>
+        ) : error ? (
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm sm:text-base text-red-500 font-medium mb-6">
+            Failed to load publications. Please try again later.
+          </motion.p>
         ) : filteredPublications.length > 0 ? (
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm sm:text-base text-slate-600 font-medium mb-6">
-            Showing <span className="font-bold text-teal-600">{filteredPublications.length}</span> of <span className="font-bold">{publicationsData.length}</span> publications
+            Showing <span className="font-bold text-teal-600">{filteredPublications.length}</span> of <span className="font-bold">{publications.length}</span> publications
           </motion.p>
         ) : (
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm sm:text-base text-slate-600 font-medium mb-6">
@@ -1069,12 +780,8 @@ const Publications = () => {
             )}
           </AnimatePresence>
         </div>
-      </div>
 
-      <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
+      </div>
     </div>
   );
 };

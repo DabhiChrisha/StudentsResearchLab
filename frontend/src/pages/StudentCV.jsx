@@ -12,7 +12,7 @@ import {
   ExternalLink,
   Trophy,
 } from "lucide-react";
-import { useSupabaseQuery, fetchWithTimeout } from "../hooks/useSupabaseQuery";
+import { useFetch, fetchWithTimeout } from "../hooks/useFetch";
 import { API_BASE_URL as API_BASE } from "../config/apiConfig";
 import studentsData from "../data/srlStudents.json";
 
@@ -23,7 +23,7 @@ export default function StudentCV() {
     data: cvData,
     loading,
     error,
-  } = useSupabaseQuery(async () => {
+  } = useFetch(async () => {
     const json = await fetchWithTimeout(`${API_BASE}/api/cv/${studentId}`);
     if (!json || !json.data) {
       setNotFound(true);
@@ -72,7 +72,7 @@ export default function StudentCV() {
     return [];
   };
 
-  // Build extra fields dynamically from Supabase columns not explicitly rendered
+  // Build extra fields dynamically from columns not explicitly rendered
   const knownKeys = new Set([
     "id",
     "enrollment_no",
@@ -115,7 +115,7 @@ export default function StudentCV() {
       })
     : [];
 
-  // Parsed array fields from Supabase
+  // Parsed array fields from CV profile
   const staticStudent = useMemo(() => {
     return studentsData.find((s) => {
       const sid =
@@ -603,7 +603,7 @@ export default function StudentCV() {
           </section>
         )}
 
-        {/* Extra CV Fields from Supabase */}
+        {/* Extra CV Fields */}
         {extraFields.length > 0 && (
           <section className="mb-20">
             <h2 className="text-xl font-black text-slate-900 mb-8 tracking-tight">
