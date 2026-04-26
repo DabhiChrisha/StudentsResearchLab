@@ -75,7 +75,7 @@ export default function Researchers() {
 
         // Filter out "admin" card
         const filtered = studentsData.filter(s => (s.student_name || "").toLowerCase() !== "admin");
-        
+
         const copy = [...filtered];
         copy.sort((a, b) => {
             // Exception: Poojan Ghetiya always goes to the bottom
@@ -83,7 +83,7 @@ export default function Researchers() {
             const bName = (b.student_name || "").toLowerCase();
             const aIsPoojan = aName.includes("poojan") && aName.includes("ghetiya");
             const bIsPoojan = bName.includes("poojan") && bName.includes("ghetiya");
-            
+
             if (aIsPoojan && !bIsPoojan) return 1;
             if (!aIsPoojan && bIsPoojan) return -1;
 
@@ -358,9 +358,9 @@ export default function Researchers() {
                                             <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 via-transparent to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
                                             <div className="relative shrink-0">
-                                                {/* Animated Ring on Hover */}
-                                                <div className="absolute -inset-2 rounded-full border-2 border-secondary/0 group-hover:border-secondary/20 group-hover:scale-110 transition-all duration-700" />
-                                                <div className="absolute inset-0 bg-secondary blur-3xl opacity-10 group-hover:opacity-30 transition-opacity rounded-full" />
+                                                {/* Animated glow ring on card hover */}
+                                                <div className="absolute -inset-3 rounded-full border-2 border-secondary/0 group-hover:border-secondary/25 group-hover:scale-110 transition-all duration-700" />
+                                                <div className="absolute inset-0 bg-secondary blur-3xl opacity-10 group-hover:opacity-30 transition-opacity duration-700 rounded-full" />
 
                                                 <button
                                                     onClick={() => openModalFor({
@@ -383,18 +383,41 @@ export default function Researchers() {
                                                         papersPublishedCount: raPublishedCount,
                                                         ongoingProjectsCount: raOngoingCount,
                                                     })}
-                                                    className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-white shadow-[0_15px_40px_rgba(0,0,0,0.1)] group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition-all duration-700 group/img"
+                                                    className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-white shadow-[0_15px_40px_rgba(0,0,0,0.1)] group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-all duration-700"
                                                 >
+                                                    {/* Avatar image — scales subtly on card hover */}
                                                     <img
                                                         loading="lazy"
                                                         decoding="async"
                                                         src={getImageUrl(ra.photo || "/students/schoolstudent.png")}
                                                         alt={ra.student_name}
-                                                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                                                        className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:blur-[1.5px]"
                                                     />
-                                                    <div className="absolute inset-0 bg-secondary/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-[4px]">
-                                                        <div className="bg-white/90 px-3 py-1 rounded-xl shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                                                            <span className="text-[9px] text-secondary font-black uppercase tracking-[0.2em]">Profile</span>
+
+                                                    {/* Frosted-glass overlay — fades in on card hover */}
+                                                    <div
+                                                        aria-hidden="true"
+                                                        className="absolute inset-0 rounded-full bg-black/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                                                    />
+
+                                                    {/* Glass CTA capsule — animates in on card hover */}
+                                                    <div className="absolute inset-0 rounded-full flex items-center justify-center pointer-events-none">
+                                                        <div
+                                                            className="
+                                                                px-4 py-1.5
+                                                                rounded-full
+                                                                bg-white/15
+                                                                backdrop-blur-md
+                                                                border border-white/40
+                                                                shadow-[0_4px_24px_rgba(255,255,255,0.18),0_0_0_1px_rgba(255,255,255,0.08)]
+                                                                opacity-0 scale-75 translate-y-2
+                                                                group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0
+                                                                transition-all duration-500 ease-out
+                                                            "
+                                                        >
+                                                            <span className="text-[9px] font-black uppercase tracking-[0.22em] text-white drop-shadow-sm">
+                                                                View Profile
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </button>
@@ -489,7 +512,7 @@ export default function Researchers() {
                             <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-secondary/10 blur-[150px] -mr-96 -mt-96 rounded-full animate-pulse pointer-events-none" />
                             <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-amber-500/5 blur-[120px] -ml-64 -mb-64 rounded-full pointer-events-none" />
                             <div className="absolute inset-0 bg-[radial-gradient(#0b3d3a_1px,transparent_1px)] [background-size:30px_30px] opacity-[0.05] pointer-events-none" />
-                            
+
                             {/* Science/Tech Watermark */}
                             <div className="absolute bottom-10 right-10 text-[10rem] font-black text-secondary/[0.02] select-none pointer-events-none tracking-tighter uppercase leading-none">
                                 Research
@@ -511,7 +534,7 @@ export default function Researchers() {
                                         <div className="lg:sticky lg:top-0 space-y-10">
                                             {/* Design Accent */}
                                             <div className="w-16 h-1 bg-teal-500/40 rounded-full mb-2" />
-                                            
+
                                             <div className="relative group/profile mx-auto lg:mx-0 w-max">
                                                 <div className="absolute -inset-6 bg-teal-500/10 blur-[60px] rounded-full opacity-60 group-hover/profile:opacity-100 transition-opacity duration-700" />
                                                 <div className="relative w-48 h-48 lg:w-56 lg:h-56 rounded-[3rem] overflow-hidden border-[8px] border-white shadow-2xl transition-transform duration-700 group-hover/profile:scale-[1.03]">
@@ -532,7 +555,7 @@ export default function Researchers() {
                                                         Researcher, SEM {activeStudent.semester}
                                                     </p>
                                                 </div>
-                                                
+
                                                 {activeStudent.reflection && (
                                                     <div className="pt-6 border-t border-black/5">
                                                         <h4 className="text-[12px] font-black text-slate-900 uppercase tracking-widest mb-3">Reflection:</h4>
@@ -587,7 +610,7 @@ export default function Researchers() {
                                                 </h4>
                                                 <ul className="space-y-4">
                                                     {((activeMetrics?.hackathons || []).length > 0) ? (
-                                                        (showAllHackathons 
+                                                        (showAllHackathons
                                                             ? (activeMetrics?.hackathons || [])
                                                             : (activeMetrics?.hackathons || []).slice(0, 4)
                                                         ).map((h, i) => (
@@ -602,7 +625,7 @@ export default function Researchers() {
                                                 </ul>
 
                                                 {(activeMetrics?.hackathons || []).length > 4 && (
-                                                    <button 
+                                                    <button
                                                         onClick={() => setShowAllHackathons(!showAllHackathons)}
                                                         className="mt-6 text-[11px] font-black text-teal-600 uppercase tracking-widest hover:text-teal-700 transition-colors flex items-center gap-2"
                                                     >
@@ -672,7 +695,7 @@ export default function Researchers() {
                                                         </div>
                                                     ))}
                                                 </div>
-                                                
+
 
                                             </div>
                                         </div>
