@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL, API_HEADERS } from '../config/apiConfig';
+import joinSrlImg from '../assets/Join SRL.png';
 
 export default function JoinUs() {
   const navigate = useNavigate();
@@ -152,9 +153,12 @@ export default function JoinUs() {
           </svg>
         </button>
         
-        <h2 className="text-4xl font-bold text-[#05877a] mb-2">
-          Join SRL
-        </h2>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-2">
+          <h2 className="text-4xl font-bold text-[#05877a]">
+            Join SRL
+          </h2>
+          <img src={joinSrlImg} alt="Join SRL Process" className="h-16 sm:h-20 md:h-24 w-auto object-contain" />
+        </div>
         <p className="text-gray-600 mb-8">
           Fill out the form to join the Students Research Lab
         </p>
