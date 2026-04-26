@@ -169,10 +169,10 @@ const Navbar = () => {
                   About Us{" "}
                   <ChevronDown
                     size={14}
-                    className={`transition-transform duration-30 ${aboutDropdownOpen ? "rotate-180" : ""}`}
+                    className={`transition-transform duration-300 ${aboutDropdownOpen ? "rotate-180" : ""}`}
                   />
                   <span
-                    className={`absolute bottom-[-2px] left-0 h-[3px] bg-teal-600 transition-all duration-30  ${isAboutActive || isAboutClicked ? "w-full" : "w-0 group-hover/aboutlink:w-full"}`}
+                    className={`absolute bottom-[-2px] left-0 h-[3px] bg-teal-600 transition-all duration-300 ${isAboutActive || isAboutClicked ? "w-full" : "w-0 group-hover/aboutlink:w-full"}`}
                   ></span>
                 </button>
                 <AnimatePresence>
@@ -224,6 +224,18 @@ const Navbar = () => {
                 {/* Shine Animation */}
                 <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/70 to-transparent opacity-80 -translate-x-full animate-shine" />
               </Link>
+              <a
+                href="https://drive.google.com/file/d/1EuI4UqNrmne9VFL1e6qr4hAk_Cyss1pD/view?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative bg-[#E0F2F1] text-[#0D9488] border border-teal-100 hover:bg-[#B2DFDB] transition-colors shadow-sm rounded-full py-1.5 xl:py-1.5 2xl:py-2 px-3 xl:px-4 2xl:px-5 text-[9px] xl:text-[10px] 2xl:text-[12px] uppercase tracking-wide font-bold overflow-hidden group"
+              >
+                <span className="relative z-10">Guidelines</span>
+                <span
+                  className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/70 to-transparent opacity-80 -translate-x-full animate-shine"
+                  style={{ animationDelay: "1s" }}
+                />
+              </a>
             </div>
 
             {/* Partner logos visible from xl+ (Hidden on lg to prevent overlap) */}
@@ -356,12 +368,12 @@ const Navbar = () => {
               Join Us
             </Link>
             <a
-              href="https://appointment.mmpsrpc.in/"
+              href="https://drive.google.com/file/d/1EuI4UqNrmne9VFL1e6qr4hAk_Cyss1pD/view?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
               className="flex justify-center w-full py-3 bg-[#E0F2F1] text-[#0D9488] border border-teal-100 font-bold rounded-xl shadow-sm uppercase text-[13px] tracking-wide active:bg-[#B2DFDB] focus:outline-none"
             >
-              Appointment
+              Guidelines
             </a>
             <div className="flex justify-center items-center gap-4 pt-4 pb-2">
               <img loading="lazy" decoding="async"
