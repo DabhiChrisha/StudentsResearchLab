@@ -3,7 +3,7 @@ import { ArrowUpRight, Github, Linkedin, Mail, ScrollText, Target, Zap, Activity
 import { getImageUrl } from '../../lib/imageUrl';
 
 const Metric = ({ icon: Icon, value, label }) => (
-    <div className="flex flex-col items-center gap-0.5 group/m cursor-help">
+    <div className="flex flex-col items-center gap-0.5 group/m">
         <div className="flex items-center gap-1 transition-transform group-hover/m:-translate-y-0.5">
             <Icon size={11} className="text-secondary opacity-60 group-hover/m:opacity-100 transition-opacity" />
             <span className="text-[10px] font-black text-slate-700 tabular-nums">{value}</span>
