@@ -22,8 +22,15 @@ router.post(
   uploadImage
 );
 
-// Error handling middleware for multer
-router.post("/api/admin/upload-image", (error, req, res, next) => {
+// Delete image route
+router.post(
+  "/admin/delete-image",
+  adminAuthMiddleware,
+  deleteImage
+);
+
+// Error handling middleware for multer - must be registered last
+router.use((error, req, res, next) => {
   if (error instanceof multer.MulterError) {
     if (error.code === "LIMIT_FILE_SIZE") {
       return res.status(400).json({
@@ -46,12 +53,5 @@ router.post("/api/admin/upload-image", (error, req, res, next) => {
   }
   next();
 });
-
-// Delete image route
-router.post(
-  "/admin/delete-image",
-  adminAuthMiddleware,
-  deleteImage
-);
 
 module.exports = router;
