@@ -286,7 +286,7 @@ inset 0 0 10px #10b98144
                             <img loading="lazy" decoding="async"
                                 src={getImageUrl("/innovation1.jpg")}
                                 alt="innovation"
-                                className={isMobile ? "w-[75px] object-contain" : "w-[125px] h-[125px] object-contain"}
+                                className={isMobile ? "w-[75px] object-contain" : "w-[120px] h-[120px] object-contain"}
                             />
                         </motion.div>
                     </div>
