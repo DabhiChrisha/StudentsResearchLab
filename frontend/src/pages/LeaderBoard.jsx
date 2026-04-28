@@ -83,6 +83,7 @@ const LeaderBoard = () => {
     const [periodStudents, setPeriodStudents] = useState([]);
     const [periodLoading, setPeriodLoading] = useState(false);
 
+<<<<<<< Updated upstream
     // Table search + sort state
     const [searchQuery, setSearchQuery] = useState('');
     const [sortKey, setSortKey] = useState(null);   // null | 'rank' | 'name' | 'attendance' | 'hours' | 'score'
@@ -105,6 +106,74 @@ const LeaderBoard = () => {
         } else {
             setMonthlyStudents(parsedOverall);
             setMonthLabel(MONTH_NAMES[new Date().getMonth()] + ' ' + new Date().getFullYear());
+=======
+                const { leaderboard } = await response.json();
+
+                // Merge backend data with static STUDENT_PROFILES for images/metadata
+                const profileMap = {};
+                STUDENT_PROFILES.forEach(p => {
+                    profileMap[p.enrollment.trim().toUpperCase()] = p;
+                });
+
+                const mergedStudents = leaderboard.map((student, index) => {
+                    const en = student.enrollment_no.trim().toUpperCase();
+                    const profile = profileMap[en] || {};
+                    return {
+                        ...profile,
+                        id: index + 1,
+                        enrollment: student.enrollment_no,
+                        name: student.name || profile.name || "Unknown Student",
+                        score: student.score || 0,
+                        attendance: student.attendance || 0,
+                        srlAttendance: student.srlAttendance || 0,
+                        rank: student.rank,
+                    };
+                });
+
+                // Group the top 5 ranks for the TopPerformers podium
+                const tmpTopPerformers = [];
+                for (let r = 1; r <= 5; r++) {
+                    const studentsMatchingRank = mergedStudents.filter(s => s.rank === r);
+                    if (studentsMatchingRank.length > 0) {
+                        tmpTopPerformers.push({
+                            rank: r,
+                            points: studentsMatchingRank[0].score,
+                            students: studentsMatchingRank
+                        });
+                    }
+                }
+
+                setTopPerformers(tmpTopPerformers);
+
+                // Group the rest (Rank 4 and beyond, to show 4 & 5 on mobile list)
+                const restOfTheStudents = mergedStudents.filter(s => s.rank >= 4);
+                setRegularPerformers(restOfTheStudents);
+                setLoading(false);
+
+            } catch (error) {
+                console.error("Error building leaderboard:", error);
+
+                // Fallback rendering in case backend is down: rank all 0
+                const fallbackStudents = STUDENT_PROFILES.map((s, i) => ({ ...s, id: i + 1, score: 0, rank: 1, attendance: 0, srlAttendance: 0 }));
+                setTopPerformers([{ rank: 1, points: 0, students: fallbackStudents.slice(0, 5) }]);
+                setRegularPerformers(fallbackStudents.slice(3));
+                setLoading(false);
+            }
+        };
+
+        fetchLeaderboard();
+    }, []);
+    const getRankStyles = (rank) => {
+        // Fallback for ranks 6 and beyond or unhandled cases
+        if (rank > 5) {
+            return {
+                card: "bg-white border-gray-200 shadow-sm",
+                badge: "bg-gray-400",
+                glow: "bg-gray-100",
+                pts: "bg-gray-100 text-gray-600 border-gray-200",
+                height: "h-full"
+            };
+>>>>>>> Stashed changes
         }
 
         if (hoursJson && hoursJson.leaderboard) {
