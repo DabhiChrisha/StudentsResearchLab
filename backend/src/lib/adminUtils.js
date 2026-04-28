@@ -24,14 +24,18 @@ const EXCLUDED_TEST_USERS = {
 
 /**
  * Generate JWT token for admin login
+ * @param {string} email - User email
+ * @param {string} enrollmentNo - Enrollment number
+ * @param {string} name - User name
+ * @param {boolean} isAdmin - Whether user is admin (from is_admin field)
  */
-const generateAdminToken = (email, enrollmentNo, name) => {
+const generateAdminToken = (email, enrollmentNo, name, isAdmin = false) => {
   const token = jwt.sign(
     {
       email,
       enrollmentNo,
       name,
-      isAdmin: true,
+      isAdmin: isAdmin === true,
       iat: Math.floor(Date.now() / 1000),
     },
     JWT_SECRET,

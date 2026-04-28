@@ -216,6 +216,7 @@ model Activity {
 model authorization {
   user_ID  String @id @db.VarChar(150)
   password String? @db.VarChar(20)
+  is_admin Boolean @default(false)
 }
 
 model research_project_members {

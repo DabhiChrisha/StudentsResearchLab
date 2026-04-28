@@ -6,17 +6,17 @@ const {
   updateStudent,
   deleteStudent,
 } = require("../controllers/adminStudentsController");
-const { adminAuthMiddleware } = require("../middleware/adminAuth");
+const { adminAuthMiddleware, authenticatedUserMiddleware } = require("../middleware/adminAuth");
 
 const router = express.Router();
 
-// All routes require admin authentication
-router.use(adminAuthMiddleware);
+// GET routes allow both admin and members (view access)
+router.get("/api/admin/students", authenticatedUserMiddleware, getStudents);
+router.get("/api/admin/students/:enrollmentNo", authenticatedUserMiddleware, getStudent);
 
-router.get("/api/admin/students", getStudents);
-router.get("/api/admin/students/:enrollmentNo", getStudent);
-router.post("/api/admin/students", createStudent);
-router.put("/api/admin/students/:enrollmentNo", updateStudent);
-router.delete("/api/admin/students/:enrollmentNo", deleteStudent);
+// POST/PUT/DELETE routes require admin authentication only
+router.post("/api/admin/students", adminAuthMiddleware, createStudent);
+router.put("/api/admin/students/:enrollmentNo", adminAuthMiddleware, updateStudent);
+router.delete("/api/admin/students/:enrollmentNo", adminAuthMiddleware, deleteStudent);
 
 module.exports = router;
