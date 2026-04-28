@@ -1,5 +1,5 @@
 const express = require("express");
-const { adminAuthMiddleware } = require("../middleware/adminAuth");
+const { adminAuthMiddleware, authenticatedUserMiddleware } = require("../middleware/adminAuth");
 const {
   getAchievements,
   createAchievement,
@@ -9,19 +9,12 @@ const {
 
 const router = express.Router();
 
-// All routes require authentication
-router.use(adminAuthMiddleware);
+// GET routes allow both admin and members (view access)
+router.get("/api/admin/achievements", authenticatedUserMiddleware, getAchievements);
 
-// GET /api/admin/achievements
-router.get("/api/admin/achievements", getAchievements);
-
-// POST /api/admin/achievements
-router.post("/api/admin/achievements", createAchievement);
-
-// PUT /api/admin/achievements/:id
-router.put("/api/admin/achievements/:id", updateAchievement);
-
-// DELETE /api/admin/achievements/:id
-router.delete("/api/admin/achievements/:id", deleteAchievement);
+// POST/PUT/DELETE routes require admin authentication only
+router.post("/api/admin/achievements", adminAuthMiddleware, createAchievement);
+router.put("/api/admin/achievements/:id", adminAuthMiddleware, updateAchievement);
+router.delete("/api/admin/achievements/:id", adminAuthMiddleware, deleteAchievement);
 
 module.exports = router;

@@ -1,12 +1,117 @@
 const prisma = require("../lib/prisma");
 
+const monthValueToNumber = (month) => {
+  const trimmed = String(month ?? "").trim();
+  const numeric = Number.parseInt(trimmed, 10);
+  if (!Number.isNaN(numeric)) {
+    return numeric;
+  }
+
+  const monthLookup = {
+    jan: 1,
+    january: 1,
+    feb: 2,
+    february: 2,
+    mar: 3,
+    march: 3,
+    apr: 4,
+    april: 4,
+    may: 5,
+    jun: 6,
+    june: 6,
+    jul: 7,
+    july: 7,
+    aug: 8,
+    august: 8,
+    sep: 9,
+    sept: 9,
+    september: 9,
+    oct: 10,
+    october: 10,
+    nov: 11,
+    november: 11,
+    dec: 12,
+    december: 12,
+  };
+
+  return monthLookup[trimmed.toLowerCase()] || 0;
+};
+
+const monthNumberToLabel = (monthNumber, year) => {
+  const monthName = new Date(year, monthNumber - 1, 1).toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+  });
+
+  return monthName;
+};
+
 /**
- * Get all scores - GET /api/admin/scores
- * Fetches from leaderboard_stats table
+ * Get all scores - GET /api/admin/scores or /api/user/scores
+ * Query params: ?month=MM&year=YYYY (optional, defaults to current month)
+ * Returns both monthly scores (from debate_scores) and leaderboard stats + available months
  */
 exports.getScores = async (req, res, next) => {
   try {
-    const scores = await prisma.leaderboardStat.findMany({
+    // Get month/year from query params or use current
+    let queryMonth = req.query.month;
+    let queryYear = req.query.year ? parseInt(req.query.year) : undefined;
+
+    const now = new Date();
+    let currentMonth, currentYear;
+
+    if (queryMonth && queryYear) {
+      currentMonth = String(queryMonth).padStart(2, "0");
+      currentYear = queryYear;
+    } else {
+      currentMonth = String(now.getMonth() + 1).padStart(2, "0");
+      currentYear = now.getFullYear();
+    }
+
+    // Get all available months from debate_scores
+    const rawMonths = await prisma.debateScore.findMany({
+      distinct: ["month", "year"],
+      select: {
+        month: true,
+        year: true,
+      },
+    });
+
+    const availableMonths = rawMonths
+      .map((item) => {
+        const monthNumber = monthValueToNumber(item.month);
+
+        return {
+          month: String(item.month).padStart(2, "0"),
+          year: item.year,
+          monthNumber,
+          value: `${item.year}-${String(monthNumber).padStart(2, "0")}`,
+          label: monthNumber ? monthNumberToLabel(monthNumber, item.year) : `${item.month} ${item.year}`,
+        };
+      })
+      .sort((a, b) => {
+        if (a.year !== b.year) return b.year - a.year;
+        return b.monthNumber - a.monthNumber;
+      });
+
+    // Get this month's debate scores
+    const monthlyScores = await prisma.debateScore.findMany({
+      where: {
+        month: currentMonth,
+        year: currentYear,
+      },
+      orderBy: { points: "desc" },
+      select: {
+        id: true,
+        enrollment_no: true,
+        month: true,
+        year: true,
+        points: true,
+      },
+    });
+
+    // Get all-time leaderboard stats
+    const leaderboardStats = await prisma.leaderboardStat.findMany({
       orderBy: { period: "desc" },
       select: {
         id: true,
@@ -22,7 +127,13 @@ exports.getScores = async (req, res, next) => {
 
     res.json({
       success: true,
-      data: scores,
+      data: {
+        currentMonth: `${currentMonth}/${currentYear}`,
+        currentYear,
+        monthlyScores: monthlyScores || [],
+        leaderboardStats: leaderboardStats || [],
+        availableMonths: availableMonths || [],
+      },
     });
   } catch (error) {
     console.error("Get scores error:", error);

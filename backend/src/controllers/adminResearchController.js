@@ -1,5 +1,10 @@
 const prisma = require("../lib/prisma");
 
+const serializeForJson = (value) =>
+  JSON.parse(
+    JSON.stringify(value, (_key, val) => (typeof val === "bigint" ? val.toString() : val))
+  );
+
 /**
  * Get all research papers - GET /api/admin/research
  */
@@ -131,7 +136,7 @@ exports.getJoinRequests = async (req, res, next) => {
 
     res.json({
       success: true,
-      data: requests || [],
+      data: serializeForJson(requests || []),
     });
   } catch (error) {
     console.error("Get join requests error:", error);

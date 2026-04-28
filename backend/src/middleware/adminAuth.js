@@ -47,7 +47,53 @@ const adminAuthMiddleware = (req, res, next) => {
   }
 };
 
+/**
+ * Middleware to verify authenticated user (admin or member)
+ * Allows both admins and members to access endpoints
+ * Members get read-only access, admins get full access
+ */
+const authenticatedUserMiddleware = (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        error: "Unauthorized",
+        message: "Missing or invalid authorization header",
+      });
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    // Allow any authenticated user (admin or member)
+    if (!decoded.email) {
+      return res.status(401).json({
+        error: "Unauthorized",
+        message: "Invalid token",
+      });
+    }
+
+    // Attach user info to request
+    req.user = {
+      email: decoded.email,
+      enrollmentNo: decoded.enrollmentNo,
+      name: decoded.name,
+      isAdmin: decoded.isAdmin || false,
+    };
+
+    next();
+  } catch (error) {
+    console.error("Auth middleware error:", error.message);
+    return res.status(401).json({
+      error: "Unauthorized",
+      message: "Invalid or expired token",
+    });
+  }
+};
+
 module.exports = {
   adminAuthMiddleware,
+  authenticatedUserMiddleware,
   JWT_SECRET,
 };

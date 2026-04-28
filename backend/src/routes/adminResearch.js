@@ -8,22 +8,21 @@ const {
   updateJoinRequest,
   deleteJoinRequest,
 } = require("../controllers/adminResearchController");
-const { adminAuthMiddleware } = require("../middleware/adminAuth");
+const { adminAuthMiddleware, authenticatedUserMiddleware } = require("../middleware/adminAuth");
 
 const router = express.Router();
 
-// All routes require admin authentication
-router.use(adminAuthMiddleware);
+// GET routes allow both admin and members (view access)
+router.get("/api/admin/research", authenticatedUserMiddleware, getResearch);
+router.get("/api/admin/join-requests", authenticatedUserMiddleware, getJoinRequests);
 
-// Research/Papers routes
-router.get("/api/admin/research", getResearch);
-router.post("/api/admin/research", createResearch);
-router.put("/api/admin/research/:id", updateResearch);
-router.delete("/api/admin/research/:id", deleteResearch);
+// POST/PUT/DELETE routes require admin authentication only
+router.post("/api/admin/research", adminAuthMiddleware, createResearch);
+router.put("/api/admin/research/:id", adminAuthMiddleware, updateResearch);
+router.delete("/api/admin/research/:id", adminAuthMiddleware, deleteResearch);
 
-// Join requests routes
-router.get("/api/admin/join-requests", getJoinRequests);
-router.put("/api/admin/join-requests/:id", updateJoinRequest);
-router.delete("/api/admin/join-requests/:id", deleteJoinRequest);
+// Join request update/delete require admin authentication
+router.put("/api/admin/join-requests/:id", adminAuthMiddleware, updateJoinRequest);
+router.delete("/api/admin/join-requests/:id", adminAuthMiddleware, deleteJoinRequest);
 
 module.exports = router;
