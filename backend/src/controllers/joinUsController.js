@@ -17,7 +17,7 @@ exports.submitJoinUs = async (req, res, next) => {
       reference_name,
     } = req.body;
 
-    const data = await prisma.joinUs.create({
+  const data = await prisma.joinUs.create({
       data: {
         name,
         enrollment,
@@ -29,7 +29,6 @@ exports.submitJoinUs = async (req, res, next) => {
         email,
         batch,
         source,
-        reference_name: reference_name || "",
       },
     });
 
