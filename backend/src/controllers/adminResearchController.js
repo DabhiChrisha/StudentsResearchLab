@@ -127,6 +127,7 @@ exports.deleteResearch = async (req, res, next) => {
 
 /**
  * Get all join requests - GET /api/admin/join-requests
+ * Merges in locally-stored statuses from JSON file (no DB column yet).
  */
 exports.getJoinRequests = async (req, res, next) => {
   try {
@@ -134,9 +135,29 @@ exports.getJoinRequests = async (req, res, next) => {
       orderBy: { created_at: "desc" },
     });
 
+    // Load statuses from local JSON file (if exists)
+    const fs = require("fs");
+    const path = require("path");
+    const statusFile = path.join(__dirname, "..", "data", "join_status.json");
+    let statuses = {};
+    try {
+      if (fs.existsSync(statusFile)) {
+        const raw = fs.readFileSync(statusFile, "utf8");
+        statuses = JSON.parse(raw || "{}");
+      }
+    } catch (err) {
+      console.error("Failed to read join_status.json:", err.message);
+      statuses = {};
+    }
+
+    const merged = serializeForJson(requests || []).map((r) => ({
+      ...r,
+      status: statuses[String(r.id)] || "pending",
+    }));
+
     res.json({
       success: true,
-      data: serializeForJson(requests || []),
+      data: merged,
     });
   } catch (error) {
     console.error("Get join requests error:", error);
@@ -152,21 +173,47 @@ exports.updateJoinRequest = async (req, res, next) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    if (!status || !["approved", "rejected"].includes(status)) {
+    if (!status || !["approved", "rejected", "pending"].includes(status)) {
       return res.status(400).json({
         error: "Invalid input",
-        message: "status must be 'approved' or 'rejected'",
+        message: "status must be 'pending', 'approved' or 'rejected'",
       });
     }
 
-    // Note: JoinUs model doesn't have a status field, update DB schema if needed
-    // For now, return success without updating
-    res.json({
-      success: true,
-      message: "Join request update successful (status field not in schema)",
-      data: { id, status, note: "Update schema to add status field to join_us table" },
-    });
+    // Persist status to local JSON file (no DB column yet)
+    const fs = require("fs");
+    const path = require("path");
+    const dataDir = path.join(__dirname, "..", "data");
+    const statusFile = path.join(dataDir, "join_status.json");
+
+    try {
+      if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+
+      let statuses = {};
+      if (fs.existsSync(statusFile)) {
+        const raw = fs.readFileSync(statusFile, "utf8");
+        statuses = JSON.parse(raw || "{}");
+      }
+
+      statuses[String(id)] = status;
+      fs.writeFileSync(statusFile, JSON.stringify(statuses, null, 2), "utf8");
+
+      res.json({
+        success: true,
+        message: "Join request status saved",
+        data: { id, status },
+      });
+    } catch (err) {
+      console.error("Failed to persist join request status:", err);
+      return res.status(500).json({ success: false, error: "Failed to persist status" });
+    }
   } catch (error) {
+    if (error.code === "P2025") {
+      return res.status(404).json({
+        error: "Not found",
+        message: "Join request not found",
+      });
+    }
     console.error("Update join request error:", error);
     next(error);
   }
