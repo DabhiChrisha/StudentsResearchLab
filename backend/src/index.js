@@ -25,6 +25,7 @@ const adminResearchRouter = require("./routes/adminResearch");
 const adminResearchProjectsRouter = require("./routes/adminResearchProjects");
 const adminAchievementsRouter = require("./routes/adminAchievements");
 const adminMemberCVRouter = require("./routes/adminMemberCV");
+const userScoresRouter = require("./routes/userScores");
 const imageUploadRouter = require("./routes/imageUpload");
 
 const app = express();
@@ -86,6 +87,7 @@ app.use(adminResearchRouter);
 app.use(adminResearchProjectsRouter);
 app.use(adminAchievementsRouter);
 app.use(adminMemberCVRouter);
+app.use(userScoresRouter);
 app.use(imageUploadRouter);
 
 // Global error handler — must be after all routes
