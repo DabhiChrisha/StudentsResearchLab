@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "admin-secret-key-change-in-product
 const adminAuthMiddleware = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-    
+
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
         error: "Unauthorized",
@@ -55,7 +55,7 @@ const adminAuthMiddleware = (req, res, next) => {
 const authenticatedUserMiddleware = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-    
+
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
         error: "Unauthorized",
