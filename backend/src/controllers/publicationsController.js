@@ -1,6 +1,6 @@
 const prisma = require('../lib/prisma');
 
-// GET /api/publications
+// GET /api/publication
 exports.getPublications = async (req, res, next) => {
   try {
     const { search, event_type, year, category } = req.query;

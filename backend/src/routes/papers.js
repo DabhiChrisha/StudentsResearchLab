@@ -27,7 +27,7 @@ router.get("/api/papers/:studentName", async (req, res, next) => {
 
     let paperTitles = [];
 
-    // Primary: publications table by enrollment number
+    // Primary: publication table by enrollment number
     if (enrollmentNo) {
       const pubRows = await prisma.publication.findMany({
         where: { enrollment_nos: { contains: enrollmentNo, mode: "insensitive" } },

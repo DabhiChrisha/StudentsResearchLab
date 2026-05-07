@@ -455,12 +455,12 @@ const Publications = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/publications`, { headers: API_HEADERS })
+    fetch(`${API_BASE_URL}/api/publication`, { headers: API_HEADERS })
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
       })
-      .then(({ publications: data }) => {
+      .then(({ publication: data }) => {
         setPublications(
           (data || []).map((pub) => ({
             id: pub.id,
