@@ -148,31 +148,20 @@ model MemberCvProfile {
 }
 
 model Publication {
-  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  serial_no       Int?     @unique
-  student_authors String
-  department      String?
-  institute       String?
-  title           String
-  event_type      String
-  is_srl_member   Boolean  @default(false)
-  paper_url       String?
-  pdf_url         String?
-  created_at      DateTime @default(now()) @db.Timestamptz(6)
-  updated_at      DateTime @default(now()) @db.Timestamptz(6)
-  venue           String?
-  date            String?
-  description     String?
-  tags            String[]
-  category        String?
-  enrollment_nos  String?
-  year            Int?
+  id                  Int       @id @default(autoincrement())
+  published_date      DateTime  @db.Date
+  conference_date     DateTime? @db.Date
+  title               String
+  authors             String[]
+  type_of_publication String
+  publisher           String
+  department          String
+  institute           String
+  link_to_paper       String?
+  conference_location String?
+  created_at          DateTime? @default(now()) @db.Timestamptz(6)
 
-  @@unique([title, venue], map: "publications_title_venue_unique")
-  @@index([category], map: "idx_publications_category")
-  @@index([title], map: "idx_publications_title")
-  @@index([year], map: "idx_publications_year")
-  @@map("publications")
+  @@map("publication")
 }
 
 model ResearchPaper {
