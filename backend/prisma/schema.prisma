@@ -183,12 +183,17 @@ model Publication {
   title               String
   authors             String[]
   type_of_publication String
-  publisher           String
+  publisher           String?
   department          String
   institute           String
   link_to_paper       String?
   conference_location String?
   created_at          DateTime? @default(now()) @db.Timestamptz(6)
+  publisher_logo_id   Int?
+  status              String    @default("PENDING")
+  approved_by         String?
+  approved_at         DateTime? @db.Timestamptz(6)
+  symbol              Symbol?   @relation(fields: [publisher_logo_id], references: [id], onDelete: SetNull)
 
   @@map("publication")
 }
@@ -287,4 +292,16 @@ model attendance {
   @@unique([enrollment_no, date], map: "idx_attendance_enrollment_date")
   @@index([date], map: "idx_attendance_date")
   @@index([enrollment_no], map: "idx_attendance_enrollment_no")
+}
+
+model Symbol {
+  id             Int           @id @default(autoincrement())
+  publisher_name String        @unique @db.VarChar(150)
+  logo_url       String
+  is_active      Boolean       @default(true)
+  created_at     DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime      @updatedAt @db.Timestamptz(6)
+  publications   Publication[]
+
+  @@map("symbol")
 }
