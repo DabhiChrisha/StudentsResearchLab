@@ -1,19 +1,20 @@
 require('dotenv').config();
 const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
+const { PrismaNeon } = require('@prisma/adapter-neon');
+const { neonConfig } = require('@neondatabase/serverless');
+const ws = require('ws');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+neonConfig.webSocketConstructor = ws;
+
+const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
-// Handle shutdown gracefully
 process.on('SIGINT', async () => {
-  console.log('\n🛑 Shutting down gracefully...');
   await prisma.$disconnect();
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-  console.log('\n🛑 Shutting down gracefully...');
   await prisma.$disconnect();
   process.exit(0);
 });

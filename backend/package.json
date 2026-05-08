@@ -10,6 +10,7 @@
     "db:generate": "npx prisma generate",
     "db:migrate": "npx prisma migrate dev",
     "db:seed": "npx prisma db seed",
+    "db:import-srl": "node prisma/importSrlStudents.js",
     "db:reset": "npx prisma migrate reset --force"
   },
   "description": "This directory contains the Python-based backend service for the Students Research Lab application.",
@@ -19,6 +20,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "@prisma/adapter-neon": "^7.8.0",
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
     "cloudinary": "^2.9.0",
@@ -29,9 +32,9 @@
     "multer": "^2.1.1",
     "nodemon": "^3.1.14",
     "pg": "^8.20.0",
-    "prisma": "^7.7.0"
+    "prisma": "^7.7.0",
+    "ws": "^8.20.0"
   },
-  "devDependencies": {},
   "prisma": {
     "seed": "node prisma/seed.js"
   }

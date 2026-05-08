@@ -455,12 +455,12 @@ const Publications = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/publication`, { headers: API_HEADERS })
+    fetch(`${API_BASE_URL}/api/publications`, { headers: API_HEADERS })
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
       })
-      .then(({ publication: data }) => {
+      .then(({ publications: data }) => {
         setPublications(
           (data || []).map((pub) => ({
             id: pub.id,
@@ -484,7 +484,10 @@ const Publications = () => {
   }, []);
 
   const filteredPublications = publications.filter((pub) => {
-    const matchesCat = activeCategory === "All" || pub.category === activeCategory;
+    const matchesCat =
+      activeCategory === "All" ||
+      (pub.category || "").toLowerCase().includes(activeCategory.toLowerCase()) ||
+      activeCategory.toLowerCase().includes((pub.category || "").toLowerCase());
     const searchLower = searchQuery.toLowerCase();
     const matchesQuery =
       (pub.title || "").toLowerCase().includes(searchLower) ||

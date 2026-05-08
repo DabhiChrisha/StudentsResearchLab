@@ -1,93 +1,45 @@
 const prisma = require('../lib/prisma');
 
-function parseArrayField(val) {
-  if (!val || val === "-") return [];
-  if (Array.isArray(val)) return val.filter((v) => v && v !== "-");
-  if (typeof val === "string") {
-    const trimmed = val.trim();
-    if (["[]", "", "-"].includes(trimmed)) return [];
-    try {
-      const parsed = JSON.parse(trimmed);
-      if (Array.isArray(parsed)) return parsed.filter((v) => v && v !== "-");
-    } catch (e) {
-      // Ignore parse error
-    }
-    // Comma-separated fallback
-    return trimmed
-      .split(",")
-      .map((s) => s.trim())
-      .filter((s) => s && s !== "-");
-  }
-  return [];
-}
-
 // GET /api/batch-member-stats
+// Returns per-student counts for card metrics.
+// Single source of truth: srl_student_profiles joined with students_details.
+// No paper_authors, research_papers, or member_cv_profiles queries.
+
 exports.getBatchStats = async (req, res, next) => {
   try {
-    // Fetch ALL paper_authors with joined research_papers
-    const paperRows = await prisma.paperAuthor.findMany({
-      include: {
-        researchPaper: {
-          select: {
-            id: true,
-            title: true,
-          },
-        },
-      },
-    });
-
-    // Fetch ALL member_cv_profiles for hackathons
-    const profileRows = await prisma.memberCvProfile.findMany({
+    const profiles = await prisma.srlStudentProfile.findMany({
+      where: { is_active: true },
       select: {
-        enrollment_no: true,
-        hackathons: true,
+        enrollment_no:    true,
+        hackathons:       true,
+        papers_published: true,
+        research_works:   true,
+        students_details: { select: { student_name: true } },
       },
     });
 
-    let authorPapers = {};
-    (paperRows || []).forEach((row) => {
-      let author = (row.author_name || "").trim();
-      if (!author) return;
+    const statsByName          = {};
+    const enrollmentHackathons = {};
 
-      let paper = row.researchPaper;
-      if (paper) {
-        let items = Array.isArray(paper) ? paper : [paper];
-        items.forEach((p) => {
-          let pid = p.id;
-          let title = p.title;
-          if (pid && title && title.trim()) {
-            if (!authorPapers[author]) {
-              authorPapers[author] = new Set();
-            }
-            authorPapers[author].add(pid);
-          }
-        });
+    for (const p of profiles) {
+      const en      = (p.enrollment_no || '').trim().toUpperCase();
+      const name    = p.students_details?.student_name || null;
+      const hackArr = Array.isArray(p.hackathons)       ? p.hackathons.filter(Boolean)       : [];
+      const paperArr = Array.isArray(p.papers_published) ? p.papers_published.filter(Boolean) : [];
+      const workArr  = Array.isArray(p.research_works)   ? p.research_works.filter(Boolean)   : [];
+
+      if (en) enrollmentHackathons[en] = hackArr.length;
+
+      if (name) {
+        statsByName[name] = {
+          research_works_count:   workArr.length,
+          papers_published_count: paperArr.length,
+        };
       }
-    });
-
-    let enrollmentHackathons = {};
-    (profileRows || []).forEach((profile) => {
-      let enroll = (profile.enrollment_no || "")
-        .toString()
-        .trim()
-        .toUpperCase();
-      if (!enroll) return;
-
-      let hacks = parseArrayField(profile.hackathons);
-      enrollmentHackathons[enroll] = hacks.length;
-    });
-
-    let statsByName = {};
-    Object.entries(authorPapers).forEach(([name, paperIds]) => {
-      let count = paperIds.size;
-      statsByName[name] = {
-        research_works_count: count,
-        papers_published_count: count,
-      };
-    });
+    }
 
     res.json({
-      stats_by_name: statsByName,
+      stats_by_name:            statsByName,
       hackathons_by_enrollment: enrollmentHackathons,
     });
   } catch (err) {

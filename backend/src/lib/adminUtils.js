@@ -13,9 +13,7 @@ const EXCLUDED_TEST_USERS = {
     "kandarp gajjar",
     "nancy patel",
   ],
-  emails: [
-    // Add test email patterns if needed
-  ],
+  emails: [],
   enrollmentNos: [
     "22BECE30091",
     "22BEIT30123",
@@ -118,10 +116,20 @@ const isExcludedStudent = (studentName, enrollmentNo) => {
   return EXCLUDED_TEST_USERS.names.some(name => name.toLowerCase() === nameNormalized);
 };
 
+// Used only by /api/researchers — excludes true admins but allows Research Assistants through.
+const shouldExcludeFromResearchers = (student) => {
+  if (!student) return true;
+  if (student.member_type === "admin") return true;
+  if (student.is_admin === true) return true;
+  if (isAdminEmail(student.email)) return true;
+  return false;
+};
+
 module.exports = {
   generateAdminToken,
   isAdminEmail,
   shouldExcludeUser,
+  shouldExcludeFromResearchers,
   filterOutTestAndAdminUsers,
   isExcludedStudent,
   EXCLUDED_TEST_USERS,

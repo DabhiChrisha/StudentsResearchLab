@@ -27,9 +27,38 @@ model StudentsDetail {
   profile_image            String?
   is_admin                 Boolean                    @default(false)
   research_project_members research_project_members[]
+  srl_student_profile      SrlStudentProfile?
 
   @@index([enrollment_no], map: "idx_sd_enrollment")
   @@map("students_details")
+}
+
+model SrlStudentProfile {
+  id                    Int        @id @default(autoincrement())
+  enrollment_no         String     @unique @db.VarChar(20)
+  linkedin              String?
+  roles                 String[]
+  reflection            String?
+  research_areas        String[]
+  ongoing_research      Json       @default("[]")
+  research_works        Json       @default("[]")
+  achievements          Json       @default("[]")
+  papers_published      Json       @default("[]")
+  hackathons            Json       @default("[]")
+  srl_publications      Json       @default("[]")
+  achievements_extended Json?
+  metadata              Json?
+  is_active             Boolean    @default(true)
+  deleted_at            DateTime?  @db.Timestamptz(6)
+  created_by            String?    @db.VarChar(150)
+  updated_by            String?    @db.VarChar(150)
+  created_at            DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime   @default(now()) @db.Timestamptz(6)
+  students_details      StudentsDetail @relation(fields: [enrollment_no], references: [enrollment_no], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([enrollment_no], map: "idx_ssp_enrollment")
+  @@index([is_active], map: "idx_ssp_is_active")
+  @@map("srl_student_profiles")
 }
 
 model DebateScore {
