@@ -36,29 +36,47 @@ const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
 
     if (isLoading) {
         return (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                {[...Array(10)].map((_, index) => (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3 sm:gap-4">
+                {[...Array(16)].map((_, index) => (
                     <div
                         key={index}
-                        className="group relative flex flex-col overflow-hidden rounded-[2.5rem] bg-slate-50 border border-slate-100 animate-shimmer"
+                        className="group relative flex flex-col overflow-hidden rounded-[1.5rem] bg-slate-100 border border-slate-100 shadow-[0_4px_12px_rgba(0,0,0,0.02)]"
                     >
-                        {/* Top: Image Box Skeleton */}
-                        <div className="p-4">
-                            <div className="relative aspect-[4/5] w-full rounded-[2rem] bg-slate-200 animate-pulse"></div>
+                        {/* Top: Image Skeleton - 1:1 aspect ratio matching actual cards */}
+                        <div className="p-2">
+                            <div className="relative aspect-square w-full rounded-[1rem] bg-gradient-to-br from-slate-200 via-slate-150 to-slate-200 animate-pulse"></div>
                         </div>
 
                         {/* Bottom: Info Section Skeleton */}
-                        <div className="px-6 pb-6 pt-2 flex flex-col gap-3">
-                            <div className="h-6 bg-slate-200 rounded-lg w-3/4 animate-pulse"></div>
-                            <div className="h-3 bg-slate-100 rounded-md w-1/2 animate-pulse"></div>
-
-                            <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
-                                <div className="flex gap-4">
-                                    <div className="w-8 h-4 bg-slate-100 rounded animate-pulse"></div>
-                                    <div className="w-8 h-4 bg-slate-100 rounded animate-pulse"></div>
-                                    <div className="w-8 h-4 bg-slate-100 rounded animate-pulse"></div>
+                        <div className="px-3 pb-3 pt-0.5 flex-1 flex flex-col">
+                            {/* Name Skeleton */}
+                            <div className="mb-2">
+                                <div className="h-4 bg-slate-200 rounded-md w-5/6 animate-pulse mb-1.5"></div>
+                                {/* Semester Badge + Department Skeleton */}
+                                <div className="flex items-center gap-1">
+                                    <div className="w-12 h-4 bg-slate-200 rounded-sm animate-pulse"></div>
+                                    <div className="w-16 h-3 bg-slate-150 rounded-xs animate-pulse"></div>
                                 </div>
-                                <div className="w-8 h-8 rounded-xl bg-slate-100 animate-pulse"></div>
+                            </div>
+
+                            {/* Research Area Tag Skeleton */}
+                            <div className="flex flex-wrap gap-1 mb-3">
+                                <div className="w-16 h-3.5 bg-slate-150 rounded-md animate-pulse"></div>
+                            </div>
+
+                            {/* Bottom Row: Metrics + Action Button Skeleton */}
+                            <div className="mt-auto pt-5 border-t border-slate-150 flex items-center justify-between gap-3">
+                                {/* Metrics Placeholders - 3 compact metrics */}
+                                <div className="flex gap-3 lg:gap-2">
+                                    {[0, 1, 2].map(i => (
+                                        <div key={i} className="flex flex-col items-center gap-0.5">
+                                            <div className="w-6 h-3 bg-slate-200 rounded animate-pulse"></div>
+                                            <div className="w-8 h-2 bg-slate-150 rounded animate-pulse"></div>
+                                        </div>
+                                    ))}
+                                </div>
+                                {/* Action Button Skeleton */}
+                                <div className="shrink-0 w-7 h-7 rounded-lg bg-slate-200 animate-pulse"></div>
                             </div>
                         </div>
                     </div>
@@ -149,3 +167,22 @@ const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
 };
 
 export default ChromaGrid;
+
+// Add global styles for animations if not already present
+if (typeof window !== 'undefined' && !document.getElementById('chroma-grid-styles')) {
+    const style = document.createElement('style');
+    style.id = 'chroma-grid-styles';
+    style.textContent = `
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        .animate-shimmer {
+            animation: shimmer 3s infinite;
+            background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+            background-size: 1000px 100%;
+            background-position: -1000px 0;
+        }
+    `;
+    document.head.appendChild(style);
+}

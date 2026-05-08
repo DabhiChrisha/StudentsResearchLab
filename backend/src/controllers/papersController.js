@@ -87,35 +87,40 @@ exports.getPapersByStudent = async (req, res, next) => {
       });
     }
 
-    // --- Papers: query publications table by enrollment number ---
+    // --- Papers, Hackathons, Research Areas: from srl_student_profiles ---
     let paperTitles = [];
+    let hackathons = [];
+    let researchAreas = [];
+
     if (enrollmentNo) {
-      const pubRows = await prisma.publication.findMany({
-        where: {
-          enrollment_nos: {
-            contains: enrollmentNo,
-            mode: 'insensitive',
-          },
-        },
+      const srlProfile = await prisma.srlStudentProfile.findUnique({
+        where: { enrollment_no: enrollmentNo, is_active: true },
         select: {
-          title: true,
-          enrollment_nos: true,
-          category: true,
+          hackathons: true,
+          research_areas: true,
+          srl_publications: true,
+          papers_published: true,
         },
       });
 
-      // Double-check the match is exact (avoid "30144" matching "30144X")
-      const enrollPattern = new RegExp(`(^|,)${enrollmentNo}(,|$)`);
-      paperTitles = (pubRows || [])
-        .filter((row) => {
-          const isMatch = enrollPattern.test(row.enrollment_nos || "");
-          const isUnderReview = (row.category || "").toLowerCase().includes("under review");
-          return isMatch && !isUnderReview;
-        })
-        .map((row) => row.title);
+      if (srlProfile) {
+        hackathons    = parseArrayField(srlProfile.hackathons);
+        researchAreas = parseArrayField(srlProfile.research_areas);
+
+        // Prefer srl_publications (structured), exclude "under review"
+        const srlPubs = parseArrayField(srlProfile.srl_publications);
+        const published = srlPubs.filter(
+          (p) => (p?.category || "").toLowerCase() !== "paper under review"
+        );
+        if (published.length > 0) {
+          paperTitles = published.map((p) => (typeof p === "string" ? p : p?.title || "")).filter(Boolean);
+        } else {
+          paperTitles = parseArrayField(srlProfile.papers_published);
+        }
+      }
     }
 
-    // --- Fallback: legacy paper_authors table (if publications table is empty for this student) ---
+    // --- Fallback: legacy paper_authors table ---
     if (paperTitles.length === 0 && studentName) {
       const legacyRows = await prisma.paperAuthor.findMany({
         where: {
@@ -136,27 +141,6 @@ exports.getPapersByStudent = async (req, res, next) => {
           paperTitles.push(row.researchPaper.title.trim());
         }
       });
-    }
-
-    // --- Hackathons + Research Areas: member_cv_profiles ---
-    let hackathons = [];
-    let researchAreas = [];
-
-    if (enrollmentNo) {
-      const profile = await prisma.memberCvProfile.findUnique({
-        where: {
-          enrollment_no: enrollmentNo,
-        },
-        select: {
-          hackathons: true,
-          research_area: true,
-        },
-      });
-
-      if (profile) {
-        hackathons = parseArrayField(profile.hackathons);
-        researchAreas = parseArrayField(profile.research_area);
-      }
     }
 
     res.json({

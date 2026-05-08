@@ -26,6 +26,7 @@ const adminResearchProjectsRouter = require("./routes/adminResearchProjects");
 const adminPublicationsRouter = require("./routes/adminPublications");
 const adminAchievementsRouter = require("./routes/adminAchievements");
 const adminMemberCVRouter = require("./routes/adminMemberCV");
+const adminSrlProfilesRouter = require("./routes/adminSrlProfiles");
 const userScoresRouter = require("./routes/userScores");
 const imageUploadRouter = require("./routes/imageUpload");
 
@@ -89,6 +90,7 @@ app.use(adminResearchProjectsRouter);
 app.use(adminPublicationsRouter);
 app.use(adminAchievementsRouter);
 app.use(adminMemberCVRouter);
+app.use(adminSrlProfilesRouter);
 app.use(userScoresRouter);
 app.use(imageUploadRouter);
 

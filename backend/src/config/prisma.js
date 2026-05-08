@@ -1,17 +1,12 @@
 require('dotenv').config();
 const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
-const { Pool } = require('pg');
+const { PrismaNeon } = require('@prisma/adapter-neon');
+const { neonConfig } = require('@neondatabase/serverless');
+const ws = require('ws');
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-  max: 5,                   // limit concurrent connections to Neon's pool
-  idleTimeoutMillis: 30000, // release idle connections after 30s
-  connectionTimeoutMillis: 10000, // fail fast (10s) instead of hanging
-});
+neonConfig.webSocketConstructor = ws;
 
-const adapter = new PrismaPg(pool);
+const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
 module.exports = prisma;

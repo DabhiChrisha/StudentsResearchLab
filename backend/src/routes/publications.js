@@ -3,7 +3,7 @@ const prisma = require("../config/prisma");
 
 const router = express.Router();
 
-router.get("/api/publication", async (req, res, next) => {
+router.get("/api/publications", async (req, res, next) => {
   try {
     const { search, event_type, year, category } = req.query;
 
@@ -33,17 +33,22 @@ router.get("/api/publication", async (req, res, next) => {
       orderBy: [{ published_date: "desc" }, { created_at: "desc" }],
     });
 
+    const toTitleCase = (str) =>
+      str ? str.replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()) : "";
+
     const mapped = (data || []).map((row) => ({
       ...row,
       student_authors: Array.isArray(row.authors) ? row.authors.join(", ") : "",
-      event_type: row.type_of_publication,
+      event_type: toTitleCase(row.type_of_publication),
       paper_url: row.link_to_paper,
-      venue: row.conference_location,
+      venue: row.conference_location || row.publisher || "",
       date: row.published_date ? new Date(row.published_date).toISOString().split("T")[0] : null,
       year: row.published_date ? new Date(row.published_date).getUTCFullYear() : null,
+      tags: [],
+      description: "",
     }));
 
-    res.json({ publication: mapped });
+    res.json({ publications: mapped });
   } catch (err) {
     next(err);
   }
