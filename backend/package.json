@@ -11,8 +11,7 @@
     "db:migrate": "npx prisma migrate dev",
     "db:seed": "npx prisma db seed",
     "db:import-srl": "node prisma/importSrlStudents.js",
-    "db:reset": "npx prisma migrate reset --force",
-    "db:migrate-pub-status": "node prisma/migratePublicationStatus.js"
+    "db:reset": "npx prisma migrate reset --force"
   },
   "description": "This directory contains the Python-based backend service for the Students Research Lab application.",
   "version": "1.0.0",

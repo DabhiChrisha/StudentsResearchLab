@@ -102,7 +102,7 @@ app.use(publicationSymbolRouter);
 
 // Global error handler — must be after all routes
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error("[Global Error] code:", err.code, "| meta:", JSON.stringify(err.meta), "| message:", err.message);
   res.status(500).json({ error: "Internal Server Error", detail: err.message });
 });
 
