@@ -1,5 +1,8 @@
 const prisma = require("../lib/prisma");
 
+const VALID_STATUSES  = ['PENDING', 'APPROVED', 'REJECTED'];
+const ALLOWED_TYPES   = ['conference', 'book chapter', 'journal', 'patent', 'poster'];
+
 const normalizeString = (value) => {
   if (value === undefined || value === null) return null;
   if (typeof value === "string") {
@@ -32,8 +35,7 @@ const buildPublicationData = (body) => {
     const raw = normalizeString(body.event_type ?? body.type_of_publication);
     if (raw) {
       const lower = raw.toLowerCase();
-      const allowed = ['conference', 'book chapter', 'journal', 'patent'];
-      publicationData.type_of_publication = allowed.includes(lower) ? lower : null;
+      publicationData.type_of_publication = ALLOWED_TYPES.includes(lower) ? lower : null;
     }
   }
   if (body.paper_url !== undefined || body.link_to_paper !== undefined) {
@@ -45,13 +47,23 @@ const buildPublicationData = (body) => {
     publicationData.conference_date = normalizeDate(body.conference_date);
   }
 
-  // Legacy aliases from admin UI
+  // Legacy alias from admin UI
   if (body.category !== undefined && publicationData.type_of_publication === undefined) {
     const rawCat = normalizeString(body.category);
     if (rawCat) {
       const lower = rawCat.toLowerCase();
-      const allowed = ['conference', 'book chapter', 'journal', 'patent'];
-      publicationData.type_of_publication = allowed.includes(lower) ? lower : null;
+      publicationData.type_of_publication = ALLOWED_TYPES.includes(lower) ? lower : null;
+    }
+  }
+
+  // Publisher logo — either a predefined Symbol ID or null
+  if (body.publisher_logo_id !== undefined) {
+    const raw = body.publisher_logo_id;
+    if (raw === null || raw === "" || raw === "null") {
+      publicationData.publisher_logo_id = null;
+    } else {
+      const parsed = Number.parseInt(raw, 10);
+      publicationData.publisher_logo_id = Number.isNaN(parsed) ? null : parsed;
     }
   }
 
@@ -59,27 +71,48 @@ const buildPublicationData = (body) => {
 };
 
 const toAdminPublicationResponse = (row) => {
-  const publishedDate = row.published_date ? new Date(row.published_date).toISOString().split("T")[0] : null;
+  const publishedDate  = row.published_date  ? new Date(row.published_date).toISOString().split("T")[0]  : null;
   const conferenceDate = row.conference_date ? new Date(row.conference_date).toISOString().split("T")[0] : null;
+  const logo_url = row.symbol?.logo_url || null;
+  const { symbol, ...rest } = row;
 
   return {
-    ...row,
-    student_authors: Array.isArray(row.authors) ? row.authors.join(", ") : "",
-    event_type: row.type_of_publication,
-    paper_url: row.link_to_paper,
-    venue: row.conference_location,
-    date: publishedDate,
-    year: publishedDate ? Number.parseInt(publishedDate.split("-")[0], 10) : null,
+    ...rest,
+    student_authors:   Array.isArray(row.authors) ? row.authors.join(", ") : "",
+    event_type:        row.type_of_publication,
+    paper_url:         row.link_to_paper,
+    venue:             row.conference_location,
+    date:              publishedDate,
+    conference_date:   conferenceDate,
+    year:              publishedDate ? Number.parseInt(publishedDate.split("-")[0], 10) : null,
+    publisher_logo_id: row.publisher_logo_id ?? null,
+    logo_url,
+    status:            row.status,
+    approved_by:       row.approved_by ?? null,
+    approved_at:       row.approved_at ? new Date(row.approved_at).toISOString() : null,
   };
 };
 
 /**
- * Get all publications - GET /api/admin/publication
+ * GET /api/admin/publication[?status=PENDING|APPROVED|REJECTED]
  */
 exports.getPublications = async (req, res, next) => {
   try {
+    const where = {};
+
+    const { status } = req.query;
+    if (status) {
+      const upper = status.toUpperCase();
+      if (!VALID_STATUSES.includes(upper)) {
+        return res.status(400).json({ error: "Invalid input", message: `status must be one of: ${VALID_STATUSES.join(', ')}` });
+      }
+      where.status = upper;
+    }
+
     const publications = await prisma.publication.findMany({
-      orderBy: [{ published_date: "desc" }, { created_at: "desc" }],
+      where,
+      include:  { symbol: { select: { logo_url: true } } },
+      orderBy: [{ created_at: "desc" }, { published_date: "desc" }],
     });
 
     res.json({
@@ -93,7 +126,7 @@ exports.getPublications = async (req, res, next) => {
 };
 
 /**
- * Get single publication - GET /api/admin/publication/:id
+ * GET /api/admin/publication/:id
  */
 exports.getPublication = async (req, res, next) => {
   try {
@@ -103,20 +136,15 @@ exports.getPublication = async (req, res, next) => {
     }
 
     const publication = await prisma.publication.findUnique({
-      where: { id },
+      where:   { id },
+      include: { symbol: { select: { logo_url: true } } },
     });
 
     if (!publication) {
-      return res.status(404).json({
-        error: "Not found",
-        message: "Publication not found",
-      });
+      return res.status(404).json({ error: "Not found", message: "Publication not found" });
     }
 
-    res.json({
-      success: true,
-      data: toAdminPublicationResponse(publication),
-    });
+    res.json({ success: true, data: toAdminPublicationResponse(publication) });
   } catch (error) {
     console.error("Get publication error:", error);
     next(error);
@@ -124,30 +152,41 @@ exports.getPublication = async (req, res, next) => {
 };
 
 /**
- * Create publication - POST /api/admin/publication
+ * POST /api/admin/publication
+ * Admin-created publications are immediately APPROVED.
  */
 exports.createPublication = async (req, res, next) => {
   try {
     const publicationData = buildPublicationData(req.body);
 
-    // Validate required fields
     if (!publicationData.title) {
+      return res.status(400).json({ error: "Invalid input", message: "title is required" });
+    }
+
+    const resolvedType = publicationData.type_of_publication ?? "conference";
+    if (resolvedType !== 'poster' && !publicationData.publisher) {
       return res.status(400).json({
         error: "Invalid input",
-        message: "title is required",
+        message: "Publisher is required for this publication type",
       });
     }
 
+    const now = new Date();
     const publication = await prisma.publication.create({
       data: {
         ...publicationData,
-        authors: publicationData.authors ?? [],
-        published_date: publicationData.published_date ?? new Date(),
-        type_of_publication: publicationData.type_of_publication ?? "conference",
-        publisher: publicationData.publisher ?? "Students Research Lab",
-        department: publicationData.department ?? "General",
-        institute: publicationData.institute ?? "LDRP-ITR",
+        authors:             publicationData.authors             ?? [],
+        published_date:      publicationData.published_date      ?? now,
+        type_of_publication: resolvedType,
+        publisher:           publicationData.publisher           ?? null,
+        department:          publicationData.department          ?? "General",
+        institute:           publicationData.institute           ?? "LDRP-ITR",
+        publisher_logo_id:   publicationData.publisher_logo_id  ?? null,
+        status:              "APPROVED",
+        approved_by:         req.admin?.email ?? null,
+        approved_at:         now,
       },
+      include: { symbol: { select: { logo_url: true } } },
     });
 
     res.status(201).json({
@@ -162,7 +201,8 @@ exports.createPublication = async (req, res, next) => {
 };
 
 /**
- * Update publication - PUT /api/admin/publication/:id
+ * PUT /api/admin/publication/:id
+ * Status is NOT changed by this endpoint — use approve/reject endpoints.
  */
 exports.updatePublication = async (req, res, next) => {
   try {
@@ -173,9 +213,30 @@ exports.updatePublication = async (req, res, next) => {
 
     const updateData = buildPublicationData(req.body);
 
+    const touchesType      = req.body.event_type !== undefined || req.body.type_of_publication !== undefined || req.body.category !== undefined;
+    const touchesPublisher = req.body.publisher !== undefined || req.body.institute !== undefined;
+
+    if (touchesType || touchesPublisher) {
+      let effectiveType = updateData.type_of_publication;
+      if (effectiveType === undefined) {
+        const current = await prisma.publication.findUnique({ where: { id }, select: { type_of_publication: true } });
+        if (!current) {
+          return res.status(404).json({ error: "Not found", message: "Publication not found" });
+        }
+        effectiveType = current.type_of_publication;
+      }
+      if (effectiveType !== 'poster' && touchesPublisher && !updateData.publisher) {
+        return res.status(400).json({
+          error: "Invalid input",
+          message: "Publisher is required for this publication type",
+        });
+      }
+    }
+
     const publication = await prisma.publication.update({
-      where: { id },
-      data: updateData,
+      where:   { id },
+      data:    updateData,
+      include: { symbol: { select: { logo_url: true } } },
     });
 
     res.json({
@@ -186,17 +247,14 @@ exports.updatePublication = async (req, res, next) => {
   } catch (error) {
     console.error("Update publication error:", error);
     if (error.code === "P2025") {
-      return res.status(404).json({
-        error: "Not found",
-        message: "Publication not found",
-      });
+      return res.status(404).json({ error: "Not found", message: "Publication not found" });
     }
     next(error);
   }
 };
 
 /**
- * Delete publication - DELETE /api/admin/publication/:id
+ * DELETE /api/admin/publication/:id
  */
 exports.deletePublication = async (req, res, next) => {
   try {
@@ -205,21 +263,99 @@ exports.deletePublication = async (req, res, next) => {
       return res.status(400).json({ error: "Invalid input", message: "Invalid publication id" });
     }
 
-    await prisma.publication.delete({
+    await prisma.publication.delete({ where: { id } });
+
+    res.json({ success: true, message: "Publication deleted successfully" });
+  } catch (error) {
+    console.error("Delete publication error:", error);
+    if (error.code === "P2025") {
+      return res.status(404).json({ error: "Not found", message: "Publication not found" });
+    }
+    next(error);
+  }
+};
+
+/**
+ * PATCH /api/admin/publication/:id/approve
+ */
+exports.approvePublication = async (req, res, next) => {
+  try {
+    const id = Number.parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) {
+      return res.status(400).json({ error: "Invalid input", message: "Invalid publication id" });
+    }
+
+    const existing = await prisma.publication.findUnique({ where: { id }, select: { status: true } });
+    if (!existing) {
+      return res.status(404).json({ error: "Not found", message: "Publication not found" });
+    }
+    if (existing.status === 'APPROVED') {
+      return res.status(409).json({ error: "Conflict", message: "Publication is already approved" });
+    }
+
+    const publication = await prisma.publication.update({
       where: { id },
+      data: {
+        status:      "APPROVED",
+        approved_by: req.admin.email,
+        approved_at: new Date(),
+      },
+      include: { symbol: { select: { logo_url: true } } },
     });
 
     res.json({
       success: true,
-      message: "Publication deleted successfully",
+      message: "Publication approved successfully",
+      status:  "APPROVED",
+      data:    toAdminPublicationResponse(publication),
     });
   } catch (error) {
-    console.error("Delete publication error:", error);
+    console.error("Approve publication error:", error);
     if (error.code === "P2025") {
-      return res.status(404).json({
-        error: "Not found",
-        message: "Publication not found",
-      });
+      return res.status(404).json({ error: "Not found", message: "Publication not found" });
+    }
+    next(error);
+  }
+};
+
+/**
+ * PATCH /api/admin/publication/:id/reject
+ */
+exports.rejectPublication = async (req, res, next) => {
+  try {
+    const id = Number.parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) {
+      return res.status(400).json({ error: "Invalid input", message: "Invalid publication id" });
+    }
+
+    const existing = await prisma.publication.findUnique({ where: { id }, select: { status: true } });
+    if (!existing) {
+      return res.status(404).json({ error: "Not found", message: "Publication not found" });
+    }
+    if (existing.status === 'REJECTED') {
+      return res.status(409).json({ error: "Conflict", message: "Publication is already rejected" });
+    }
+
+    const publication = await prisma.publication.update({
+      where: { id },
+      data: {
+        status:      "REJECTED",
+        approved_by: null,
+        approved_at: null,
+      },
+      include: { symbol: { select: { logo_url: true } } },
+    });
+
+    res.json({
+      success: true,
+      message: "Publication rejected successfully",
+      status:  "REJECTED",
+      data:    toAdminPublicationResponse(publication),
+    });
+  } catch (error) {
+    console.error("Reject publication error:", error);
+    if (error.code === "P2025") {
+      return res.status(404).json({ error: "Not found", message: "Publication not found" });
     }
     next(error);
   }

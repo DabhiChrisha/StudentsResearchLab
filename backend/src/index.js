@@ -29,6 +29,9 @@ const adminMemberCVRouter = require("./routes/adminMemberCV");
 const adminSrlProfilesRouter = require("./routes/adminSrlProfiles");
 const userScoresRouter = require("./routes/userScores");
 const imageUploadRouter = require("./routes/imageUpload");
+const publisherLogosRouter    = require("./routes/publisherLogos");
+const adminSymbolsRouter      = require("./routes/adminSymbols");
+const publicationSymbolRouter = require("./routes/publicationSymbol");
 
 const app = express();
 const ALLOWED_ORIGINS = [
@@ -93,6 +96,9 @@ app.use(adminMemberCVRouter);
 app.use(adminSrlProfilesRouter);
 app.use(userScoresRouter);
 app.use(imageUploadRouter);
+app.use(publisherLogosRouter);
+app.use(adminSymbolsRouter);
+app.use(publicationSymbolRouter);
 
 // Global error handler — must be after all routes
 app.use((err, req, res, next) => {

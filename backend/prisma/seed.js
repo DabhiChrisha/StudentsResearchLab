@@ -108,6 +108,29 @@ async function main() {
     });
     console.log('✅ Seeded 1 join_us record\n');
 
+    // ==================== SEED SYMBOL (Publisher Logos) ====================
+    console.log('🏷️  Seeding symbol table (publisher logos)...');
+    // Cloudinary URLs were generated via: npm run logos:upload
+    // IDs are stable — frontend fetches logos by ID. Do NOT change them.
+    const publishers = [
+      { id: 1, publisher_name: 'IEEE Xplore',               logo_url: 'https://res.cloudinary.com/dv66zfsc6/image/upload/v1778256982/publication-symbols/ieee_xplore.jpg' },
+      { id: 2, publisher_name: 'VMFRDU',                    logo_url: 'https://res.cloudinary.com/dv66zfsc6/image/upload/v1778256991/publication-symbols/vmfrdu.png' },
+      { id: 3, publisher_name: 'Springer',                  logo_url: 'https://res.cloudinary.com/dv66zfsc6/image/upload/v1778256986/publication-symbols/springer.webp' },
+      { id: 4, publisher_name: 'INDERSCIENCE',              logo_url: 'https://res.cloudinary.com/dv66zfsc6/image/upload/v1778256984/publication-symbols/inderscience.webp' },
+      { id: 5, publisher_name: 'Wolters Kluwer',            logo_url: 'https://res.cloudinary.com/dv66zfsc6/image/upload/v1778256992/publication-symbols/wolters_kluwer.png' },
+      { id: 6, publisher_name: 'CEUR Workshop Proceedings', logo_url: 'https://res.cloudinary.com/dv66zfsc6/image/upload/v1778256979/publication-symbols/ceur.png' },
+      { id: 7, publisher_name: 'Other',                     logo_url: '' }, // sentinel — custom logos uploaded at runtime via POST /api/publication-symbol/upload
+    ];
+
+    for (const pub of publishers) {
+      await prisma.symbol.upsert({
+        where: { id: pub.id },
+        update: { publisher_name: pub.publisher_name, logo_url: pub.logo_url },
+        create: pub,
+      });
+    }
+    console.log(`✅ Seeded ${publishers.length} publisher logo rows\n`);
+
     console.log('═══════════════════════════════════════════════');
     console.log('✅ CORE SEED COMPLETED!\n');
     console.log('📊 Summary:');
@@ -115,7 +138,8 @@ async function main() {
     console.log('   ✓ 11 srl_sessions');
     console.log('   ✓ 10 leaderboard_stats (sample)');
     console.log('   ✓ 1 join_us');
-    console.log('\n💡 TODO: Add remaining research papers, projects, activities, achievements');
+    console.log('   ✓ 6 symbol (publisher logos — placeholders)');
+    console.log('\n💡 Custom publisher logos are created via POST /api/publication-symbol/upload at runtime.');
     console.log('═══════════════════════════════════════════════\n');
 
   } catch (error) {
