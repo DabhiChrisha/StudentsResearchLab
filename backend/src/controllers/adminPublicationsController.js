@@ -1,7 +1,7 @@
 const prisma = require("../lib/prisma");
 
 const VALID_STATUSES  = ['PENDING', 'APPROVED', 'REJECTED'];
-const ALLOWED_TYPES   = ['conference', 'book chapter', 'journal', 'patent', 'poster'];
+const ALLOWED_TYPES   = ['conference', 'book chapter', 'journal', 'patent', 'poster', 'research artical'];
 
 const normalizeString = (value) => {
   if (value === undefined || value === null) return null;
@@ -195,7 +195,10 @@ exports.createPublication = async (req, res, next) => {
       data: toAdminPublicationResponse(publication),
     });
   } catch (error) {
-    console.error("Create publication error:", error);
+    console.error("Create publication error:", error.code, error.meta, error.message);
+    if (error.code === "P2003") {
+      return res.status(400).json({ error: "Invalid input", message: "Invalid publisher_logo_id — referenced symbol does not exist" });
+    }
     next(error);
   }
 };
@@ -245,9 +248,12 @@ exports.updatePublication = async (req, res, next) => {
       data: toAdminPublicationResponse(publication),
     });
   } catch (error) {
-    console.error("Update publication error:", error);
+    console.error("Update publication error:", error.code, error.meta, error.message);
     if (error.code === "P2025") {
       return res.status(404).json({ error: "Not found", message: "Publication not found" });
+    }
+    if (error.code === "P2003") {
+      return res.status(400).json({ error: "Invalid input", message: "Invalid publisher_logo_id — referenced symbol does not exist" });
     }
     next(error);
   }
