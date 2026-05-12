@@ -76,26 +76,35 @@ exports.markAttendance = async (req, res, next) => {
       where: { enrollment_no: String(enrollment_no) },
     });
 
-    const record = await prisma.LeaderboardStat.upsert({
+    const existing = await prisma.leaderboardStat.findFirst({
       where: {
-        enrollment_no_period: {
-          enrollment_no: String(enrollment_no),
-          period: String(period),
-        },
-      },
-      update: {
-        hours: hours ? parseFloat(hours) : undefined,
-        attendance: attendance ? parseInt(attendance) : undefined,
-      },
-      create: {
         enrollment_no: String(enrollment_no),
         period: String(period),
-        hours: parseFloat(hours) || 0,
-        attendance: parseInt(attendance) || 0,
-        student_name: student?.student_name || "",
-        serial_no: 0,
       },
     });
+
+    let record;
+    if (existing) {
+      record = await prisma.leaderboardStat.update({
+        where: { id: existing.id },
+        data: {
+          hours:      hours      !== undefined ? parseFloat(hours)      : undefined,
+          attendance: attendance !== undefined ? parseInt(attendance)    : undefined,
+        },
+      });
+    } else {
+      const maxSerial = await prisma.leaderboardStat.aggregate({ _max: { serial_no: true } });
+      record = await prisma.leaderboardStat.create({
+        data: {
+          enrollment_no: String(enrollment_no),
+          period:        String(period),
+          hours:         parseFloat(hours)    || 0,
+          attendance:    parseInt(attendance) || 0,
+          student_name:  student?.student_name || "",
+          serial_no:     (maxSerial._max.serial_no ?? 0) + 1,
+        },
+      });
+    }
 
     res.status(201).json({
       success: true,
