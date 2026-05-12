@@ -6,7 +6,7 @@ const serializeForJson = (value) =>
   );
 
 /**
- * Get member CV by enrollment - GET /api/admin/member-cv?enrollment_no=...
+ * GET /api/admin/member-cv?enrollment_no=...
  */
 exports.getMemberCVByEnrollment = async (req, res, next) => {
   try {
@@ -20,78 +20,64 @@ exports.getMemberCVByEnrollment = async (req, res, next) => {
       });
     }
 
-    // Members can view only their own CV profile.
     if (requestUser && !requestUser.isAdmin) {
       const requestedEnrollment = String(enrollment_no);
       const userEnrollment = String(requestUser.enrollmentNo || "");
-
       if (!userEnrollment || requestedEnrollment !== userEnrollment) {
-        return res.status(403).json({
-          success: false,
-          message: "You can only view your own profile",
-        });
+        return res.status(403).json({ success: false, message: "You can only view your own profile" });
       }
     }
 
-    const memberCV = await prisma.MemberCvProfile.findUnique({
+    const memberCV = await prisma.memberCvProfile.findUnique({
       where: { enrollment_no: String(enrollment_no) },
     });
 
     if (!memberCV) {
-      return res.json({
-        success: true,
-        data: null,
-        message: "No CV profile found - using defaults",
-      });
+      return res.json({ success: true, data: null, message: "No CV profile found - using defaults" });
     }
 
-    res.json({
-      success: true,
-      data: serializeForJson(memberCV),
-    });
+    res.json({ success: true, data: serializeForJson(memberCV) });
   } catch (error) {
-    console.error("Get member CV error:", error);
     next(error);
   }
 };
 
 /**
- * Update member CV - PUT /api/admin/member-cv
+ * PUT /api/admin/member-cv
  */
 exports.updateMemberCV = async (req, res, next) => {
   try {
     const {
       enrollment_no,
       student_name,
-      research_work_summary,
-      research_area,
+      linkedin_id,
+      semester,
+      department,
+      institute,
+      organization,
+      reflection,
       hackathons,
       research_papers,
-      patents,
-      projects,
-      updated_by,
+      research_work,
+      leadership,
+      awards,
+      certifications,
+      additional_achievements,
+      internships,
     } = req.body;
 
     if (!enrollment_no) {
-      return res.status(400).json({
-        success: false,
-        message: "enrollment_no is required",
-      });
+      return res.status(400).json({ success: false, message: "enrollment_no is required" });
     }
 
-    // Check if member trying to edit is only editing their own profile
     const requestUser = req.user;
     if (requestUser && !requestUser.isAdmin) {
-      // Member can only edit their own profile
       if (String(enrollment_no) !== String(requestUser.enrollmentNo || "")) {
-        return res.status(403).json({
-          success: false,
-          message: "You can only edit your own profile",
-        });
+        return res.status(403).json({ success: false, message: "You can only edit your own profile" });
       }
     }
 
-    const existingMemberCV = await prisma.MemberCvProfile.findUnique({
+    const existingMemberCV = await prisma.memberCvProfile.findUnique({
       where: { enrollment_no: String(enrollment_no) },
       select: { id: true },
     });
@@ -99,71 +85,67 @@ exports.updateMemberCV = async (req, res, next) => {
     let memberCV;
 
     if (existingMemberCV) {
-      memberCV = await prisma.MemberCvProfile.update({
+      memberCV = await prisma.memberCvProfile.update({
         where: { enrollment_no: String(enrollment_no) },
         data: {
-          student_name: student_name || undefined,
-          research_work_summary: research_work_summary || null,
-          research_area: research_area || null,
-          hackathons: hackathons || [],
-          research_papers: research_papers || [],
-          patents: patents || [],
-          projects: projects || [],
-          updated_by: updated_by || requestUser?.email || null,
-          updated_at: new Date(),
+          student_name:            student_name            || undefined,
+          linkedin_id:             linkedin_id             ?? null,
+          semester:                semester                ?? null,
+          department:              department              ?? null,
+          institute:               institute               ?? null,
+          organization:            organization            ?? null,
+          reflection:              reflection              ?? null,
+          hackathons:              hackathons              || [],
+          research_papers:         research_papers         || [],
+          research_work:           research_work           || [],
+          leadership:              leadership              || [],
+          awards:                  awards                  || [],
+          certifications:          certifications          || [],
+          additional_achievements: additional_achievements || [],
+          internships:             internships             || [],
+          updated_at:              new Date(),
         },
       });
     } else {
-      const maxIdResult = await prisma.$queryRaw`
-        SELECT COALESCE(MAX(id), 0) AS max_id
-        FROM member_cv_profiles
-      `;
-      const maxId = Array.isArray(maxIdResult) && maxIdResult[0] ? BigInt(maxIdResult[0].max_id || 0) : 0n;
-
-      memberCV = await prisma.MemberCvProfile.create({
+      memberCV = await prisma.memberCvProfile.create({
         data: {
-          id: maxId + 1n,
-          enrollment_no: String(enrollment_no),
-          student_name: student_name || "Unknown",
-          research_work_summary: research_work_summary || null,
-          research_area: research_area || null,
-          hackathons: hackathons || [],
-          research_papers: research_papers || [],
-          patents: patents || [],
-          projects: projects || [],
-          updated_by: updated_by || requestUser?.email || null,
+          enrollment_no:           String(enrollment_no),
+          student_name:            student_name || "Unknown",
+          linkedin_id:             linkedin_id             ?? null,
+          semester:                semester                ?? null,
+          department:              department              ?? null,
+          institute:               institute               ?? null,
+          organization:            organization            ?? null,
+          reflection:              reflection              ?? null,
+          hackathons:              hackathons              || [],
+          research_papers:         research_papers         || [],
+          research_work:           research_work           || [],
+          leadership:              leadership              || [],
+          awards:                  awards                  || [],
+          certifications:          certifications          || [],
+          additional_achievements: additional_achievements || [],
+          internships:             internships             || [],
         },
       });
     }
 
-    res.json({
-      success: true,
-      data: serializeForJson(memberCV),
-      message: "CV profile updated successfully",
-    });
+    res.json({ success: true, data: serializeForJson(memberCV), message: "CV profile updated successfully" });
   } catch (error) {
-    console.error("Update member CV error:", error);
     next(error);
   }
 };
 
 /**
- * Get all member CVs - GET /api/admin/member-cv/all
- * Admin only
+ * GET /api/admin/member-cv/all  (admin only)
  */
 exports.getAllMemberCVs = async (req, res, next) => {
   try {
-    const memberCVs = await prisma.MemberCvProfile.findMany({
+    const memberCVs = await prisma.memberCvProfile.findMany({
       orderBy: { updated_at: "desc" },
     });
 
-    res.json({
-      success: true,
-      data: serializeForJson(memberCVs),
-      count: memberCVs.length,
-    });
+    res.json({ success: true, data: serializeForJson(memberCVs), count: memberCVs.length });
   } catch (error) {
-    console.error("Get all member CVs error:", error);
     next(error);
   }
 };

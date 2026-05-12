@@ -43,7 +43,21 @@ export const useFetch = (fetchFn, dependencies = [], maxRetries = 3, retryInterv
         setError(null);
         setRetryCount(0);
         executeFetch(isMounted, 0);
-        return () => { isMounted = false; };
+
+        // Refetch when the user returns to the tab so new DB entries appear immediately.
+        const onVisible = () => {
+            if (document.visibilityState === 'visible' && isMounted) {
+                setLoading(true);
+                setError(null);
+                executeFetch(isMounted, 0);
+            }
+        };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            isMounted = false;
+            document.removeEventListener('visibilitychange', onVisible);
+        };
     }, dependencies);
 
     useEffect(() => {
@@ -72,6 +86,7 @@ export const fetchWithTimeout = async (url, options = {}, timeout = 10000) => {
 
     try {
         const response = await fetch(url, {
+            cache: 'no-store',
             ...options,
             headers: { ...API_HEADERS, ...(options.headers || {}) },
             signal: controller.signal,

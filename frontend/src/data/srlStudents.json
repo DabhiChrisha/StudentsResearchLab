@@ -144,7 +144,9 @@
       "department": "CE",
       "institute": "LDRP-ITR",
       "organization": "SRL, IEEE-KSV",
-      "researchWork": [],
+      "researchWork": [
+        "Ongoing: U-FIN: A Federated Generative Learning with RL-Tuned Dual-Stream Networks (TCNGAT) for Real-Time Financial Fraud Detection"
+      ],
       "hackathons": [
         "SSIP 2024 - Participant",
         "SSIP 2025 (Early) - Participant",
@@ -1491,6 +1493,7 @@
       "organization": "SRL, IEEE-KSV",
       "researchWork": [
         "Published: Exploring AI\u0027s Influence on Human Thinking (AISTS 2025)",
+        "Ongoing: U-FIN: A Federated Generative Learning with RL-Tuned Dual-Stream Networks (TCNGAT) for Real-Time Financial Fraud Detection",
         "Published: Misinformation Detection using LLMs (ACAI 2025)",
         "Published: Book Chapter: Introduction to Internet of Things (Springer)",
         "Winner Project: Student Attendance Tracking (Grant: ₹50,000)"
@@ -1621,6 +1624,7 @@
         "Accepted: Personalized Mood Detection Using LLMs (AICCoNS 2026, Dubai)",
         "Winner Project: Student Attendance Tracking (Grant: ₹50,000)",
         "Ongoing: Early Epileptic Seizure Diagnosis",
+        "Ongoing: U-FIN: A Federated Generative Learning with RL-Tuned Dual-Stream Networks (TCNGAT) for Real-Time Financial Fraud Detection",
         "Ongoing: AI-Powered Drone Surveillance",
         "Ongoing: Intelligent Skill Extraction"
       ],
@@ -2106,6 +2110,7 @@
       "institute": "LDRP-ITR",
       "organization": "SRL, IEEE-KSV",
       "researchWork": [
+        "Ongoing: U-FIN: A Federated Generative Learning with RL-Tuned Dual-Stream Networks (TCNGAT) for Real-Time Financial Fraud Detection",
         "Published: Exploring AI\u0027s Influence on Human Thinking (AISTS 2025)",
         "Published: Prostate Cancer Detection (WcCST 2026)",
         "Published: SHAP-Enhanced Outbreak Forecasting (NASCENT MR 2025)",
@@ -2635,7 +2640,9 @@
       "department": "IT",
       "institute": "VS-ITR",
       "organization": "SRL, IEEE-KSV",
-      "researchWork": [],
+      "researchWork": [
+        "Ongoing: U-FIN: A Federated Generative Learning with RL-Tuned Dual-Stream Networks (TCNGAT) for Real-Time Financial Fraud Detection"
+      ],
       "hackathons": [
         "2nd Runner-Up Cognivia Hackathon Sampark\u002726",
         "InnovAItion Hackathon 2026, DAU Finalists",

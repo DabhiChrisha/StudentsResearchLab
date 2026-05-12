@@ -37,5 +37,8 @@
   },
   "prisma": {
     "seed": "node prisma/seed.js"
+  },
+  "devDependencies": {
+    "xlsx": "^0.18.5"
   }
 }
