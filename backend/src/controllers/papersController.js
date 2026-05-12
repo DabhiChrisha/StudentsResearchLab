@@ -93,30 +93,21 @@ exports.getPapersByStudent = async (req, res, next) => {
     let researchAreas = [];
 
     if (enrollmentNo) {
-      const srlProfile = await prisma.srlStudentProfile.findUnique({
-        where: { enrollment_no: enrollmentNo, is_active: true },
+      const cvProfile = await prisma.memberCvProfile.findUnique({
+        where: { enrollment_no: enrollmentNo },
         select: {
-          hackathons: true,
-          research_areas: true,
-          srl_publications: true,
-          papers_published: true,
+          hackathons:     true,
+          research_area:  true,
+          research_papers: true,
         },
       });
 
-      if (srlProfile) {
-        hackathons    = parseArrayField(srlProfile.hackathons);
-        researchAreas = parseArrayField(srlProfile.research_areas);
-
-        // Prefer srl_publications (structured), exclude "under review"
-        const srlPubs = parseArrayField(srlProfile.srl_publications);
-        const published = srlPubs.filter(
-          (p) => (p?.category || "").toLowerCase() !== "paper under review"
-        );
-        if (published.length > 0) {
-          paperTitles = published.map((p) => (typeof p === "string" ? p : p?.title || "")).filter(Boolean);
-        } else {
-          paperTitles = parseArrayField(srlProfile.papers_published);
-        }
+      if (cvProfile) {
+        hackathons    = parseArrayField(cvProfile.hackathons);
+        researchAreas = cvProfile.research_area
+          ? cvProfile.research_area.split(',').map(s => s.trim()).filter(Boolean)
+          : [];
+        paperTitles   = parseArrayField(cvProfile.research_papers);
       }
     }
 

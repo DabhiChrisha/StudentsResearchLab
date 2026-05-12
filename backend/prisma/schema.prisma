@@ -21,44 +21,17 @@ model StudentsDetail {
   contact_no               String?                    @db.VarChar(15)
   gender                   String?                    @db.VarChar(10)
   member_type              String?                    @db.VarChar(50)
+  member                   String?                    @default("student member") @db.VarChar(50)
   cv_url                   String?
   created_at               DateTime?                  @default(now()) @db.Timestamp(6)
   login_password           String?
   profile_image            String?
   is_admin                 Boolean                    @default(false)
   research_project_members research_project_members[]
-  srl_student_profile      SrlStudentProfile?
+  member_cv_profile        MemberCvProfile?
 
   @@index([enrollment_no], map: "idx_sd_enrollment")
   @@map("students_details")
-}
-
-model SrlStudentProfile {
-  id                    Int        @id @default(autoincrement())
-  enrollment_no         String     @unique @db.VarChar(20)
-  linkedin              String?
-  roles                 String[]
-  reflection            String?
-  research_areas        String[]
-  ongoing_research      Json       @default("[]")
-  research_works        Json       @default("[]")
-  achievements          Json       @default("[]")
-  papers_published      Json       @default("[]")
-  hackathons            Json       @default("[]")
-  srl_publications      Json       @default("[]")
-  achievements_extended Json?
-  metadata              Json?
-  is_active             Boolean    @default(true)
-  deleted_at            DateTime?  @db.Timestamptz(6)
-  created_by            String?    @db.VarChar(150)
-  updated_by            String?    @db.VarChar(150)
-  created_at            DateTime   @default(now()) @db.Timestamptz(6)
-  updated_at            DateTime   @default(now()) @db.Timestamptz(6)
-  students_details      StudentsDetail @relation(fields: [enrollment_no], references: [enrollment_no], onDelete: Cascade, onUpdate: Cascade)
-
-  @@index([enrollment_no], map: "idx_ssp_enrollment")
-  @@index([is_active], map: "idx_ssp_is_active")
-  @@map("srl_student_profiles")
 }
 
 model DebateScore {
@@ -159,18 +132,27 @@ model JoinUs {
 }
 
 model MemberCvProfile {
-  id                    BigInt   @id @default(autoincrement())
-  enrollment_no         String   @unique
-  student_name          String
-  research_work_summary String?
-  research_area         String?
-  hackathons            Json     @default("[]")
-  research_papers       Json     @default("[]")
-  patents               Json     @default("[]")
-  projects              Json     @default("[]")
-  updated_by            String?
-  created_at            DateTime @default(now()) @db.Timestamptz(6)
-  updated_at            DateTime @default(now()) @db.Timestamptz(6)
+  id                      BigInt   @id @default(autoincrement())
+  enrollment_no           String   @unique
+  student_name            String
+  linkedin_id             String?
+  semester                Int?
+  department              String?
+  institute               String?
+  organization            String?
+  reflection              String?
+  research_areas          Json     @default("[]")
+  research_work           Json     @default("[]")
+  hackathons              Json     @default("[]")
+  research_papers         Json     @default("[]")
+  leadership              Json     @default("[]")
+  awards                  Json     @default("[]")
+  certifications          Json     @default("[]")
+  additional_achievements Json     @default("[]")
+  internships             Json     @default("[]")
+  created_at              DateTime @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime @default(now()) @db.Timestamptz(6)
+  students_details        StudentsDetail @relation(fields: [enrollment_no], references: [enrollment_no], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([enrollment_no], map: "idx_member_cv_profiles_enrollment_no")
   @@map("member_cv_profiles")

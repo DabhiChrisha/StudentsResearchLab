@@ -42,23 +42,37 @@ export default function Researchers() {
     const batchMap = bMap || {};
 
     // Main researcher fetch
-    useEffect(() => {
-        let isCancelled = false;
-        (async () => {
-            try {
-                const res  = await fetch(`${API_BASE_URL}/api/researchers`, { headers: API_HEADERS });
-                const data = await res.json();
-                if (!isCancelled) {
-                    setStudentsData(data.researchers || []);
-                    setIsLoading(false);
-                }
-            } catch (err) {
-                console.error("Failed to fetch researchers:", err);
-                if (!isCancelled) setIsLoading(false);
-            }
-        })();
-        return () => { isCancelled = true; };
+    const fetchResearchers = useCallback(async (signal) => {
+        try {
+            const res  = await fetch(`${API_BASE_URL}/api/researchers`, {
+                headers: API_HEADERS,
+                cache: 'no-store',
+                signal,
+            });
+            const data = await res.json();
+            setStudentsData(data.researchers || []);
+        } catch (err) {
+            if (err.name !== 'AbortError') console.error("Failed to fetch researchers:", err);
+        } finally {
+            setIsLoading(false);
+        }
     }, []);
+
+    useEffect(() => {
+        const controller = new AbortController();
+        setIsLoading(true);
+        fetchResearchers(controller.signal);
+
+        const onVisible = () => {
+            if (document.visibilityState === 'visible') fetchResearchers(new AbortController().signal);
+        };
+        document.addEventListener('visibilitychange', onVisible);
+
+        return () => {
+            controller.abort();
+            document.removeEventListener('visibilitychange', onVisible);
+        };
+    }, [fetchResearchers]);
 
     // ── sorting ───────────────────────────────────────────────────────────────
     const sortedStudents = useMemo(() => {
@@ -194,7 +208,7 @@ export default function Researchers() {
             // full arrays — all from srl_student_profiles
             research_areas:          toArr(activeStudent.research_areas),
             hackathons:              toArr(activeStudent.hackathons),
-            papers:                  papersArr,
+            papers:                  papersArr.filter(p => !p.toLowerCase().startsWith('ongoing')),
             researchWorks:           toArr(activeStudent.researchWorks),
             achievements:            toArr(activeStudent.achievements),
             ongoingResearch:         toArr(activeStudent.ongoingResearch),
@@ -638,20 +652,6 @@ export default function Researchers() {
                                                                         <span className="px-2 py-0.5 rounded-full bg-amber-50 border border-amber-100 text-[9px] font-black text-amber-700 uppercase tracking-wider">Grant</span>
                                                                     )}
                                                                 </div>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </ModalPanel>
-                                            )}
-
-                                            {/* Panel 7: Ongoing Research */}
-                                            {toArr(activeMetrics?.ongoingResearch).length > 0 && (
-                                                <ModalPanel title="Ongoing Research">
-                                                    <ul className="space-y-4">
-                                                        {toArr(activeMetrics.ongoingResearch).map((r, i) => (
-                                                            <li key={i} className="flex items-start gap-4 text-[13px] font-bold text-slate-700 leading-tight">
-                                                                <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 mt-1.5" />
-                                                                <span>{r}</span>
                                                             </li>
                                                         ))}
                                                     </ul>

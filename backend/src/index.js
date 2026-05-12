@@ -26,7 +26,6 @@ const adminResearchProjectsRouter = require("./routes/adminResearchProjects");
 const adminPublicationsRouter = require("./routes/adminPublications");
 const adminAchievementsRouter = require("./routes/adminAchievements");
 const adminMemberCVRouter = require("./routes/adminMemberCV");
-const adminSrlProfilesRouter = require("./routes/adminSrlProfiles");
 const userScoresRouter = require("./routes/userScores");
 const imageUploadRouter = require("./routes/imageUpload");
 const publisherLogosRouter    = require("./routes/publisherLogos");
@@ -55,7 +54,16 @@ app.use(
   }),
 );
 
-app.use(express.json()); // Parse JSON bodies
+app.use(express.json());
+
+// Prevent browsers and CDNs from caching API responses so new DB entries
+// are always reflected immediately on the main website.
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    res.setHeader('Cache-Control', 'no-store');
+  }
+  next();
+});
 
 app.get("/", (req, res) => {
   res.json({ status: "StudentsResearchLab Node.js backend running" });
@@ -93,7 +101,6 @@ app.use(adminResearchProjectsRouter);
 app.use(adminPublicationsRouter);
 app.use(adminAchievementsRouter);
 app.use(adminMemberCVRouter);
-app.use(adminSrlProfilesRouter);
 app.use(userScoresRouter);
 app.use(imageUploadRouter);
 app.use(publisherLogosRouter);

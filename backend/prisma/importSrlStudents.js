@@ -1,9 +1,8 @@
 /**
  * importSrlStudents.js
  *
- * One-time import script: migrates all data from srlStudents.json
- * into the srl_student_profiles table (and upserts basic info into
- * students_details for any student not already seeded).
+ * One-time import script: migrates data from srlStudents.json
+ * into member_cv_profiles (and upserts basic info into students_details).
  *
  * Run from the backend/ directory:
  *   node prisma/importSrlStudents.js
@@ -61,8 +60,7 @@ async function main() {
     // 1. Ensure the student exists in students_details (non-destructive upsert)
     try {
       await prisma.studentsDetail.upsert({
-        where: { enrollment_no: en },
-        // Do not overwrite existing data — only fill in what's missing
+        where:  { enrollment_no: en },
         update: {},
         create: {
           student_name:   s.student_name,
@@ -80,7 +78,6 @@ async function main() {
       });
       upsertedStudents++;
     } catch (err) {
-      // Unique constraint on email from a different enrollment — skip profile but warn
       if (err.code === 'P2002') {
         console.warn(`⚠️  Skipping students_details upsert for ${en}: ${err.message}`);
       } else {
@@ -88,43 +85,35 @@ async function main() {
       }
     }
 
-    // 2. Upsert into srl_student_profiles
-    const roles           = toArray(s.roles);
-    const researchAreas   = toArray(s.research);
-    const ongoingResearch = toArray(s.ongoingResearch);
-    const researchWorks   = toArray(s.researchWorks);
-    const achievements    = toArray(s.achievements);
-    const papersPublished = toArray(s.papersPublished);
-    const hackathons      = toArray(s.hackathons);
-    const srlPublications = toArray(s.srlPublications);
-
+    // 2. Upsert into member_cv_profiles (original fields only)
     const profileData = {
-      linkedin:              s.linkedin || null,
-      roles,
-      reflection:            s.reflection || null,
-      research_areas:        researchAreas,
-      ongoing_research:      ongoingResearch,
-      research_works:        researchWorks,
-      achievements,
-      papers_published:      papersPublished,
-      hackathons,
-      srl_publications:      srlPublications,
-      achievements_extended: s.achievements_extended || null,
-      is_active:             true,
+      student_name:          s.student_name,
+      research_work_summary: s.reflection || null,
+      research_area:         Array.isArray(s.research) ? s.research.join(', ') : (s.research || null),
+      hackathons:            toArray(s.hackathons),
+      research_papers:       toArray(s.papersPublished),
+      projects:              toArray(s.researchWorks),
       updated_at:            new Date(),
       updated_by:            'import-script',
     };
 
     try {
-      await prisma.srlStudentProfile.upsert({
-        where:  { enrollment_no: en },
-        update: profileData,
-        create: {
-          enrollment_no: en,
-          ...profileData,
-          created_by: 'import-script',
-        },
+      const existing = await prisma.memberCvProfile.findUnique({
+        where: { enrollment_no: en },
+        select: { id: true },
       });
+
+      if (existing) {
+        await prisma.memberCvProfile.update({ where: { enrollment_no: en }, data: profileData });
+      } else {
+        const maxIdResult = await prisma.$queryRaw`SELECT COALESCE(MAX(id), 0) AS max_id FROM member_cv_profiles`;
+        const maxId = Array.isArray(maxIdResult) && maxIdResult[0] ? BigInt(maxIdResult[0].max_id || 0) : 0n;
+
+        await prisma.memberCvProfile.create({
+          data: { id: maxId + 1n, enrollment_no: en, updated_by: 'import-script', ...profileData },
+        });
+      }
+
       upsertedProfiles++;
       console.log(`  ✔  ${en} — ${s.student_name}`);
     } catch (err) {
@@ -135,9 +124,9 @@ async function main() {
   console.log(`
 ========================================
   Import complete
-  students_details upserted : ${upsertedStudents}
-  srl_student_profiles upserted : ${upsertedProfiles}
-  skipped                   : ${skipped}
+  students_details upserted  : ${upsertedStudents}
+  member_cv_profiles upserted: ${upsertedProfiles}
+  skipped                    : ${skipped}
 ========================================`);
 }
 

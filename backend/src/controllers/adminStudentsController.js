@@ -105,6 +105,17 @@ exports.createStudent = async (req, res, next) => {
       },
     });
 
+    // Auto-create a blank CV profile so the student appears on the researchers page
+    await prisma.memberCvProfile.create({
+      data: {
+        enrollment_no,
+        student_name,
+        department: department || null,
+        semester:   parseInt(semester) || null,
+        institute:  institute_name || null,
+      },
+    });
+
     res.status(201).json({
       success: true,
       message: "Student created successfully",

@@ -1,19 +1,16 @@
 const prisma = require('../lib/prisma');
 
 // GET /api/batch-member-stats
-// Returns per-student counts for card metrics.
-// Single source of truth: srl_student_profiles joined with students_details.
-// No paper_authors, research_papers, or member_cv_profiles queries.
+// Source: member_cv_profiles joined with students_details.
 
 exports.getBatchStats = async (req, res, next) => {
   try {
-    const profiles = await prisma.srlStudentProfile.findMany({
-      where: { is_active: true },
+    const profiles = await prisma.memberCvProfile.findMany({
       select: {
-        enrollment_no:    true,
-        hackathons:       true,
-        papers_published: true,
-        research_works:   true,
+        enrollment_no:   true,
+        hackathons:      true,
+        research_papers: true,
+        projects:        true,
         students_details: { select: { student_name: true } },
       },
     });
@@ -22,11 +19,11 @@ exports.getBatchStats = async (req, res, next) => {
     const enrollmentHackathons = {};
 
     for (const p of profiles) {
-      const en      = (p.enrollment_no || '').trim().toUpperCase();
-      const name    = p.students_details?.student_name || null;
-      const hackArr = Array.isArray(p.hackathons)       ? p.hackathons.filter(Boolean)       : [];
-      const paperArr = Array.isArray(p.papers_published) ? p.papers_published.filter(Boolean) : [];
-      const workArr  = Array.isArray(p.research_works)   ? p.research_works.filter(Boolean)   : [];
+      const en       = (p.enrollment_no || '').trim().toUpperCase();
+      const name     = p.students_details?.student_name || null;
+      const hackArr  = Array.isArray(p.hackathons)      ? p.hackathons.filter(Boolean)      : [];
+      const paperArr = Array.isArray(p.research_papers) ? p.research_papers.filter(Boolean) : [];
+      const workArr  = Array.isArray(p.projects)        ? p.projects.filter(Boolean)        : [];
 
       if (en) enrollmentHackathons[en] = hackArr.length;
 
