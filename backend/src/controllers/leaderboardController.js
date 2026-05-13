@@ -10,7 +10,9 @@ const PERIOD_MAX_ATT = {
   "Feb 2026": 18,
   "Mar 2026": 16,
   "Apr 2026": 5,
-  "All Time": 78,
+  "All Time": 100,
+  "2026-2027": 100,
+  "2025-2026": 100,
 };
 
 const MONTH_ABB = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -24,6 +26,63 @@ const MONTH_FULL = ["January","February","March","April","May","June",
 function monthYearToPeriod(month, year) {
   if (year === 2025 && (month === 11 || month === 12)) return "Dec 2025";
   return `${MONTH_ABB[month - 1]} ${year}`;
+}
+
+function academicYearStartForDate(date) {
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  return month >= 5 ? year : year - 1;
+}
+
+function academicYearPeriods(startYear) {
+  return [
+    `May ${startYear}`,
+    `Jun ${startYear}`,
+    `Jul ${startYear}`,
+    `Aug ${startYear}`,
+    `Sep ${startYear}`,
+    `Oct ${startYear}`,
+    `Nov ${startYear}`,
+    `Dec ${startYear}`,
+    `Jan ${startYear + 1}`,
+    `Feb ${startYear + 1}`,
+    `Mar ${startYear + 1}`,
+    `Apr ${startYear + 1}`,
+  ];
+}
+
+function isAcademicYearPeriod(period) {
+  return /^\d{4}-\d{4}$/.test(String(period || "").trim());
+}
+
+function groupRowsByStudent(rows) {
+  const grouped = new Map();
+
+  rows.forEach((row) => {
+    const enrollmentNo = String(row.enrollment_no || "").trim().toUpperCase();
+    const key = enrollmentNo || String(row.student_name || "").trim().toLowerCase();
+    const score = Number(row.debate_score || 0);
+    const attendance = Number(row.attendance || 0);
+    const hours = Number(row.hours || 0);
+
+    if (!grouped.has(key)) {
+      grouped.set(key, {
+        ...row,
+        enrollment_no: enrollmentNo,
+        debate_score: score,
+        attendance,
+        hours,
+      });
+      return;
+    }
+
+    const existing = grouped.get(key);
+    existing.debate_score = Number(existing.debate_score || 0) + score;
+    existing.attendance = Number(existing.attendance || 0) + attendance;
+    existing.hours = Number(existing.hours || 0) + hours;
+  });
+
+  return Array.from(grouped.values());
 }
 
 async function buildLeaderboard(period) {
@@ -59,9 +118,30 @@ async function buildLeaderboard(period) {
     detailMap[en] = r;
   });
 
+  let effectiveRows = statsRows || [];
+
+  if (effectiveRows.length === 0 && isAcademicYearPeriod(period)) {
+    const [startYear] = String(period).split("-").map((part) => parseInt(part, 10));
+    const months = academicYearPeriods(startYear);
+    const monthlyRows = await prisma.leaderboardStat.findMany({
+      where: {
+        period: { in: months },
+      },
+      select: {
+        serial_no: true,
+        student_name: true,
+        enrollment_no: true,
+        attendance: true,
+        hours: true,
+        debate_score: true,
+      },
+    });
+    effectiveRows = groupRowsByStudent(monthlyRows);
+  }
+
   const maxAtt = PERIOD_MAX_ATT[period] || 1;
 
-  let students = (statsRows || [])
+  let students = (effectiveRows || [])
     .filter((r) => !isExcludedStudent(r.student_name, r.enrollment_no))
     .map((r) => {
       const en = (r.enrollment_no || "").trim().toUpperCase();
@@ -103,16 +183,23 @@ async function buildLeaderboard(period) {
 exports.getLeaderboard = async (req, res, next) => {
   try {
     const now = new Date();
-    const month = now.getMonth() + 1;
-    const year = now.getFullYear();
+    const academicYearStart = academicYearStartForDate(now);
+    const academicYearPeriod = `${academicYearStart}-${academicYearStart + 1}`;
+    const previousAcademicYearPeriod = `${academicYearStart - 1}-${academicYearStart}`;
 
-    const period = monthYearToPeriod(month, year);
-    const students = await buildLeaderboard(period);
+    // Try to get academic year data; fallback to previous academic year if not found
+    let students = await buildLeaderboard(academicYearPeriod);
+    let period = academicYearPeriod;
+    
+    if (!students || students.length === 0) {
+      students = await buildLeaderboard(previousAcademicYearPeriod);
+      period = previousAcademicYearPeriod;
+    }
 
     res.json({
       period,
       timestamp: now.toISOString(),
-      leaderboard: students,
+      leaderboard: students || [],
     });
   } catch (err) {
     next(err);

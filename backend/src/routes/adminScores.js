@@ -5,6 +5,7 @@ const {
   createScore,
   updateScore,
   deleteScore,
+  aggregateScores,
 } = require("../controllers/adminScoresController");
 const { adminAuthMiddleware, authenticatedUserMiddleware } = require("../middleware/adminAuth");
 
@@ -18,5 +19,8 @@ router.get("/api/admin/scores/:enrollmentNo", authenticatedUserMiddleware, getSc
 router.post("/api/admin/scores", adminAuthMiddleware, createScore);
 router.put("/api/admin/scores/:id", adminAuthMiddleware, updateScore);
 router.delete("/api/admin/scores/:id", adminAuthMiddleware, deleteScore);
+
+// Aggregate endpoint - POST /api/admin/scores/aggregate?month=MM&year=YYYY
+router.post("/api/admin/scores/aggregate", adminAuthMiddleware, aggregateScores);
 
 module.exports = router;

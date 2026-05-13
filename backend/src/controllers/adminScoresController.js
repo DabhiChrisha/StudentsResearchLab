@@ -1,4 +1,5 @@
 const prisma = require("../lib/prisma");
+const { aggregateDebateScoresToLeaderboard } = require("../lib/adminUtils");
 
 const monthValueToNumber = (month) => {
   const trimmed = String(month ?? "").trim();
@@ -310,6 +311,38 @@ exports.deleteScore = async (req, res, next) => {
         message: "Score not found",
       });
     }
+    next(error);
+  }
+};
+
+/**
+ * Aggregate debate scores to leaderboard - POST /api/admin/scores/aggregate
+ * Takes month/year query params (or uses current if not provided)
+ * Aggregates all debate_scores for the academic year and creates/updates leaderboard_stats entries
+ * Also creates missing rows for students who don't have entries
+ */
+exports.aggregateScores = async (req, res, next) => {
+  try {
+    let month = req.query.month;
+    let year = req.query.year ? parseInt(req.query.year) : undefined;
+
+    const now = new Date();
+    if (!month || !year) {
+      month = String(now.getMonth() + 1).padStart(2, '0');
+      year = now.getFullYear();
+    } else {
+      month = String(month).padStart(2, '0');
+    }
+
+    const result = await aggregateDebateScoresToLeaderboard(prisma, parseInt(month), year);
+
+    res.json({
+      success: true,
+      message: `Successfully aggregated scores for academic year ${result.academicYearFormat}`,
+      data: result,
+    });
+  } catch (error) {
+    console.error("Aggregate scores error:", error);
     next(error);
   }
 };

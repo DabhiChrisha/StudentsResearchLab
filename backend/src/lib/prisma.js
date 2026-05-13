@@ -1,4 +1,6 @@
 require('dotenv').config();
+console.log('DEBUG prisma lib cwd=', process.cwd());
+console.log('DEBUG prisma lib DATABASE_URL=', process.env.DATABASE_URL);
 const { PrismaClient } = require('../generated/prisma');
 const { PrismaNeon } = require('@prisma/adapter-neon');
 const { neonConfig } = require('@neondatabase/serverless');

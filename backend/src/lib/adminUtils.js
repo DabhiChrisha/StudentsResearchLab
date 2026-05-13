@@ -125,6 +125,186 @@ const shouldExcludeFromResearchers = (student) => {
   return false;
 };
 
+/**
+ * Get academic year format (e.g., "2026-2027") for a given month/year
+ * Academic year starts in May (month 5) and ends in April (month 4)
+ */
+const getMonthAcademicYear = (month, year) => {
+  const monthNum = typeof month === 'string' ? parseInt(month, 10) : month;
+  if (monthNum >= 5) {
+    return `${year}-${year + 1}`;
+  } else {
+    return `${year - 1}-${year}`;
+  }
+};
+
+/**
+ * Get all months and years within an academic year range
+ * Academic year: May of startYear to April of (startYear + 1)
+ */
+const getAllMonthsInAcademicYear = (startYear) => {
+  const months = [];
+  const monthNames = ["May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"];
+  const monthNumbers = [5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4];
+  const years = [startYear, startYear, startYear, startYear, startYear, startYear, startYear, startYear, startYear + 1, startYear + 1, startYear + 1, startYear + 1];
+  
+  for (let i = 0; i < monthNames.length; i++) {
+    months.push({ month: monthNames[i], number: monthNumbers[i], year: years[i] });
+  }
+  return months;
+};
+
+/**
+ * Aggregate debate scores to leaderboard_stats for an academic year
+ * Creates/updates leaderboard_stats entries with academic year format (e.g., "2026-2027")
+ * Also creates missing rows for students who don't have entries for current month
+ * Supports negative scores (subtraction)
+ */
+const aggregateDebateScoresToLeaderboard = async (prisma, triggerMonth, triggerYear) => {
+  try {
+    const academicYearFormat = getMonthAcademicYear(triggerMonth, triggerYear);
+    const academicYearStart = parseInt(academicYearFormat.split('-')[0], 10);
+    const monthsInYear = getAllMonthsInAcademicYear(academicYearStart);
+    
+    // Format current month for monthly leaderboard entry
+    const monthLabel = new Date(triggerYear, triggerMonth - 1, 1).toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    });
+
+    // Get all students
+    const allStudents = await prisma.studentsDetail.findMany({
+      select: {
+        id: true,
+        enrollment_no: true,
+        student_name: true,
+        email: true,
+        member_type: true,
+        is_admin: true,
+      },
+    });
+
+    // Get max serial_no
+    const maxSerialResult = await prisma.leaderboardStat.aggregate({
+      _max: { serial_no: true },
+    });
+    let currentSerialNo = (maxSerialResult._max.serial_no || 0) + 1;
+
+    const results = [];
+
+    for (const student of allStudents) {
+      // Calculate total debate score for all months in this academic year
+      let totalDebateScore = 0;
+      
+      for (const monthData of monthsInYear) {
+        const debateScore = await prisma.debateScore.findFirst({
+          where: {
+            enrollment_no: student.enrollment_no,
+            month: String(monthData.number).padStart(2, '0'),
+            year: monthData.year,
+          },
+        });
+        
+        if (debateScore && debateScore.points !== null) {
+          totalDebateScore += debateScore.points; // Supports negative scores
+        }
+      }
+
+      // ===== 1. Create/Update academic year entry =====
+      const existingAcadYearEntry = await prisma.leaderboardStat.findFirst({
+        where: {
+          enrollment_no: student.enrollment_no,
+          period: academicYearFormat,
+        },
+      });
+
+      if (existingAcadYearEntry) {
+        // Update existing entry
+        await prisma.leaderboardStat.update({
+          where: { id: existingAcadYearEntry.id },
+          data: {
+            student_name: student.student_name,
+            debate_score: totalDebateScore,
+          },
+        });
+      } else {
+        // Create new entry
+        await prisma.leaderboardStat.create({
+          data: {
+            serial_no: currentSerialNo++,
+            enrollment_no: student.enrollment_no,
+            student_name: student.student_name,
+            period: academicYearFormat,
+            debate_score: totalDebateScore,
+            attendance: 0,
+            hours: 0,
+          },
+        });
+      }
+
+      // ===== 2. Create/Update current month entry if missing =====
+      const currentMonthScore = await prisma.debateScore.findFirst({
+        where: {
+          enrollment_no: student.enrollment_no,
+          month: String(triggerMonth).padStart(2, '0'),
+          year: triggerYear,
+        },
+      });
+
+      const existingMonthEntry = await prisma.leaderboardStat.findFirst({
+        where: {
+          enrollment_no: student.enrollment_no,
+          period: monthLabel,
+        },
+      });
+
+      if (existingMonthEntry && currentMonthScore) {
+        // Update existing month entry with current score
+        await prisma.leaderboardStat.update({
+          where: { id: existingMonthEntry.id },
+          data: {
+            student_name: student.student_name,
+            debate_score: currentMonthScore.points || 0,
+          },
+        });
+      } else if (!existingMonthEntry) {
+        // Create new month entry (even if no score, create with 0)
+        await prisma.leaderboardStat.create({
+          data: {
+            serial_no: currentSerialNo++,
+            enrollment_no: student.enrollment_no,
+            student_name: student.student_name,
+            period: monthLabel,
+            debate_score: currentMonthScore?.points || 0,
+            attendance: 0,
+            hours: 0,
+          },
+        });
+      }
+      
+      results.push({
+        enrollment_no: student.enrollment_no,
+        student_name: student.student_name,
+        totalDebateScore,
+        currentMonthScore: currentMonthScore?.points || 0,
+        academicYearFormat,
+        monthLabel,
+      });
+    }
+
+    return {
+      success: true,
+      academicYearFormat,
+      monthLabel,
+      updatedCount: results.length,
+      results,
+    };
+  } catch (error) {
+    console.error("Error aggregating debate scores to leaderboard:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   generateAdminToken,
   isAdminEmail,
@@ -132,6 +312,9 @@ module.exports = {
   shouldExcludeFromResearchers,
   filterOutTestAndAdminUsers,
   isExcludedStudent,
+  getMonthAcademicYear,
+  getAllMonthsInAcademicYear,
+  aggregateDebateScoresToLeaderboard,
   EXCLUDED_TEST_USERS,
   JWT_SECRET,
   ADMIN_EMAIL,
