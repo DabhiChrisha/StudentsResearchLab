@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { BookOpen, Calendar, ExternalLink, Download, Search, Users, ShieldCheck, FileText, Bookmark, PlusCircle, X, FileDown } from "lucide-react";
+import { BookOpen, Calendar, ExternalLink, Download, Search, Users, ShieldCheck, FileText, Bookmark, PlusCircle, X, FileDown, Lock } from "lucide-react";
 import * as XLSX from 'xlsx';
 import { getImageUrl } from "../lib/imageUrl";
 import { API_BASE_URL, API_HEADERS } from "../config/apiConfig";
@@ -12,204 +12,13 @@ const categories = ["All", "Conference", "Journal", "Book Chapter", "Poster Pres
 /* ================= COMPONENTS ================= */
 
 const PublicationCard = ({ pub, index, exportToExcel }) => {
-  const [linkedinImage, setLinkedinImage] = useState(null);
-
-  // Premium green theme gradients
-  const backgrounds = [
-    "from-teal-500 to-teal-600",
-    "from-green-500 to-green-600",
-    "from-emerald-500 to-emerald-600",
-    "from-cyan-500 to-teal-500",
-    "from-teal-400 to-green-500",
-    "from-green-600 to-emerald-700",
-    "from-teal-600 to-cyan-600",
-    "from-emerald-400 to-teal-500",
-  ];
-
-  const bgClass = backgrounds[index % backgrounds.length];
-
-  // Dark border colors matching theme
-  const borderColors = [
-    "border-teal-800",
-    "border-green-800",
-    "border-emerald-800",
-    "border-cyan-800",
-    "border-teal-800",
-    "border-green-900",
-    "border-teal-900",
-    "border-emerald-900",
-  ];
-
-  const borderColor = borderColors[index % borderColors.length];
-
-  // Varying card heights for visual interest - tall and thin
-  const cardHeights = [
-    "min-h-[260px]",
-    "min-h-[240px]",
-    "min-h-[230px]",
-    "min-h-[270px]",
-    "min-h-[250px]",
-    "min-h-[235px]",
-    "min-h-[260px]",
-    "min-h-[245px]",
-    "min-h-[240px]",
-    "min-h-[250px]",
-    "min-h-[235px]",
-    "min-h-[260px]",
-  ];
-
-  const cardHeight = cardHeights[index % cardHeights.length];
-
-  // Map background class to explicit gradient colors for fallback
-  const gradientColorMap = {
-    "from-teal-500 to-teal-600": "linear-gradient(to bottom right, #14b8a6, #0d9488)",
-    "from-green-500 to-green-600": "linear-gradient(to bottom right, #22c55e, #16a34a)",
-    "from-emerald-500 to-emerald-600": "linear-gradient(to bottom right, #10b981, #059669)",
-    "from-cyan-500 to-teal-500": "linear-gradient(to bottom right, #06b6d4, #14b8a6)",
-    "from-teal-400 to-green-500": "linear-gradient(to bottom right, #2dd4bf, #22c55e)",
-    "from-green-600 to-emerald-700": "linear-gradient(to bottom right, #16a34a, #047857)",
-    "from-teal-600 to-cyan-600": "linear-gradient(to bottom right, #0d9488, #0891b2)",
-    "from-emerald-400 to-teal-500": "linear-gradient(to bottom right, #4ade80, #14b8a6)",
+  // Use website theme colors
+  const colorScheme = { 
+    from: "from-secondary", 
+    to: "to-secondary-dark", 
+    light: "bg-secondary-light", 
+    accent: "text-secondary-dark" 
   };
-
-  const fallbackGradient = gradientColorMap[bgClass] || "linear-gradient(to bottom right, #14b8a6, #0d9488)";
-
-  // Fetch preview image from link with enhanced parameters and multiple sources
-  useEffect(() => {
-    const abortController = new AbortController();
-
-    const fetchImage = async () => {
-      // Check if publication has custom background image - use it with highest priority
-      if (pub.backgroundImage) {
-        setLinkedinImage(getImageUrl(pub.backgroundImage));
-        return;
-      }
-
-      if (!pub.link || !pub.link.startsWith("http")) return;
-
-      // Primary attempts with microlink API
-      const primaryAttempts = [
-        `https://api.microlink.io?url=${encodeURIComponent(pub.link)}&screenshot=true&fullpage=false&viewport.width=1200&viewport.height=630`,
-        `https://api.microlink.io?url=${encodeURIComponent(pub.link)}&screenshot=true&page=1`,
-        `https://api.microlink.io?url=${encodeURIComponent(pub.link)}`,
-      ];
-
-      // Try primary attempts
-      for (const microlinkUrl of primaryAttempts) {
-        try {
-          const response = await fetch(microlinkUrl, {
-            signal: abortController.signal,
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-
-            // Try multiple image sources in order
-            if (data.data?.image?.url && data.data.image.url.length > 0) {
-              setLinkedinImage(data.data.image.url);
-              return;
-            } else if (data.data?.screenshot?.url && data.data.screenshot.url.length > 0) {
-              setLinkedinImage(data.data.screenshot.url);
-              return;
-            } else if (data.data?.logo?.url && data.data.logo.url.length > 0) {
-              setLinkedinImage(data.data.logo.url);
-              return;
-            }
-          }
-        } catch (err) {
-          // Continue to next attempt
-          continue;
-        }
-      }
-
-      // Secondary fallback: try URL2PNG service
-      try {
-        const screenshotUrl = `https://v1.screenshot.11ty.dev/${encodeURIComponent(pub.link)}/opengraph/`;
-        const response = await fetch(screenshotUrl, {
-          signal: abortController.signal,
-        });
-
-        if (response.ok) {
-          setLinkedinImage(screenshotUrl);
-          return;
-        }
-      } catch (err) {
-        // Continue
-      }
-
-      // Tertiary fallback: try thum.io
-      try {
-        const thumbUrl = `https://image.thum.io/get/width/1200/height/630/crop/smart/${encodeURIComponent(pub.link)}`;
-        const headResponse = await fetch(thumbUrl, {
-          method: 'HEAD',
-          signal: abortController.signal,
-        });
-
-        if (headResponse.ok) {
-          setLinkedinImage(thumbUrl);
-          return;
-        }
-      } catch (err) {
-        // Continue
-      }
-
-      // Final fallback: try open graph meta tags
-      try {
-        const ogResponse = await fetch(pub.link, {
-          signal: abortController.signal,
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-          }
-        });
-
-        if (ogResponse.ok) {
-          const html = await ogResponse.text();
-          // Try multiple OG tag formats
-          const ogMatches = [
-            html.match(/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/),
-            html.match(/<meta\s+name=["']twitter:image["']\s+content=["']([^"']+)["']/),
-            html.match(/<meta\s+property=["']twitter:image["']\s+content=["']([^"']+)["']/),
-          ];
-
-          for (const match of ogMatches) {
-            if (match && match[1] && match[1].length > 0) {
-              setLinkedinImage(match[1]);
-              return;
-            }
-          }
-        }
-      } catch (err) {
-        // Fallback to gradient - will be shown automatically
-      }
-
-      // If all attempts fail, the fallbackGradient will be visible
-    };
-
-    // Set a timeout to ensure we don't wait forever
-    const timeoutId = setTimeout(() => {
-      abortController.abort();
-    }, 8000);
-
-    fetchImage().finally(() => {
-      clearTimeout(timeoutId);
-    });
-
-    return () => {
-      abortController.abort();
-      clearTimeout(timeoutId);
-    };
-  }, [pub.link]);
-
-  // Get the clickable link for the card header
-  const getHeaderLink = () => {
-    const link = pub.link || "";
-    if (link.startsWith("http")) {
-      return link;
-    }
-    return "#";
-  };
-
-  const headerLink = getHeaderLink();
 
   return (
     <motion.div
@@ -217,147 +26,146 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={`${cardHeight} hover:rotate-0 hover:translate-y-0 transition-all duration-500`}
     >
-      {/* OUTER CARD WITH THICK BORDER - BIG CARD */}
-      <div className={`h-full relative rounded-2xl sm:rounded-3xl overflow-visible shadow-xl hover:shadow-2xl transition-all duration-300 flex flex-col border-5 sm:border-6 md:border-8 ${borderColor}`}
-        style={{
-          background: fallbackGradient,
-        }}
-      >
-
-        {/* TOP GRADIENT SECTION WITH BACKGROUND IMAGE - CLICKABLE */}
-        <a
-          href={headerLink}
-          target={headerLink !== "#" ? "_blank" : "_self"}
-          rel="noopener noreferrer"
-          className={`relative p-4 sm:p-5 md:p-6 flex-none min-h-32 sm:min-h-40 md:min-h-44 flex flex-col justify-between rounded-t-lg overflow-hidden ${headerLink !== "#" ? 'cursor-pointer hover:opacity-90' : 'cursor-default'} transition-opacity duration-300`}
-          style={{
-            // Green/teal gradient as background
-            background: fallbackGradient,
-            // Show image on top
-            ...(linkedinImage && {
-              backgroundImage: `url('${getImageUrl(linkedinImage)}')`,
-              backgroundSize: pub.useContainBackground ? "contain" : (pub.link && pub.link.includes('ieeexplore') ? "cover" : "75%"),
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }),
-          }}
-        >
-          {/* Green gradient shows behind and around the image */}
-
-          {/* Badges - positioned absolutely to appear above image */}
-          <div className="absolute top-4 sm:top-5 md:top-6 left-4 sm:left-5 md:left-6 z-20">
-            <div className="px-3 py-1.5 rounded-full bg-white/95 text-slate-700 text-xs sm:text-sm font-bold shadow-md backdrop-blur-sm">
-              {pub.category}
-            </div>
+      <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden group flex flex-col relative h-auto" style={{backgroundImage: `url('/study.png')`, backgroundSize: '100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}>
+        
+        {/* Watermark Overlay */}
+        <div className="absolute inset-0 bg-white/75 pointer-events-none"></div>
+        
+        {/* Content Container */}
+        <div className="relative z-10 flex flex-col h-full">
+        
+        {/* PREMIUM GRADIENT HEADER */}
+        <div className={`bg-gradient-to-br ${colorScheme.from} ${colorScheme.to} px-6 sm:px-8 py-1.5 relative overflow-hidden flex items-center justify-center flex-shrink-0`}>
+          {/* Animated background elements */}
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full -mr-20 -mt-20 blur-2xl"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white rounded-full -ml-16 -mb-16 blur-2xl"></div>
           </div>
 
-          <div className="absolute bottom-4 sm:bottom-5 md:bottom-6 right-4 sm:right-5 md:right-6 z-20">
-            <div className="px-3 py-1.5 rounded-full bg-white/95 text-slate-700 text-xs sm:text-sm font-medium shadow-md flex items-center gap-1.5 backdrop-blur-sm">
-              <Calendar size={14} />
-              {pub.date}
-            </div>
-          </div>
-        </a>
-
-        {/* SMALL INNER CARD - White content card with SIMPLIFIED design */}
-        <div className="flex-1 p-1.5 sm:p-2 md:p-3 flex items-center justify-center">
-          <div className="w-full h-full bg-white/95 rounded-lg sm:rounded-xl border-2 sm:border-3 border-slate-200 shadow-md p-2.5 sm:p-3 md:p-4 flex flex-col overflow-y-auto">
-            {/* Inner Card Content */}
-            <>
-              {/* Title */}
-              <h3 className="text-sm sm:text-base md:text-base font-bold font-serif text-slate-900 mb-1.5 line-clamp-2 leading-tight">
-                {pub.title}
-              </h3>
-
-              {/* Authors section */}
-              <div className="mb-1.5 text-xs sm:text-sm font-bold text-white bg-teal-600 px-2 py-0.5 rounded leading-snug">
-                <span>Authors: {pub.authors.join(", ")}</span>
-              </div>
-
-              {/* Description */}
-              <p className="text-xs sm:text-sm text-slate-700 mb-1.5 line-clamp-2 leading-relaxed">
-                {pub.description}
+          <div className="relative z-10 flex flex-col items-center justify-center gap-1">
+            {/* Category - Modern text styling */}
+            <p className="text-white text-lg font-bold tracking-widest">
+              {(pub.category || "Publication").toUpperCase()}
+            </p>
+            
+            {/* Underline accent */}
+            <div className="h-0.5 w-20 bg-white/60 rounded-full -mt-2.5"></div>
+            
+            {/* Venue below category - for Conference type */}
+            {pub.category === "Conference" && pub.venue && (
+              <p className="text-white/90 text-sm font-medium mt-1">
+                {pub.venue}
               </p>
-
-              {/* Published in - italicized */}
-              <div className="mb-1.5 text-xs sm:text-sm text-slate-600 leading-snug italic font-normal">
-                Published in: {pub.venue}
-              </div>
-
-              {/* Tags */}
-              <div className="mb-1.5 flex flex-wrap gap-1">
-                {pub.tags.map((tag, i) => (
-                  <span key={i} className="text-[9px] sm:text-[10px] font-bold text-slate-700 bg-amber-50 px-1.5 py-0.5 rounded">
-                    {tag.toUpperCase()}
-                  </span>
-                ))}
-              </div>
-            </>
-
-            {/* Footer with Action Buttons and Publisher */}
-            <div className="mt-auto pt-1.5 sm:pt-2 border-t border-slate-200 flex flex-col gap-1.5">
-              {/* Action Button - Link to Paper or By: for Patents */}
-              <div className="flex justify-between items-center">
-                {pub.category === "Patents" ? (
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs sm:text-sm font-semibold text-slate-700">By:</span>
-                    {pub.ipo && (
-                      <img
-                        src={getImageUrl(pub.ipo.logo)}
-                        alt={pub.ipo.name}
-                        className="h-8 object-contain"
-                        title={pub.ipo.name}
-                      />
-                    )}
-                  </div>
-                ) : pub.link && pub.link.startsWith("http") ? (
-                  <a
-                    href={pub.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-teal-600 hover:text-teal-700 transition-colors"
-                  >
-                    <FileDown size={14} />
-                    Paper
-                  </a>
-                ) : pub.link ? (
-                  <span className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-700">
-                    <FileDown size={14} />
-                    Paper
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-400">
-                    <FileDown size={14} />
-                    Not Available
-                  </span>
-                )}
-              </div>
-
-              {/* Publisher Section - Not shown for Poster Presentations */}
-              {pub.category !== "Poster Presentation" && pub.publishers && pub.publishers.length > 0 && (
-                <div className="flex items-center gap-2 pt-1 border-t border-slate-200">
-                  <span className="text-xs sm:text-sm font-semibold text-slate-600">Publisher:</span>
-                  <div className="flex gap-1.5 items-center">
-                    {pub.publishers.map((publisherItem, idx) => (
-                      <img
-                        key={idx}
-                        src={getImageUrl(publisherItem.logo)}
-                        alt={publisherItem.name}
-                        className={`object-contain ${publisherItem.name === "Springer" ? "h-6" : publisherItem.name === "NASCENT MR" ? "h-14" : publisherItem.name === "74th IPC Pharma Exhibition" ? "h-10" : "h-6"}`}
-                        title={publisherItem.name}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </div>
 
-        {/* BOTTOM SOLID BAR */}
-        <div className={`h-5 sm:h-6 md:h-7 bg-gradient-to-r ${bgClass} shadow-sm rounded-b-lg`}></div>
+        {/* CONTENT SECTION */}
+        <div className="p-3 sm:p-4 flex flex-col flex-1 space-y-1.5 overflow-hidden hover:overflow-y-auto">
+          
+          {/* Title */}
+          <div>
+            <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-tight">
+              {pub.title}
+            </h3>
+          </div>
+
+          {/* Authors - Highlighted */}
+          <div className={`${colorScheme.light} p-2 rounded-lg flex items-start gap-2`}>
+            <Users size={12} className={`${colorScheme.accent} mt-0.5 flex-shrink-0`} />
+            <p className={`text-xs ${colorScheme.accent} font-bold`}>
+              {pub.authors && pub.authors.length > 0 
+                ? pub.authors.join(", ") 
+                : pub.first_author || "Unknown Author"}
+            </p>
+          </div>
+
+          {/* KEY DATES Section Header */}
+          <div className="mt-1 mb-1">
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Key Details</p>
+          </div>
+
+          {/* Details Grid - Labels on left, values on right */}
+          <div className="space-y-1 text-xs">
+            {/* Published Date */}
+            {pub.date && pub.category !== "Poster Presentation" && pub.category !== "Poster" && (
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
+                  <Calendar size={14} className="text-slate-600" />
+                  <span className="font-semibold text-slate-700">Published Date:</span>
+                </div>
+                <span className="text-slate-600">{pub.date.split('T')[0]}</span>
+              </div>
+            )}
+
+            {/* Conference Date */}
+            {pub.category === "Conference" && pub.conference_date && (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <Calendar size={14} className="text-slate-600" />
+                  <span className="font-semibold text-slate-700">Conference Dates:</span>
+                </div>
+                <span className="text-slate-600">{pub.conference_date.split('T')[0]}</span>
+              </div>
+            )}
+
+            {/* Publisher */}
+            {pub.publisher && (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <BookOpen size={14} className="text-slate-600" />
+                  <span className="font-semibold text-slate-700">Publisher:</span>
+                </div>
+                <span className="text-slate-600">{pub.publisher}</span>
+              </div>
+            )}
+
+            {/* Venue - Conference only */}
+            {pub.category === "Conference" && pub.venue && (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <Bookmark size={14} className="text-slate-600" />
+                  <span className="font-semibold text-slate-700">Venue:</span>
+                </div>
+                <span className="text-slate-600">{pub.venue}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Paper Link - Bottom */}
+          <div className="mt-auto pt-2 border-t border-gray-200 flex items-center justify-between">
+            {pub.link && pub.link.startsWith("http") ? (
+              <a
+                href={pub.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r ${colorScheme.from} ${colorScheme.to} text-white text-xs font-bold rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95`}
+              >
+                <ExternalLink size={11} />
+                <span className="text-xs">
+                  {pub.category === "Conference" 
+                    ? "View Paper" 
+                    : pub.category === "Journal"
+                    ? "View Journal"
+                    : pub.category === "Book Chapter"
+                    ? "View Book Chapter"
+                    : pub.category === "Patent"
+                    ? "View Patent"
+                    : pub.category === "Poster" || pub.category === "Poster Presentation"
+                    ? "View Poster"
+                    : `View ${pub.category || "Publication"}`}
+                </span>
+              </a>
+            ) : (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 text-gray-400 text-xs font-bold rounded-lg">
+                <Lock size={11} />
+                <span className="text-xs">No Link</span>
+              </div>
+            )}
+          </div>
+        </div>
+        </div>
       </div>
     </motion.div>
   );
@@ -414,7 +222,7 @@ const YearPickerModal = ({ isOpen, onClose, years, selectedYear, onSelectYear, b
                 onClose();
               }}
               className={`py-2 sm:py-2.5 px-2 rounded-lg font-bold text-sm transition-all duration-300 ${selectedYear === year
-                ? "bg-teal-600 text-white shadow-md shadow-teal-600/30"
+                ? "bg-secondary text-white shadow-md shadow-secondary/30"
                 : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                 }`}
             >
@@ -468,6 +276,7 @@ const Publications = () => {
             authors: pub.student_authors
               ? pub.student_authors.split(",").map((a) => a.trim()).filter(Boolean)
               : [],
+            first_author: pub.first_author || "",
             venue: pub.venue || "",
             date: pub.date || (pub.year ? String(pub.year) : ""),
             category: pub.event_type || "",
@@ -476,6 +285,8 @@ const Publications = () => {
             tags: Array.isArray(pub.tags) ? pub.tags : [],
             status: pub.category || undefined,
             year: pub.year || null,
+            publisher: pub.publisher || pub.custom_publisher_name || "",
+            conference_date: pub.conference_date || "",
           }))
         );
       })
@@ -589,7 +400,7 @@ const Publications = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mt-6 flex justify-center"
           >
-            <Link to="/add-publication" className="bg-teal-600 text-white px-6 py-3 rounded-full font-bold shadow-md hover:bg-teal-700 transition-colors inline-flex items-center gap-2">
+            <Link to="/add-publication" className="bg-secondary text-white px-6 py-3 rounded-full font-bold shadow-md hover:bg-secondary-dark transition-colors inline-flex items-center gap-2">
               <PlusCircle size={20} />
               Add Publications
             </Link>
@@ -605,7 +416,7 @@ const Publications = () => {
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
                   className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-300 ${activeCategory === cat
-                    ? "bg-teal-600 text-white shadow-md shadow-teal-600/20"
+                    ? "bg-secondary text-white shadow-md shadow-secondary/20"
                     : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200 hover:border-slate-300"
                   }`}
                 >
@@ -631,7 +442,7 @@ const Publications = () => {
                 ref={yearButtonRef}
                 onClick={() => setShowYearPicker(true)}
                 className={`shrink-0 h-9 px-2.5 sm:px-3 rounded-full font-bold text-xs sm:text-sm transition-all duration-300 flex items-center gap-1.5 ${selectedYear
-                  ? "bg-teal-600 text-white shadow-md shadow-teal-600/20"
+                  ? "bg-secondary text-white shadow-md shadow-secondary/20"
                   : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
                   }`}
               >
@@ -653,15 +464,15 @@ const Publications = () => {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex flex-wrap items-center gap-1.5 bg-teal-50/50 p-2 sm:p-3 rounded-2xl border border-teal-200/50"
+              className="flex flex-wrap items-center gap-1.5 bg-secondary/5 p-2 sm:p-3 rounded-2xl border border-secondary/30"
             >
-              <span className="text-xs font-semibold text-teal-700">Filters:</span>
+              <span className="text-xs font-semibold text-secondary">Filters:</span>
 
               {activeCategory !== "All" && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-full text-xs text-slate-700 font-medium border border-teal-200"
+                  className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-full text-xs text-slate-700 font-medium border border-secondary/20"
                 >
                   {activeCategory}
                   <button onClick={() => setActiveCategory("All")} className="hover:text-red-500 transition-colors">
@@ -674,7 +485,7 @@ const Publications = () => {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-full text-xs text-slate-700 font-medium border border-teal-200"
+                  className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-full text-xs text-slate-700 font-medium border border-secondary/20"
                 >
                   <Search size={12} />
                   {searchQuery}
@@ -688,7 +499,7 @@ const Publications = () => {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-full text-xs text-slate-700 font-medium border border-teal-200"
+                  className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-full text-xs text-slate-700 font-medium border border-secondary/20"
                 >
                   <Calendar size={12} />
                   {selectedYear}
@@ -704,7 +515,7 @@ const Publications = () => {
                   setSearchQuery("");
                   setSelectedYear(null);
                 }}
-                className="ml-auto text-teal-600 hover:text-teal-700 font-bold text-xs underline"
+                className="ml-auto text-secondary hover:text-secondary-dark font-bold text-xs underline"
               >
                 Clear All
               </button>
@@ -731,7 +542,7 @@ const Publications = () => {
           </motion.p>
         ) : filteredPublications.length > 0 ? (
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm sm:text-base text-slate-600 font-medium mb-6">
-            Showing <span className="font-bold text-teal-600">{filteredPublications.length}</span> of <span className="font-bold">{publications.length}</span> publications
+            Showing <span className="font-bold text-secondary">{filteredPublications.length}</span> of <span className="font-bold">{publications.length}</span> publications
           </motion.p>
         ) : (
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm sm:text-base text-slate-600 font-medium mb-6">
