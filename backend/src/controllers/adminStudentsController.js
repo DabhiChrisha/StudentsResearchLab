@@ -67,6 +67,7 @@ exports.createStudent = async (req, res, next) => {
       batch,
       gender,
       member_type = "member",
+      profile_image,
     } = req.body;
 
     // Validate required fields
@@ -102,6 +103,7 @@ exports.createStudent = async (req, res, next) => {
         batch: batch || null,
         gender: gender || null,
         member_type: member_type === "admin" ? "member" : member_type,
+        profile_image: profile_image || null,
       },
     });
 
@@ -150,6 +152,7 @@ exports.updateStudent = async (req, res, next) => {
       batch,
       gender,
       member_type,
+      profile_image,
     } = req.body;
 
     // Check if student exists
@@ -178,6 +181,7 @@ exports.updateStudent = async (req, res, next) => {
     if (member_type && member_type !== "admin") {
       updateData.member_type = member_type;
     }
+    if (profile_image !== undefined) updateData.profile_image = profile_image || null;
 
     const student = await prisma.studentsDetail.update({
       where: { enrollment_no: enrollmentNo },

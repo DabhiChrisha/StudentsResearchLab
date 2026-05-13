@@ -62,6 +62,16 @@ const Sessions = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  const isVideoMedia = (url) => {
+    if (!url) return false;
+    const videoExtensions = [".mp4", ".webm", ".ogg", ".mov", ".quicktime"];
+    const urlLower = url.toLowerCase();
+    return (
+      videoExtensions.some((ext) => urlLower.includes(ext)) ||
+      urlLower.includes("/video/upload/")
+    );
+  };
+
   const filteredSessions =
     activeTab === "all"
       ? sessions
@@ -134,8 +144,8 @@ const Sessions = () => {
                   className="group block bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.12)] transform-gpu will-change-transform"
                 >
                   {/* MEDIA */}
-                  <div className="h-64 lg:h-72 bg-white overflow-hidden">
-                    {session.type === "video" ? (
+                  <div className="h-64 lg:h-72 bg-white overflow-hidden relative">
+                    {isVideoMedia(session.media_urls?.[0]) ? (
                       <video
                         autoPlay
                         muted
@@ -144,10 +154,14 @@ const Sessions = () => {
                         preload="metadata"
                         className="w-full h-full object-contain pointer-events-none transform-gpu"
                       >
-                        <source src={getImageUrl(session.media_urls?.[0])} type="video/mp4" />
+                        <source src={getImageUrl(session.media_urls[0])} />
                       </video>
+                    ) : session.media_urls?.length > 0 ? (
+                      <ImageCarousel images={session.media_urls} />
                     ) : (
-                      <ImageCarousel images={session.media_urls || []} />
+                      <div className="w-full h-full flex items-center justify-center bg-slate-50 text-slate-400">
+                        No Media Available
+                      </div>
                     )}
                   </div>
 

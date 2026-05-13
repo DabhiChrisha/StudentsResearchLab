@@ -32,52 +32,63 @@ const CardSkeleton = () => (
 );
 
 /* ================= CARD ================= */
-const Card = ({ item, onClick }) => (
-  <motion.div
-    layout
-    transition={{ type: "spring", stiffness: 140, damping: 22 }}
-    whileHover={{ y: -6 }}
-    onClick={(e) => { e.stopPropagation(); onClick(); }}
-    className="relative cursor-pointer rounded-3xl overflow-hidden border border-slate-200 shadow-sm bg-white group"
-  >
-    <div className="aspect-[4/3] overflow-hidden bg-white">
-      {item.type === "image" && item.media_urls?.length > 0 ? (
-        <Swiper
-          modules={[Autoplay, Pagination]}
-          autoplay={{ delay: 2500, disableOnInteraction: false }}
-          pagination={{ clickable: true }}
-          loop
-          className="w-full h-full"
-        >
-          {item.media_urls.map((img, index) => (
-            <SwiperSlide key={index} className="!flex !items-center !justify-center">
-              <img
-                loading="lazy"
-                decoding="async"
-                src={getImageUrl(img)}
-                alt={item.title}
-                className="block max-w-full max-h-full object-contain mx-auto"
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      ) : item.type === "video" && item.media_urls?.length > 0 ? (
-        <div className="w-full h-full flex items-center justify-center bg-white">
-          <video
-            src={getImageUrl(item.media_urls[0])}
-            muted
+const Card = ({ item, onClick }) => {
+  const isVideoMedia = (url) => {
+    if (!url) return false;
+    const videoExtensions = [".mp4", ".webm", ".ogg", ".mov", ".quicktime"];
+    const urlLower = url.toLowerCase();
+    return (
+      videoExtensions.some((ext) => urlLower.includes(ext)) ||
+      urlLower.includes("/video/upload/")
+    );
+  };
+
+  return (
+    <motion.div
+      layout
+      transition={{ type: "spring", stiffness: 140, damping: 22 }}
+      whileHover={{ y: -6 }}
+      onClick={(e) => { e.stopPropagation(); onClick(); }}
+      className="relative cursor-pointer rounded-3xl overflow-hidden border border-slate-200 shadow-sm bg-white group"
+    >
+      <div className="aspect-[4/3] overflow-hidden bg-white">
+        {isVideoMedia(item.media_urls?.[0]) ? (
+          <div className="w-full h-full flex items-center justify-center bg-white">
+            <video
+              src={getImageUrl(item.media_urls[0])}
+              muted
+              loop
+              autoPlay
+              playsInline
+              className="block max-w-full max-h-full object-contain mx-auto"
+            />
+          </div>
+        ) : item.media_urls?.length > 0 ? (
+          <Swiper
+            modules={[Autoplay, Pagination]}
+            autoplay={{ delay: 2500, disableOnInteraction: false }}
+            pagination={{ clickable: true }}
             loop
-            autoPlay
-            playsInline
-            className="block max-w-full max-h-full object-contain mx-auto"
-          />
-        </div>
-      ) : (
-        <div className="w-full h-full flex items-center justify-center bg-slate-100">
-          <span className="text-slate-400 text-sm">No media</span>
-        </div>
-      )}
-    </div>
+            className="w-full h-full"
+          >
+            {item.media_urls.map((img, index) => (
+              <SwiperSlide key={index} className="!flex !items-center !justify-center">
+                <img
+                  loading="lazy"
+                  decoding="async"
+                  src={getImageUrl(img)}
+                  alt={item.title}
+                  className="block max-w-full max-h-full object-contain mx-auto"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-slate-100">
+            <span className="text-slate-400 text-sm">No media</span>
+          </div>
+        )}
+      </div>
 
     <div className="absolute inset-0 z-20 bg-black/60 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-5 text-white">
       <h3 className="font-bold text-lg">{item.title}</h3>
@@ -85,7 +96,8 @@ const Card = ({ item, onClick }) => (
       <p className="text-xs mt-1 opacity-70">Click to view details</p>
     </div>
   </motion.div>
-);
+  );
+};
 
 /* ================= MAIN ================= */
 const Achievements = () => {
@@ -264,7 +276,16 @@ const Achievements = () => {
               </button>
 
               <div className="aspect-[4/3] bg-white flex items-center justify-center overflow-hidden">
-                {selected.type === "image" && selected.media_urls?.length > 0 ? (
+                {isVideoMedia(selected.media_urls?.[0]) ? (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <video
+                      src={getImageUrl(selected.media_urls[0])}
+                      controls
+                      autoPlay
+                      className="block max-w-full max-h-full object-contain mx-auto"
+                    />
+                  </div>
+                ) : selected.media_urls?.length > 0 ? (
                   <Swiper
                     modules={[Autoplay, Pagination]}
                     autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
@@ -284,15 +305,6 @@ const Achievements = () => {
                       </SwiperSlide>
                     ))}
                   </Swiper>
-                ) : selected.type === "video" && selected.media_urls?.length > 0 ? (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <video
-                      src={getImageUrl(selected.media_urls[0])}
-                      controls
-                      autoPlay
-                      className="block max-w-full max-h-full object-contain mx-auto"
-                    />
-                  </div>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-slate-100">
                     <span className="text-slate-400 text-sm">No media available yet</span>

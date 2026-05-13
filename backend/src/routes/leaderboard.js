@@ -125,7 +125,8 @@ async function buildLeaderboard(period) {
       return {
         enrollment_no: en,
         name: r.student_name || "Unknown",
-        image: detail.profile_image || null,
+        profile_image: detail.profile_image || null,
+        image: detail.profile_image || null, // backward-compat alias
         total_score: r.debate_score || 0,
         attendance_percentage: `${attPct}%`,
         total_hours: hrs > 0 ? `${hrs.toFixed(1)} Hrs` : "0 Hrs",

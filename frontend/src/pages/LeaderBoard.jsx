@@ -58,7 +58,7 @@ const parseBackendStudent = (student, index) => {
         id: index + 1,
         enrollment: student.enrollment_no,
         name: student.name || "Unknown Student",
-        image: getImageUrl(student.image || IMAGE_MAP[en] || "/SRL.svg"),
+        image: getImageUrl(student.profile_image || student.image || IMAGE_MAP[en] || "/SRL.svg"),
         score: student.total_score || 0,
         srlAttendance: rawAtt,
         srlAttendanceNum: numAtt,
