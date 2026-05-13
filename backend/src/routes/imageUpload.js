@@ -1,6 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-const { upload, uploadImage, deleteImage } = require("../controllers/imageUploadController");
+const { upload, uploadAny, uploadImage, uploadMedia, deleteImage } = require("../controllers/imageUploadController");
 const { adminAuthMiddleware } = require("../middleware/adminAuth");
 
 const router = express.Router();
@@ -22,6 +22,14 @@ router.post(
   uploadImage
 );
 
+// Shared media upload — accepts images and videos, maps section to Cloudinary folder
+router.post(
+  "/api/admin/upload",
+  adminAuthMiddleware,
+  uploadAny.single("file"),
+  uploadMedia
+);
+
 // Delete image route
 router.post(
   "/admin/delete-image",
@@ -36,7 +44,7 @@ router.use((error, req, res, next) => {
       return res.status(400).json({
         success: false,
         error: "File too large",
-        message: "File size must not exceed 10MB",
+        message: "File exceeds the maximum allowed size for this endpoint",
       });
     }
     return res.status(400).json({

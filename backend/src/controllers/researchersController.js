@@ -60,7 +60,8 @@ exports.getResearchers = async (req, res, next) => {
       return {
         student_name:  sd.student_name,
         enrollment_no: en,
-        photo:         sd.profile_image || '/students/schoolstudent.png',
+        profile_image: sd.profile_image || null,
+        photo:         sd.profile_image || null, // backward-compat alias
         department:    sd.department    || 'CE',
         semester:      sd.semester      || '',
         batch:         sd.batch         || '-',

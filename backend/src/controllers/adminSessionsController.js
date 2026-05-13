@@ -1,37 +1,44 @@
 const prisma = require("../lib/prisma");
 const { uploadToCloudinary, deleteFromCloudinary } = require("../utils/imageUpload");
 
+// Reject any URL that isn't a full https address so relative/internal paths
+// never reach the database.
+const sanitizeMediaUrls = (urls) => {
+  if (!Array.isArray(urls)) return [];
+  return urls.filter((url) => {
+    if (!url || typeof url !== "string") return false;
+    if (!url.startsWith("https://")) {
+      console.warn(`[Sessions] Dropping invalid media URL (not a full https URL): ${url}`);
+      return false;
+    }
+    return true;
+  });
+};
+
 /**
- * Get all achievements - GET /api/admin/achievements
+ * GET /api/admin/sessions
  */
-exports.getAchievements = async (req, res, next) => {
+exports.getSessions = async (req, res, next) => {
   try {
-    const achievements = await prisma.achievementContent.findMany({
+    const sessions = await prisma.sessionContent.findMany({
       orderBy: { serial_no: "desc" },
     });
-
-    res.json({
-      success: true,
-      data: achievements,
-    });
+    res.json(sessions);
   } catch (error) {
-    console.error("Get achievements error:", error);
     next(error);
   }
 };
 
 /**
- * Create achievement - POST /api/admin/achievements
+ * POST /api/admin/sessions
  */
-exports.createAchievement = async (req, res, next) => {
+exports.createSession = async (req, res, next) => {
   try {
-    const { date_raw, achievement_date, title, description, category, linkedin_url, image_url, media_urls, mediaUrls } = req.body;
+    const { date_raw, session_date, title, description, category, linkedin_url, image_url, media_urls, mediaUrls } = req.body;
     // Support both snake_case and camelCase
     const resolvedMediaUrls = media_urls || mediaUrls || [];
 
-    // DEBUG LOGGING
-    console.log("[CREATE ACHIEVEMENT] Request body:", JSON.stringify(req.body, null, 2));
-    console.log("[CREATE ACHIEVEMENT] Has file:", !!req.file);
+
 
     // Validate required fields
     if (!title || !title.trim()) {
@@ -47,14 +54,17 @@ exports.createAchievement = async (req, res, next) => {
       try {
         const uploadResult = await uploadToCloudinary(
           req.file.buffer,
-          "srl_achievements",
+          "srl_sessions",
           req.file.originalname
         );
+        if (!uploadResult || !uploadResult.url || !uploadResult.url.startsWith("https://")) {
+          throw new Error(`Cloudinary upload returned invalid response: ${JSON.stringify(uploadResult)}`);
+        }
         uploadedUrl = uploadResult.url;
       } catch (uploadError) {
         return res.status(500).json({
           error: "Upload failed",
-          message: uploadError.message || "Failed to upload image to Cloudinary",
+          message: uploadError.message || "Failed to upload media to Cloudinary",
         });
       }
     }
@@ -69,26 +79,27 @@ exports.createAchievement = async (req, res, next) => {
       );
     };
 
-    const baseMediaUrls = Array.isArray(resolvedMediaUrls) ? resolvedMediaUrls : [];
+    // Only keep URLs that are full https addresses; drop relative/internal paths
+    const baseMediaUrls = sanitizeMediaUrls(Array.isArray(resolvedMediaUrls) ? resolvedMediaUrls : []);
     const finalMediaUrls = uploadedUrl ? [...baseMediaUrls, uploadedUrl] : baseMediaUrls;
-    console.log("[CREATE ACHIEVEMENT] Final media_urls:", finalMediaUrls);
     
-    // Auto-detect type
+    // Auto-detect type from media_urls
     const detectedType = finalMediaUrls.length > 0 && isVideoMedia(finalMediaUrls[0]) ? "video" : "image";
 
+
     // Get the max serial_no and calculate the next one
-    const maxSerialNo = await prisma.achievementContent.findFirst({
+    const maxSerialNo = await prisma.sessionContent.findFirst({
       orderBy: { serial_no: "desc" },
       select: { serial_no: true },
     });
 
     const nextSerialNo = (maxSerialNo?.serial_no || 0) + 1;
 
-    const achievement = await prisma.achievementContent.create({
+    const session = await prisma.sessionContent.create({
       data: {
         serial_no: nextSerialNo,
         date_raw: date_raw || null,
-        achievement_date: achievement_date ? new Date(achievement_date) : null,
+        session_date: session_date ? new Date(session_date) : null,
         title: title.trim(),
         description: description ? description.trim() : null,
         category: category ? category.trim() : null,
@@ -102,11 +113,11 @@ exports.createAchievement = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: "Achievement created successfully",
-      data: achievement,
+      message: "Session created successfully",
+      data: session,
     });
   } catch (error) {
-    console.error("Create achievement error:", error);
+    console.error("Create session error:", error);
     if (error.code === "P2002") {
       return res.status(400).json({
         error: "Conflict",
@@ -118,12 +129,12 @@ exports.createAchievement = async (req, res, next) => {
 };
 
 /**
- * Update achievement - PUT /api/admin/achievements/:id
+ * PUT /api/admin/sessions/:id
  */
-exports.updateAchievement = async (req, res, next) => {
+exports.updateSession = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { date_raw, achievement_date, title, description, category, type, linkedin_url, image_url, media_urls, mediaUrls } = req.body;
+    const { date_raw, session_date, title, description, category, type, linkedin_url, image_url, media_urls, mediaUrls } = req.body;
     // Support both snake_case and camelCase
     const resolvedMediaUrls = media_urls || mediaUrls;
 
@@ -137,20 +148,16 @@ exports.updateAchievement = async (req, res, next) => {
       );
     };
 
-    // DEBUG LOGGING
-    console.log("[UPDATE ACHIEVEMENT] ID:", id);
-    console.log("[UPDATE ACHIEVEMENT] Request body:", JSON.stringify(req.body, null, 2));
-    console.log("[UPDATE ACHIEVEMENT] Has file:", !!req.file);
-
     const updateData = {};
     if (date_raw !== undefined) updateData.date_raw = date_raw;
-    if (achievement_date !== undefined) updateData.achievement_date = achievement_date ? new Date(achievement_date) : null;
+    if (session_date !== undefined) updateData.session_date = session_date ? new Date(session_date) : null;
     if (title !== undefined) updateData.title = title;
     if (description !== undefined) updateData.description = description;
     if (category !== undefined) updateData.category = category;
     if (type !== undefined) {
       updateData.type = type;
     }
+
     if (linkedin_url !== undefined) updateData.linkedin_url = linkedin_url;
     if (image_url !== undefined) updateData.image_url = image_url;
 
@@ -160,56 +167,59 @@ exports.updateAchievement = async (req, res, next) => {
       try {
         const uploadResult = await uploadToCloudinary(
           req.file.buffer,
-          "srl_achievements",
+          "srl_sessions",
           req.file.originalname
         );
+        if (!uploadResult || !uploadResult.url || !uploadResult.url.startsWith("https://")) {
+          throw new Error(`Cloudinary upload returned invalid response: ${JSON.stringify(uploadResult)}`);
+        }
         uploadedUrl = uploadResult.url;
       } catch (uploadError) {
         return res.status(500).json({
           error: "Upload failed",
-          message: uploadError.message || "Failed to upload image to Cloudinary",
+          message: uploadError.message || "Failed to upload media to Cloudinary",
         });
       }
     }
 
     if (uploadedUrl) {
-      const baseMediaUrls = Array.isArray(resolvedMediaUrls) ? resolvedMediaUrls : [];
+      // Only keep valid https URLs from the body, then append the newly uploaded one
+      const baseMediaUrls = sanitizeMediaUrls(Array.isArray(resolvedMediaUrls) ? resolvedMediaUrls : []);
       const finalUrls = [...baseMediaUrls, uploadedUrl];
       updateData.media_urls = finalUrls;
-      console.log("[UPDATE ACHIEVEMENT] Added uploaded file to media_urls:", uploadedUrl);
-      
+
       // Auto-detect type if not explicitly provided
       if (type === undefined) {
         updateData.type = isVideoMedia(finalUrls[0]) ? "video" : "image";
       }
     } else if (resolvedMediaUrls !== undefined) {
-      updateData.media_urls = resolvedMediaUrls;
-      console.log("[UPDATE ACHIEVEMENT] Updating media_urls from payload:", resolvedMediaUrls);
-      
+      // Sanitize body-provided URLs — drop any non-https paths
+      const sanitized = sanitizeMediaUrls(Array.isArray(resolvedMediaUrls) ? resolvedMediaUrls : []);
+      updateData.media_urls = sanitized;
       // Auto-detect type if not explicitly provided
-      if (type === undefined && Array.isArray(resolvedMediaUrls) && resolvedMediaUrls.length > 0) {
-        updateData.type = isVideoMedia(resolvedMediaUrls[0]) ? "video" : "image";
+      if (type === undefined && sanitized.length > 0) {
+        updateData.type = isVideoMedia(sanitized[0]) ? "video" : "image";
       }
     }
 
-    console.log("[UPDATE ACHIEVEMENT] Final updateData:", JSON.stringify(updateData, null, 2));
 
-    const achievement = await prisma.achievementContent.update({
+
+    const session = await prisma.sessionContent.update({
       where: { id: parseInt(id) },
       data: updateData,
     });
 
     res.json({
       success: true,
-      message: "Achievement updated successfully",
-      data: achievement,
+      message: "Session updated successfully",
+      data: session,
     });
   } catch (error) {
-    console.error("Update achievement error:", error);
+    console.error("Update session error:", error);
     if (error.code === "P2025") {
       return res.status(404).json({
         error: "Not found",
-        message: "Achievement not found",
+        message: "Session not found",
       });
     }
     next(error);
@@ -217,29 +227,25 @@ exports.updateAchievement = async (req, res, next) => {
 };
 
 /**
- * Delete achievement - DELETE /api/admin/achievements/:id
+ * DELETE /api/admin/sessions/:id
  */
-exports.deleteAchievement = async (req, res, next) => {
+exports.deleteSession = async (req, res, next) => {
   try {
     const { id } = req.params;
-
-    await prisma.achievementContent.delete({
+    await prisma.sessionContent.delete({
       where: { id: parseInt(id) },
     });
-
     res.json({
       success: true,
-      message: "Achievement deleted successfully",
+      message: "Session deleted successfully",
     });
   } catch (error) {
-    console.error("Delete achievement error:", error);
     if (error.code === "P2025") {
       return res.status(404).json({
         error: "Not found",
-        message: "Achievement not found",
+        message: "Session not found",
       });
     }
     next(error);
   }
 };
-

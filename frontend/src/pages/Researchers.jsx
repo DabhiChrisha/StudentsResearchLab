@@ -131,7 +131,7 @@ export default function Researchers() {
             return {
                 id:                    s.enrollment_no || s.student_name.toLowerCase().replace(/\s+/g, '-'),
                 enrollment:            s.enrollment_no,
-                image:                 getImageUrl(s.photo || '/students/schoolstudent.png'),
+                image:                 getImageUrl(s.profile_image || s.photo || '/students/schoolstudent.png'),
                 title:                 s.student_name,
                 subtitle:              `${s.department} • Semester ${s.semester}`,
                 batch,
@@ -316,7 +316,7 @@ export default function Researchers() {
                                             onClick={() => openModalFor({
                                                 id:                    ra.enrollment_no || ra.student_name.toLowerCase().replace(/\s+/g, '-'),
                                                 enrollment:            ra.enrollment_no,
-                                                image:                 getImageUrl(ra.photo || '/students/schoolstudent.png'),
+                                                image:                 getImageUrl(ra.profile_image || ra.photo || '/students/schoolstudent.png'),
                                                 title:                 ra.student_name,
                                                 subtitle:              `${ra.department} • Semester ${ra.semester}`,
                                                 batch,
@@ -346,7 +346,7 @@ export default function Researchers() {
                                                 <div className="absolute inset-0 bg-secondary blur-3xl opacity-10 group-hover:opacity-30 transition-opacity duration-700 rounded-full" />
                                                 <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-white shadow-[0_15px_40px_rgba(0,0,0,0.1)] group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-all duration-700">
                                                     <img loading="lazy" decoding="async"
-                                                        src={getImageUrl(ra.photo || '/students/schoolstudent.png')}
+                                                        src={getImageUrl(ra.profile_image || ra.photo || '/students/schoolstudent.png')}
                                                         alt={ra.student_name}
                                                         className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:blur-[1.5px]"
                                                     />

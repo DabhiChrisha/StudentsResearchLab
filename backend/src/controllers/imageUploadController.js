@@ -25,6 +25,30 @@ const upload = multer({
   },
 });
 
+// Multer instance for the shared upload endpoint — supports images and videos up to 100 MB
+const uploadAny = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 100 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowedMimes = [
+      "image/jpeg", "image/png", "image/gif", "image/webp",
+      "video/mp4", "video/quicktime", "video/avi", "video/webm", "video/x-matroska",
+    ];
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error("Invalid file type. Only images (JPEG, PNG, GIF, WebP) and videos (MP4, MOV, AVI, WebM, MKV) are allowed."));
+    }
+  },
+});
+
+// Maps the optional `section` body field to Cloudinary folder names
+const SECTION_FOLDER_MAP = {
+  activity: "srl_activities",
+  achievement: "srl_achievements",
+  student: "srl_students",
+};
+
 const uploadImage = async (req, res) => {
   try {
     if (!req.file) {
@@ -98,8 +122,59 @@ const deleteImage = async (req, res) => {
   }
 };
 
+/**
+ * POST /api/admin/upload
+ * Generic media upload — uploads to Cloudinary and returns the URL.
+ * The admin portal stores the returned URL and passes it when creating/updating records.
+ *
+ * Body fields:
+ *   file        (multipart) — required
+ *   section     (string)    — "activity" | "achievement" | "student" (optional, defaults to srl_admin)
+ *   mediaType   (string)    — "image" | "video" (informational only; type is auto-detected)
+ *
+ * Response: { success: true, data: { url, publicId, resourceType } }
+ */
+const uploadMedia = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: "No file uploaded",
+        message: "Please provide a file to upload",
+      });
+    }
+
+    const { section } = req.body;
+    const folder = SECTION_FOLDER_MAP[section] || "srl_admin";
+    const resourceType = req.file.mimetype.startsWith("video/") ? "video" : "image";
+
+    const uploadResult = await uploadToCloudinary(
+      req.file.buffer,
+      folder,
+      req.file.originalname
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        url: uploadResult.url,
+        publicId: uploadResult.public_id,
+        resourceType,
+      },
+    });
+  } catch (error) {
+    console.error("Media upload error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Upload failed",
+    });
+  }
+};
+
 module.exports = {
   upload,
+  uploadAny,
   uploadImage,
+  uploadMedia,
   deleteImage,
 };
