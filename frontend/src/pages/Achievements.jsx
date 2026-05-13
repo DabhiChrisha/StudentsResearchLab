@@ -8,6 +8,16 @@ import "swiper/css/pagination";
 import { API_BASE_URL, API_HEADERS } from "../config/apiConfig";
 import { getImageUrl } from "../lib/imageUrl";
 
+const isVideoMedia = (url) => {
+  if (!url) return false;
+  const videoExtensions = [".mp4", ".webm", ".ogg", ".mov", ".quicktime"];
+  const urlLower = url.toLowerCase();
+  return (
+    videoExtensions.some((ext) => urlLower.includes(ext)) ||
+    urlLower.includes("/video/upload/")
+  );
+};
+
 /* 🎊 Confetti helper */
 const fireConfetti = () => {
   const duration = 1200;
@@ -33,22 +43,25 @@ const CardSkeleton = () => (
 
 /* ================= CARD ================= */
 const Card = ({ item, onClick }) => {
-  const isVideoMedia = (url) => {
-    if (!url) return false;
-    const videoExtensions = [".mp4", ".webm", ".ogg", ".mov", ".quicktime"];
-    const urlLower = url.toLowerCase();
-    return (
-      videoExtensions.some((ext) => urlLower.includes(ext)) ||
-      urlLower.includes("/video/upload/")
-    );
-  };
-
   return (
     <motion.div
       layout
       transition={{ type: "spring", stiffness: 140, damping: 22 }}
       whileHover={{ y: -6 }}
-      onClick={(e) => { e.stopPropagation(); onClick(); }}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          e.stopPropagation();
+          onClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`View details for ${item.title || "achievement"}`}
       className="relative cursor-pointer rounded-3xl overflow-hidden border border-slate-200 shadow-sm bg-white group"
     >
       <div className="aspect-[4/3] overflow-hidden bg-white">
@@ -60,7 +73,7 @@ const Card = ({ item, onClick }) => {
               loop
               autoPlay
               playsInline
-              className="block max-w-full max-h-full object-contain mx-auto"
+              className="block max-w-full max-h-full object-contain mx-auto pointer-events-none"
             />
           </div>
         ) : item.media_urls?.length > 0 ? (
@@ -78,7 +91,7 @@ const Card = ({ item, onClick }) => {
                   decoding="async"
                   src={getImageUrl(img)}
                   alt={item.title}
-                  className="block max-w-full max-h-full object-contain mx-auto"
+                  className="block max-w-full max-h-full object-contain mx-auto pointer-events-none"
                 />
               </SwiperSlide>
             ))}
@@ -144,6 +157,19 @@ const Achievements = () => {
       }, 120);
       hadSelectionRef.current = false;
     }
+  }, [selected]);
+
+  useEffect(() => {
+    if (!selected) return;
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape" || event.key === "Esc") {
+        setSelected(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
   }, [selected]);
 
   useEffect(() => {
