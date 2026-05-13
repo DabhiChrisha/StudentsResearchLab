@@ -13,30 +13,127 @@ export default function AddPublication() {
     institution: "",
     title: "",
     event_type: "",
+    venue: "",
+    conference_date: "",
+    publisher: "",
+    custom_publisher_name: "",
     is_srl_member: "",
     paper_link: "",
     date: "",
     summary: "",
+    publisher_photo: null,
   });
+  
+  const [photoPreview, setPhotoPreview] = useState(null);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    const { name, value, type, files } = e.target;
+    
+    if (type === "file") {
+      const file = files[0];
+      if (file) {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: file,
+        }));
+        
+        // Create preview
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPhotoPreview(reader.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+  
+  const handlePhotoUpload = (e) => {
+    const files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
+    if (files && files[0]) {
+      const file = files[0];
+      setFormData((prev) => ({
+        ...prev,
+        publisher_photo: file,
+      }));
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate venue for Conference
+    if (formData.event_type === "Conference" && !formData.venue.trim()) {
+      alert("❌ Venue is required for Conference publications");
+      return;
+    }
+    
+    // Validate publisher for non-Poster types
+    if (formData.event_type !== "Poster" && !formData.publisher.trim()) {
+      alert("❌ Publisher is required for this publication type");
+      return;
+    }
+    
+    // Validate custom publisher for Other
+    if (formData.publisher === "Other" && !formData.custom_publisher_name.trim()) {
+      alert("❌ Publisher name is required when selecting 'Other'");
+      return;
+    }
+
+    // Validate date only for non-Poster types
+    if (formData.event_type !== "Poster" && !formData.date.trim()) {
+      alert("❌ Published Date is required for this publication type");
+      return;
+    }
+    
     setLoading(true);
 
     try {
+      // Use FormData to handle both text and file data
+      const submitData = new FormData();
+      
+      // Add all text fields
+      submitData.append("first_author", formData.first_author);
+      submitData.append("co_authors", formData.co_authors);
+      submitData.append("department", formData.department);
+      submitData.append("institution", formData.institution);
+      submitData.append("title", formData.title);
+      submitData.append("event_type", formData.event_type);
+      submitData.append("venue", formData.venue);
+      submitData.append("conference_date", formData.conference_date);
+      submitData.append("publisher", formData.publisher === "Other" ? formData.custom_publisher_name : formData.publisher);
+      submitData.append("is_srl_member", formData.is_srl_member);
+      submitData.append("paper_link", formData.paper_link);
+      submitData.append("date", formData.date);
+      submitData.append("summary", formData.summary);
+      
+      // Add file if present
+      if (formData.publisher_photo) {
+        submitData.append("publisher_photo", formData.publisher_photo);
+      }
+
       const res = await fetch(`${API_BASE_URL}/api/submit-publication`, {
         method: "POST",
-        headers: { ...API_HEADERS },
-        body: JSON.stringify(formData)
+        headers: { "Accept": "application/json" },
+        body: submitData
       });
+      
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.detail || "Database error");
@@ -142,20 +239,18 @@ export default function AddPublication() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormSelect 
-              label="Type of event" 
+              label="Type of Publication" 
               name="event_type" 
               value={formData.event_type} 
               onChange={handleChange}
               options={[
-                { value: "", label: "Select Event Type" },
-                { value: "Conference Proceeding", label: "Conference Proceeding" },
-                { value: "Book Series", label: "Book Series" },
-                { value: "Book Chapter", label: "Book Chapter" },
-                { value: "Research Article", label: "Research Article" },
-                { value: "Patent", label: "Patent" },
+                { value: "", label: "Select Publication Type" },
+                { value: "Conference", label: "Conference" },
                 { value: "Journal", label: "Journal" },
-                { value: "Book", label: "Book" },
-                { value: "Poster Presentation", label: "Poster Presentation" },
+                { value: "Book Chapter", label: "Book Chapter" },
+                { value: "Patent", label: "Patent" },
+                { value: "Poster", label: "Poster" },
+                { value: "Research Article", label: "Research Article" },
               ]}
               required
             />
@@ -173,21 +268,73 @@ export default function AddPublication() {
             />
           </div>
 
+          <FormInput 
+            label="Venue" 
+            name="venue" 
+            value={formData.venue} 
+            onChange={handleChange}
+            placeholder="Enter the venue/event name"
+            required={formData.event_type === "Conference"}
+          />
+
+          {formData.event_type === "Conference" && (
+            <FormInput 
+              label="Conference Date" 
+              name="conference_date" 
+              type="date"
+              value={formData.conference_date} 
+              onChange={handleChange}
+              required
+            />
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-             <FormInput 
+            <FormSelect 
+              label="Publisher" 
+              name="publisher" 
+              value={formData.publisher} 
+              onChange={handleChange}
+              options={[
+                { value: "", label: "Select publisher" },
+                { value: "IEEE Xplore", label: "IEEE Xplore" },
+                { value: "VMFRDU", label: "VMFRDU" },
+                { value: "Springer", label: "Springer" },
+                { value: "INDERSCIENCE", label: "INDERSCIENCE" },
+                { value: "Wolters Kluwer", label: "Wolters Kluwer" },
+                { value: "CEUR Workshop Proceedings", label: "CEUR Workshop Proceedings" },
+                { value: "Other", label: "Other" },
+              ]}
+              required={formData.event_type !== "Poster"}
+            />
+          </div>
+
+          {formData.publisher === "Other" && (
+            <FormInput 
+              label="Add Publisher Name" 
+              name="custom_publisher_name" 
+              value={formData.custom_publisher_name} 
+              onChange={handleChange}
+              placeholder="Enter the publisher name"
+              required={formData.publisher === "Other"}
+            />
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormInput 
               label="Link to the paper" 
               name="paper_link" 
               value={formData.paper_link} 
               onChange={handleChange}
               placeholder="Enter URL to the paper"
+              required
             />
-             <FormInput 
-              label="Date" 
+            <FormInput 
+              label="Published Date" 
               name="date" 
               type="date"
               value={formData.date} 
               onChange={handleChange}
-              required
+              required={formData.event_type !== "Poster"}
             />
           </div>
 
@@ -200,6 +347,63 @@ export default function AddPublication() {
             required
             rows={4}
           />
+
+          {formData.publisher === "Other" && (
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Publisher Photo
+              </label>
+              <div
+                onDragOver={handleDragOver}
+                onDrop={handlePhotoUpload}
+                className="border-2 border-dashed border-[#c9a878] rounded-lg p-8 text-center cursor-pointer hover:border-[#05877a] hover:bg-gray-50 transition-all"
+              >
+                <input
+                  type="file"
+                  name="publisher_photo"
+                  onChange={handlePhotoUpload}
+                  accept="image/*"
+                  className="hidden"
+                  id="photo-upload"
+                />
+                <label htmlFor="photo-upload" className="cursor-pointer block">
+                  {photoPreview ? (
+                    <div className="space-y-2">
+                      <img 
+                        src={photoPreview} 
+                        alt="Preview" 
+                        className="mx-auto h-40 w-40 object-cover rounded-lg"
+                      />
+                      <p className="text-sm text-gray-600">Click or drag to replace</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="mx-auto h-12 w-12 text-[#c9a878]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                        />
+                      </svg>
+                      <p className="text-lg font-semibold text-[#c9a878]">
+                        Click to upload or drag and drop
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        Images (JPEG, PNG, GIF, WebP) up to 10MB
+                      </p>
+                    </div>
+                  )}
+                </label>
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
             <button
