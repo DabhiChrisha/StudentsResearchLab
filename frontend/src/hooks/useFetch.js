@@ -1,8 +1,33 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { API_HEADERS } from '../config/apiConfig';
 
+// ── Module-level response cache (stale-while-revalidate) ─────────────────────
+// Survives React re-mounts and route navigations within the same browser tab.
+// Key: URL string   Value: { data, ts, ttl }
+const _cache = new Map();
+
+export function getCachedResponse(key) {
+  const entry = _cache.get(key);
+  if (!entry) return null;
+  if (Date.now() - entry.ts > entry.ttl) { _cache.delete(key); return null; }
+  return entry.data;
+}
+
+export function setCachedResponse(key, data, ttl = 30_000) {
+  _cache.set(key, { data, ts: Date.now(), ttl });
+}
+
+export function invalidateCacheKey(key) { _cache.delete(key); }
+export function clearAllCache() { _cache.clear(); }
+// ─────────────────────────────────────────────────────────────────────────────
+
 /**
- * Generic data fetching hook with retry and timeout logic.
+ * Generic data fetching hook with retry, timeout, and optional client caching.
+ *
+ * @param {Function} fetchFn        Async function that returns the data.
+ * @param {Array}    dependencies   Re-run when these change (like useEffect deps).
+ * @param {number}   maxRetries     Times to retry on failure (default 3).
+ * @param {number}   retryInterval  ms between retries (default 3000).
  */
 export const useFetch = (fetchFn, dependencies = [], maxRetries = 3, retryInterval = 3000) => {
     const [data, setData] = useState(undefined);
@@ -24,6 +49,7 @@ export const useFetch = (fetchFn, dependencies = [], maxRetries = 3, retryInterv
                 setLoading(false);
             }
         } catch (err) {
+            if (err.name === 'AbortError') return; // silently ignore cancellations
             console.warn(`Fetch attempt ${currentRetry + 1} failed:`, err.message);
 
             if (currentRetry < maxRetries && isMounted) {
@@ -44,7 +70,6 @@ export const useFetch = (fetchFn, dependencies = [], maxRetries = 3, retryInterv
         setRetryCount(0);
         executeFetch(isMounted, 0);
 
-        // Refetch when the user returns to the tab so new DB entries appear immediately.
         const onVisible = () => {
             if (document.visibilityState === 'visible' && isMounted) {
                 setLoading(true);
@@ -58,29 +83,54 @@ export const useFetch = (fetchFn, dependencies = [], maxRetries = 3, retryInterv
             isMounted = false;
             document.removeEventListener('visibilitychange', onVisible);
         };
-    }, dependencies);
+    }, dependencies); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (retryCount === 0) return;
         let isMounted = true;
         executeFetch(isMounted, retryCount);
         return () => { isMounted = false; };
-    }, [retryCount]);
+    }, [retryCount, executeFetch]);
 
-    const manualRetry = () => {
+    const manualRetry = useCallback(() => {
         setRetryCount(0);
         setLoading(true);
         setError(null);
         executeFetch(true, 0);
-    };
+    }, [executeFetch]);
 
-    return { data, loading, error, retry: manualRetry };
+    /** Refetch in background — no loading spinner (for SSE / live admin updates). */
+    const refetchSilent = useCallback(async () => {
+        try {
+            await fetchFnRef.current();
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                console.warn('Silent refetch failed:', err.message);
+            }
+        }
+    }, []);
+
+    return { data, loading, error, retry: manualRetry, refetchSilent };
 };
 
 /**
- * fetch wrapper with timeout support
+ * fetch wrapper with timeout support.
+ * Pass { cacheKey, cacheTtl } to enable stale-while-revalidate client cache.
+ *
+ * @example
+ *   const data = await fetchWithTimeout('/api/leaderboard', {}, 8000, {
+ *     cacheKey: 'leaderboard', cacheTtl: 60_000
+ *   });
  */
-export const fetchWithTimeout = async (url, options = {}, timeout = 10000) => {
+export const fetchWithTimeout = async (url, options = {}, timeout = 10000, cacheOptions = {}) => {
+    const { cacheKey, cacheTtl = 30_000 } = cacheOptions;
+
+    // Return cached data immediately if still fresh
+    if (cacheKey) {
+        const hit = getCachedResponse(cacheKey);
+        if (hit) return hit;
+    }
+
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeout);
 
@@ -93,7 +143,10 @@ export const fetchWithTimeout = async (url, options = {}, timeout = 10000) => {
         });
         clearTimeout(id);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        return await response.json();
+        const data = await response.json();
+
+        if (cacheKey) setCachedResponse(cacheKey, data, cacheTtl);
+        return data;
     } catch (error) {
         clearTimeout(id);
         if (error.name === 'AbortError') {

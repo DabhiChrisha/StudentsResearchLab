@@ -1,4 +1,5 @@
 const prisma = require("../lib/prisma");
+const { broadcast } = require("../utils/sseManager");
 
 /**
  * Get all attendance records - GET /api/admin/attendance
@@ -106,6 +107,8 @@ exports.markAttendance = async (req, res, next) => {
       });
     }
 
+    broadcast('leaderboard_changed', {});
+
     res.status(201).json({
       success: true,
       message: "Attendance marked successfully",
@@ -140,6 +143,8 @@ exports.updateAttendance = async (req, res, next) => {
       },
     });
 
+    broadcast('leaderboard_changed', {});
+
     res.json({
       success: true,
       message: "Attendance updated successfully",
@@ -168,6 +173,8 @@ exports.deleteAttendance = async (req, res, next) => {
     await prisma.LeaderboardStat.delete({
       where: { id: parseInt(id) },
     });
+
+    broadcast('leaderboard_changed', {});
 
     res.json({
       success: true,

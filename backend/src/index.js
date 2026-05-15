@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const compression = require("compression");
 
 // Import routes
 const sessionsRouter = require("./routes/sessions");
@@ -32,6 +33,7 @@ const imageUploadRouter = require("./routes/imageUpload");
 const publisherLogosRouter    = require("./routes/publisherLogos");
 const adminSymbolsRouter      = require("./routes/adminSymbols");
 const publicationSymbolRouter = require("./routes/publicationSymbol");
+const eventsRouter            = require("./routes/events");
 
 const app = express();
 const ALLOWED_ORIGINS = [
@@ -55,14 +57,47 @@ app.use(
   }),
 );
 
+// Gzip/Brotli compression — cuts JSON payload size 60-80% (never compress SSE streams)
+app.use(
+  compression({
+    threshold: 1024,
+    filter: (req, res) => {
+      if (req.path === "/api/events") return false;
+      return compression.filter(req, res);
+    },
+  }),
+);
+
 app.use(express.json());
 
-// Prevent browsers and CDNs from caching API responses so new DB entries
-// are always reflected immediately on the main website.
+// Cache strategy:
+// - Public read-only endpoints: 30s fresh + 5min stale-while-revalidate.
+//   This eliminates redundant DB hits on repeat navigations while keeping
+//   data fresh enough for a lab website updated a few times per day.
+// - All admin/mutation endpoints: no-store (always fresh).
+const PUBLIC_CACHEABLE = [
+  '/api/leaderboard',
+  '/api/researchers',
+  '/api/publications',
+  '/api/activities',
+  '/api/sessions',
+  '/api/achievements',
+  '/api/timeline',
+  '/api/papers',
+  '/api/cv/',
+  '/api/batch-stats',
+];
+
 app.use((req, res, next) => {
-  if (req.path.startsWith('/api')) {
-    res.setHeader('Cache-Control', 'no-store');
-  }
+  if (!req.path.startsWith('/api')) return next();
+  const isPublicGet = req.method === 'GET' &&
+    PUBLIC_CACHEABLE.some(prefix => req.path.startsWith(prefix));
+  res.setHeader(
+    'Cache-Control',
+    isPublicGet
+      ? 'public, max-age=30, stale-while-revalidate=300, stale-if-error=600'
+      : 'no-store',
+  );
   next();
 });
 
@@ -108,6 +143,7 @@ app.use(imageUploadRouter);
 app.use(publisherLogosRouter);
 app.use(adminSymbolsRouter);
 app.use(publicationSymbolRouter);
+app.use(eventsRouter);
 
 // Global error handler — must be after all routes
 app.use((err, req, res, next) => {

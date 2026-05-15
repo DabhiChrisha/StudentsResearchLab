@@ -1,4 +1,5 @@
 const prisma = require("../lib/prisma");
+const { broadcast } = require("../utils/sseManager");
 
 /**
  * Get all students - GET /api/admin/students
@@ -118,6 +119,8 @@ exports.createStudent = async (req, res, next) => {
       },
     });
 
+    broadcast('student_changed', { enrollment_no: student.enrollment_no });
+
     res.status(201).json({
       success: true,
       message: "Student created successfully",
@@ -188,6 +191,8 @@ exports.updateStudent = async (req, res, next) => {
       data: updateData,
     });
 
+    broadcast('student_changed', { enrollment_no: student.enrollment_no });
+
     res.json({
       success: true,
       message: "Student updated successfully",
@@ -227,6 +232,8 @@ exports.deleteStudent = async (req, res, next) => {
     await prisma.studentsDetail.delete({
       where: { enrollment_no: enrollmentNo },
     });
+
+    broadcast('student_changed', { enrollment_no: enrollmentNo });
 
     res.json({
       success: true,

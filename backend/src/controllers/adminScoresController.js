@@ -1,5 +1,6 @@
 const prisma = require("../lib/prisma");
 const { aggregateDebateScoresToLeaderboard } = require("../lib/adminUtils");
+const { broadcast } = require("../utils/sseManager");
 
 const monthValueToNumber = (month) => {
   const trimmed = String(month ?? "").trim();
@@ -237,6 +238,8 @@ exports.createScore = async (req, res, next) => {
       },
     });
 
+    broadcast('leaderboard_changed', {});
+
     res.status(201).json({
       success: true,
       message: "Score created successfully",
@@ -270,6 +273,8 @@ exports.updateScore = async (req, res, next) => {
       data: { debate_score: scoreValue },
     });
 
+    broadcast('leaderboard_changed', {});
+
     res.json({
       success: true,
       message: "Score updated successfully",
@@ -298,6 +303,8 @@ exports.deleteScore = async (req, res, next) => {
     await prisma.leaderboardStat.delete({
       where: { id: parseInt(id) },
     });
+
+    broadcast('leaderboard_changed', {});
 
     res.json({
       success: true,
@@ -335,6 +342,8 @@ exports.aggregateScores = async (req, res, next) => {
     }
 
     const result = await aggregateDebateScoresToLeaderboard(prisma, parseInt(month), year);
+
+    broadcast('leaderboard_changed', {});
 
     res.json({
       success: true,

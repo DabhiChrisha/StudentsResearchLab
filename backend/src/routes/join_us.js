@@ -1,5 +1,6 @@
 const express = require("express");
 const prisma = require("../config/prisma");
+const { broadcast } = require("../utils/sseManager");
 
 const router = express.Router();
 
@@ -62,6 +63,11 @@ router.post("/api/join-us", async (req, res, next) => {
       typeof value === 'bigint' ? value.toString() : value
     ));
 
+    broadcast("join_request_pending", {
+      id: serializedData.id,
+      action: "pending",
+      name: serializedData.name,
+    });
     res.json({ success: true, data: serializedData });
   } catch (err) {
     console.error("Join Us Submission Error Stack:", err);

@@ -131,6 +131,24 @@
   }
 }
 
+/* ─── Skeleton Loading Bones ───────────────────────────────────────────────── */
+@keyframes skeleton-shimmer {
+  from { background-position: -600px 0; }
+  to   { background-position: 600px 0; }
+}
+
+.skeleton-bone {
+  background: linear-gradient(
+    90deg,
+    #dde3ea 25%,
+    #edf1f5 50%,
+    #dde3ea 75%
+  );
+  background-size: 600px 100%;
+  animation: skeleton-shimmer 1.5s linear infinite;
+}
+/* ──────────────────────────────────────────────────────────────────────────── */
+
 /* Accessibility: Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
 
@@ -141,6 +159,11 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .skeleton-bone {
+    animation: none;
+    background: #dde3ea;
   }
 }
 

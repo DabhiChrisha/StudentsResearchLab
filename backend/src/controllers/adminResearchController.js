@@ -1,4 +1,6 @@
 const prisma = require("../lib/prisma");
+const { broadcast } = require("../utils/sseManager");
+const { syncStudentFromJoinRequest } = require("../lib/syncStudentFromJoinRequest");
 
 const serializeForJson = (value) =>
   JSON.parse(
@@ -180,42 +182,68 @@ exports.updateJoinRequest = async (req, res, next) => {
       });
     }
 
+    const joinRequest = await prisma.joinUs.findUnique({
+      where: { id: BigInt(id) },
+    });
+
+    if (!joinRequest) {
+      return res.status(404).json({
+        error: "Not found",
+        message: "Join request not found",
+      });
+    }
+
+    let syncedStudent = null;
+    if (status === "approved") {
+      const { student, created } = await syncStudentFromJoinRequest(joinRequest);
+      syncedStudent = serializeForJson(student);
+      console.log(
+        `[Join Request] ${created ? "Created" : "Updated"} student ${student.enrollment_no} from approved request ${id}`,
+      );
+    }
+
     // Persist status to local JSON file (no DB column yet)
     const fs = require("fs");
     const path = require("path");
     const dataDir = path.join(__dirname, "..", "data");
     const statusFile = path.join(dataDir, "join_status.json");
 
-    try {
-      if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 
-      let statuses = {};
-      if (fs.existsSync(statusFile)) {
-        const raw = fs.readFileSync(statusFile, "utf8");
-        statuses = JSON.parse(raw || "{}");
-      }
-
-      statuses[String(id)] = status;
-      fs.writeFileSync(statusFile, JSON.stringify(statuses, null, 2), "utf8");
-
-      res.json({
-        success: true,
-        message: "Join request status saved",
-        data: { id, status },
-      });
-    } catch (err) {
-      console.error("Failed to persist join request status:", err);
-      return res.status(500).json({ success: false, error: "Failed to persist status" });
+    let statuses = {};
+    if (fs.existsSync(statusFile)) {
+      const raw = fs.readFileSync(statusFile, "utf8");
+      statuses = JSON.parse(raw || "{}");
     }
+
+    statuses[String(id)] = status;
+    fs.writeFileSync(statusFile, JSON.stringify(statuses, null, 2), "utf8");
+
+    broadcast("join_request_changed", { id, status, action: "updated" });
+    res.json({
+      success: true,
+      message:
+        status === "approved"
+          ? "Join request approved and student record synced"
+          : "Join request status saved",
+      data: { id, status, student: syncedStudent },
+    });
   } catch (error) {
-    if (error.code === "P2025") {
-      return res.status(404).json({
-        error: "Not found",
-        message: "Join request not found",
+    console.error("Update join request error:", error);
+    if (error.code === "P2002") {
+      return res.status(409).json({
+        success: false,
+        error: "Conflict",
+        message:
+          error.message ||
+          "A student with this enrollment or email already exists",
       });
     }
-    console.error("Update join request error:", error);
-    next(error);
+    return res.status(500).json({
+      success: false,
+      error: "Internal Server Error",
+      message: error.message || "Failed to update join request",
+    });
   }
 };
 
@@ -230,6 +258,7 @@ exports.deleteJoinRequest = async (req, res, next) => {
       where: { id: BigInt(id) },
     });
 
+    broadcast("join_request_changed", { id, action: "deleted" });
     res.json({
       success: true,
       message: "Join request deleted successfully",

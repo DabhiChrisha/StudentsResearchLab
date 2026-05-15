@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Medal, Star, Target, Zap, Clock, TrendingUp, Users, Award, BookOpen, Crown, Search, Calendar, Timer } from "lucide-react";
 import { useState, useEffect } from 'react';
-import { useFetch, fetchWithTimeout } from '../hooks/useFetch';
+import { useFetch, fetchWithTimeout, invalidateCacheKey } from '../hooks/useFetch';
 import { API_BASE_URL as API_BASE } from '../config/apiConfig';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { getImageUrl } from '../lib/imageUrl';
@@ -88,11 +88,11 @@ const LeaderBoard = () => {
     const [sortKey, setSortKey] = useState(null);   // null | 'rank' | 'name' | 'attendance' | 'hours' | 'score'
     const [sortDir, setSortDir] = useState('desc');
 
-    const { loading, error } = useFetch(async () => {
+    const { loading, error, retry: refetchLeaderboard, refetchSilent } = useFetch(async () => {
         const [overallJson, monthlyJson, hoursJson] = await Promise.all([
-            fetchWithTimeout(`${API_BASE}/api/leaderboard`),
-            fetchWithTimeout(`${API_BASE}/api/leaderboard/monthly`),
-            fetchWithTimeout(`${API_BASE}/api/leaderboard/top-hours`),
+            fetchWithTimeout(`${API_BASE}/api/leaderboard`,       {}, 10000, { cacheKey: 'lb:overall',  cacheTtl: 60_000 }),
+            fetchWithTimeout(`${API_BASE}/api/leaderboard/monthly`,{}, 10000, { cacheKey: 'lb:monthly',  cacheTtl: 60_000 }),
+            fetchWithTimeout(`${API_BASE}/api/leaderboard/top-hours`, {}, 10000, { cacheKey: 'lb:hours', cacheTtl: 60_000 }),
         ]);
 
         const parsedOverall = overallJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin');
@@ -115,6 +115,18 @@ const LeaderBoard = () => {
 
         return parsedOverall; // Data returned from hook (though we use local states for complex data)
     });
+
+    useEffect(() => {
+        const onLive = (e) => {
+            if (e.detail?.type !== 'leaderboard_changed') return;
+            invalidateCacheKey('lb:overall');
+            invalidateCacheKey('lb:monthly');
+            invalidateCacheKey('lb:hours');
+            refetchSilent();
+        };
+        window.addEventListener('srl:live-update', onLive);
+        return () => window.removeEventListener('srl:live-update', onLive);
+    }, [refetchSilent]);
 
     // Fetch data whenever selectedPeriod changes (for monthly + hours tabs)
     useEffect(() => {
@@ -160,8 +172,20 @@ const LeaderBoard = () => {
     let currentLeaderboard = allStudents;
     let mainMetricLabel = "pts";
     let mainMetricKey = "score";
-    if (activeTab === 'monthly') {
-        currentLeaderboard = periodStudents.length > 0 ? periodStudents : monthlyStudents;
+    
+    if (activeTab === 'overall' || activeTab === 'monthly') {
+        const base = activeTab === 'monthly' ? (periodStudents.length > 0 ? periodStudents : monthlyStudents) : allStudents;
+        currentLeaderboard = [...base].sort((a, b) => {
+            const rA = parseInt(a.rank, 10);
+            const rB = parseInt(b.rank, 10);
+            const scoreA = parseFloat(a.score) || 0;
+            const scoreB = parseFloat(b.score) || 0;
+
+            if (!isNaN(rA) && !isNaN(rB)) return rA - rB;
+            if (!isNaN(rA)) return -1;
+            if (!isNaN(rB)) return 1;
+            return scoreB - scoreA;
+        });
     } else if (activeTab === 'hours') {
         const base = periodStudents.length > 0 ? periodStudents : top5ByHours;
         currentLeaderboard = [...base].sort((a, b) => {
@@ -388,13 +412,13 @@ const LeaderBoard = () => {
 
             <div className="max-w-[1100px] mx-auto relative z-10">
                 {loading ? (
-                    <div className="animate-pulse w-full">
+                    <div className="w-full" aria-busy="true" aria-label="Loading leaderboard">
                         {/* Error State */}
                         {error && (
                             <div className="text-center py-10">
                                 <p className="text-red-500 font-bold text-lg mb-4">Unable to load data. Please try again.</p>
-                                <button 
-                                    onClick={() => window.location.reload()} 
+                                <button
+                                    onClick={() => window.location.reload()}
                                     className="px-6 py-2 bg-amber-500 text-white rounded-full font-bold shadow-md hover:bg-amber-600 transition-all"
                                 >
                                     Try Again
@@ -405,11 +429,11 @@ const LeaderBoard = () => {
                         {/* Header Skeleton */}
                         <div className="flex flex-col items-center justify-center mb-4 md:mb-6 gap-4">
                             <div className="flex flex-row items-center justify-center gap-3 md:gap-4 w-full flex-wrap md:flex-nowrap">
-                                <div className="h-10 md:h-11 bg-amber-100 rounded-full w-48 border-2 border-amber-200/60"></div>
-                                <div className="h-10 md:h-11 bg-amber-100 rounded-full w-40 border-2 border-amber-200/60"></div>
-                                <div className="h-10 md:h-11 bg-amber-100 rounded-full w-44 border-2 border-amber-200/60"></div>
+                                <div className="h-10 md:h-11 skeleton-bone rounded-full w-48"></div>
+                                <div className="h-10 md:h-11 skeleton-bone rounded-full w-40"></div>
+                                <div className="h-10 md:h-11 skeleton-bone rounded-full w-44"></div>
                             </div>
-                            <div className="h-10 md:h-14 bg-gray-200 rounded-lg w-3/4 max-w-md mt-2"></div>
+                            <div className="h-10 md:h-14 skeleton-bone rounded-lg w-3/4 max-w-md mt-2"></div>
                         </div>
 
                         {/* Podium Skeleton */}
@@ -423,9 +447,9 @@ const LeaderBoard = () => {
                                     { height: 'h-[40px] md:h-[54px]', avatar: 'w-12 h-12 md:w-16 md:h-16', marginBottom: 'mb-0', width: 'w-[60px] md:w-32' }
                                 ].map((p, i) => (
                                     <div key={i} className={`flex flex-col items-center justify-end relative h-[180px] md:h-[300px] shrink-0 ${p.width} ${p.marginBottom}`}>
-                                        <div className={`mb-2 md:mb-3 rounded-full bg-gray-300 border-2 md:border-4 border-gray-200 ${p.avatar}`}></div>
-                                        <div className="h-3 md:h-4 bg-gray-300 rounded w-3/4 mb-5 md:mb-8"></div>
-                                        <div className={`w-full ${p.height} rounded-lg md:rounded-xl shadow-lg bg-gray-200 border border-t-0 border-white/30`} />
+                                        <div className={`mb-2 md:mb-3 rounded-full skeleton-bone ${p.avatar}`}></div>
+                                        <div className="h-3 md:h-4 skeleton-bone rounded w-3/4 mb-5 md:mb-8"></div>
+                                        <div className={`w-full ${p.height} rounded-lg md:rounded-xl skeleton-bone`} />
                                     </div>
                                 ))}
                             </div>
@@ -433,32 +457,32 @@ const LeaderBoard = () => {
 
                         {/* List Skeleton */}
                         <div className="mt-16 sm:mt-24">
-                            <div className="h-4 bg-gray-300 w-64 mx-auto mb-6 rounded"></div>
+                            <div className="h-4 skeleton-bone w-64 mx-auto mb-6 rounded"></div>
                             <div className="bg-gradient-to-b from-[#f6ead0]/50 to-white/50 p-2 md:p-3 rounded-2xl md:rounded-[32px] border border-[#e8dcb8]/50">
                                 <div className="bg-white rounded-xl md:rounded-[24px] overflow-hidden">
                                     <div className="flex items-center bg-[#faeed1]/50 px-4 md:px-6 py-4 border-b border-[#ebdcae]/50">
-                                        <div className="h-4 bg-gray-200 w-full rounded"></div>
+                                        <div className="h-4 skeleton-bone w-full rounded"></div>
                                     </div>
                                     <div className="divide-y divide-gray-100 bg-white">
                                         {[...Array(5)].map((_, i) => (
                                             <div key={i} className="flex items-center px-4 md:px-6 py-3">
-                                                <div className="w-12 md:w-16 h-6 bg-gray-200 rounded shrink-0 flex flex-col items-center"></div>
+                                                <div className="w-12 md:w-16 h-6 skeleton-bone rounded shrink-0"></div>
                                                 <div className="w-16 md:w-20 justify-center shrink-0 hidden sm:flex">
-                                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gray-200"></div>
+                                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full skeleton-bone"></div>
                                                 </div>
                                                 <div className="flex-1 ml-2 md:ml-4 flex flex-col gap-2 min-w-0 pr-2 md:pr-4">
-                                                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                                                    <div className="h-3 bg-gray-200 rounded w-1/3"></div>
+                                                    <div className="h-4 skeleton-bone rounded w-1/2"></div>
+                                                    <div className="h-3 skeleton-bone rounded w-1/3"></div>
                                                 </div>
                                                 <div className="hidden lg:flex w-48 justify-center items-center gap-2">
-                                                    <div className="w-6 h-6 rounded-full bg-gray-200 shrink-0"></div>
-                                                    <div className="h-4 w-12 bg-gray-200 rounded shrink-0"></div>
+                                                    <div className="w-6 h-6 rounded-full skeleton-bone shrink-0"></div>
+                                                    <div className="h-4 w-12 skeleton-bone rounded shrink-0"></div>
                                                 </div>
                                                 <div className="hidden md:flex w-40 justify-center items-center gap-2">
-                                                    <div className="h-8 w-24 bg-gray-200 rounded-full"></div>
+                                                    <div className="h-8 w-24 skeleton-bone rounded-full"></div>
                                                 </div>
                                                 <div className="w-20 md:w-28 flex flex-col items-center justify-center shrink-0">
-                                                    <div className="h-6 w-10 bg-gray-200 rounded"></div>
+                                                    <div className="h-6 w-10 skeleton-bone rounded"></div>
                                                 </div>
                                             </div>
                                         ))}
@@ -557,8 +581,13 @@ const LeaderBoard = () => {
                                     if (sortKey === 'name') { av = (a.name || '').toLowerCase(); bv = (b.name || '').toLowerCase(); }
                                     else if (sortKey === 'attendance') { av = a.srlAttendanceNum || 0; bv = b.srlAttendanceNum || 0; }
                                     else if (sortKey === 'hours') { av = parseFloat((a.totalHours || '0').replace(' Hrs', '')) || 0; bv = parseFloat((b.totalHours || '0').replace(' Hrs', '')) || 0; }
-                                    else if (sortKey === 'score') { av = a.score || 0; bv = b.score || 0; }
-                                    else { av = a.rank || 0; bv = b.rank || 0; }
+                                    else if (sortKey === 'score') { av = parseFloat(a.score) || 0; bv = parseFloat(b.score) || 0; }
+                                    else { 
+                                        av = parseInt(a.rank, 10); 
+                                        bv = parseInt(b.rank, 10);
+                                        if (isNaN(av)) av = 999999;
+                                        if (isNaN(bv)) bv = 999999;
+                                    }
                                     if (av < bv) return sortDir === 'asc' ? -1 : 1;
                                     if (av > bv) return sortDir === 'asc' ? 1 : -1;
                                     return 0;
@@ -628,7 +657,7 @@ const LeaderBoard = () => {
                                                 const isTop5 = st.rank >= 1 && st.rank <= 5;
                                                 return (
                                                     <motion.div
-                                                        key={st.name}
+                                                        key={`${st.enrollment}-${idx}`}
                                                         initial={{ opacity: 0, y: 6 }}
                                                         animate={{ opacity: 1, y: 0 }}
                                                         transition={{ duration: 0.2, delay: Math.min(idx * 0.02, 0.2) }}

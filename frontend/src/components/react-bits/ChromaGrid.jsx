@@ -36,47 +36,44 @@ const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
 
     if (isLoading) {
         return (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3 sm:gap-4" aria-busy="true" aria-label="Loading researchers">
                 {[...Array(16)].map((_, index) => (
                     <div
                         key={index}
-                        className="group relative flex flex-col overflow-hidden rounded-[1.5rem] bg-slate-100 border border-slate-100 shadow-[0_4px_12px_rgba(0,0,0,0.02)]"
+                        className="group relative flex flex-col overflow-hidden rounded-[1.5rem] bg-slate-50 border border-slate-100 shadow-[0_4px_12px_rgba(0,0,0,0.02)]"
                     >
-                        {/* Top: Image Skeleton - 1:1 aspect ratio matching actual cards */}
+                        {/* Top: Image Skeleton */}
                         <div className="p-2">
-                            <div className="relative aspect-square w-full rounded-[1rem] bg-gradient-to-br from-slate-200 via-slate-150 to-slate-200 animate-pulse"></div>
+                            <div className="relative aspect-square w-full rounded-[1rem] skeleton-bone"></div>
                         </div>
 
                         {/* Bottom: Info Section Skeleton */}
                         <div className="px-3 pb-3 pt-0.5 flex-1 flex flex-col">
                             {/* Name Skeleton */}
                             <div className="mb-2">
-                                <div className="h-4 bg-slate-200 rounded-md w-5/6 animate-pulse mb-1.5"></div>
-                                {/* Semester Badge + Department Skeleton */}
+                                <div className="h-4 skeleton-bone rounded-md w-5/6 mb-1.5"></div>
                                 <div className="flex items-center gap-1">
-                                    <div className="w-12 h-4 bg-slate-200 rounded-sm animate-pulse"></div>
-                                    <div className="w-16 h-3 bg-slate-150 rounded-xs animate-pulse"></div>
+                                    <div className="w-12 h-4 skeleton-bone rounded-sm"></div>
+                                    <div className="w-16 h-3 skeleton-bone rounded-sm"></div>
                                 </div>
                             </div>
 
                             {/* Research Area Tag Skeleton */}
                             <div className="flex flex-wrap gap-1 mb-3">
-                                <div className="w-16 h-3.5 bg-slate-150 rounded-md animate-pulse"></div>
+                                <div className="w-16 h-3.5 skeleton-bone rounded-md"></div>
                             </div>
 
                             {/* Bottom Row: Metrics + Action Button Skeleton */}
-                            <div className="mt-auto pt-5 border-t border-slate-150 flex items-center justify-between gap-3">
-                                {/* Metrics Placeholders - 3 compact metrics */}
+                            <div className="mt-auto pt-5 border-t border-slate-100 flex items-center justify-between gap-3">
                                 <div className="flex gap-3 lg:gap-2">
                                     {[0, 1, 2].map(i => (
                                         <div key={i} className="flex flex-col items-center gap-0.5">
-                                            <div className="w-6 h-3 bg-slate-200 rounded animate-pulse"></div>
-                                            <div className="w-8 h-2 bg-slate-150 rounded animate-pulse"></div>
+                                            <div className="w-6 h-3 skeleton-bone rounded"></div>
+                                            <div className="w-8 h-2 skeleton-bone rounded"></div>
                                         </div>
                                     ))}
                                 </div>
-                                {/* Action Button Skeleton */}
-                                <div className="shrink-0 w-7 h-7 rounded-lg bg-slate-200 animate-pulse"></div>
+                                <div className="shrink-0 w-7 h-7 rounded-lg skeleton-bone"></div>
                             </div>
                         </div>
                     </div>

@@ -262,7 +262,8 @@ const Publications = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const fetchPublications = (opts) => {
+    if (!opts?.silent) setLoading(true);
     fetch(`${API_BASE_URL}/api/publications`, { headers: API_HEADERS })
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
@@ -290,8 +291,27 @@ const Publications = () => {
           }))
         );
       })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+      .catch((err) => {
+        if (!opts?.silent) setError(err.message);
+      })
+      .finally(() => {
+        if (!opts?.silent) setLoading(false);
+      });
+  };
+
+  // Initial load
+  useEffect(() => { fetchPublications(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Live admin updates — silent background refresh (no full-page loading state)
+  useEffect(() => {
+    const onLive = (e) => {
+      const t = e.detail?.type;
+      if (t === "publication_approved" || t === "publication_changed") {
+        fetchPublications({ silent: true });
+      }
+    };
+    window.addEventListener("srl:live-update", onLive);
+    return () => window.removeEventListener("srl:live-update", onLive);
   }, []);
 
   const filteredPublications = publications.filter((pub) => {
@@ -532,50 +552,46 @@ const Publications = () => {
           buttonRef={yearButtonRef}
         />
 
-        {loading ? (
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm sm:text-base text-slate-600 font-medium mb-6">
-            Loading publications...
-          </motion.p>
-        ) : error ? (
+        {!loading && error ? (
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm sm:text-base text-red-500 font-medium mb-6">
             Failed to load publications. Please try again later.
           </motion.p>
-        ) : filteredPublications.length > 0 ? (
+        ) : !loading && filteredPublications.length > 0 ? (
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm sm:text-base text-slate-600 font-medium mb-6">
             Showing <span className="font-bold text-secondary">{filteredPublications.length}</span> of <span className="font-bold">{publications.length}</span> publications
           </motion.p>
-        ) : (
+        ) : !loading ? (
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm sm:text-base text-slate-600 font-medium mb-6">
             No publications found.
           </motion.p>
-        )}
+        ) : null}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           <AnimatePresence mode="popLayout">
             {loading ? (
               [...Array(6)].map((_, index) => (
-                <div key={index} className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col h-[350px] animate-pulse">
+                <div key={index} className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col h-[350px]" aria-busy="true" aria-label="Loading publication">
                   <div className="flex justify-between items-start mb-5">
-                    <div className="h-6 w-24 bg-teal-50 rounded-full"></div>
-                    <div className="h-4 w-16 bg-gray-200 rounded"></div>
+                    <div className="h-6 w-24 skeleton-bone rounded-full"></div>
+                    <div className="h-4 w-16 skeleton-bone rounded"></div>
                   </div>
-                  <div className="h-6 md:h-8 w-3/4 bg-gray-200 rounded-md mb-4"></div>
-                  <div className="h-4 w-full bg-gray-200 rounded-md mb-2"></div>
-                  <div className="h-4 w-5/6 bg-gray-200 rounded-md mb-6"></div>
+                  <div className="h-6 md:h-8 w-3/4 skeleton-bone rounded-md mb-4"></div>
+                  <div className="h-4 w-full skeleton-bone rounded-md mb-2"></div>
+                  <div className="h-4 w-5/6 skeleton-bone rounded-md mb-6"></div>
                   <div className="flex items-start gap-3 mb-6">
-                    <div className="w-4 h-4 rounded bg-gray-200 mt-1 shrink-0"></div>
-                    <div className="h-4 w-1/2 bg-gray-200 rounded"></div>
+                    <div className="w-4 h-4 rounded skeleton-bone mt-1 shrink-0"></div>
+                    <div className="h-4 w-1/2 skeleton-bone rounded"></div>
                   </div>
                   <div className="flex items-start gap-3 mb-6">
-                    <div className="w-4 h-4 rounded bg-gray-200 mt-1 shrink-0"></div>
-                    <div className="h-4 w-2/3 bg-gray-200 rounded"></div>
+                    <div className="w-4 h-4 rounded skeleton-bone mt-1 shrink-0"></div>
+                    <div className="h-4 w-2/3 skeleton-bone rounded"></div>
                   </div>
                   <div className="mt-auto border-t border-slate-100 pt-5 flex justify-between items-center">
                     <div className="flex gap-2">
-                      <div className="h-5 w-16 bg-gray-200 rounded-md"></div>
-                      <div className="h-5 w-12 bg-gray-200 rounded-md"></div>
+                      <div className="h-5 w-16 skeleton-bone rounded-md"></div>
+                      <div className="h-5 w-12 skeleton-bone rounded-md"></div>
                     </div>
-                    <div className="w-10 h-10 rounded-full bg-slate-100"></div>
+                    <div className="w-10 h-10 rounded-full skeleton-bone"></div>
                   </div>
                 </div>
               ))

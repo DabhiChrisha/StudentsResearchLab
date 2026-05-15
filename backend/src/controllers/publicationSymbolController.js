@@ -16,12 +16,12 @@ const upload = multer({
 exports.upload = upload;
 
 // ── GET /api/publication-symbol ────────────────────────────────────────────────
-// Returns all active publishers (id + name only — no logo_url) for dropdown population.
+// Returns all active publishers (id + name + logo_url) for dropdown population.
 exports.listPublishers = async (req, res, next) => {
   try {
     const publishers = await prisma.symbol.findMany({
       where: { is_active: true },
-      select: { id: true, publisher_name: true },
+      select: { id: true, publisher_name: true, logo_url: true },
       orderBy: { id: 'asc' },
     });
     res.json({ success: true, data: publishers });
@@ -69,6 +69,63 @@ exports.getPublisher = async (req, res, next) => {
       logo_url:       symbol.logo_url || null,
     });
   } catch (err) {
+    next(err);
+  }
+};
+
+// ── POST /api/publication-symbol/upload-public ────────────────────────────────
+// Called when a public user selects "Other" in the Add Publication form.
+// No admin auth required — the publication itself goes through PENDING approval.
+// Accepts multipart/form-data: { publisher_name: string, logo: <image file> }
+exports.uploadCustomLogoPublic = async (req, res, next) => {
+  try {
+    const publisher_name = req.body.publisher_name?.trim();
+
+    if (!publisher_name) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid input',
+        message: 'publisher_name is required',
+      });
+    }
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid input',
+        message: 'logo file is required',
+      });
+    }
+
+    let uploadResult;
+    try {
+      uploadResult = await uploadToCloudinary(
+        req.file.buffer,
+        'publication-symbols',
+        req.file.originalname,
+      );
+    } catch (uploadErr) {
+      console.error('Cloudinary upload error:', uploadErr.message);
+      return res.status(502).json({
+        success: false,
+        error: 'Upload failed',
+        message: 'Could not upload logo to Cloudinary. Please try again.',
+      });
+    }
+
+    const symbol = await prisma.symbol.upsert({
+      where:  { publisher_name },
+      update: { logo_url: uploadResult.url, is_active: true },
+      create: { publisher_name, logo_url: uploadResult.url },
+    });
+
+    res.status(201).json({
+      success:        true,
+      symbol_id:      symbol.id,
+      publisher_name: symbol.publisher_name,
+      logo_url:       symbol.logo_url,
+    });
+  } catch (err) {
+    console.error('uploadCustomLogoPublic error:', err);
     next(err);
   }
 };

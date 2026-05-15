@@ -1,5 +1,6 @@
 const prisma = require("../lib/prisma");
 const { uploadToCloudinary, deleteFromCloudinary } = require("../utils/imageUpload");
+const { broadcast } = require("../utils/sseManager");
 
 // Reject any URL that isn't a full https address so relative/internal paths
 // never reach the database.
@@ -111,6 +112,8 @@ exports.createSession = async (req, res, next) => {
       },
     });
 
+    broadcast('session_changed', { id: session.id });
+
     res.status(201).json({
       success: true,
       message: "Session created successfully",
@@ -209,6 +212,8 @@ exports.updateSession = async (req, res, next) => {
       data: updateData,
     });
 
+    broadcast('session_changed', { id: session.id });
+
     res.json({
       success: true,
       message: "Session updated successfully",
@@ -235,6 +240,9 @@ exports.deleteSession = async (req, res, next) => {
     await prisma.sessionContent.delete({
       where: { id: parseInt(id) },
     });
+
+    broadcast('session_changed', { id: parseInt(id) });
+
     res.json({
       success: true,
       message: "Session deleted successfully",

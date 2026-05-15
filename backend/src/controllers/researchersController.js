@@ -29,8 +29,23 @@ function normalizeArray(val) {
 
 exports.getResearchers = async (req, res, next) => {
   try {
+    // Select only the fields the frontend actually needs — avoids sending
+    // login_password, cv_url, contact_no, gender, and other unused columns.
     const profiles = await prisma.memberCvProfile.findMany({
-      include: { students_details: true },
+      include: {
+        students_details: {
+          select: {
+            student_name:  true,
+            enrollment_no: true,
+            profile_image: true,
+            department:    true,
+            semester:      true,
+            batch:         true,
+            email:         true,
+            member:        true,
+          },
+        },
+      },
     });
 
     const filtered = profiles.filter(

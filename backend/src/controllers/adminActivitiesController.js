@@ -1,5 +1,6 @@
 const prisma = require("../lib/prisma");
 const { uploadToCloudinary, deleteFromCloudinary } = require("../utils/imageUpload");
+const { broadcast } = require("../utils/sseManager");
 
 /**
  * Get all activities - GET /api/admin/activities
@@ -98,6 +99,8 @@ exports.createActivity = async (req, res, next) => {
     });
 
     console.log("[CREATE ACTIVITY] DB insert successful. Activity created:", JSON.stringify(activity, null, 2));
+
+    broadcast('activity_changed', { id: activity.id });
 
     res.status(201).json({
       success: true,
@@ -201,6 +204,8 @@ exports.updateActivity = async (req, res, next) => {
 
     console.log("[UPDATE ACTIVITY] DB update successful. Activity updated:", JSON.stringify(activity, null, 2));
 
+    broadcast('activity_changed', { id: activity.id });
+
     res.json({
       success: true,
       message: "Activity updated successfully",
@@ -228,6 +233,8 @@ exports.deleteActivity = async (req, res, next) => {
     await prisma.activity.delete({
       where: { id: parseInt(id) },
     });
+
+    broadcast('activity_changed', { id: parseInt(id) });
 
     res.json({
       success: true,

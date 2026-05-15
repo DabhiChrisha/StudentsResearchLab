@@ -6,7 +6,6 @@ import {
   Linkedin,
   Github,
   GraduationCap,
-  Loader2,
   User,
   BookOpen,
   ExternalLink,
@@ -23,6 +22,8 @@ export default function StudentCV() {
     data: cvData,
     loading,
     error,
+    retry,
+    refetchSilent,
   } = useFetch(async () => {
     const json = await fetchWithTimeout(`${API_BASE}/api/cv/${studentId}`);
     if (!json || !json.data) {
@@ -37,6 +38,17 @@ export default function StudentCV() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    const onLive = (e) => {
+      if (e.detail?.type !== "student_changed") return;
+      const updated = String(e.detail?.enrollment_no || "").toUpperCase();
+      const current = String(studentId || "").toUpperCase();
+      if (!updated || updated === current) refetchSilent();
+    };
+    window.addEventListener("srl:live-update", onLive);
+    return () => window.removeEventListener("srl:live-update", onLive);
+  }, [studentId, refetchSilent]);
 
   // Helper: check if a value has real content
   const hasValue = (val) => val && val !== "-" && val !== "" && val !== "[]";
@@ -175,11 +187,35 @@ export default function StudentCV() {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#e3eef0] flex flex-col items-center justify-center font-sans gap-4">
-        <Loader2 className="w-8 h-8 animate-spin text-secondary" />
-        <p className="text-slate-500 text-sm font-semibold animate-pulse">
-          Loading CV profile...
-        </p>
+      <div className="min-h-screen bg-[#e3eef0] font-sans" aria-busy="true" aria-label="Loading profile">
+        {/* Nav skeleton */}
+        <div className="fixed top-0 left-0 right-0 z-50 bg-[#e3eef0]/80 backdrop-blur-md border-b border-black/5 h-16" />
+
+        <div className="max-w-4xl mx-auto px-6 pt-28 pb-16 space-y-6">
+          {/* Profile card skeleton */}
+          <div className="bg-white rounded-3xl p-8 flex flex-col sm:flex-row gap-8 shadow-sm">
+            <div className="w-32 h-32 rounded-2xl skeleton-bone shrink-0" />
+            <div className="flex-1 space-y-3 pt-1">
+              <div className="h-7 skeleton-bone rounded-lg w-2/3" />
+              <div className="h-4 skeleton-bone rounded w-1/3" />
+              <div className="h-4 skeleton-bone rounded w-1/4" />
+              <div className="flex gap-2 pt-2">
+                <div className="h-8 w-24 skeleton-bone rounded-full" />
+                <div className="h-8 w-24 skeleton-bone rounded-full" />
+              </div>
+            </div>
+          </div>
+
+          {/* Section skeletons */}
+          {[1, 2, 3].map(i => (
+            <div key={i} className="bg-white rounded-3xl p-6 shadow-sm space-y-3">
+              <div className="h-5 skeleton-bone rounded w-1/4 mb-4" />
+              <div className="h-4 skeleton-bone rounded w-full" />
+              <div className="h-4 skeleton-bone rounded w-5/6" />
+              <div className="h-4 skeleton-bone rounded w-4/6" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

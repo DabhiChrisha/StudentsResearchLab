@@ -1,5 +1,6 @@
 const express = require("express");
 const prisma = require("../config/prisma");
+const { broadcast } = require("../utils/sseManager");
 
 const router = express.Router();
 
@@ -31,8 +32,14 @@ router.get("/api/publications", async (req, res, next) => {
 
     const data = await prisma.publication.findMany({
       where,
-      include:  { symbol: { select: { logo_url: true } } },
-      orderBy: [{ published_date: "desc" }, { created_at: "desc" }],
+      select: {
+        id: true, title: true, authors: true, type_of_publication: true,
+        publisher: true, department: true, institute: true, link_to_paper: true,
+        conference_location: true, published_date: true, conference_date: true,
+        publisher_logo_id: true,
+        symbol: { select: { logo_url: true } },
+      },
+      orderBy: [{ published_date: "desc" }, { id: "desc" }],
     });
 
     const toTitleCase = (str) =>
@@ -72,28 +79,39 @@ router.post("/api/submit-publication", async (req, res, next) => {
       event_type,
       paper_link,
       date,
+      publisher,
+      publisher_logo_id,
+      venue,
+      conference_date,
     } = req.body;
 
-    const allowed = ['conference', 'book chapter', 'journal', 'patent', 'poster'];
+    const allowed = ['conference', 'book chapter', 'journal', 'patent', 'poster', 'research article'];
     const chosenType = (typeof event_type === 'string' && event_type.trim()) ? event_type.trim().toLowerCase() : null;
     const finalType = allowed.includes(chosenType) ? chosenType : 'conference';
     const isPoster = finalType === 'poster';
+
+    const logoId = publisher_logo_id ? parseInt(publisher_logo_id, 10) : null;
+    const resolvedPublisher = publisher || (isPoster ? (institution || null) : "Students Research Lab");
 
     const data = await prisma.publication.create({
       data: {
         title,
         authors: [first_author, ...(co_authors ? co_authors.split(",").map((x) => x.trim()).filter(Boolean) : [])],
         type_of_publication: finalType,
-        publisher:           isPoster ? (institution || null) : (institution || "Students Research Lab"),
+        publisher:           resolvedPublisher,
         department:          department || "General",
         institute:           institution || "LDRP-ITR",
         link_to_paper:       paper_link || null,
         published_date:      date ? new Date(date) : new Date(),
-        conference_date:     date ? new Date(date) : null,
-        conference_location: null,
+        conference_date:     conference_date ? new Date(conference_date) : (date ? new Date(date) : null),
+        conference_location: venue || null,
         status:              "PENDING",
+        ...(logoId && !Number.isNaN(logoId) ? { publisher_logo_id: logoId } : {}),
       },
     });
+
+    // Notify all connected admin portal clients in real time
+    broadcast('publication_pending', { id: data.id, title: data.title });
 
     res.json({
       success: true,

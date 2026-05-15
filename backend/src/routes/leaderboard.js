@@ -5,6 +5,24 @@ const router = express.Router();
 
 const { isExcludedStudent } = require("../lib/adminUtils");
 
+// ── In-process cache: avoids repeated DB round-trips for the same period ──────
+// TTL of 60 s keeps data fresh for a live lab session; SSE events (student_changed
+// / leaderboard_changed) should also call invalidateLeaderboardCache() on writes.
+const _lbCache = new Map(); // period → { students, timestamp }
+const LB_TTL_MS = 60_000;
+
+function getCachedLeaderboard(period) {
+  const entry = _lbCache.get(period);
+  if (!entry) return null;
+  if (Date.now() - entry.timestamp > LB_TTL_MS) { _lbCache.delete(period); return null; }
+  return entry.students;
+}
+function setCachedLeaderboard(period, students) {
+  _lbCache.set(period, { students, timestamp: Date.now() });
+}
+function invalidateLeaderboardCache() { _lbCache.clear(); }
+module.exports.invalidateLeaderboardCache = invalidateLeaderboardCache;
+
 const PERIOD_MAX_ATT = {
   "Dec 2025": 33,
   "Jan 2026": 12,
@@ -84,20 +102,14 @@ function groupRowsByStudent(rows) {
 }
 
 async function buildLeaderboard(period) {
-  const [statsRows, detailRows] = await Promise.all([
-    prisma.leaderboardStat.findMany({
-      where: { period },
-      select: { serial_no: true, student_name: true, enrollment_no: true, attendance: true, hours: true, debate_score: true },
-    }),
-    prisma.studentsDetail.findMany({
-      select: { enrollment_no: true, profile_image: true, department: true, semester: true, division: true, batch: true },
-    }),
-  ]);
+  // Return cached result if still fresh
+  const cached = getCachedLeaderboard(period);
+  if (cached) return cached;
 
-  const detailMap = {};
-  detailRows.forEach((r) => {
-    const en = (r.enrollment_no || "").trim().toUpperCase();
-    detailMap[en] = r;
+  // Fetch only the stats for this period first
+  let statsRows = await prisma.leaderboardStat.findMany({
+    where: { period },
+    select: { serial_no: true, student_name: true, enrollment_no: true, attendance: true, hours: true, debate_score: true },
   });
 
   let effectiveRows = statsRows || [];
@@ -111,6 +123,25 @@ async function buildLeaderboard(period) {
     });
     effectiveRows = groupRowsByStudent(monthlyRows);
   }
+
+  // Only look up student details for the enrollments actually in the leaderboard
+  // (avoids a full-table scan of students_details on every leaderboard request)
+  const enrollmentsInStats = [...new Set(
+    effectiveRows.map(r => (r.enrollment_no || "").trim().toUpperCase()).filter(Boolean)
+  )];
+
+  const detailRows = enrollmentsInStats.length > 0
+    ? await prisma.studentsDetail.findMany({
+        where: { enrollment_no: { in: enrollmentsInStats } },
+        select: { enrollment_no: true, profile_image: true, department: true, semester: true, division: true, batch: true },
+      })
+    : [];
+
+  const detailMap = {};
+  detailRows.forEach((r) => {
+    const en = (r.enrollment_no || "").trim().toUpperCase();
+    detailMap[en] = r;
+  });
 
   const maxAtt = PERIOD_MAX_ATT[period] || 1;
 
@@ -153,6 +184,7 @@ async function buildLeaderboard(period) {
     delete s._att;
   });
 
+  setCachedLeaderboard(period, students);
   return students;
 }
 

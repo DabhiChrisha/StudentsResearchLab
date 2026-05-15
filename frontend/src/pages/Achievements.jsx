@@ -32,11 +32,11 @@ const fireConfetti = () => {
 
 /* Skeleton card while loading */
 const CardSkeleton = () => (
-  <div className="rounded-3xl overflow-hidden border border-slate-200 shadow-sm bg-white animate-pulse">
-    <div className="aspect-[4/3] bg-slate-200" />
+  <div className="rounded-3xl overflow-hidden border border-slate-200 shadow-sm bg-white" aria-busy="true" aria-label="Loading achievement">
+    <div className="aspect-[4/3] skeleton-bone" />
     <div className="p-4 space-y-2">
-      <div className="h-4 bg-slate-200 rounded w-3/4" />
-      <div className="h-3 bg-slate-200 rounded w-1/2" />
+      <div className="h-4 skeleton-bone rounded w-3/4" />
+      <div className="h-3 skeleton-bone rounded w-1/2" />
     </div>
   </div>
 );
@@ -123,15 +123,32 @@ const Achievements = () => {
   const detailRef = useRef(null);
   const hadSelectionRef = useRef(false);
 
-  useEffect(() => {
+  const fetchAchievements = (opts) => {
+    if (!opts?.silent) setLoading(true);
     fetch(`${API_BASE_URL}/api/achievements`, { headers: API_HEADERS })
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
       })
       .then(({ achievements }) => setData(achievements || []))
-      .catch(() => setData([]))
-      .finally(() => setLoading(false));
+      .catch(() => {
+        if (!opts?.silent) setData([]);
+      })
+      .finally(() => {
+        if (!opts?.silent) setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchAchievements();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const onLive = (e) => {
+      if (e.detail?.type === "achievement_changed") fetchAchievements({ silent: true });
+    };
+    window.addEventListener("srl:live-update", onLive);
+    return () => window.removeEventListener("srl:live-update", onLive);
   }, []);
 
   const remaining = data.filter((d) => d.id !== selected?.id);

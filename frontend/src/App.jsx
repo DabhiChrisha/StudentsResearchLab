@@ -2,6 +2,7 @@ import { useState, lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { API_BASE_URL, API_HEADERS } from './config/apiConfig';
+import { useSiteLiveUpdates } from './hooks/useSiteLiveUpdates';
 
 // Layout & UI Components
 import Navbar from './components/Navbar';
@@ -30,6 +31,7 @@ import PageTransitionWrapper from './components/PageTransitionWrapper';
 
 function App() {
   const [loading, setLoading] = useState(true);
+  useSiteLiveUpdates();
 
   useEffect(() => {
     // Wake up Render backend immediately on app load

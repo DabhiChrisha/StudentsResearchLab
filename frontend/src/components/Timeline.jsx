@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion } from "framer-motion";
 import Tree from './tree';
 import GradientText from './react-bits/GradientText';
@@ -139,7 +139,7 @@ const TimelineSkeleton = () => {
 function Timeline() {
   const scrollContainerRef = useRef(null);
 
-  const { data: timelineSteps = [], loading, error, retry } = useFetch(async () => {
+  const { data: timelineSteps = [], loading, error, retry, refetchSilent } = useFetch(async () => {
     const json = await fetchWithTimeout(`${API_BASE_URL}/api/timeline`);
     const timelineData = json?.data || json?.sessions || json?.timeline || [];
 
@@ -152,6 +152,14 @@ function Timeline() {
       ...item,
     }));
   });
+
+  useEffect(() => {
+    const onLive = (e) => {
+      if (e.detail?.type === "session_changed") refetchSilent();
+    };
+    window.addEventListener("srl:live-update", onLive);
+    return () => window.removeEventListener("srl:live-update", onLive);
+  }, [refetchSilent]);
 
   return (
     <section id="timeline" className="py-24 px-4 md:px-8 bg-gradient-to-b from-white via-[#e8f5f1] to-white relative overflow-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>

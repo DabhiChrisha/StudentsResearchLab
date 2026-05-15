@@ -36,9 +36,14 @@ export default function JoinUs() {
     const { name, value } = e.target;
     console.log('Field changed:', name, 'Value:', value);
 
+    let processed = value;
+    if (name === "contact") {
+      processed = value.replace(/\D/g, "").slice(0, 10);
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: processed,
     }));
   };
 
@@ -47,6 +52,12 @@ export default function JoinUs() {
     setLoading(true);
 
     console.log('Form data being submitted:', formData);
+
+    if (!/^\d{10}$/.test(formData.contact)) {
+      setSubmitStatus({ type: 'error', message: "❌ Please enter a valid 10-digit contact number." });
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch(`${API_BASE_URL}/api/join-us`, {
@@ -473,13 +484,17 @@ export default function JoinUs() {
 
           {/* Contact and Email - Row 5 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormInput 
-              label="Contact Number" 
-              name="contact" 
-              value={formData.contact} 
+            <FormInput
+              label="Contact Number"
+              name="contact"
+              type="tel"
+              value={formData.contact}
               onChange={handleChange}
-              placeholder="Enter your contact number"
+              placeholder="Enter 10-digit contact number"
               required
+              pattern="[0-9]{10}"
+              title="Please enter a valid 10-digit contact number"
+              maxLength={10}
             />
 			<FormInput 
               label="Email ID" 
@@ -515,7 +530,7 @@ export default function JoinUs() {
   );
 }
 
-function FormInput({ label, name, type = "text", value, onChange, placeholder, required = false }) {
+function FormInput({ label, name, type = "text", value, onChange, placeholder, required = false, ...rest }) {
   return (
     <div>
       <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -529,6 +544,7 @@ function FormInput({ label, name, type = "text", value, onChange, placeholder, r
         placeholder={placeholder}
         required={required}
         className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-[#05877a] focus:ring-2 focus:ring-[#05877a]/20 transition-all"
+        {...rest}
       />
     </div>
   );
