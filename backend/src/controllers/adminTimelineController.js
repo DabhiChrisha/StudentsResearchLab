@@ -1,4 +1,5 @@
 const prisma = require("../lib/prisma");
+const { broadcast } = require("../utils/sseManager");
 
 /**
  * Get all timeline entries - GET /api/admin/timeline
@@ -58,6 +59,8 @@ exports.createTimelineEntry = async (req, res, next) => {
       },
     });
 
+    broadcast("session_changed", { id: entry.id });
+
     res.status(201).json({
       success: true,
       message: "Timeline entry created successfully",
@@ -99,6 +102,8 @@ exports.updateTimelineEntry = async (req, res, next) => {
       data: updateData,
     });
 
+    broadcast("session_changed", { id: entry.id });
+
     res.json({
       success: true,
       message: "Timeline entry updated successfully",
@@ -126,6 +131,8 @@ exports.deleteTimelineEntry = async (req, res, next) => {
     await prisma.sessionContent.delete({
       where: { id: parseInt(id) },
     });
+
+    broadcast("session_changed", { id: parseInt(id) });
 
     res.json({
       success: true,

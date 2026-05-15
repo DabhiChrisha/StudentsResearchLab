@@ -1,4 +1,5 @@
 const prisma = require("../lib/prisma");
+const { broadcast } = require("../utils/sseManager");
 
 const serializeForJson = (value) =>
   JSON.parse(
@@ -30,13 +31,18 @@ exports.getMemberCVByEnrollment = async (req, res, next) => {
 
     const memberCV = await prisma.memberCvProfile.findUnique({
       where: { enrollment_no: String(enrollment_no) },
+      include: { students_details: { select: { profile_image: true } } },
     });
 
     if (!memberCV) {
       return res.json({ success: true, data: null, message: "No CV profile found - using defaults" });
     }
 
-    res.json({ success: true, data: serializeForJson(memberCV) });
+    const serialized = serializeForJson(memberCV);
+    // Merge profile_image from students_details so the frontend can display it
+    serialized.profile_image = memberCV.students_details?.profile_image || null;
+
+    res.json({ success: true, data: serialized });
   } catch (error) {
     next(error);
   }
@@ -56,6 +62,8 @@ exports.updateMemberCV = async (req, res, next) => {
       institute,
       organization,
       reflection,
+      profile_image,
+      research_areas,
       hackathons,
       research_papers,
       research_work,
@@ -84,53 +92,55 @@ exports.updateMemberCV = async (req, res, next) => {
 
     let memberCV;
 
+    const cvData = {
+      student_name:            student_name            || undefined,
+      linkedin_id:             linkedin_id             ?? null,
+      semester:                semester                ?? null,
+      department:              department              ?? null,
+      institute:               institute               ?? null,
+      organization:            organization            ?? null,
+      reflection:              reflection              ?? null,
+      research_areas:          research_areas          || [],
+      hackathons:              hackathons              || [],
+      research_papers:         research_papers         || [],
+      research_work:           research_work           || [],
+      leadership:              leadership              || [],
+      awards:                  awards                  || [],
+      certifications:          certifications          || [],
+      additional_achievements: additional_achievements || [],
+      internships:             internships             || [],
+    };
+
     if (existingMemberCV) {
       memberCV = await prisma.memberCvProfile.update({
         where: { enrollment_no: String(enrollment_no) },
-        data: {
-          student_name:            student_name            || undefined,
-          linkedin_id:             linkedin_id             ?? null,
-          semester:                semester                ?? null,
-          department:              department              ?? null,
-          institute:               institute               ?? null,
-          organization:            organization            ?? null,
-          reflection:              reflection              ?? null,
-          hackathons:              hackathons              || [],
-          research_papers:         research_papers         || [],
-          research_work:           research_work           || [],
-          leadership:              leadership              || [],
-          awards:                  awards                  || [],
-          certifications:          certifications          || [],
-          additional_achievements: additional_achievements || [],
-          internships:             internships             || [],
-          updated_at:              new Date(),
-        },
+        data: { ...cvData, updated_at: new Date() },
       });
     } else {
+      // For create, student_name is required — use "Unknown" as fallback
+      const { student_name: _sn, ...cvDataWithoutName } = cvData;
       memberCV = await prisma.memberCvProfile.create({
         data: {
-          enrollment_no:           String(enrollment_no),
-          student_name:            student_name || "Unknown",
-          linkedin_id:             linkedin_id             ?? null,
-          semester:                semester                ?? null,
-          department:              department              ?? null,
-          institute:               institute               ?? null,
-          organization:            organization            ?? null,
-          reflection:              reflection              ?? null,
-          hackathons:              hackathons              || [],
-          research_papers:         research_papers         || [],
-          research_work:           research_work           || [],
-          leadership:              leadership              || [],
-          awards:                  awards                  || [],
-          certifications:          certifications          || [],
-          additional_achievements: additional_achievements || [],
-          internships:             internships             || [],
+          enrollment_no: String(enrollment_no),
+          student_name:  student_name || "Unknown",
+          ...cvDataWithoutName,
         },
       });
     }
 
+    // profile_image lives in students_details — update it there if provided
+    if (profile_image !== undefined) {
+      await prisma.studentsDetail.update({
+        where: { enrollment_no: String(enrollment_no) },
+        data: { profile_image: profile_image || null },
+      });
+    }
+
+    broadcast("student_changed", { enrollment_no: String(enrollment_no) });
+
     res.json({ success: true, data: serializeForJson(memberCV), message: "CV profile updated successfully" });
   } catch (error) {
+    console.error("[Member CV] Update error:", error);
     next(error);
   }
 };

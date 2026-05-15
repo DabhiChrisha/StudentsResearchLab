@@ -1,5 +1,6 @@
 const prisma = require("../lib/prisma");
 const { uploadToCloudinary, deleteFromCloudinary } = require("../utils/imageUpload");
+const { broadcast } = require("../utils/sseManager");
 
 /**
  * Get all achievements - GET /api/admin/achievements
@@ -100,6 +101,8 @@ exports.createAchievement = async (req, res, next) => {
       },
     });
 
+    broadcast('achievement_changed', { id: achievement.id });
+
     res.status(201).json({
       success: true,
       message: "Achievement created successfully",
@@ -199,6 +202,8 @@ exports.updateAchievement = async (req, res, next) => {
       data: updateData,
     });
 
+    broadcast('achievement_changed', { id: achievement.id });
+
     res.json({
       success: true,
       message: "Achievement updated successfully",
@@ -226,6 +231,8 @@ exports.deleteAchievement = async (req, res, next) => {
     await prisma.achievementContent.delete({
       where: { id: parseInt(id) },
     });
+
+    broadcast('achievement_changed', { id: parseInt(id) });
 
     res.json({
       success: true,

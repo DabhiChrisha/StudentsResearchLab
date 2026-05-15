@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFetch, fetchWithTimeout } from "../hooks/useFetch";
 import { API_BASE_URL } from "../config/apiConfig";
@@ -13,10 +13,20 @@ const Activities = () => {
     data: activities = [],
     loading,
     error,
+    retry,
+    refetchSilent,
   } = useFetch(async () => {
     const json = await fetchWithTimeout(`${API_BASE_URL}/api/activities`);
     return json.data || [];
   });
+
+  useEffect(() => {
+    const onLive = (e) => {
+      if (e.detail?.type === "activity_changed") refetchSilent();
+    };
+    window.addEventListener("srl:live-update", onLive);
+    return () => window.removeEventListener("srl:live-update", onLive);
+  }, [refetchSilent]);
 
   return (
     <div
@@ -55,16 +65,16 @@ const Activities = () => {
 
         {/* Loading Skeleton */}
         {loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-8 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-8 items-stretch" aria-busy="true" aria-label="Loading activities">
             {[...Array(6)].map((_, i) => (
               <div
                 key={i}
-                className="bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden min-h-[270px] md:min-h-[290px] animate-pulse border border-gray-100"
+                className="bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden min-h-[270px] md:min-h-[290px] border border-gray-100"
               >
-                <div className="w-full bg-gray-200 aspect-[4/3]"></div>
+                <div className="w-full skeleton-bone aspect-[4/3] rounded-t-2xl"></div>
                 <div className="flex flex-col flex-1 p-5 pt-4">
-                  <div className="h-6 md:h-7 bg-gray-200 rounded-md w-3/4 mx-auto mb-3"></div>
-                  <div className="h-4 bg-gray-200 rounded-md w-1/3 mx-auto mb-2"></div>
+                  <div className="h-6 md:h-7 skeleton-bone rounded-md w-3/4 mx-auto mb-3"></div>
+                  <div className="h-4 skeleton-bone rounded-md w-1/3 mx-auto mb-2"></div>
                 </div>
               </div>
             ))}

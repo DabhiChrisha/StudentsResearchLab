@@ -54,7 +54,8 @@ export default function Researchers() {
         } catch (err) {
             if (err.name !== 'AbortError') console.error("Failed to fetch researchers:", err);
         } finally {
-            setIsLoading(false);
+            // Don't clear loading when the request was intentionally aborted (e.g. StrictMode cleanup)
+            if (!signal?.aborted) setIsLoading(false);
         }
     }, []);
 
@@ -72,6 +73,16 @@ export default function Researchers() {
             controller.abort();
             document.removeEventListener('visibilitychange', onVisible);
         };
+    }, [fetchResearchers]);
+
+    useEffect(() => {
+        const onLive = (e) => {
+            if (e.detail?.type === 'student_changed') {
+                fetchResearchers(new AbortController().signal);
+            }
+        };
+        window.addEventListener('srl:live-update', onLive);
+        return () => window.removeEventListener('srl:live-update', onLive);
     }, [fetchResearchers]);
 
     // ── sorting ───────────────────────────────────────────────────────────────
@@ -226,12 +237,7 @@ export default function Researchers() {
 
     // ─── render ───────────────────────────────────────────────────────────────
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="pt-10 lg:pt-14 pb-12 min-h-screen bg-white"
-        >
+        <div className="pt-10 lg:pt-14 pb-12 min-h-screen bg-white">
             <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* ── Header ─────────────────────────────────────────────── */}
@@ -264,20 +270,20 @@ export default function Researchers() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
                             {isLoading ? (
                                 [...Array(2)].map((_, idx) => (
-                                    <div key={idx} className="relative overflow-hidden rounded-[2rem] shadow-xl p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-6 border border-white/60 animate-pulse" style={{ background: "linear-gradient(135deg, #e5e1baff 100%, #7af8c6ff 100%)" }}>
+                                    <div key={idx} className="relative overflow-hidden rounded-[2rem] shadow-xl p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-6 border border-white/60" style={{ background: "linear-gradient(135deg, #e5e1baff 100%, #7af8c6ff 100%)" }}>
 
                                         {/* Avatar with white border ring */}
                                         <div className="shrink-0 relative">
-                                            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-black/15 border-4 border-white shadow-[0_15px_40px_rgba(0,0,0,0.08)]" />
+                                            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full skeleton-bone border-4 border-white shadow-[0_15px_40px_rgba(0,0,0,0.08)]" />
                                         </div>
 
                                         {/* Content */}
                                         <div className="flex-1 text-center sm:text-left w-full flex flex-col gap-2.5">
                                             {/* Badge pill */}
-                                            <div className="h-5 w-32 bg-black/10 rounded-full self-center sm:self-start" />
+                                            <div className="h-5 w-32 skeleton-bone rounded-full self-center sm:self-start" />
                                             {/* Name — two lines mimic serif heading */}
-                                            <div className="h-7 bg-black/10 rounded-lg w-3/4 mx-auto sm:mx-0" />
-                                            <div className="h-5 bg-black/[0.07] rounded-lg w-1/2 mx-auto sm:mx-0" />
+                                            <div className="h-7 skeleton-bone rounded-lg w-3/4 mx-auto sm:mx-0" />
+                                            <div className="h-5 skeleton-bone rounded-lg w-1/2 mx-auto sm:mx-0" />
                                             {/* Dept + semester */}
                                             <div className="h-3 bg-black/[0.06] rounded-md w-2/5 mx-auto sm:mx-0" />
                                             {/* Tags */}
@@ -414,9 +420,13 @@ export default function Researchers() {
                 <div className="mb-16">
                     <div className="flex items-center justify-between mb-8 border-b border-slate-200 pb-2">
                         <h2 className="text-3xl font-black text-slate-900 tracking-tight">Student <span className="text-secondary">Members</span></h2>
-                        <div className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-4 py-1.5 rounded-full">
-                            {members.length} Student Members
-                        </div>
+                        {isLoading ? (
+                            <div className="w-32 h-6 skeleton-bone rounded-full" />
+                        ) : (
+                            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-4 py-1.5 rounded-full">
+                                {members.length} Student Members
+                            </div>
+                        )}
                     </div>
                     <ChromaGrid items={chromaItems} onImageClick={openModalFor} isLoading={isLoading} />
                 </div>
@@ -697,7 +707,7 @@ export default function Researchers() {
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(13, 148, 136, 0.2); border-radius: 10px; }
                 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(13, 148, 136, 0.5); }
             `}} />
-        </motion.div>
+        </div>
     );
 }
 
@@ -731,7 +741,7 @@ function ModalSkeleton() {
 
             {/* Close Button Skeleton */}
             <div className="absolute top-4 right-6 z-30">
-                <div className="p-2.5 rounded-xl bg-slate-200 animate-pulse w-9 h-9"></div>
+                <div className="skeleton-bone rounded-xl w-9 h-9"></div>
             </div>
 
             <div className="relative flex-1 overflow-y-auto overflow-x-hidden">
@@ -740,26 +750,26 @@ function ModalSkeleton() {
                     {/* ── Left: Visual Profile Skeleton ──────────────────────── */}
                     <div className="bg-gradient-to-b from-white/60 to-white/30 backdrop-blur-2xl p-10 lg:p-14 border-r border-white/40 flex flex-col relative z-10">
                         <div className="lg:sticky lg:top-0 space-y-10">
-                            <div className="w-16 h-1 bg-slate-200 rounded-full animate-pulse" />
+                            <div className="w-16 h-1 skeleton-bone rounded-full" />
 
                             {/* Avatar Skeleton */}
                             <div className="relative group/profile mx-auto lg:mx-0 w-max">
-                                <div className="w-48 h-48 lg:w-56 lg:h-56 rounded-[3rem] bg-gradient-to-br from-slate-200 to-slate-300 animate-pulse"></div>
+                                <div className="w-48 h-48 lg:w-56 lg:h-56 rounded-[3rem] skeleton-bone"></div>
                             </div>
 
                             {/* Name & Role Skeleton */}
                             <div className="space-y-4 text-center lg:text-left">
                                 <div className="space-y-3">
-                                    <div className="h-8 bg-slate-200 rounded-lg w-5/6 mx-auto lg:mx-0 animate-pulse"></div>
-                                    <div className="h-5 bg-slate-150 rounded-lg w-4/6 mx-auto lg:mx-0 animate-pulse"></div>
+                                    <div className="h-8 skeleton-bone rounded-lg w-5/6 mx-auto lg:mx-0"></div>
+                                    <div className="h-5 skeleton-bone rounded-lg w-4/6 mx-auto lg:mx-0"></div>
                                 </div>
 
                                 {/* Reflection Skeleton */}
                                 <div className="pt-6 border-t border-black/5">
-                                    <div className="h-3 bg-slate-150 rounded-md w-20 mb-3 animate-pulse"></div>
+                                    <div className="h-3 skeleton-bone rounded-md w-20 mb-3"></div>
                                     <div className="space-y-2">
-                                        <div className="h-3.5 bg-slate-150 rounded-md w-full animate-pulse"></div>
-                                        <div className="h-3.5 bg-slate-150 rounded-md w-5/6 animate-pulse"></div>
+                                        <div className="h-3.5 skeleton-bone rounded-md w-full"></div>
+                                        <div className="h-3.5 skeleton-bone rounded-md w-5/6"></div>
                                     </div>
                                 </div>
                             </div>
@@ -767,7 +777,7 @@ function ModalSkeleton() {
                             {/* Social Links Skeleton */}
                             <div className="flex items-center justify-center lg:justify-start gap-4 pt-4">
                                 {[0, 1, 2].map(i => (
-                                    <div key={i} className="w-12 h-12 rounded-full bg-slate-200 animate-pulse"></div>
+                                    <div key={i} className="w-12 h-12 rounded-full skeleton-bone"></div>
                                 ))}
                             </div>
                         </div>
@@ -779,12 +789,12 @@ function ModalSkeleton() {
                             {/* Panel 1 Skeleton */}
                             <div className="p-10 rounded-[2.5rem] bg-white/50 backdrop-blur-xl border border-white shadow-[0_20px_50px_rgba(0,0,0,0.04)] flex flex-col">
                                 <div className="flex items-center gap-3 mb-8">
-                                    <div className="w-2 h-2 rounded-full bg-slate-200 animate-pulse"></div>
-                                    <div className="h-4 bg-slate-200 rounded-md w-32 animate-pulse"></div>
+                                    <div className="w-2 h-2 rounded-full skeleton-bone"></div>
+                                    <div className="h-4 skeleton-bone rounded-md w-32"></div>
                                 </div>
                                 <div className="space-y-2">
                                     {[0, 1, 2].map(i => (
-                                        <div key={i} className="h-6 bg-slate-100 rounded-full w-4/5 animate-pulse"></div>
+                                        <div key={i} className="h-6 skeleton-bone rounded-full w-4/5"></div>
                                     ))}
                                 </div>
                             </div>
@@ -792,14 +802,14 @@ function ModalSkeleton() {
                             {/* Panel 2 Skeleton */}
                             <div className="p-10 rounded-[2.5rem] bg-white/50 backdrop-blur-xl border border-white shadow-[0_20px_50px_rgba(0,0,0,0.04)] flex flex-col">
                                 <div className="flex items-center gap-3 mb-8">
-                                    <div className="w-2 h-2 rounded-full bg-slate-200 animate-pulse"></div>
-                                    <div className="h-4 bg-slate-200 rounded-md w-32 animate-pulse"></div>
+                                    <div className="w-2 h-2 rounded-full skeleton-bone"></div>
+                                    <div className="h-4 skeleton-bone rounded-md w-32"></div>
                                 </div>
                                 <div className="space-y-3">
                                     {[0, 1, 2, 3].map(i => (
                                         <div key={i} className="flex items-start gap-3">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-slate-200 mt-1.5 animate-pulse"></div>
-                                            <div className="h-3 bg-slate-100 rounded w-3/4 animate-pulse"></div>
+                                            <div className="w-1.5 h-1.5 rounded-full skeleton-bone mt-1.5"></div>
+                                            <div className="h-3 skeleton-bone rounded w-3/4"></div>
                                         </div>
                                     ))}
                                 </div>
@@ -808,22 +818,22 @@ function ModalSkeleton() {
                             {/* Panel 3 Skeleton */}
                             <div className="p-10 rounded-[2.5rem] bg-white/50 backdrop-blur-xl border border-white shadow-[0_20px_50px_rgba(0,0,0,0.04)] flex flex-col">
                                 <div className="flex items-center gap-3 mb-8">
-                                    <div className="w-2 h-2 rounded-full bg-slate-200 animate-pulse"></div>
-                                    <div className="h-4 bg-slate-200 rounded-md w-32 animate-pulse"></div>
+                                    <div className="w-2 h-2 rounded-full skeleton-bone"></div>
+                                    <div className="h-4 skeleton-bone rounded-md w-32"></div>
                                 </div>
                                 <div className="space-y-3 mb-8">
                                     {[0, 1].map(i => (
                                         <div key={i} className="flex items-start gap-3">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-slate-200 mt-1.5 animate-pulse"></div>
-                                            <div className="h-3 bg-slate-100 rounded w-3/4 animate-pulse"></div>
+                                            <div className="w-1.5 h-1.5 rounded-full skeleton-bone mt-1.5"></div>
+                                            <div className="h-3 skeleton-bone rounded w-3/4"></div>
                                         </div>
                                     ))}
                                 </div>
                                 <div className="pt-8 border-t border-black/5">
-                                    <div className="h-4 bg-slate-200 rounded-md w-40 mb-6 animate-pulse"></div>
+                                    <div className="h-4 skeleton-bone rounded-md w-40 mb-6"></div>
                                     <div className="grid grid-cols-3 gap-3">
                                         {[0, 1, 2].map(i => (
-                                            <div key={i} className="p-3 rounded-2xl bg-slate-100 animate-pulse h-16"></div>
+                                            <div key={i} className="skeleton-bone rounded-2xl h-16"></div>
                                         ))}
                                     </div>
                                 </div>
@@ -832,14 +842,14 @@ function ModalSkeleton() {
                             {/* Panel 4 Skeleton */}
                             <div className="p-10 rounded-[2.5rem] bg-white/50 backdrop-blur-xl border border-white shadow-[0_20px_50px_rgba(0,0,0,0.04)] flex flex-col">
                                 <div className="flex items-center gap-3 mb-8">
-                                    <div className="w-2 h-2 rounded-full bg-slate-200 animate-pulse"></div>
-                                    <div className="h-4 bg-slate-200 rounded-md w-32 animate-pulse"></div>
+                                    <div className="w-2 h-2 rounded-full skeleton-bone"></div>
+                                    <div className="h-4 skeleton-bone rounded-md w-32"></div>
                                 </div>
                                 <div className="space-y-3">
                                     {[0, 1, 2].map(i => (
                                         <div key={i} className="p-4 rounded-3xl bg-white border border-slate-50 flex items-center gap-5">
-                                            <div className="w-10 h-10 rounded-full bg-slate-200 animate-pulse shrink-0"></div>
-                                            <div className="h-3 bg-slate-100 rounded w-4/5 animate-pulse"></div>
+                                            <div className="w-10 h-10 rounded-full skeleton-bone shrink-0"></div>
+                                            <div className="h-3 skeleton-bone rounded w-4/5"></div>
                                         </div>
                                     ))}
                                 </div>

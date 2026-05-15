@@ -36,11 +36,11 @@ const ImageCarousel = ({ images }) => {
 
 /* Skeleton card while loading */
 const SessionSkeleton = () => (
-  <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.12)] animate-pulse">
-    <div className="h-64 lg:h-72 bg-slate-200" />
+  <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.12)]" aria-busy="true" aria-label="Loading session">
+    <div className="h-64 lg:h-72 skeleton-bone" />
     <div className="px-6 pb-6 pt-4 space-y-3">
-      <div className="h-4 bg-slate-200 rounded w-3/4" />
-      <div className="h-4 bg-slate-200 rounded w-1/2" />
+      <div className="h-4 skeleton-bone rounded w-3/4" />
+      <div className="h-4 skeleton-bone rounded w-1/2" />
     </div>
   </div>
 );
@@ -51,15 +51,32 @@ const Sessions = () => {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("all");
 
-  useEffect(() => {
+  const fetchSessions = (opts) => {
+    if (!opts?.silent) setLoading(true);
     fetch(`${API_BASE_URL}/api/sessions`, { headers: API_HEADERS })
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
       })
       .then(({ sessions: data }) => setSessions(data || []))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+      .catch((err) => {
+        if (!opts?.silent) setError(err.message);
+      })
+      .finally(() => {
+        if (!opts?.silent) setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchSessions();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const onLive = (e) => {
+      if (e.detail?.type === "session_changed") fetchSessions({ silent: true });
+    };
+    window.addEventListener("srl:live-update", onLive);
+    return () => window.removeEventListener("srl:live-update", onLive);
   }, []);
 
   const isVideoMedia = (url) => {

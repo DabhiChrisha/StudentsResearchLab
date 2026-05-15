@@ -1,4 +1,5 @@
 const prisma = require("../lib/prisma");
+const { broadcast } = require("../utils/sseManager");
 
 const VALID_STATUSES  = ['PENDING', 'APPROVED', 'REJECTED'];
 const ALLOWED_TYPES   = ['conference', 'book chapter', 'journal', 'patent', 'poster', 'research artical'];
@@ -189,6 +190,9 @@ exports.createPublication = async (req, res, next) => {
       include: { symbol: { select: { logo_url: true } } },
     });
 
+    broadcast("publication_approved", { id: publication.id, title: publication.title });
+    broadcast("publication_changed", { id: publication.id });
+
     res.status(201).json({
       success: true,
       message: "Publication created successfully",
@@ -242,6 +246,11 @@ exports.updatePublication = async (req, res, next) => {
       include: { symbol: { select: { logo_url: true } } },
     });
 
+    if (publication.status === "APPROVED") {
+      broadcast("publication_approved", { id: publication.id, title: publication.title });
+    }
+    broadcast("publication_changed", { id: publication.id });
+
     res.json({
       success: true,
       message: "Publication updated successfully",
@@ -270,6 +279,8 @@ exports.deletePublication = async (req, res, next) => {
     }
 
     await prisma.publication.delete({ where: { id } });
+
+    broadcast("publication_changed", { id });
 
     res.json({ success: true, message: "Publication deleted successfully" });
   } catch (error) {
@@ -308,6 +319,9 @@ exports.approvePublication = async (req, res, next) => {
       },
       include: { symbol: { select: { logo_url: true } } },
     });
+
+    // Notify all connected clients so the public website updates in real time
+    broadcast('publication_approved', { id: publication.id, title: publication.title });
 
     res.json({
       success: true,
@@ -351,6 +365,9 @@ exports.rejectPublication = async (req, res, next) => {
       },
       include: { symbol: { select: { logo_url: true } } },
     });
+
+    // Notify admin portal clients so the pending list refreshes in real time
+    broadcast('publication_rejected', { id: publication.id });
 
     res.json({
       success: true,
