@@ -143,6 +143,10 @@ async function buildLeaderboard(period) {
 
   let students = (effectiveRows || [])
     .filter((r) => !isExcludedStudent(r.student_name, r.enrollment_no))
+    .filter((r) => {
+      const en = (r.enrollment_no || "").trim().toUpperCase();
+      return en && Boolean(detailMap[en]);
+    })
     .map((r) => {
       const en = (r.enrollment_no || "").trim().toUpperCase();
       const detail = detailMap[en] || {};

@@ -5,37 +5,36 @@ const router = express.Router();
 
 const mapTimelineIcon = (row, index) => {
   if (index === 0) return "beginning";
-  if (row?.category === "success") return "alumni";
-  if (row?.category === "learning") return "theory";
+  const text = `${row?.title || ""} ${row?.description || ""}`.toLowerCase();
+  if (text.includes("alumni")) return "alumni";
+  if (text.includes("theory") || text.includes("practice")) return "theory";
   return "impactthon";
 };
 
 router.get("/api/timeline", async (req, res, next) => {
   try {
-    const data = await prisma.sessionContent.findMany({
+    const data = await prisma.timeline_entries.findMany({
       select: {
         id: true,
-        serial_no: true,
+        step: true,
         title: true,
         description: true,
-        category: true,
-        type: true,
-        date_raw: true,
-        session_date: true,
+        icon_svg: true,
+        display_order: true,
+        is_active: true,
       },
-      orderBy: { serial_no: "asc" },
+      where: { is_active: true },
+      orderBy: { display_order: "asc" },
     });
 
     const timeline = (data || []).map((row, index) => ({
-      id: row.id,
-      step: row.serial_no,
+      id: row.id.toString(),
+      step: row.step,
       title: row.title,
       description: row.description || "",
       icon: mapTimelineIcon(row, index),
-      category: row.category,
-      type: row.type,
-      date_raw: row.date_raw,
-      session_date: row.session_date,
+      icon_svg: row.icon_svg,
+      display_order: row.display_order,
     }));
 
     res.json({ data: timeline });

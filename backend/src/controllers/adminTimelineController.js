@@ -1,18 +1,23 @@
 const prisma = require("../lib/prisma");
 const { broadcast } = require("../utils/sseManager");
 
+const serializeTimelineEntry = (entry) => ({
+  ...entry,
+  id: entry.id.toString(),
+});
+
 /**
  * Get all timeline entries - GET /api/admin/timeline
  */
 exports.getTimeline = async (req, res, next) => {
   try {
-    const entries = await prisma.sessionContent.findMany({
-      orderBy: { session_date: "desc" },
+    const entries = await prisma.timeline_entries.findMany({
+      orderBy: { display_order: "asc" },
     });
 
     res.json({
       success: true,
-      data: entries,
+      data: entries.map(serializeTimelineEntry),
     });
   } catch (error) {
     console.error("Get timeline error:", error);
@@ -25,46 +30,55 @@ exports.getTimeline = async (req, res, next) => {
  */
 exports.createTimelineEntry = async (req, res, next) => {
   try {
-    const { date_raw, session_date, title, description, category, type, linkedin_url, image_url, media_urls = [] } = req.body;
+    const {
+      step,
+      title,
+      description,
+      icon_svg,
+      display_order,
+      is_active = true,
+    } = req.body;
 
-    // Validate required fields
-    if (!title || !title.trim()) {
+    if (!step || !step.toString().trim()) {
+      return res.status(400).json({
+        error: "Invalid input",
+        message: "step is required",
+      });
+    }
+
+    if (!title || !title.toString().trim()) {
       return res.status(400).json({
         error: "Invalid input",
         message: "title is required",
       });
     }
 
-    // Get the max serial_no and calculate the next one
-    const maxSerialNo = await prisma.sessionContent.findFirst({
-      orderBy: { serial_no: "desc" },
-      select: { serial_no: true },
+    const maxDisplayOrder = await prisma.timeline_entries.findFirst({
+      orderBy: { display_order: "desc" },
+      select: { display_order: true },
     });
 
-    const nextSerialNo = (maxSerialNo?.serial_no || 0) + 1;
+    const nextDisplayOrder = (maxDisplayOrder?.display_order || 0) + 1;
 
-    const entry = await prisma.sessionContent.create({
+    const entry = await prisma.timeline_entries.create({
       data: {
-        serial_no: nextSerialNo,
-        date_raw: date_raw || null,
-        session_date: session_date ? new Date(session_date) : null,
-        title: title.trim(),
-        description: description ? description.trim() : null,
-        category: category ? category.trim() : null,
-        type: type || "video",
-        linkedin_url: linkedin_url ? linkedin_url.trim() : null,
-        image_url: image_url ? image_url.trim() : null,
-        media_urls,
+        step: step.toString().trim(),
+        title: title.toString().trim(),
+        description: description ? description.toString().trim() : "",
+        icon_svg: icon_svg || null,
+        display_order: display_order !== undefined ? Number(display_order) : nextDisplayOrder,
+        is_active: Boolean(is_active),
         created_at: new Date(),
+        updated_at: new Date(),
       },
     });
 
-    broadcast("session_changed", { id: entry.id });
+    broadcast("session_changed", { id: entry.id.toString() });
 
     res.status(201).json({
       success: true,
       message: "Timeline entry created successfully",
-      data: entry,
+      data: serializeTimelineEntry(entry),
     });
   } catch (error) {
     console.error("Create timeline entry error:", error);
@@ -84,30 +98,28 @@ exports.createTimelineEntry = async (req, res, next) => {
 exports.updateTimelineEntry = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { date_raw, session_date, title, description, category, type, linkedin_url, image_url, media_urls } = req.body;
+    const { step, title, description, icon_svg, display_order, is_active } = req.body;
 
     const updateData = {};
-    if (date_raw) updateData.date_raw = date_raw;
-    if (session_date) updateData.session_date = new Date(session_date);
-    if (title) updateData.title = title;
-    if (description) updateData.description = description;
-    if (category) updateData.category = category;
-    if (type) updateData.type = type;
-    if (linkedin_url) updateData.linkedin_url = linkedin_url;
-    if (image_url) updateData.image_url = image_url;
-    if (media_urls) updateData.media_urls = media_urls;
+    if (step !== undefined) updateData.step = step.toString();
+    if (title !== undefined) updateData.title = title.toString();
+    if (description !== undefined) updateData.description = description?.toString() ?? "";
+    if (icon_svg !== undefined) updateData.icon_svg = icon_svg;
+    if (display_order !== undefined) updateData.display_order = Number(display_order);
+    if (is_active !== undefined) updateData.is_active = Boolean(is_active);
+    updateData.updated_at = new Date();
 
-    const entry = await prisma.sessionContent.update({
-      where: { id: parseInt(id) },
+    const entry = await prisma.timeline_entries.update({
+      where: { id: BigInt(id) },
       data: updateData,
     });
 
-    broadcast("session_changed", { id: entry.id });
+    broadcast("session_changed", { id: entry.id.toString() });
 
     res.json({
       success: true,
       message: "Timeline entry updated successfully",
-      data: entry,
+      data: serializeTimelineEntry(entry),
     });
   } catch (error) {
     console.error("Update timeline entry error:", error);
@@ -128,8 +140,8 @@ exports.deleteTimelineEntry = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    await prisma.sessionContent.delete({
-      where: { id: parseInt(id) },
+    await prisma.timeline_entries.delete({
+      where: { id: BigInt(id) },
     });
 
     broadcast("session_changed", { id: parseInt(id) });

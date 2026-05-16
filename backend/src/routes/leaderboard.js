@@ -5,22 +5,15 @@ const router = express.Router();
 
 const { isExcludedStudent } = require("../lib/adminUtils");
 
-// ── In-process cache: avoids repeated DB round-trips for the same period ──────
-// TTL of 60 s keeps data fresh for a live lab session; SSE events (student_changed
-// / leaderboard_changed) should also call invalidateLeaderboardCache() on writes.
-const _lbCache = new Map(); // period → { students, timestamp }
-const LB_TTL_MS = 60_000;
-
+// ── In-process cache disabled for leaderboard correctness ────────────────────
+// Student and score edits must be reflected immediately in admin dashboards.
 function getCachedLeaderboard(period) {
-  const entry = _lbCache.get(period);
-  if (!entry) return null;
-  if (Date.now() - entry.timestamp > LB_TTL_MS) { _lbCache.delete(period); return null; }
-  return entry.students;
+  return null;
 }
 function setCachedLeaderboard(period, students) {
-  _lbCache.set(period, { students, timestamp: Date.now() });
+  return;
 }
-function invalidateLeaderboardCache() { _lbCache.clear(); }
+function invalidateLeaderboardCache() {}
 module.exports.invalidateLeaderboardCache = invalidateLeaderboardCache;
 
 const PERIOD_MAX_ATT = {
@@ -147,6 +140,10 @@ async function buildLeaderboard(period) {
 
   let students = effectiveRows
     .filter((r) => !isExcludedStudent(r.student_name, r.enrollment_no))
+    .filter((r) => {
+      const en = (r.enrollment_no || "").trim().toUpperCase();
+      return en && Boolean(detailMap[en]);
+    })
     .map((r) => {
       const en = (r.enrollment_no || "").trim().toUpperCase();
       const detail = detailMap[en] || {};
