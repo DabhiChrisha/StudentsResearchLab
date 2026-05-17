@@ -79,6 +79,13 @@ exports.getScores = async (req, res, next) => {
       },
     });
 
+    const validStudents = await prisma.studentsDetail.findMany({
+      select: { enrollment_no: true },
+    });
+    const validEnrollments = validStudents
+      .map((row) => String(row.enrollment_no || "").trim())
+      .filter(Boolean);
+
     const availableMonths = rawMonths
       .map((item) => {
         const monthNumber = monthValueToNumber(item.month);
@@ -101,6 +108,7 @@ exports.getScores = async (req, res, next) => {
       where: {
         month: currentMonth,
         year: currentYear,
+        enrollment_no: validEnrollments.length ? { in: validEnrollments } : undefined,
       },
       orderBy: { points: "desc" },
       select: {
@@ -114,6 +122,9 @@ exports.getScores = async (req, res, next) => {
 
     // Get all-time leaderboard stats
     const leaderboardStats = await prisma.leaderboardStat.findMany({
+      where: {
+        enrollment_no: validEnrollments.length ? { in: validEnrollments } : undefined,
+      },
       orderBy: { period: "desc" },
       select: {
         id: true,
@@ -150,6 +161,19 @@ exports.getScores = async (req, res, next) => {
 exports.getScoresByStudent = async (req, res, next) => {
   try {
     const { enrollmentNo } = req.params;
+
+    const studentExists = await prisma.studentsDetail.findUnique({
+      where: { enrollment_no: enrollmentNo },
+      select: { enrollment_no: true },
+    });
+
+    if (!studentExists) {
+      return res.status(404).json({
+        success: false,
+        error: "Not found",
+        message: "Student not found",
+      });
+    }
 
     const scores = await prisma.leaderboardStat.findMany({
       where: { enrollment_no: enrollmentNo },
