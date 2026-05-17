@@ -19,6 +19,41 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
     light: "bg-secondary-light", 
     accent: "text-secondary-dark" 
   };
+  const [logoFailed, setLogoFailed] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [logoScale, setLogoScale] = useState(1);
+  const publisherLogoUrl = !logoFailed ? getImageUrl(pub.publisherLogoUrl) : null;
+  const normalizedCategory = (pub.category || "").toLowerCase().trim();
+  const isPoster = normalizedCategory.includes("poster");
+  const isConference = normalizedCategory.includes("conference");
+  const publicationDateRaw = (() => {
+    if (isPoster) return pub.presented_on || pub.presentedOn || pub.date || pub.conference_date || pub.year || "";
+    if (isConference) return pub.conference_date || pub.date || pub.year || "";
+    return pub.date || pub.conference_date || pub.presented_on || pub.presentedOn || pub.year || "";
+  })();
+  const publicationDateLabel = (() => {
+    if (isPoster) return "Presented On";
+    if (isConference) return "Conference Date";
+    return "Published Date";
+  })();
+  const formattedPublicationDate = publicationDateRaw ? String(publicationDateRaw).split("T")[0] : "";
+  const hasHiddenDetails = Boolean(pub.publisher || pub.venue || publisherLogoUrl);
+
+  const handleLogoLoad = (event) => {
+    const { naturalWidth, naturalHeight } = event.currentTarget;
+    if (!naturalWidth || !naturalHeight) return;
+
+    const isSmallLogo = naturalWidth < 100 || naturalHeight < 44;
+    if (!isSmallLogo) {
+      setLogoScale(1);
+      return;
+    }
+
+    const widthScale = 160 / naturalWidth;
+    const heightScale = 64 / naturalHeight;
+    const targetScale = Math.min(widthScale, heightScale, 1.15);
+    setLogoScale(targetScale > 1 ? Number(targetScale.toFixed(2)) : 1);
+  };
 
   return (
     <motion.div
@@ -27,7 +62,11 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
-      <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden group flex flex-col relative h-auto" style={{backgroundImage: `url('/study.png')`, backgroundSize: '100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}>
+      <div
+        className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden group flex flex-col relative min-h-[360px] cursor-pointer"
+        style={{backgroundImage: `url('/study.png')`, backgroundSize: '100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}
+        onClick={() => setIsExpanded((current) => !current)}
+      >
         
         {/* Watermark Overlay */}
         <div className="absolute inset-0 bg-white/75 pointer-events-none"></div>
@@ -52,29 +91,23 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
             {/* Underline accent */}
             <div className="h-0.5 w-20 bg-white/60 rounded-full -mt-2.5"></div>
             
-            {/* Venue below category - for Conference type */}
-            {pub.category === "Conference" && pub.venue && (
-              <p className="text-white/90 text-sm font-medium mt-1">
-                {pub.venue}
-              </p>
-            )}
           </div>
         </div>
 
         {/* CONTENT SECTION */}
-        <div className="p-3 sm:p-4 flex flex-col flex-1 space-y-1.5 overflow-hidden hover:overflow-y-auto">
+        <div className="p-3 sm:p-4 flex flex-col flex-1 space-y-1.5 overflow-hidden">
           
           {/* Title */}
           <div>
-            <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-tight">
+            <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
               {pub.title}
             </h3>
           </div>
 
           {/* Authors - Highlighted */}
-          <div className={`${colorScheme.light} p-2 rounded-lg flex items-start gap-2`}>
+          <div className={`${colorScheme.light} h-12 p-2 rounded-lg flex items-start gap-2 overflow-hidden`}>
             <Users size={12} className={`${colorScheme.accent} mt-0.5 flex-shrink-0`} />
-            <p className={`text-xs ${colorScheme.accent} font-bold`}>
+            <p className={`text-xs ${colorScheme.accent} font-bold line-clamp-2`}>
               {pub.authors && pub.authors.length > 0 
                 ? pub.authors.join(", ") 
                 : pub.first_author || "Unknown Author"}
@@ -82,64 +115,55 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
           </div>
 
           {/* KEY DATES Section Header */}
-          <div className="mt-1 mb-1">
+          <div className="mt-0.5 mb-1">
             <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Key Details</p>
           </div>
 
           {/* Details Grid - Labels on left, values on right */}
-          <div className="space-y-1 text-xs">
-            {/* Published Date */}
-            {pub.date && pub.category !== "Poster Presentation" && pub.category !== "Poster" && (
+          <div className="space-y-0.5 text-xs">
+            {formattedPublicationDate && (
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1.5">
                   <Calendar size={14} className="text-slate-600" />
-                  <span className="font-semibold text-slate-700">Published Date:</span>
+                  <span className="font-semibold text-slate-700">{publicationDateLabel}:</span>
                 </div>
-                <span className="text-slate-600">{pub.date.split('T')[0]}</span>
+                <span className="text-slate-600">{formattedPublicationDate}</span>
               </div>
             )}
 
-            {/* Conference Date */}
-            {pub.category === "Conference" && pub.conference_date && (
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1.5">
-                  <Calendar size={14} className="text-slate-600" />
-                  <span className="font-semibold text-slate-700">Conference Dates:</span>
-                </div>
-                <span className="text-slate-600">{pub.conference_date.split('T')[0]}</span>
-              </div>
-            )}
+            {hasHiddenDetails && (
+            <div className={`overflow-hidden transition-all duration-300 ease-out ${isExpanded ? "mt-2 max-h-28 opacity-100" : "mt-0 max-h-0 opacity-0 group-hover:mt-2 group-hover:max-h-28 group-hover:opacity-100"}`}>
+              <div className="rounded-lg border border-slate-200 bg-white/75 p-2">
+                <div className="min-w-0 space-y-1">
+                  {pub.publisher && (
+                    <div className="flex min-w-0 items-center gap-1.5">
+                      <BookOpen size={14} className="flex-shrink-0 text-slate-600" />
+                      <span className="flex-shrink-0 font-semibold text-slate-700">Publisher:</span>
+                      <span className="min-w-0 truncate text-slate-600">{pub.publisher}</span>
+                    </div>
+                  )}
 
-            {/* Publisher */}
-            {pub.publisher && (
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1.5">
-                  <BookOpen size={14} className="text-slate-600" />
-                  <span className="font-semibold text-slate-700">Publisher:</span>
+                  {pub.venue && (
+                    <div className="flex min-w-0 items-center gap-1.5">
+                      <Bookmark size={14} className="flex-shrink-0 text-slate-600" />
+                      <span className="flex-shrink-0 font-semibold text-slate-700">Venue:</span>
+                      <span className="min-w-0 truncate text-slate-600">{pub.venue}</span>
+                    </div>
+                  )}
                 </div>
-                <span className="text-slate-600">{pub.publisher}</span>
               </div>
-            )}
-
-            {/* Venue - Conference only */}
-            {pub.category === "Conference" && pub.venue && (
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1.5">
-                  <Bookmark size={14} className="text-slate-600" />
-                  <span className="font-semibold text-slate-700">Venue:</span>
-                </div>
-                <span className="text-slate-600">{pub.venue}</span>
-              </div>
+            </div>
             )}
           </div>
 
           {/* Paper Link - Bottom */}
-          <div className="mt-auto pt-2 border-t border-gray-200 flex items-center justify-between">
+          <div className="mt-auto pt-2 border-t border-gray-200 flex items-center justify-between gap-3">
             {pub.link && pub.link.startsWith("http") ? (
               <a
                 href={pub.link}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(event) => event.stopPropagation()}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r ${colorScheme.from} ${colorScheme.to} text-white text-xs font-bold rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95`}
               >
                 <ExternalLink size={11} />
@@ -163,6 +187,24 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
                 <span className="text-xs">No Link</span>
               </div>
             )}
+            <div className="ml-auto flex h-16 w-40 flex-shrink-0 items-center justify-center p-0 overflow-hidden">
+              {publisherLogoUrl ? (
+                <img
+                  src={publisherLogoUrl}
+                  alt={`${pub.publisher || "Publisher"} logo`}
+                  className="max-h-full max-w-full object-contain transition-all duration-200"
+                  style={{
+                    transform: logoScale > 1 ? `scale(${logoScale})` : undefined,
+                    transformOrigin: "center",
+                  }}
+                  loading="lazy"
+                  onLoad={handleLogoLoad}
+                  onError={() => setLogoFailed(true)}
+                />
+              ) : (
+                <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Logo</span>
+              )}
+            </div>
           </div>
         </div>
         </div>
@@ -287,6 +329,7 @@ const Publications = () => {
             status: pub.category || undefined,
             year: pub.year || null,
             publisher: pub.publisher || pub.custom_publisher_name || "",
+            publisherLogoUrl: pub.logo_url || pub.publisher_logo_url || "",
             conference_date: pub.conference_date || "",
           }))
         );

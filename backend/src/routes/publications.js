@@ -54,6 +54,7 @@ router.get("/api/publications", async (req, res, next) => {
         paper_url:         row.link_to_paper,
         venue:             row.conference_location || row.publisher || "",
         date:              row.published_date ? new Date(row.published_date).toISOString().split("T")[0] : null,
+        conference_date:   row.conference_date ? new Date(row.conference_date).toISOString().split("T")[0] : null,
         year:              row.published_date ? new Date(row.published_date).getUTCFullYear() : null,
         logo_url:          symbol?.logo_url || null,
         publisher_logo_id: row.publisher_logo_id ?? null,

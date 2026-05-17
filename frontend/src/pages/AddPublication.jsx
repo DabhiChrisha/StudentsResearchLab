@@ -10,7 +10,7 @@ const isValidUrl = (value) => {
 
 const todayDate = new Date();
 todayDate.setHours(0, 0, 0, 0);
-const todayStr = todayDate.toISOString().split("T")[0]; // "YYYY-MM-DD" — used as max on date inputs
+const todayStr = `${todayDate.getFullYear()}-${String(todayDate.getMonth() + 1).padStart(2, "0")}-${String(todayDate.getDate()).padStart(2, "0")}`; // Local YYYY-MM-DD for date inputs
 
 export default function AddPublication() {
   const navigate = useNavigate();
@@ -46,6 +46,18 @@ export default function AddPublication() {
 
   const isPublisherRequired = formData.event_type !== "Poster";
   const isConferenceVenueRequired = formData.event_type === "Conference";
+  const isPosterType = formData.event_type === "Poster";
+  const isJournalType = formData.event_type === "Journal";
+  const isBookChapterType = formData.event_type === "Book Chapter";
+  const isPatentType = formData.event_type === "Patent";
+
+  const dateFieldLabel = (() => {
+    if (isConferenceVenueRequired) return "Conference Date";
+    if (isPosterType) return "Presented On";
+    if (isJournalType || isBookChapterType) return "Published Date";
+    if (isPatentType) return "Patent Date";
+    return "Date";
+  })();
 
   useEffect(() => {
     fetchPublishers();
@@ -282,7 +294,7 @@ export default function AddPublication() {
         title: formData.title,
         event_type: formData.event_type,
         venue: formData.venue,
-        conference_date: formData.conference_date,
+        conference_date: isConferenceVenueRequired ? formData.conference_date : "",
         publisher: showOtherFields ? customPublisher.trim() : formData.publisher,
         publisher_logo_id: publisherLogoId,
         is_srl_member: formData.is_srl_member,
@@ -450,7 +462,7 @@ export default function AddPublication() {
 
           {isConferenceVenueRequired && (
             <FormInput
-              label="Conference Date"
+              label={dateFieldLabel}
               name="conference_date"
               type="date"
               value={formData.conference_date}
@@ -616,16 +628,18 @@ export default function AddPublication() {
               {errors.paper_link && <p className="mt-1 text-xs text-red-500" data-field-error>{errors.paper_link}</p>}
             </div>
 
-            <FormInput
-              label="Published Date"
-              name="date"
-              type="date"
-              value={formData.date}
-              onChange={handleChange}
-              required={isPublisherRequired}
-              max={todayStr}
-              error={errors.date}
-            />
+            {!isConferenceVenueRequired && (
+              <FormInput
+                label={dateFieldLabel}
+                name="date"
+                type="date"
+                value={formData.date}
+                onChange={handleChange}
+                required={isPublisherRequired}
+                max={todayStr}
+                error={errors.date}
+              />
+            )}
           </div>
 
           <FormTextarea
