@@ -13,6 +13,42 @@ function safeArray(val) {
   return [];
 }
 
+// Normalize array fields that may contain objects (e.g. {title, doi, journal, year}).
+// Extracts a meaningful string from objects; discards empty ones.
+function normalizeArray(val) {
+  return safeArray(val).map(item => {
+    if (typeof item === 'string') return item.trim() || null;
+    if (typeof item === 'object' && item !== null) {
+      const str = item.title || item.name || item.description || item.details || '';
+      return str.trim() || null;
+    }
+    return null;
+  }).filter(Boolean);
+}
+
+// Keep research papers as full objects with {title, link, status} for frontend rendering
+function keepResearchPaperObjects(val) {
+  const arr = safeArray(val);
+  return arr.map(item => {
+    if (typeof item === 'string') {
+      // If it's a string, wrap it as {title}
+      const trimmed = item.trim();
+      return trimmed ? { title: trimmed } : null;
+    }
+    if (typeof item === 'object' && item !== null) {
+      // If it's already an object, keep it as-is if it has a title
+      if (item.title || item.name) {
+        return {
+          title: (item.title || item.name || '').trim(),
+          link: item.link || item.doi || '',
+          status: item.status || 'completed'
+        };
+      }
+    }
+    return null;
+  }).filter(Boolean);
+}
+
 // ─── GET /api/researchers ────────────────────────────────────────────────────
 // Single source of truth: srl_student_profiles joined with students_details.
 // All arrays, all counts, all profile data come exclusively from these two tables.
@@ -34,13 +70,13 @@ exports.getResearchers = async (req, res, next) => {
       const sd = profile.students_details;
       const en = (profile.enrollment_no || '').trim().toUpperCase();
 
-      // ── all arrays from srl_student_profiles ────────────────────────────
-      const hackathons      = safeArray(profile.hackathons);
-      const papersPublished = safeArray(profile.papers_published);
-      const researchWorks   = safeArray(profile.research_works);
-      const ongoingResearch = safeArray(profile.ongoing_research);
-      const achievements    = safeArray(profile.achievements);
-      const srlPublications = safeArray(profile.srl_publications);
+      const hackathons      = normalizeArray(profile.hackathons);
+      const papersPublished = keepResearchPaperObjects(profile.research_papers);
+      const allResearchWork = normalizeArray(profile.research_work);
+      const researchAreas   = normalizeArray(profile.research_areas);
+      const leadership      = normalizeArray(profile.leadership);
+      const awards          = normalizeArray(profile.awards);
+      const achievements    = normalizeArray(profile.additional_achievements);
 
       // ── counts derived from arrays — no external table queries ──────────
       const srlPublished    = srlPublications.filter(

@@ -159,18 +159,27 @@ model JoinUs {
 }
 
 model MemberCvProfile {
-  id                    BigInt   @id @default(autoincrement())
-  enrollment_no         String   @unique
-  student_name          String
-  research_work_summary String?
-  research_area         String?
-  hackathons            Json     @default("[]")
-  research_papers       Json     @default("[]")
-  patents               Json     @default("[]")
-  projects              Json     @default("[]")
-  updated_by            String?
-  created_at            DateTime @default(now()) @db.Timestamptz(6)
-  updated_at            DateTime @default(now()) @db.Timestamptz(6)
+  id                      BigInt   @id @default(autoincrement())
+  enrollment_no           String   @unique
+  student_name            String
+  linkedin_id             String?
+  branch                  String?  @db.VarChar
+  department              String?
+  institute               String?
+  organization            String?
+  reflection              String?
+  research_areas          Json     @default("[]")
+  research_work           Json     @default("[]")
+  hackathons              Json     @default("[]")
+  research_papers         Json     @default("[]")
+  leadership              Json     @default("[]")
+  awards                  Json     @default("[]")
+  certifications          Json     @default("[]")
+  additional_achievements Json     @default("[]")
+  internships             Json     @default("[]")
+  created_at              DateTime @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime @default(now()) @db.Timestamptz(6)
+  students_details        StudentsDetail @relation(fields: [enrollment_no], references: [enrollment_no], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([enrollment_no], map: "idx_member_cv_profiles_enrollment_no")
   @@map("member_cv_profiles")

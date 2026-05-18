@@ -12,7 +12,12 @@ import { getImageUrl } from '../lib/imageUrl';
 // Safely coerce any API value to an array
 function toArr(val) {
     if (!val) return [];
-    if (Array.isArray(val)) return val.filter(Boolean);
+    if (Array.isArray(val)) return val.filter(item => {
+        // Keep objects (like research papers) and non-empty strings
+        if (typeof item === 'object' && item !== null) return true;
+        if (typeof item === 'string') return item.trim() !== '';
+        return Boolean(item);
+    });
     if (typeof val === 'string') {
         const t = val.trim();
         if (!t || t === '[]') return [];
@@ -194,7 +199,14 @@ export default function Researchers() {
             // full arrays — all from srl_student_profiles
             research_areas:          toArr(activeStudent.research_areas),
             hackathons:              toArr(activeStudent.hackathons),
+<<<<<<< Updated upstream
             papers:                  papersArr,
+=======
+            papers:                  papersArr.filter(p => {
+                const title = typeof p === 'object' && p !== null ? p.title : p;
+                return !String(title).toLowerCase().startsWith('ongoing');
+            }),
+>>>>>>> Stashed changes
             researchWorks:           toArr(activeStudent.researchWorks),
             achievements:            toArr(activeStudent.achievements),
             ongoingResearch:         toArr(activeStudent.ongoingResearch),
@@ -548,12 +560,39 @@ export default function Researchers() {
                                             {/* Panel 3: Papers + Analytics */}
                                             <ModalPanel title="Papers Published & Year">
                                                 <ul className="space-y-4 mb-10">
-                                                    {(activeMetrics?.papers || []).slice(0, 2).map((p, i) => (
-                                                        <li key={i} className="flex items-start gap-4 text-[13px] font-bold text-slate-700 leading-tight">
-                                                            <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0" />
-                                                            <span>{p}</span>
-                                                        </li>
-                                                    ))}
+                                                    {(activeMetrics?.papers || []).slice(0, 2).map((p, i) => {
+                                                        const isObject = typeof p === 'object' && p !== null;
+                                                        const title = isObject ? p.title : p;
+                                                        const link = isObject ? p.link : null;
+                                                        const status = isObject ? p.status : null;
+                                                        return (
+                                                            <li key={i} className="flex items-start gap-4 text-[13px] font-bold text-slate-700 leading-tight justify-between">
+                                                                <div className="flex items-start gap-4 flex-1">
+                                                                    <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0" />
+                                                                    <div className="flex-1">
+                                                                        <span>{title}</span>
+                                                                        {status && (
+                                                                            <div className={`text-xs font-semibold px-2 py-1 rounded-full inline-block mt-1 ${
+                                                                                status === 'ongoing' || status === 'in-progress'
+                                                                                    ? 'bg-blue-100 text-blue-700'
+                                                                                    : 'bg-green-100 text-green-700'
+                                                                            }`}>
+                                                                                {(status === 'ongoing' || status === 'in-progress') ? '🔄 Ongoing' : '✓ Completed'}
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                                {link && link.trim() && (
+                                                                    <a href={link} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 p-1.5 hover:bg-blue-100 rounded-lg text-blue-600 transition-colors">
+                                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                                                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                                                                        </svg>
+                                                                    </a>
+                                                                )}
+                                                            </li>
+                                                        );
+                                                    })}
                                                     {(!activeMetrics?.papers?.length) && <li><EmptyHint text="No publications yet" /></li>}
                                                 </ul>
                                                 <div className="pt-8 border-t border-black/5">

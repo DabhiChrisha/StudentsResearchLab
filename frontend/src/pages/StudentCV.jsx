@@ -11,6 +11,7 @@ import {
   BookOpen,
   ExternalLink,
   Trophy,
+  Link as LinkIcon,
 } from "lucide-react";
 import { useFetch, fetchWithTimeout } from "../hooks/useFetch";
 import { API_BASE_URL as API_BASE } from "../config/apiConfig";
@@ -131,7 +132,44 @@ export default function StudentCV() {
     return fromDb;
   }, [cvData, staticStudent]);
 
-  const researchPapers = cvData ? parseArrayField(cvData.research_papers) : [];
+  // Parse research papers with proper object handling
+  const parseResearchPapers = (val) => {
+    if (!val) return [];
+    
+    // If it's already an array, return it as-is
+    if (Array.isArray(val)) {
+      return val.filter(v => {
+        if (typeof v === "object" && v !== null) {
+          return v.title && (typeof v.title === "string" ? v.title.trim() !== "" : true);
+        }
+        return v && v !== "-";
+      });
+    }
+    
+    // If it's a string, try to parse it as JSON
+    if (typeof val === "string") {
+      const trimmed = val.trim();
+      if (trimmed === "[]" || trimmed === "" || trimmed === "-") return [];
+      
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) {
+          return parsed.filter(v => {
+            if (typeof v === "object" && v !== null) {
+              return v.title && (typeof v.title === "string" ? v.title.trim() !== "" : true);
+            }
+            return v && v !== "-";
+          });
+        }
+      } catch (e) {
+        console.warn("Failed to parse research papers:", e);
+      }
+    }
+    
+    return [];
+  };
+
+  const researchPapers = cvData ? parseResearchPapers(cvData.research_papers) : [];
   const patents = cvData ? parseArrayField(cvData.patents) : [];
   const projects = cvData ? parseArrayField(cvData.projects) : [];
 
@@ -454,32 +492,60 @@ export default function StudentCV() {
             </h2>
             <div className="space-y-6 pl-2">
               {researchPapers.map((paper, i) => {
-                const isValidPaper =
-                  typeof paper === "object"
-                    ? paper.title && paper.title.trim() !== ""
-                    : paper && paper.trim() !== "";
+                // Check if paper is an object or string
+                const isObject = typeof paper === "object" && paper !== null;
+                const title = isObject ? paper.title : paper;
+                const link = isObject ? paper.link : null;
+                const status = isObject ? paper.status : null;
+                
+                const isValidPaper = title && (typeof title === "string" ? title.trim() !== "" : true);
                 if (!isValidPaper) return null;
+                
                 return (
                   <div key={i} className="group relative">
                     <div className="absolute -left-4 top-2 bottom-2 w-[2px] bg-secondary/0 group-hover:bg-secondary/50 transition-all rounded-full" />
-                    <h3 className="text-base font-black text-slate-900 tracking-tight mb-1 group-hover:translate-x-1 transition-transform">
-                      {typeof paper === "object" ? paper.title : paper}
-                    </h3>
-                    {typeof paper === "object" && paper.journal && (
-                      <p className="text-sm font-medium text-slate-500 leading-relaxed max-w-prose">
-                        {paper.journal} {paper.year ? `(${paper.year})` : ""}
-                        {paper.doi && (
-                          <a
-                            href={paper.doi}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-blue-500 ml-2 underline"
-                          >
-                            [Link]
-                          </a>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <h3 className="text-base font-black text-slate-900 tracking-tight mb-1 group-hover:translate-x-1 transition-transform">
+                          {title}
+                        </h3>
+                        {status && (
+                          <span className={`text-xs font-semibold px-2 py-1 rounded-full inline-block ${
+                            status === "ongoing" || status === "in-progress"
+                              ? "bg-blue-100 text-blue-700"
+                              : "bg-green-100 text-green-700"
+                          }`}>
+                            {(status === "ongoing" || status === "in-progress") ? "🔄 Ongoing" : "✓ Completed"}
+                          </span>
                         )}
-                      </p>
-                    )}
+                        {isObject && paper.journal && (
+                          <p className="text-sm font-medium text-slate-500 leading-relaxed max-w-prose mt-2">
+                            {paper.journal} {paper.year ? `(${paper.year})` : ""}
+                            {paper.doi && (
+                              <a
+                                href={paper.doi}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-blue-500 ml-2 underline"
+                              >
+                                [Link]
+                              </a>
+                            )}
+                          </p>
+                        )}
+                      </div>
+                      {link && link.trim() && (
+                        <a
+                          href={link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-shrink-0 p-2 hover:bg-blue-100 rounded-lg text-blue-600 transition-colors"
+                          title="Open research paper"
+                        >
+                          <LinkIcon className="w-5 h-5" />
+                        </a>
+                      )}
+                    </div>
                   </div>
                 );
               })}

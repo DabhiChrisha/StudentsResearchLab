@@ -63,8 +63,14 @@ exports.updateMemberCV = async (req, res, next) => {
     const {
       enrollment_no,
       student_name,
-      research_work_summary,
-      research_area,
+      linkedin_id,
+      branch,
+      department,
+      institute,
+      organization,
+      reflection,
+      profile_image,
+      research_areas,
       hackathons,
       research_papers,
       patents,
@@ -97,6 +103,25 @@ exports.updateMemberCV = async (req, res, next) => {
     });
 
     let memberCV;
+
+    const cvData = {
+      student_name:            student_name            || undefined,
+      linkedin_id:             linkedin_id             ?? null,
+      branch:                  branch                  ?? null,
+      department:              department              ?? null,
+      institute:               institute               ?? null,
+      organization:            organization            ?? null,
+      reflection:              reflection              ?? null,
+      research_areas:          research_areas          || [],
+      hackathons:              hackathons              || [],
+      research_papers:         research_papers         || [],
+      research_work:           research_work           || [],
+      leadership:              leadership              || [],
+      awards:                  awards                  || [],
+      certifications:          certifications          || [],
+      additional_achievements: additional_achievements || [],
+      internships:             internships             || [],
+    };
 
     if (existingMemberCV) {
       memberCV = await prisma.MemberCvProfile.update({
