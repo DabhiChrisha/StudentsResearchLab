@@ -164,13 +164,19 @@ export default function JoinUs() {
           </svg>
         </button>
         
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-2">
-          <h2 className="text-4xl font-bold text-[#05877a]">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-[30px] sm:mb-[38px]">
+          <h2 className="text-4xl font-bold text-[#05877a] shrink-0">
             Join SRL
           </h2>
-          <img src={joinSrlImg} alt="Join SRL Process" className="h-16 sm:h-20 md:h-24 w-auto object-contain" />
+          <div className="w-full sm:flex-1 flex sm:justify-end">
+            <img
+              src={joinSrlImg}
+              alt="Join SRL Process"
+              className="w-full max-w-[320px] sm:max-w-[420px] md:max-w-[520px] h-auto object-contain"
+            />
+          </div>
         </div>
-        <p className="text-gray-600 mb-8">
+        <p className="text-gray-600 mb-[26px] sm:mb-[34px]">
           Fill out the form to join the Students Research Lab
         </p>
 

@@ -121,7 +121,7 @@ const Navbar = () => {
             to="/"
             className="flex items-center gap-1.5 md:gap-2 lg:gap-1.5 xl:gap-2 2xl:gap-3 group shrink-0 min-w-0"
           >
-            <div className="w-[42px] h-[42px] sm:w-[46px] sm:h-[46px] md:w-[50px] md:h-[50px] lg:w-[44px] lg:h-[44px] xl:w-[52px] xl:h-[52px] 2xl:w-[60px] 2xl:h-[60px] -my-[4px] md:-my-[6px] lg:-my-[4px] xl:-my-[6px] 2xl:-my-[8px] bg-white rounded-full p-0.5 lg:p-1 flex items-center justify-center shadow-[0_0_15px_rgba(255,230,100,0.4)] lg:shadow-[0_0_20px_rgba(255,230,100,0.3)] shrink-0 transition-all duration-500 group-hover:scale-105 group-hover:shadow-[0_0_25px_rgba(255,210,100,0.5)]">
+            <div className={`bg-white rounded-full p-0.5 lg:p-1 flex items-center justify-center shadow-[0_0_15px_rgba(255,230,100,0.4)] lg:shadow-[0_0_20px_rgba(255,230,100,0.3)] shrink-0 transition-all duration-500 ${isScrolled ? "w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] md:w-[44px] md:h-[44px] lg:w-[38px] lg:h-[38px] xl:w-[46px] xl:h-[46px] 2xl:w-[52px] 2xl:h-[52px]" : "w-[42px] h-[42px] sm:w-[46px] sm:h-[46px] md:w-[50px] md:h-[50px] lg:w-[44px] lg:h-[44px] xl:w-[52px] xl:h-[52px] 2xl:w-[60px] 2xl:h-[60px]"} group-hover:scale-105 group-hover:shadow-[0_0_25px_rgba(255,210,100,0.5)]`}>
               <img loading="lazy" decoding="async"
                 src={srlLogo}
                 alt="SRL"

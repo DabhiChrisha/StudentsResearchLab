@@ -31,7 +31,7 @@ const JoinUsModal = ({ isOpen, onClose }) => {
                                     <h2 className="text-2xl sm:text-3xl font-bold font-serif text-slate-900">Join SRL</h2>
                                     <p className="text-sm text-slate-500 mt-1">Registration Form</p>
                                 </div>
-                                <img src={joinSrlImg} alt="Join SRL Process" className="h-10 sm:h-14 lg:h-16 w-auto object-contain mt-2 sm:mt-0" />
+                                <img src={joinSrlImg} alt="Join SRL Process" className="h-20 sm:h-24 lg:h-28 w-auto object-contain mt-2 sm:mt-0" />
                             </div>
                             <button
                                 onClick={onClose}

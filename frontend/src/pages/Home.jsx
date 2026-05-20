@@ -128,9 +128,9 @@ const Home = () => {
                         category: "Posters Presented",
                       },
                       {
-                        label: "Awards and Recognitions",
-                        value: "2+",
-                        category: "Excellence",
+                        label: "Ongoing Research Projects",
+                        value: "36+",
+                        category: "In Progress",
                       },
                       {
                         label: (

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFetch, fetchWithTimeout } from "../hooks/useFetch";
 import { API_BASE_URL } from "../config/apiConfig";
@@ -8,6 +9,27 @@ import { getImageUrl } from "../lib/imageUrl";
 const Activities = () => {
   const [modal, setModal] = useState(null); // activity object or null
   const sectionRef = useRef(null);
+
+  // When modal is open, lock background scrolling and compensate for scrollbar width
+  useEffect(() => {
+    if (modal) {
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      // prevent scroll chaining on mobile
+      document.documentElement.style.overscrollBehavior = 'none';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+      document.documentElement.style.overscrollBehavior = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+      document.documentElement.style.overscrollBehavior = '';
+    };
+  }, [modal]);
 
   const {
     data: activities = [],
@@ -189,142 +211,147 @@ const Activities = () => {
           </div>
         )}
 
-        {/* Modal */}
-        <AnimatePresence>
-          {modal && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-              style={{ alignItems: "flex-start", paddingTop: "5.5rem" }}
-            >
+        {/* Modal (rendered into document.body via portal so it always stacks above footer) */}
+        {modal &&
+          createPortal(
+            <AnimatePresence>
               <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full mx-4 flex flex-col md:flex-row gap-6 relative border-2 border-sky-100 modal-neon-border"
-                style={{ minHeight: 400, maxHeight: 500 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[99999] flex items-start justify-center bg-black/40 overscroll-contain"
+                style={{ paddingTop: "5.5rem" }}
+                onClick={(e) => {
+                  if (e.target === e.currentTarget) setModal(null);
+                }}
               >
-                {/* Image */}
-                {(modal?.signedPhotoUrl || modal?.Photo) && (
-                  <div className="md:w-1/2 w-full bg-gray-100 flex items-center justify-center rounded-3xl overflow-hidden">
-                    {(() => {
-                      let url = modal.Photo ? (modal.Photo.startsWith("http") ? modal.Photo : getImageUrl(modal.Photo)) : null;
-                      if (url && url.match(/\.(mp4|webm|ogg)(\?.*)?$/i)) {
-                        return (
-                          <video
-                            src={getImageUrl(url)}
-                            className="object-contain w-full h-full max-h-[340px] mx-auto my-auto bg-black"
-                            controls
-                            autoPlay={false}
-                            muted
-                            playsInline
-                            preload="metadata"
-                            poster={getImageUrl("/video-poster.png")}
-                          >
-                            Sorry, your browser doesn't support embedded videos.
-                          </video>
-                        );
-                      } else if (
-                        url &&
-                        url.match(/\.(jpg|jpeg|png|gif|bmp|svg|webp)(\?.*)?$/i)
-                      ) {
-                        return (
-                          <img
-                            loading="lazy"
-                            decoding="async"
-                            src={getImageUrl(url)}
-                            alt={modal.title + " (debug: " + url + ")"}
-                            className="object-contain w-full h-full max-h-[340px] mx-auto my-auto rounded-3xl"
-                            style={{
-                              maxHeight: "100%",
-                              maxWidth: "100%",
-                              display: "block",
-                            }}
-                          />
-                        );
-                      } else if (url) {
-                        return (
-                          <img
-                            loading="lazy"
-                            decoding="async"
-                            src={getImageUrl(url)}
-                            alt={modal.title + " (debug: " + url + ")"}
-                            className="object-contain w-full h-full max-h-[340px] mx-auto my-auto rounded-3xl"
-                            style={{
-                              maxHeight: "100%",
-                              maxWidth: "100%",
-                              display: "block",
-                            }}
-                          />
-                        );
-                      }
-                      return null;
-                    })()}
-                  </div>
-                )}
-                {/* Details */}
-                <div className="flex-1 flex flex-col min-w-0 justify-between">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h2 className="text-2xl font-bold text-gray-900 flex-1">
-                      {modal.title}
-                    </h2>
-                    {modal.year && (
-                      <span className="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-xs font-semibold">
-                        {modal.year}
-                      </span>
-                    )}
-                  </div>
-                  {modal.link && (
-                    <a
-                      href={modal.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sky-700 font-semibold text-sm mb-3 hover:underline"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm15.5 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.968v5.699h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.838-1.563 3.036 0 3.597 2.001 3.597 4.599v5.597z" />
-                      </svg>
-                      <span>(View Post)</span>
-                    </a>
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.95, opacity: 0 }}
+                  className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full mx-4 flex flex-col md:flex-row gap-6 relative border-2 border-sky-100 modal-neon-border"
+                  style={{ minHeight: 400, maxHeight: 500 }}
+                >
+                  {/* Image */}
+                  {(modal?.signedPhotoUrl || modal?.Photo) && (
+                    <div className="md:w-1/2 w-full bg-gray-100 flex items-center justify-center rounded-3xl overflow-hidden">
+                      {(() => {
+                        let url = modal.Photo ? (modal.Photo.startsWith("http") ? modal.Photo : getImageUrl(modal.Photo)) : null;
+                        if (url && url.match(/\.(mp4|webm|ogg)(\?.*)?$/i)) {
+                          return (
+                            <video
+                              src={getImageUrl(url)}
+                              className="object-contain w-full h-full max-h-[340px] mx-auto my-auto bg-black"
+                              controls
+                              autoPlay={false}
+                              muted
+                              playsInline
+                              preload="metadata"
+                              poster={getImageUrl("/video-poster.png")}
+                            >
+                              Sorry, your browser doesn't support embedded videos.
+                            </video>
+                          );
+                        } else if (
+                          url &&
+                          url.match(/\.(jpg|jpeg|png|gif|bmp|svg|webp)(\?.*)?$/i)
+                        ) {
+                          return (
+                            <img
+                              loading="lazy"
+                              decoding="async"
+                              src={getImageUrl(url)}
+                              alt={modal.title + " (debug: " + url + ")"}
+                              className="object-contain w-full h-full max-h-[340px] mx-auto my-auto rounded-3xl"
+                              style={{
+                                maxHeight: "100%",
+                                maxWidth: "100%",
+                                display: "block",
+                              }}
+                            />
+                          );
+                        } else if (url) {
+                          return (
+                            <img
+                              loading="lazy"
+                              decoding="async"
+                              src={getImageUrl(url)}
+                              alt={modal.title + " (debug: " + url + ")"}
+                              className="object-contain w-full h-full max-h-[340px] mx-auto my-auto rounded-3xl"
+                              style={{
+                                maxHeight: "100%",
+                                maxWidth: "100%",
+                                display: "block",
+                              }}
+                            />
+                          );
+                        }
+                        return null;
+                      })()}
+                    </div>
                   )}
-                  <div className="flex-1 min-h-0">
-                    <span className="font-bold text-gray-700 text-base">
-                      Brief:{" "}
-                    </span>
+                  {/* Details */}
+                  <div className="flex-1 flex flex-col min-w-0 justify-between">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h2 className="text-2xl font-bold text-gray-900 flex-1">
+                        {modal.title}
+                      </h2>
+                      {modal.year && (
+                        <span className="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-xs font-semibold">
+                          {modal.year}
+                        </span>
+                      )}
+                    </div>
+                    {modal.link && (
+                      <a
+                        href={modal.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-sky-700 font-semibold text-sm mb-3 hover:underline"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm15.5 11.268h-3v-5.604c0-1.337-.025-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.968v5.699h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.838-1.563 3.036 0 3.597 2.001 3.597 4.599v5.597z" />
+                        </svg>
+                        <span>(View Post)</span>
+                      </a>
+                    )}
+                    <div className="flex-1 min-h-0">
+                      <span className="font-bold text-gray-700 text-base">
+                        Brief:{" "}
+                      </span>
+                      <div
+                        className="overflow-y-auto pr-2 text-gray-700 text-base"
+                        style={{ maxHeight: "calc(100% - 2rem)" }}
+                      >
+                        {modal.brief || modal.description}
+                      </div>
+                    </div>
                     <div
-                      className="overflow-y-auto pr-2 text-gray-700 text-base"
-                      style={{ maxHeight: "calc(100% - 2rem)" }}
+                      className="text-gray-400 text-xs pt-2"
+                      style={{ marginTop: "auto" }}
                     >
-                      {modal.brief || modal.description}
+                      {modal.date}
                     </div>
                   </div>
-                  <div
-                    className="text-gray-400 text-xs pt-2"
-                    style={{ marginTop: "auto" }}
+                  {/* Close Button */}
+                  <button
+                    onClick={() => setModal(null)}
+                    className="absolute top-4 right-4 bg-white/80 hover:bg-white rounded-full p-2 shadow text-gray-700"
+                    aria-label="Close"
                   >
-                    {modal.date}
-                  </div>
-                </div>
-                {/* Close Button */}
-                <button
-                  onClick={() => setModal(null)}
-                  className="absolute top-4 right-4 bg-white/80 hover:bg-white rounded-full p-2 shadow text-gray-700"
-                  aria-label="Close"
-                >
-                  <X size={22} />
-                </button>
+                    <X size={22} />
+                  </button>
+                </motion.div>
               </motion.div>
-            </motion.div>
+            </AnimatePresence>,
+            document.body,
           )}
-        </AnimatePresence>
       </div>
     </div>
   );
