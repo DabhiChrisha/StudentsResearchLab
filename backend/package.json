@@ -34,7 +34,7 @@
     "nodemon": "^3.1.14",
     "pg": "^8.20.0",
     "prisma": "^7.7.0",
-    "ws": "^8.20.0"
+    "ws": "^8.20.1"
   },
   "prisma": {
     "seed": "node prisma/seed.js"

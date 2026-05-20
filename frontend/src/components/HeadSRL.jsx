@@ -88,7 +88,7 @@ export default function HeadSRL() {
 
               <blockquote className="text-lg md:text-xl text-slate-800 font-serif leading-relaxed italic relative">
                 Aspirations, curiosity, excellence, and dedication form the
-                foundation of SRL — a space created to nurture disciplined,
+                foundation of SRL - a space created to nurture disciplined,
                 research-driven minds.
                 <span className="inline-block animate-gradient-text text-2xl md:text-3xl ml-2 align-bottom leading-none select-none">
                   ”
@@ -117,10 +117,10 @@ export default function HeadSRL() {
               <div className="flex items-center gap-3 text-slate-700 hover:text-[#05877a] transition-colors group">
                 <Mail className="w-5 h-5 text-[#05877a]" />
                 <a
-                  href="mailto:mmpsrpc@ksv.ac.in"
+                  href="mailto:mmpsrc.ksv@gmail.com"
                   className="font-medium underline decoration-[#05877a]/30 hover:decoration-[#05877a]"
                 >
-                  mmpsrpc@ksv.ac.in
+                  mmpsrc.ksv@gmail.com
                 </a>
               </div>
               <div className="flex items-center gap-3 text-slate-700">
