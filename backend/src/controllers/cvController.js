@@ -51,8 +51,10 @@ exports.getCvProfile = async (req, res, next) => {
     }
 
     const cv = await prisma.memberCvProfile.findUnique({
-      where: {
-        enrollment_no: normalizedEnrollment,
+      where: { enrollment_no: normalizedEnrollment },
+      include: {
+        students_details: { select: { batch: true, profile_image: true } },
+        patents: true,
       },
     });
 
@@ -62,9 +64,16 @@ exports.getCvProfile = async (req, res, next) => {
       });
     }
 
-    res.json({
-      data: cv,
-    });
+    // Serialize BigInt to string and shape response for public API
+    const serialized = JSON.parse(JSON.stringify(cv, (_k, v) => (typeof v === 'bigint' ? v.toString() : v)));
+    const out = {
+      ...serialized,
+      batch: cv.students_details?.batch || null,
+      profile_image: cv.students_details?.profile_image || null,
+      patents: serialized.patents || [],
+    };
+
+    res.json({ data: out });
   } catch (err) {
     res.status(500).json({ detail: err.message });
   }

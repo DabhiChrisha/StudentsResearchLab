@@ -33,6 +33,7 @@ exports.getResearchers = async (req, res, next) => {
     // login_password, cv_url, contact_no, gender, and other unused columns.
     const profiles = await prisma.memberCvProfile.findMany({
       include: {
+        patents: true,
         students_details: {
           select: {
             student_name:  true,
@@ -72,6 +73,12 @@ exports.getResearchers = async (req, res, next) => {
         w => w.toLowerCase().startsWith('ongoing')
       );
 
+      // Serialize BigInt values from patents
+      const serializedPatents = (profile.patents || []).map(p => ({
+        ...p,
+        patent_id: p.patent_id?.toString ? p.patent_id.toString() : p.patent_id,
+      }));
+
       return {
         student_name:  sd.student_name,
         enrollment_no: en,
@@ -93,6 +100,7 @@ exports.getResearchers = async (req, res, next) => {
         ongoingResearch: ongoingWork,
         achievements,
         achievements_extended: { leadership, awards },
+        patents: serializedPatents,
         srlPublications: [],
 
         hackathonsCount:    hackathons.length,
