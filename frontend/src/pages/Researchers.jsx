@@ -165,6 +165,7 @@ export default function Researchers() {
                 research_areas:        toArr(s.research),
                 achievements_extended: s.achievements_extended || null,
                 srlPublications:       srlPubs,
+                patents:               toArr(s.patents),
                 metadata:              s.metadata || null,
                 gradient:              'linear-gradient(135deg, #dcfce7 0%, #fef9c3 100%)',
             };
@@ -204,6 +205,7 @@ export default function Researchers() {
         const underReview    = srlPubs.filter(p => p.category === 'Paper under Review');
         const ongoingResearch = toArr(activeStudent.ongoingResearch);
         const papersArr      = toArr(activeStudent.papers);
+        const patents        = toArr(activeStudent.patents);
 
         // Published = non-review srl pubs OR simple papers list
         const published = srlPubs.length > 0
@@ -225,6 +227,7 @@ export default function Researchers() {
             ongoingResearch:         toArr(activeStudent.ongoingResearch),
             filteredSrlPublications: srlPubs.filter(p => p.category !== 'Paper under Review'),
             underReviewSrlPubs:      underReview,
+            patents:                 patents,
         };
     }, [activeStudent]);
 
@@ -337,6 +340,7 @@ export default function Researchers() {
                                                 research_areas:        toArr(ra.research),
                                                 achievements_extended: ra.achievements_extended || null,
                                                 srlPublications:       raSrlPubs,
+                                                patents:               toArr(ra.patents),
                                                 metadata:              ra.metadata || null,
                                                 researchWorksCount:    raResearchWorks.length || '--',
                                                 hackathonsCount:       raHackathons.length || '--',
@@ -660,6 +664,30 @@ export default function Researchers() {
                                                                     )}
                                                                     {pub.conferenceGrant && (
                                                                         <span className="px-2 py-0.5 rounded-full bg-amber-50 border border-amber-100 text-[9px] font-black text-amber-700 uppercase tracking-wider">Grant</span>
+                                                                    )}
+                                                                </div>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </ModalPanel>
+                                            )}
+
+                                            {/* Panel 7: Patents */}
+                                            {toArr(activeMetrics?.patents).length > 0 && (
+                                                <ModalPanel title="Patents" icon={<Award size={14} className="text-amber-500" />}>
+                                                    <ul className="space-y-5">
+                                                        {toArr(activeMetrics.patents).map((patent, i) => (
+                                                            <li key={i} className="space-y-1">
+                                                                <p className="text-[12px] font-black text-slate-800 leading-snug">{patent.patent_title || 'Untitled Patent'}</p>
+                                                                <div className="flex flex-wrap gap-2">
+                                                                    {patent.application_number && (
+                                                                        <span className="text-[10px] font-medium text-slate-500">No: {patent.application_number}</span>
+                                                                    )}
+                                                                    {patent.application_status && (
+                                                                        <span className="px-2 py-0.5 rounded-full bg-amber-50 border border-amber-100 text-[9px] font-black text-amber-700 uppercase tracking-wider">{patent.application_status}</span>
+                                                                    )}
+                                                                    {patent.application_date && (
+                                                                        <span className="text-[10px] font-medium text-slate-400">{new Date(patent.application_date).toLocaleDateString()}</span>
                                                                     )}
                                                                 </div>
                                                             </li>
