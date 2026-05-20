@@ -74,8 +74,8 @@ const buildPublicationData = (body) => {
 const toAdminPublicationResponse = (row) => {
   const publishedDate  = row.published_date  ? new Date(row.published_date).toISOString().split("T")[0]  : null;
   const conferenceDate = row.conference_date ? new Date(row.conference_date).toISOString().split("T")[0] : null;
-  const logo_url = row.symbol?.logo_url || null;
-  const { symbol, ...rest } = row;
+  const logo_url = row.logo_url || null;
+  const { logo_url: _logo, ...rest } = row;
 
   return {
     ...rest,
@@ -110,16 +110,23 @@ exports.getPublications = async (req, res, next) => {
       where.status = upper;
     }
 
+    // Fetch publications (no symbol relation available) and resolve publisher logos
     const publications = await prisma.publication.findMany({
       where,
-      include:  { symbol: { select: { logo_url: true } } },
       orderBy: [{ created_at: "desc" }, { published_date: "desc" }],
     });
 
-    res.json({
-      success: true,
-      data: publications.map(toAdminPublicationResponse),
-    });
+    // Resolve publisher logos by matching publication.publisher -> symbol.publisher_name
+    const publishers = Array.from(new Set(publications.map(p => p.publisher).filter(Boolean)));
+    let symbolRows = [];
+    if (publishers.length > 0) {
+      symbolRows = await prisma.symbol.findMany({ where: { publisher_name: { in: publishers } }, select: { publisher_name: true, logo_url: true } });
+    }
+    const symbolMap = symbolRows.reduce((acc, s) => { acc[s.publisher_name] = s.logo_url; return acc; }, {});
+
+    const publicationsWithLogo = publications.map(p => ({ ...p, logo_url: symbolMap[p.publisher] || null }));
+
+    res.json({ success: true, data: publicationsWithLogo.map(toAdminPublicationResponse) });
   } catch (error) {
     console.error("Get publications error:", error);
     next(error);
@@ -136,10 +143,13 @@ exports.getPublication = async (req, res, next) => {
       return res.status(400).json({ error: "Invalid input", message: "Invalid publication id" });
     }
 
-    const publication = await prisma.publication.findUnique({
-      where:   { id },
-      include: { symbol: { select: { logo_url: true } } },
-    });
+    const publication = await prisma.publication.findUnique({ where: { id } });
+
+    // Resolve logo by publisher name if available
+    if (publication && publication.publisher) {
+      const symbolRow = await prisma.symbol.findUnique({ where: { publisher_name: publication.publisher }, select: { logo_url: true } });
+      publication.logo_url = symbolRow?.logo_url || null;
+    }
 
     if (!publication) {
       return res.status(404).json({ error: "Not found", message: "Publication not found" });
@@ -187,8 +197,13 @@ exports.createPublication = async (req, res, next) => {
         approved_by:         req.admin?.email ?? null,
         approved_at:         now,
       },
-      include: { symbol: { select: { logo_url: true } } },
     });
+
+    // Resolve logo via publisher name (text) if available
+    if (publication.publisher) {
+      const symbolRow = await prisma.symbol.findUnique({ where: { publisher_name: publication.publisher }, select: { logo_url: true } });
+      publication.logo_url = symbolRow?.logo_url || null;
+    }
 
     broadcast("publication_approved", { id: publication.id, title: publication.title });
     broadcast("publication_changed", { id: publication.id });
@@ -240,11 +255,13 @@ exports.updatePublication = async (req, res, next) => {
       }
     }
 
-    const publication = await prisma.publication.update({
-      where:   { id },
-      data:    updateData,
-      include: { symbol: { select: { logo_url: true } } },
-    });
+    const publication = await prisma.publication.update({ where: { id }, data: updateData });
+
+    // Resolve logo via publisher name if available
+    if (publication.publisher) {
+      const symbolRow = await prisma.symbol.findUnique({ where: { publisher_name: publication.publisher }, select: { logo_url: true } });
+      publication.logo_url = symbolRow?.logo_url || null;
+    }
 
     if (publication.status === "APPROVED") {
       broadcast("publication_approved", { id: publication.id, title: publication.title });
@@ -317,8 +334,13 @@ exports.approvePublication = async (req, res, next) => {
         approved_by: req.admin.email,
         approved_at: new Date(),
       },
-      include: { symbol: { select: { logo_url: true } } },
     });
+
+    // Resolve logo via publisher name if available
+    if (publication.publisher) {
+      const symbolRow = await prisma.symbol.findUnique({ where: { publisher_name: publication.publisher }, select: { logo_url: true } });
+      publication.logo_url = symbolRow?.logo_url || null;
+    }
 
     // Notify all connected clients so the public website updates in real time
     broadcast('publication_approved', { id: publication.id, title: publication.title });
@@ -363,8 +385,13 @@ exports.rejectPublication = async (req, res, next) => {
         approved_by: null,
         approved_at: null,
       },
-      include: { symbol: { select: { logo_url: true } } },
     });
+
+    // Resolve logo via publisher name if available
+    if (publication.publisher) {
+      const symbolRow = await prisma.symbol.findUnique({ where: { publisher_name: publication.publisher }, select: { logo_url: true } });
+      publication.logo_url = symbolRow?.logo_url || null;
+    }
 
     // Notify admin portal clients so the pending list refreshes in real time
     broadcast('publication_rejected', { id: publication.id });

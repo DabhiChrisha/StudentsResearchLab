@@ -107,7 +107,6 @@ async function syncStudentFromJoinRequest(joinRequest) {
     const cvPayload = {
       student_name: studentData.student_name,
       department: studentData.department,
-      semester: studentData.semester,
       institute: studentData.institute_name,
     };
 

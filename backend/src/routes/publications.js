@@ -37,18 +37,48 @@ router.get("/api/publications", async (req, res, next) => {
         publisher: true, department: true, institute: true, link_to_paper: true,
         conference_location: true, published_date: true, conference_date: true,
         publisher_logo_id: true,
-        symbol: { select: { logo_url: true } },
       },
       orderBy: [{ published_date: "desc" }, { id: "desc" }],
     });
+
+    const publisherNames = Array.from(
+      new Set((data || []).map((row) => row.publisher).filter(Boolean))
+    );
+    const publisherLogoIds = Array.from(
+      new Set((data || []).map((row) => row.publisher_logo_id).filter((value) => value !== null && value !== undefined))
+    );
+
+    const [symbolsByName, symbolsById] = await Promise.all([
+      publisherNames.length
+        ? prisma.symbol.findMany({
+            where: { publisher_name: { in: publisherNames } },
+            select: { publisher_name: true, logo_url: true },
+          })
+        : [],
+      publisherLogoIds.length
+        ? prisma.symbol.findMany({
+            where: { id: { in: publisherLogoIds } },
+            select: { id: true, logo_url: true },
+          })
+        : [],
+    ]);
+
+    const logoUrlByName = symbolsByName.reduce((acc, symbol) => {
+      acc[symbol.publisher_name] = symbol.logo_url;
+      return acc;
+    }, {});
+
+    const logoUrlById = symbolsById.reduce((acc, symbol) => {
+      acc[symbol.id] = symbol.logo_url;
+      return acc;
+    }, {});
 
     const toTitleCase = (str) =>
       str ? str.replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()) : "";
 
     const mapped = (data || []).map((row) => {
-      const { symbol, ...rest } = row;
       return {
-        ...rest,
+        ...row,
         student_authors:   Array.isArray(row.authors) ? row.authors.join(", ") : "",
         event_type:        toTitleCase(row.type_of_publication),
         paper_url:         row.link_to_paper,
@@ -56,8 +86,7 @@ router.get("/api/publications", async (req, res, next) => {
         date:              row.published_date ? new Date(row.published_date).toISOString().split("T")[0] : null,
         conference_date:   row.conference_date ? new Date(row.conference_date).toISOString().split("T")[0] : null,
         year:              row.published_date ? new Date(row.published_date).getUTCFullYear() : null,
-        logo_url:          symbol?.logo_url || null,
-        publisher_logo_id: row.publisher_logo_id ?? null,
+        logo_url:          logoUrlById[row.publisher_logo_id] || logoUrlByName[row.publisher] || null,
         tags:              [],
         description:       "",
       };
