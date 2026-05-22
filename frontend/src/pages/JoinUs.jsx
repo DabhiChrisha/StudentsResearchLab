@@ -274,7 +274,7 @@ export default function JoinUs({ isModal = false, onClose }) {
             (JoinUsModal renders its own header with the title and logo to avoid duplication) */}
         {!isModal && (
           <div className="flex flex-col items-center gap-6 sm:gap-8 mb-8 sm:mb-10 w-full py-2">
-            <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold text-[#05877a] text-center w-full tracking-tight leading-none">
+            <h2 className="text-5xl sm:text-6xl md:text-5xl font-bold text-[#05877a] text-center w-full tracking-tight leading-none">
               Join SRL
             </h2>
             <div className="w-full flex justify-center">
