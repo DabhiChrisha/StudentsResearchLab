@@ -8,7 +8,10 @@ exports.getStudents = async (req, res, next) => {
   try {
     const students = await prisma.studentsDetail.findMany({
       where: {
-        member_type: { not: "admin" },
+        OR: [
+          { member_type: { not: "admin" } },
+          { member_type: null }
+        ]
       },
       orderBy: { created_at: "desc" },
     });

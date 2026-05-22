@@ -75,10 +75,10 @@ const toAdminPublicationResponse = (row) => {
   const publishedDate  = row.published_date  ? new Date(row.published_date).toISOString().split("T")[0]  : null;
   const conferenceDate = row.conference_date ? new Date(row.conference_date).toISOString().split("T")[0] : null;
   const logo_url = row.logo_url || null;
-  const { logo_url: _logo, ...rest } = row;
 
   return {
-    ...rest,
+    id: row.id,
+    title: row.title,
     student_authors:   Array.isArray(row.authors) ? row.authors.join(", ") : "",
     event_type:        row.type_of_publication,
     paper_url:         row.link_to_paper,
@@ -87,7 +87,7 @@ const toAdminPublicationResponse = (row) => {
     conference_date:   conferenceDate,
     year:              publishedDate ? Number.parseInt(publishedDate.split("-")[0], 10) : null,
     publisher_logo_id: row.publisher_logo_id ?? null,
-    logo_url,
+    logo_url:          logo_url,
     status:            row.status,
     approved_by:       row.approved_by ?? null,
     approved_at:       row.approved_at ? new Date(row.approved_at).toISOString() : null,

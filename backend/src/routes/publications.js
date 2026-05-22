@@ -4,34 +4,80 @@ const { broadcast } = require("../utils/sseManager");
 
 const router = express.Router();
 
+const toTitleCase = (str) =>
+  str ? str.replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()) : "";
+
+// Helper to transform Publication model data
+const transformPublication = (row, logoUrlById = {}, logoUrlByName = {}) => ({
+  id: `pub_${row.id}`,
+  title: row.title,
+  student_authors: Array.isArray(row.authors) ? row.authors.join(", ") : "",
+  authors: row.authors || [],
+  category: toTitleCase(row.type_of_publication),
+  event_type: toTitleCase(row.type_of_publication),
+  paper_url: row.link_to_paper,
+  link: row.link_to_paper,
+  venue: row.conference_location || row.publisher || "",
+  publisher: row.publisher || "",
+  date: row.published_date ? new Date(row.published_date).toISOString().split("T")[0] : null,
+  conference_date: row.conference_date ? new Date(row.conference_date).toISOString().split("T")[0] : null,
+  year: row.published_date ? new Date(row.published_date).getUTCFullYear() : null,
+  logo_url: logoUrlById[row.publisher_logo_id] || logoUrlByName[row.publisher] || null,
+  publisher_logo_id: row.publisher_logo_id ?? null,
+  tags: [],
+  description: "",
+  source: "Publication",
+});
+
+// Helper to transform publications model data
+const transformPublications = (row) => ({
+  id: row.id,
+  title: row.title,
+  student_authors: row.student_authors || "",
+  authors: row.student_authors ? row.student_authors.split(",").map(a => a.trim()) : [],
+  category: toTitleCase(row.event_type),
+  event_type: toTitleCase(row.event_type),
+  paper_url: row.paper_url,
+  link: row.paper_url,
+  venue: row.venue || "",
+  publisher: row.venue || "",
+  date: row.date,
+  conference_date: null,
+  year: row.year || (row.date ? parseInt(row.date.split("-")[0]) : null),
+  logo_url: null,
+  publisher_logo_id: null,
+  tags: row.tags || [],
+  description: row.description || "",
+  source: "publications",
+});
+
 router.get("/api/publications", async (req, res, next) => {
   try {
     const { search, event_type, year, category } = req.query;
 
-    // Only APPROVED publications are visible on the public website
-    const where = { status: "APPROVED" };
-
-    if (event_type) where.type_of_publication = { equals: event_type, mode: "insensitive" };
-    if (category) where.type_of_publication = { equals: category, mode: "insensitive" };
+    // Fetch from Publication model (APPROVED only)
+    const wherePublication = { status: "APPROVED" };
+    if (event_type) wherePublication.type_of_publication = { equals: event_type, mode: "insensitive" };
+    if (category) wherePublication.type_of_publication = { equals: category, mode: "insensitive" };
     if (year) {
       const yr = Number.parseInt(year, 10);
       if (!Number.isNaN(yr)) {
-        where.published_date = {
+        wherePublication.published_date = {
           gte: new Date(`${yr}-01-01`),
           lt: new Date(`${yr + 1}-01-01`),
         };
       }
     }
     if (search) {
-      where.OR = [
+      wherePublication.OR = [
         { title: { contains: search, mode: "insensitive" } },
         { authors: { hasSome: [search] } },
         { conference_location: { contains: search, mode: "insensitive" } },
       ];
     }
 
-    const data = await prisma.publication.findMany({
-      where,
+    const pubData = await prisma.publication.findMany({
+      where: wherePublication,
       select: {
         id: true, title: true, authors: true, type_of_publication: true,
         publisher: true, department: true, institute: true, link_to_paper: true,
@@ -41,11 +87,12 @@ router.get("/api/publications", async (req, res, next) => {
       orderBy: [{ published_date: "desc" }, { id: "desc" }],
     });
 
+    // Resolve Logos for pubData
     const publisherNames = Array.from(
-      new Set((data || []).map((row) => row.publisher).filter(Boolean))
+      new Set(pubData.map((row) => row.publisher).filter(Boolean))
     );
     const publisherLogoIds = Array.from(
-      new Set((data || []).map((row) => row.publisher_logo_id).filter((value) => value !== null && value !== undefined))
+      new Set(pubData.map((row) => row.publisher_logo_id).filter((value) => value !== null && value !== undefined))
     );
 
     const [symbolsByName, symbolsById] = await Promise.all([
@@ -73,26 +120,16 @@ router.get("/api/publications", async (req, res, next) => {
       return acc;
     }, {});
 
-    const toTitleCase = (str) =>
-      str ? str.replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()) : "";
-
-    const mapped = (data || []).map((row) => {
-      return {
-        ...row,
-        student_authors:   Array.isArray(row.authors) ? row.authors.join(", ") : "",
-        event_type:        toTitleCase(row.type_of_publication),
-        paper_url:         row.link_to_paper,
-        venue:             row.conference_location || row.publisher || "",
-        date:              row.published_date ? new Date(row.published_date).toISOString().split("T")[0] : null,
-        conference_date:   row.conference_date ? new Date(row.conference_date).toISOString().split("T")[0] : null,
-        year:              row.published_date ? new Date(row.published_date).getUTCFullYear() : null,
-        logo_url:          logoUrlById[row.publisher_logo_id] || logoUrlByName[row.publisher] || null,
-        tags:              [],
-        description:       "",
-      };
+    // Combine and sort by date
+    const combined = [
+      ...pubData.map(row => transformPublication(row, logoUrlById, logoUrlByName)),
+    ].sort((a, b) => {
+      const dateA = new Date(a.date || a.conference_date || 0);
+      const dateB = new Date(b.date || b.conference_date || 0);
+      return dateB - dateA;
     });
 
-    res.json({ publications: mapped });
+    res.json({ publications: combined });
   } catch (err) {
     next(err);
   }
@@ -147,7 +184,7 @@ router.post("/api/submit-publication", async (req, res, next) => {
       success: true,
       message: "Publication submitted for approval",
       status:  "PENDING",
-      data:    [data],
+      data:    [transformPublication(data)],
     });
   } catch (err) {
     next(err);

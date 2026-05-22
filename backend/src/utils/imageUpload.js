@@ -15,13 +15,16 @@ cloudinary.config({
  * @param {String} fileName - Original file name
  * @returns {Promise} - Cloudinary upload response
  */
-const uploadToCloudinary = async (fileBuffer, folder = "srl_admin", fileName = "image") => {
+const uploadToCloudinary = async (fileBuffer, folder = "srl_admin", fileName = "image", resourceType = "auto") => {
   return new Promise((resolve, reject) => {
+    // Sanitize fileName to only contain alphanumeric characters, underscores, and dashes
+    const safeFileName = fileName.split(".")[0].replace(/[^a-zA-Z0-9_-]/g, "_");
+
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder: folder,
-        resource_type: "auto",
-        public_id: `${folder}_${Date.now()}_${fileName.split(".")[0]}`,
+        resource_type: resourceType,
+        public_id: `${folder}_${Date.now()}_${safeFileName}`,
         overwrite: true,
       },
       (error, result) => {
@@ -45,18 +48,43 @@ const uploadToCloudinary = async (fileBuffer, folder = "srl_admin", fileName = "
 /**
  * Delete image from Cloudinary
  * @param {String} publicId - Cloudinary public ID
+ * @param {String} resourceType - Cloudinary resource type (e.g. image, raw)
  * @returns {Promise} - Cloudinary delete response
  */
-const deleteFromCloudinary = async (publicId) => {
+const deleteFromCloudinary = async (publicId, resourceType = "image") => {
   try {
-    const result = await cloudinary.uploader.destroy(publicId);
+    const result = await cloudinary.uploader.destroy(publicId, { resource_type: resourceType });
     return { success: true, result };
   } catch (error) {
     throw new Error(`Cloudinary delete failed: ${error.message}`);
   }
 };
 
+/**
+ * Extract public ID from Cloudinary URL
+ * @param {String} cloudinaryUrl - Cloudinary URL
+ * @returns {String|null} - Public ID
+ */
+const extractPublicId = (cloudinaryUrl) => {
+  if (!cloudinaryUrl) return null;
+  try {
+    const parts = cloudinaryUrl.split("/upload/");
+    if (parts.length < 2) return null;
+    let path = parts[1];
+    // Remove version like v1234567890/
+    if (path.match(/^v\d+\//)) {
+      path = path.replace(/^v\d+\//, "");
+    }
+    // Remove file extension
+    path = path.replace(/\.[^/.]+$/, "");
+    return path;
+  } catch (error) {
+    return null;
+  }
+};
+
 module.exports = {
   uploadToCloudinary,
   deleteFromCloudinary,
+  extractPublicId,
 };

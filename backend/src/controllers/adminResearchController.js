@@ -1,6 +1,8 @@
 const prisma = require("../lib/prisma");
 const { broadcast } = require("../utils/sseManager");
 const { syncStudentFromJoinRequest } = require("../lib/syncStudentFromJoinRequest");
+const { sendApprovalEmail } = require("../services/emailService");
+const { deleteFromCloudinary, extractPublicId } = require("../utils/imageUpload");
 
 const serializeForJson = (value) =>
   JSON.parse(
@@ -200,9 +202,34 @@ exports.updateJoinRequest = async (req, res, next) => {
       console.log(
         `[Join Request] ${created ? "Created" : "Updated"} student ${student.enrollment_no} from approved request ${id}`,
       );
+
+      // Trigger approval email asynchronously (fire-and-forget)
+      sendApprovalEmail({ to: joinRequest.email, studentName: joinRequest.name }).catch((emailErr) => {
+        console.error("Failed to send approval email asynchronously:", emailErr);
+      });
     }
 
-    // Persist status to local JSON file (no DB column yet)
+    let updatedResumeLink = joinRequest.resume_link;
+    if (status === "rejected" && joinRequest.resume_link) {
+      const publicId = extractPublicId(joinRequest.resume_link);
+      if (publicId) {
+        try {
+          await deleteFromCloudinary(publicId, "raw");
+          console.log(`[Join Request] Deleted rejected resume from Cloudinary: ${publicId}`);
+        } catch (err) {
+          console.error("Failed to delete resume from Cloudinary:", err);
+        }
+      }
+      updatedResumeLink = null;
+    }
+
+    // Update status in the database
+    await prisma.joinUs.update({
+      where: { id: BigInt(id) },
+      data: { status: status, resume_link: updatedResumeLink },
+    });
+
+    // Persist status to local JSON file (legacy fallback)
     const fs = require("fs");
     const path = require("path");
     const dataDir = path.join(__dirname, "..", "data");
@@ -254,6 +281,29 @@ exports.deleteJoinRequest = async (req, res, next) => {
   try {
     const { id } = req.params;
 
+    const joinRequest = await prisma.joinUs.findUnique({
+      where: { id: BigInt(id) },
+    });
+
+    if (!joinRequest) {
+      return res.status(404).json({
+        error: "Not found",
+        message: "Join request not found",
+      });
+    }
+
+    if (joinRequest.resume_link) {
+      const publicId = extractPublicId(joinRequest.resume_link);
+      if (publicId) {
+        try {
+          await deleteFromCloudinary(publicId, "raw");
+          console.log(`[Join Request] Deleted resume from Cloudinary for deleted request ${id}`);
+        } catch (err) {
+          console.error("Failed to delete resume from Cloudinary:", err);
+        }
+      }
+    }
+
     await prisma.joinUs.delete({
       where: { id: BigInt(id) },
     });
@@ -271,6 +321,49 @@ exports.deleteJoinRequest = async (req, res, next) => {
       });
     }
     console.error("Delete join request error:", error);
+    next(error);
+  }
+};
+
+/**
+ * Get join request resume - GET /api/admin/join-requests/:id/resume
+ * Proxies the PDF from Cloudinary so it can be displayed inline
+ */
+exports.getJoinRequestResume = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const joinRequest = await prisma.joinUs.findUnique({
+      where: { id: BigInt(id) },
+    });
+
+    if (!joinRequest || !joinRequest.resume_link) {
+      return res.status(404).json({
+        error: "Not found",
+        message: "Resume not found for this request",
+      });
+    }
+
+    // Fetch the PDF from Cloudinary
+    console.log(`[getJoinRequestResume] Fetching from Cloudinary: ${joinRequest.resume_link}`);
+    const response = await fetch(joinRequest.resume_link, {
+      headers: {
+        "User-Agent": "Mozilla/5.0", // some CDNs block headless fetches
+      },
+    });
+    if (!response.ok) {
+      console.error(`[getJoinRequestResume] Fetch failed. Status: ${response.status} ${response.statusText}, URL: ${joinRequest.resume_link}`);
+      throw new Error(`Failed to fetch from Cloudinary: ${response.statusText}`);
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `inline; filename="resume_${id}.pdf"`);
+    res.send(buffer);
+  } catch (error) {
+    console.error("Get join request resume error:", error);
     next(error);
   }
 };
