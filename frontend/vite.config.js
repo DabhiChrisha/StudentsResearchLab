@@ -9,7 +9,6 @@ export default defineConfig({
     host: '127.0.0.1',
     port: 5174,
     strictPort: false,
-    historyApiFallback: true,
     proxy: {
       '/api': {
         target: 'http://localhost:8000',

@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
@@ -15,6 +15,8 @@ import {
   BookOpen,
   FlaskConical,
   Trophy,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import ChromaGrid from "../components/react-bits/ChromaGrid";
 import GradientText from "../components/GradientText";
@@ -43,12 +45,27 @@ function toArr(val) {
   return [];
 }
 
+// Parse certifications — supports old string array OR new {name, url} objects.
+// Always returns [{name, url}] for uniform consumption.
+function parseCertifications(val) {
+  const arr = toArr(val);
+  return arr.map((item) => {
+    if (typeof item === "string" && item.trim()) return { name: item.trim(), url: "" };
+    if (typeof item === "object" && item !== null && (item.name || item.url)) {
+      return { name: item.name || "", url: item.url || "" };
+    }
+    return null;
+  }).filter(Boolean);
+}
+
 // ─── Main Researchers Component ───────────────────────────────────────────────
 export default function Researchers() {
   const [activeStudent, setActiveStudent] = useState(null);
   const [studentsData, setStudentsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showAllHackathons, setShowAllHackathons] = useState(false);
+  // Certificates modal state
+  const [activeCertStudent, setActiveCertStudent] = useState(null); // { name, certs: [{name,url}] }
 
   // Leaderboard → batch mapping
   const { data: bMap } = useFetch(async () => {
@@ -268,6 +285,13 @@ export default function Researchers() {
     setShowAllHackathons(false);
   };
 
+  const openCertsFor = (studentName, certsRaw) => {
+    const certs = parseCertifications(certsRaw);
+    setActiveCertStudent({ name: studentName, certs });
+  };
+
+  const closeCertsModal = () => setActiveCertStudent(null);
+
   // ── derived modal metrics ─────────────────────────────────────────────────
   // All data comes directly from the /api/researchers response embedded in
   // activeStudent — no supplemental fetches needed.
@@ -349,13 +373,26 @@ export default function Researchers() {
     };
   }, [activeStudent]);
 
-  // ESC to close
+  // ESC to close — skip if cert lightbox is currently open (it handles its own ESC)
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape" && activeStudent) closeModal();
+      if (e.key === "Escape" && activeStudent && !document.body.dataset.certOpen)
+        closeModal();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
+  }, [activeStudent]);
+
+  // Body scroll lock + ScrollToTop signal for the profile modal
+  useEffect(() => {
+    if (!activeStudent) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.body.dataset.modalOpen = "true";   // ← hides ScrollToTop button
+    return () => {
+      document.body.style.overflow = prev;
+      delete document.body.dataset.modalOpen;
+    };
   }, [activeStudent]);
 
   // ─── render ───────────────────────────────────────────────────────────────
@@ -594,12 +631,15 @@ export default function Researchers() {
                                 <Linkedin size={15} />
                               </a>
                             )}
-                            {/* Certificates button (inert, stops propagation) */}
+                            {/* Certificates button — opens CertificatesModal */}
                             <button
                               type="button"
                               title="Certificates"
                               aria-label={`View certificates for ${ra.student_name}`}
-                              onClick={(e) => e.stopPropagation()}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openCertsFor(ra.student_name, ra.certifications);
+                              }}
                               className="p-2 rounded-md bg-slate-50 text-slate-400 border border-slate-200 hover:border-secondary hover:bg-secondary hover:text-white transition-all duration-300 shadow-sm"
                             >
                               <Award size={15} />
@@ -630,6 +670,7 @@ export default function Researchers() {
           <ChromaGrid
             items={chromaItems}
             onImageClick={openModalFor}
+            onCertClick={(item) => openCertsFor(item.title, item.certifications)}
             isLoading={isLoading}
           />
         </div>
@@ -754,7 +795,13 @@ export default function Researchers() {
                           className="w-10 h-10 rounded-full bg-teal-100/50 flex items-center justify-center text-teal-700 hover:bg-teal-500 hover:text-white transition-all duration-500 shadow-sm border border-white/50"
                           title="View certificates"
                           aria-label="View certificates"
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openCertsFor(
+                              activeStudent.title,
+                              activeStudent.certifications
+                            );
+                          }}
                         >
                           <Award size={18} />
                         </button>
@@ -1116,6 +1163,17 @@ export default function Researchers() {
         )}
       </AnimatePresence>
 
+      {/* ── Certificates Modal ───────────────────────────────────── */}
+      <AnimatePresence>
+        {activeCertStudent && (
+          <CertificatesModal
+            studentName={activeCertStudent.name}
+            certs={activeCertStudent.certs}
+            onClose={closeCertsModal}
+          />
+        )}
+      </AnimatePresence>
+
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -1150,6 +1208,318 @@ function ModalPanel({ title, icon, children, className = "" }) {
 function EmptyHint({ text }) {
   return (
     <p className="text-[14px] text-slate-400 italic font-medium">{text}</p>
+  );
+}
+
+// ─── Certificate Lightbox (fullscreen, navigable, body-scroll-locked) ─────────────────
+function CertificatesModal({ studentName, certs, onClose }) {
+  const uploadedCerts = (certs || []).filter((c) => c.url);
+  const nameCerts     = (certs || []).filter((c) => !c.url);
+  const total         = uploadedCerts.length;
+
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [direction,  setDirection]  = useState(1);   // 1 = forward, -1 = backward
+  const [imgErr,     setImgErr]     = useState(false);
+  const [imgLoaded,  setImgLoaded]  = useState(false);
+  const thumbsRef = useRef(null);
+
+  // ─ Body scroll lock + signal ScrollToTop to hide ──────────────────────
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.body.dataset.certOpen = "true";
+    return () => {
+      document.body.style.overflow = prev;
+      delete document.body.dataset.certOpen;
+    };
+  }, []);
+
+  // ─ Reset per-cert state when cert changes ─────────────────────────────
+  useEffect(() => {
+    setImgErr(false);
+    setImgLoaded(false);
+  }, [currentIdx]);
+
+  // ─ Scroll active thumbnail into view ──────────────────────────────────
+  useEffect(() => {
+    if (!thumbsRef.current) return;
+    const active = thumbsRef.current.querySelector('[data-active="true"]');
+    active?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }, [currentIdx]);
+
+  // ─ Directional navigation ─────────────────────────────────────────────
+  const goNext = useCallback(() => {
+    setDirection(1);
+    setCurrentIdx((i) => (i + 1) % total);
+  }, [total]);
+  const goPrev = useCallback(() => {
+    setDirection(-1);
+    setCurrentIdx((i) => (i - 1 + total) % total);
+  }, [total]);
+
+  // ─ Keyboard: ESC / ← → — capture phase so profile modal doesn't also fire ──
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        e.stopImmediatePropagation();
+        onClose();
+      } else if (e.key === "ArrowRight" && total > 1) goNext();
+      else if (e.key === "ArrowLeft"  && total > 1) goPrev();
+    };
+    document.addEventListener("keydown", onKey, true);
+    return () => document.removeEventListener("keydown", onKey, true);
+  }, [onClose, goNext, goPrev, total]);
+
+  const current   = uploadedCerts[currentIdx];
+  const hasImages = total > 0;
+
+  // ── Shared easing curves ───────────────────────────────────────────────
+  const EASE_OUT = [0.22, 1, 0.36, 1];   // fast decelerate — snappy entrance
+
+  // ── Directional slide variants for certificate images ─────────────────
+  const slideVariants = {
+    enter:  (d) => ({ opacity: 0, x: d * 38, scale: 0.98 }),
+    center: {     opacity: 1, x: 0,      scale: 1    },
+    exit:   (d) => ({ opacity: 0, x: d * -38, scale: 0.98 }),
+  };
+
+  // ── No-image fallback (name-only chips) ───────────────────────────────
+  if (!hasImages) {
+    return (
+      <motion.div
+        className="fixed inset-0 z-[500] flex items-center justify-center p-4"
+        style={{ paddingTop: "80px", willChange: "opacity" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{    opacity: 0 }}
+        transition={{ duration: 0.18, ease: "easeOut" }}
+      >
+        <div className="absolute inset-0 bg-black/80" onClick={onClose} />
+        <motion.div
+          initial={{ scale: 0.93, y: 14 }}
+          animate={{ scale: 1,    y: 0  }}
+          exit={{    scale: 0.93, y: 14 }}
+          transition={{ duration: 0.2, ease: EASE_OUT }}
+          className="relative bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl max-w-md w-full p-8 border border-white/40"
+          style={{ willChange: "transform" }}
+        >
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <div className="flex items-center gap-2 mb-0.5">
+                <Award className="w-5 h-5 text-teal-600" />
+                <h3 className="text-lg font-black text-slate-900">Certifications</h3>
+              </div>
+              <p className="text-sm text-slate-400 font-medium">{studentName}</p>
+            </div>
+            <button onClick={onClose} className="p-2 rounded-xl bg-slate-100 text-slate-500 hover:bg-teal-500 hover:text-white transition-all">
+              <X size={16} />
+            </button>
+          </div>
+          {nameCerts.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {nameCerts.map((c, i) => (
+                <span key={i} className="px-3 py-1.5 rounded-full bg-teal-50 border border-teal-100 text-teal-800 text-sm font-bold">
+                  {c.name || "Unnamed"}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p className="text-slate-400 text-sm text-center py-6">No certificates added yet.</p>
+          )}
+        </motion.div>
+      </motion.div>
+    );
+  }
+
+  // ── Full lightbox ──────────────────────────────────────────────────────
+  return (
+    <motion.div
+      className="fixed inset-0 z-[500] flex flex-col"
+      style={{ paddingTop: "64px", willChange: "opacity" }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{    opacity: 0 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
+    >
+      {/* Tint — root opacity drives the fade, no blur = zero repaint cost */}
+      <div className="absolute inset-0 bg-black/90" onClick={onClose} />
+
+      {/* ── Content — scale+y only (transform = GPU composited; root opacity handles fade) ── */}
+      <motion.div
+        className="relative flex flex-col h-full"
+        initial={{ scale: 0.95, y: 14 }}
+        animate={{ scale: 1,    y: 0  }}
+        exit={{    scale: 0.97, y: -8 }}
+        transition={{ duration: 0.2, ease: EASE_OUT }}
+        style={{ willChange: "transform" }}
+      >
+
+        {/* ── Top bar ── */}
+        <div className="flex items-center justify-end px-4 sm:px-6 py-3 shrink-0">
+          <div className="flex items-center gap-3">
+            {total > 1 && (
+              <span className="text-white/60 text-xs font-black tabular-nums bg-white/10 px-2.5 py-1 rounded-full">
+                {currentIdx + 1} / {total}
+              </span>
+            )}
+            <button
+              onClick={onClose}
+              className="w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/25 hover:scale-110 active:scale-95 transition-all"
+              aria-label="Close"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+
+        {/* ── Image area ── */}
+        <div className="flex-1 min-h-0 relative overflow-hidden">
+
+          {/* Left nav arrow */}
+          {total > 1 && (
+            <button
+              onClick={goPrev}
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-teal-500/80 hover:border-teal-400 hover:scale-110 active:scale-95 transition-all backdrop-blur-sm shadow-lg"
+              aria-label="Previous certificate"
+            >
+              <ChevronLeft size={20} />
+            </button>
+          )}
+
+          {/* Name + image stacked — fills the absolute container */}
+          <div className="absolute inset-0 flex flex-col items-center px-14 sm:px-20 py-2">
+
+            {/* Cert name — fades with direction */}
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.p
+                key={`name-${currentIdx}`}
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y:  0 }}
+                exit={{    opacity: 0, y:  6 }}
+                transition={{ duration: 0.15, ease: EASE_OUT }}
+                className="text-white font-black text-xl sm:text-2xl text-center mb-4 px-4 max-w-2xl tracking-tight leading-snug shrink-0"
+                style={{ textShadow: "0 2px 14px rgba(0,0,0,0.7)", willChange: "transform, opacity" }}
+              >
+                {current?.name || `Certificate ${currentIdx + 1}`}
+              </motion.p>
+            </AnimatePresence>
+
+            {/* Image slide — directional, popLayout for instant swap */}
+            <div className="relative flex-1 min-h-0 w-full">
+              <AnimatePresence mode="popLayout" initial={false} custom={direction}>
+                <motion.div
+                  key={currentIdx}
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.22, ease: EASE_OUT }}
+                  className="absolute inset-0 flex items-center justify-center"
+                  style={{ willChange: "transform, opacity" }}
+                >
+                  {!imgErr && current?.url ? (
+                    <>
+                      {/* Pulse skeleton — visible while image loads */}
+                      {!imgLoaded && (
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div
+                            className="rounded-2xl bg-white/8 animate-pulse"
+                            style={{ width: "min(60vw, 420px)", height: "min(44vh, 300px)" }}
+                          />
+                        </div>
+                      )}
+                      {/* Image — CSS transition fade-in on load (zero JS overhead) */}
+                      <img
+                        src={current.url}
+                        alt={current.name || `Certificate ${currentIdx + 1}`}
+                        className="block max-w-full max-h-full object-contain rounded-2xl shadow-[0_32px_80px_rgba(0,0,0,0.55)]"
+                        loading="eager"
+                        draggable={false}
+                        onLoad={() => setImgLoaded(true)}
+                        onError={() => setImgErr(true)}
+                        style={{
+                          opacity: imgLoaded ? 1 : 0,
+                          transition: "opacity 240ms ease",
+                          willChange: "opacity",
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <div className="flex flex-col items-center gap-4 text-white/30">
+                      <Award size={56} />
+                      <p className="text-sm font-medium">Image unavailable</p>
+                    </div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Right nav arrow */}
+          {total > 1 && (
+            <button
+              onClick={goNext}
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-teal-500/80 hover:border-teal-400 hover:scale-110 active:scale-95 transition-all backdrop-blur-sm shadow-lg"
+              aria-label="Next certificate"
+            >
+              <ChevronRight size={20} />
+            </button>
+          )}
+        </div>
+
+        {/* ── Bottom bar ── */}
+        <div className="shrink-0 px-4 sm:px-6 pb-4 pt-2 space-y-3">
+
+          {/* Thumbnail strip */}
+          {total > 1 && (
+            <div
+              ref={thumbsRef}
+              className="flex gap-2 justify-center overflow-x-auto pb-1"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              {uploadedCerts.map((cert, i) => (
+                <button
+                  key={i}
+                  data-active={i === currentIdx ? "true" : "false"}
+                  onClick={() => {
+                    setDirection(i > currentIdx ? 1 : -1);
+                    setCurrentIdx(i);
+                  }}
+                  className={`flex-shrink-0 w-16 h-11 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                    i === currentIdx
+                      ? "border-teal-400 scale-105 shadow-lg shadow-teal-500/30"
+                      : "border-white/15 opacity-45 hover:opacity-75 hover:border-white/40"
+                  }`}
+                  aria-label={`View certificate ${i + 1}`}
+                >
+                  <img
+                    src={cert.url}
+                    alt=""
+                    className="w-full h-full object-cover"
+                    draggable={false}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Name-only cert chips */}
+          {nameCerts.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 justify-center">
+              {nameCerts.map((cert, i) => (
+                <span
+                  key={i}
+                  className="px-2.5 py-1 rounded-full bg-white/10 text-white/65 text-[11px] font-semibold border border-white/15"
+                >
+                  {cert.name || "Unnamed"}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

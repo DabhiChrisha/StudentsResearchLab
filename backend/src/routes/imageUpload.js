@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
-const { upload, uploadAny, uploadImage, uploadMedia, deleteImage } = require("../controllers/imageUploadController");
-const { adminAuthMiddleware } = require("../middleware/adminAuth");
+const { upload, uploadAny, uploadCertificate, uploadImage, uploadMedia, uploadCertificateHandler, deleteImage } = require("../controllers/imageUploadController");
+const { adminAuthMiddleware, authenticatedUserMiddleware } = require("../middleware/adminAuth");
 
 const router = express.Router();
 
@@ -35,6 +35,14 @@ router.post(
   "/admin/delete-image",
   adminAuthMiddleware,
   deleteImage
+);
+
+// Certificate upload — accessible by any authenticated user (members upload their own certs)
+router.post(
+  "/api/admin/upload-certificate",
+  authenticatedUserMiddleware,
+  uploadCertificate.single("file"),
+  uploadCertificateHandler
 );
 
 // Error handling middleware for multer - must be registered last

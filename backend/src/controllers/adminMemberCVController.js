@@ -6,6 +6,39 @@ const serializeForJson = (value) =>
     JSON.stringify(value, (_key, val) => (typeof val === "bigint" ? val.toString() : val))
   );
 
+/**
+ * Normalize certifications from any format into [{name, url}] objects.
+ * Handles: null, empty, old string arrays, new object arrays, malformed JSON strings.
+ */
+function parseCertificationsSafe(raw) {
+  if (!raw) return [];
+  let arr;
+  if (Array.isArray(raw)) {
+    arr = raw;
+  } else if (typeof raw === 'string') {
+    try {
+      const parsed = JSON.parse(raw);
+      arr = Array.isArray(parsed) ? parsed : [];
+    } catch (_) {
+      // fallback: comma-separated names
+      return raw.split(',').map(s => s.trim()).filter(Boolean).map(s => ({ name: s, url: '' }));
+    }
+  } else {
+    return [];
+  }
+  return arr.map(item => {
+    if (typeof item === 'string' && item.trim()) {
+      return { name: item.trim(), url: '' };
+    }
+    if (typeof item === 'object' && item !== null) {
+      const name = (item.name || '').trim();
+      const url = (item.url || '').trim();
+      if (name || url) return { name, url };
+    }
+    return null;
+  }).filter(Boolean);
+}
+
 let memberCvColumnsCache = null;
 
 const MEMBER_CV_SELECTABLE_FIELDS = [
@@ -210,7 +243,7 @@ exports.updateMemberCV = async (req, res, next) => {
       research_work:           research_work           || [],
       leadership:              leadership              || [],
       awards:                  awards                  || [],
-      certifications:          certifications          || [],
+      certifications:          parseCertificationsSafe(certifications),
       additional_achievements: additional_achievements || [],
       internships:             internships             || [],
     };
