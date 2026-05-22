@@ -203,12 +203,10 @@ exports.updateJoinRequest = async (req, res, next) => {
         `[Join Request] ${created ? "Created" : "Updated"} student ${student.enrollment_no} from approved request ${id}`,
       );
 
-      // Trigger approval email
-      try {
-        await sendApprovalEmail({ to: joinRequest.email, studentName: joinRequest.name });
-      } catch (emailErr) {
-        console.error("Failed to send approval email:", emailErr);
-      }
+      // Trigger approval email asynchronously (fire-and-forget)
+      sendApprovalEmail({ to: joinRequest.email, studentName: joinRequest.name }).catch((emailErr) => {
+        console.error("Failed to send approval email asynchronously:", emailErr);
+      });
     }
 
     let updatedResumeLink = joinRequest.resume_link;

@@ -105,12 +105,10 @@ router.post("/api/join-us", upload.none(), async (req, res, next) => {
       name: serializedData.name,
     });
 
-    // Trigger confirmation email
-    try {
-      await sendJoinRequestConfirmationEmail({ to: email, studentName: name });
-    } catch (emailErr) {
-      console.error("Failed to send confirmation email:", emailErr);
-    }
+    // Trigger confirmation email asynchronously (fire-and-forget)
+    sendJoinRequestConfirmationEmail({ to: email, studentName: name }).catch((emailErr) => {
+      console.error("Failed to send confirmation email asynchronously:", emailErr);
+    });
 
     res.json({ success: true, data: serializedData });
   } catch (err) {

@@ -8,6 +8,7 @@ const fromAddress = (process.env.EMAIL_FROM_ADDRESS || process.env.SMTP_USER || 
 const defaultFrom = fromAddress ? `"${fromName}" <${fromAddress}>` : fromName;
 
 const smtp = {
+  pool: true,
   host: process.env.SMTP_HOST?.trim() || 'smtp.gmail.com',
   port: Number.parseInt(process.env.SMTP_PORT || '465', 10),
   secure: String(process.env.SMTP_SECURE || 'true').toLowerCase() === 'true',
