@@ -27,6 +27,7 @@ const adminResearchProjectsRouter = require("./routes/adminResearchProjects");
 const adminPublicationsRouter = require("./routes/adminPublications");
 const adminAchievementsRouter = require("./routes/adminAchievements");
 const adminSessionsRouter = require("./routes/adminSessions");
+const adminSessionScoresRouter = require("./routes/adminSessionScores");
 const adminMemberCVRouter = require("./routes/adminMemberCV");
 const userScoresRouter = require("./routes/userScores");
 const imageUploadRouter = require("./routes/imageUpload");
@@ -34,6 +35,7 @@ const publisherLogosRouter    = require("./routes/publisherLogos");
 const adminSymbolsRouter      = require("./routes/adminSymbols");
 const publicationSymbolRouter = require("./routes/publicationSymbol");
 const eventsRouter            = require("./routes/events");
+const sessionsUploadRouter   = require("./routes/sessionsUpload");
 
 const app = express();
 const ALLOWED_ORIGINS = [
@@ -137,6 +139,7 @@ app.use(adminResearchProjectsRouter);
 app.use(adminPublicationsRouter);
 app.use(adminAchievementsRouter);
 app.use(adminSessionsRouter);
+app.use(adminSessionScoresRouter);
 app.use(adminMemberCVRouter);
 app.use(userScoresRouter);
 app.use(imageUploadRouter);
@@ -144,6 +147,7 @@ app.use(publisherLogosRouter);
 app.use(adminSymbolsRouter);
 app.use(publicationSymbolRouter);
 app.use(eventsRouter);
+app.use(sessionsUploadRouter);
 
 // Global error handler — must be after all routes
 app.use((err, req, res, next) => {
