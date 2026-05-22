@@ -234,6 +234,7 @@ exports.updateMemberCV = async (req, res, next) => {
           ...(existingColumns.has("student_name") ? { student_name: student_name || "Unknown" } : {}),
           ...cvDataWithoutName,
         },
+        include: { patents: { select: { patent_id: true, patent_title: true } } },
       });
     }
 

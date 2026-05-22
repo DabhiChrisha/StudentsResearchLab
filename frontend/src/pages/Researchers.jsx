@@ -155,27 +155,52 @@ export default function Researchers() {
 
       // All arrays come directly from srl_student_profiles via /api/researchers
       const hackathonsArr = toArr(s.hackathons);
-      const papersPublishedArr = toArr(s.papersPublished);
-      const researchWorksArr = toArr(s.researchWorks);
-      const ongoingResearchArr = toArr(s.ongoingResearch);
       const srlPubs = toArr(s.srlPublications);
 
-      // Split srl_publications into published vs under-review (kept separate from
-      // ongoing_research so the PAPERS count is never reduced by ongoing_research items)
+      const rawPapers = toArr(s.research_papers || s.papersPublished);
+      const parsedPapers = rawPapers.map(item => {
+        if (typeof item === 'string') {
+          return { title: item, status: item.toLowerCase().includes('ongoing') ? 'ongoing' : 'completed' };
+        }
+        if (typeof item === 'object' && item !== null) {
+          return {
+            title: item.title || item.name || "",
+            status: item.status || "completed"
+          };
+        }
+        return null;
+      }).filter(Boolean);
+      const completedPapers = parsedPapers.filter(p => p.status !== 'ongoing').map(p => p.title).filter(Boolean);
+      const ongoingPapersList = parsedPapers.filter(p => p.status === 'ongoing').map(p => p.title).filter(Boolean);
+
+      const rawWork = toArr(s.research_work || s.researchWorks);
+      const parsedWork = rawWork.map(w => {
+        if (typeof w === 'string') return { title: w, status: w.toLowerCase().startsWith('ongoing') ? 'ongoing' : 'completed' };
+        if (typeof w === 'object' && w !== null) {
+          return {
+            title: w.title || w.description || "",
+            status: w.status || "completed"
+          };
+        }
+        return null;
+      }).filter(Boolean);
+      const completedWork = parsedWork.filter(w => w.status !== 'ongoing').map(w => w.title).filter(Boolean);
+      const ongoingWorkList = parsedWork.filter(w => w.status === 'ongoing').map(w => w.title).filter(Boolean);
+
+      const totalOngoingProjects = ongoingPapersList.concat(ongoingWorkList);
+
       const srlUnderReview = srlPubs.filter(
         (p) => p.category === "Paper under Review",
       ).length;
       const srlPublished =
         srlPubs.length > 0 ? srlPubs.length - srlUnderReview : 0;
 
-      // PAPERS: structured srl pubs (non-review) → simple papers_published list → publications table
       const publishedCount =
         srlPubs.length > 0
           ? srlPublished
-          : papersPublishedArr.length || s.publicationsCount || "--";
+          : completedPapers.length || s.publicationsCount || "--";
 
-      // ONGOING: papers currently under review + explicit ongoing_research projects
-      const ongoingCount = srlUnderReview + ongoingResearchArr.length;
+      const ongoingCount = srlUnderReview + totalOngoingProjects.length;
 
       return {
         id:
@@ -192,16 +217,14 @@ export default function Researchers() {
         reflection: s.reflection || "",
         email: s.email || "",
         linkedin: s.linkedin || "",
-        // counts — all from srl_student_profiles arrays
-        researchWorksCount: researchWorksArr.length || "--",
+        researchWorksCount: completedWork.length || "--",
         hackathonsCount: hackathonsArr.length || "--",
         papersPublishedCount: publishedCount,
         ongoingProjectsCount: ongoingCount,
-        // full arrays
+        // Send raw database fields forward so activeMetrics can parse them too
+        research_papers: rawPapers,
+        research_work: rawWork,
         hackathons: hackathonsArr,
-        papers: papersPublishedArr,
-        researchWorks: researchWorksArr,
-        ongoingResearch: toArr(s.ongoingResearch),
         achievements: toArr(s.achievements),
         certifications: toArr(s.certifications),
         research_areas: toArr(s.research),
@@ -255,29 +278,69 @@ export default function Researchers() {
     const underReview = srlPubs.filter(
       (p) => p.category === "Paper under Review",
     );
-    const ongoingResearch = toArr(activeStudent.ongoingResearch);
-    const papersArr = toArr(activeStudent.papers);
     const patents = toArr(activeStudent.patents);
 
-    // Published = non-review srl pubs OR simple papers list
+    // Instead of activeStudent.papers and ongoingResearch, we'll parse the raw DB fields
+    // which should now be in activeStudent.research_papers and activeStudent.research_work.
+    // Let's use activeStudent.research_papers directly if available, fallback to papers.
+    const rawPapers = toArr(activeStudent.research_papers || activeStudent.papers);
+    
+    // Parse research papers the same way Member CV does
+    const parsedPapers = rawPapers.map(item => {
+      if (typeof item === 'string') {
+        return { title: item, status: item.toLowerCase().includes('ongoing') ? 'ongoing' : 'completed' };
+      }
+      if (typeof item === 'object' && item !== null) {
+        return {
+          title: item.title || item.name || "",
+          link: item.link || "",
+          status: item.status || "completed"
+        };
+      }
+      return null;
+    }).filter(Boolean);
+
+    const completedPapers = parsedPapers.filter(p => p.status !== 'ongoing').map(p => p.title).filter(Boolean);
+    const ongoingPapersList = parsedPapers.filter(p => p.status === 'ongoing').map(p => p.title).filter(Boolean);
+
+    // Parse research work the same way Member CV does
+    const rawWork = toArr(activeStudent.research_work || activeStudent.researchWorks);
+    const parsedWork = rawWork.map(w => {
+      if (typeof w === 'string') return { title: w, status: w.toLowerCase().startsWith('ongoing') ? 'ongoing' : 'completed' };
+      if (typeof w === 'object' && w !== null) {
+        return {
+          title: w.title || w.description || "",
+          status: w.status || "completed"
+        };
+      }
+      return null;
+    }).filter(Boolean);
+
+    const completedWork = parsedWork.filter(w => w.status !== 'ongoing').map(w => w.title).filter(Boolean);
+    const ongoingWorkList = parsedWork.filter(w => w.status === 'ongoing').map(w => w.title).filter(Boolean);
+
+    // Combine ongoing
+    const totalOngoingProjects = ongoingPapersList.concat(ongoingWorkList);
+
+    // Published = non-review srl pubs OR completed papers
     const published =
       srlPubs.length > 0
         ? srlPubs.length - underReview.length
-        : papersArr.length;
+        : completedPapers.length;
 
     return {
-      research_works_count: toArr(activeStudent.researchWorks).length,
+      research_works_count: completedWork.length,
       hackathons_count: toArr(activeStudent.hackathons).length,
       papers_published_count: published,
-      // Papers under review + explicit ongoing_research projects
-      ongoing_projects_count: underReview.length + ongoingResearch.length,
-      // full arrays — all from srl_student_profiles
+      // Papers under review + explicit ongoing projects
+      ongoing_projects_count: underReview.length + totalOngoingProjects.length,
+      // full arrays
       research_areas: toArr(activeStudent.research_areas),
       hackathons: toArr(activeStudent.hackathons),
-      papers: papersArr.filter((p) => !p.toLowerCase().startsWith("ongoing")),
-      researchWorks: toArr(activeStudent.researchWorks),
+      papers: completedPapers,
+      researchWorks: completedWork,
       achievements: toArr(activeStudent.achievements),
-      ongoingResearch: toArr(activeStudent.ongoingResearch),
+      ongoingResearch: totalOngoingProjects,
       filteredSrlPublications: srlPubs.filter(
         (p) => p.category !== "Paper under Review",
       ),
@@ -461,8 +524,8 @@ export default function Researchers() {
                               className="absolute inset-0 rounded-full bg-black/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                             />
                             <div className="absolute inset-0 rounded-full flex items-end justify-center pointer-events-none pb-5">
-                              <div className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/40 opacity-0 scale-75 translate-y-1 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-400 ease-out">
-                                <span className="text-[11px] sm:text-[12px] font-black uppercase tracking-[0.18em] text-white drop-shadow-sm whitespace-nowrap">
+                              <div className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/40 opacity-0 scale-75 translate-y-1 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-400 ease-out">
+                                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.08em] text-white drop-shadow-sm whitespace-nowrap">
                                   View Profile
                                 </span>
                               </div>

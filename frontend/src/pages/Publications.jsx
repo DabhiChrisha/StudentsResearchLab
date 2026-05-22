@@ -21,39 +21,11 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
   };
   const [logoFailed, setLogoFailed] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [logoScale, setLogoScale] = useState(1);
   const publisherLogoUrl = !logoFailed ? getImageUrl(pub.publisherLogoUrl) : null;
-  const normalizedCategory = (pub.category || "").toLowerCase().trim();
-  const isPoster = normalizedCategory.includes("poster");
-  const isConference = normalizedCategory.includes("conference");
-  const publicationDateRaw = (() => {
-    if (isPoster) return pub.presented_on || pub.presentedOn || pub.date || pub.conference_date || pub.year || "";
-    if (isConference) return pub.conference_date || pub.date || pub.year || "";
-    return pub.date || pub.conference_date || pub.presented_on || pub.presentedOn || pub.year || "";
-  })();
-  const publicationDateLabel = (() => {
-    if (isPoster) return "Presented On";
-    if (isConference) return "Conference Date";
-    return "Published Date";
-  })();
-  const formattedPublicationDate = publicationDateRaw ? String(publicationDateRaw).split("T")[0] : "";
+  const isPoster = pub.category === "Poster" || pub.category === "Poster Presentation";
+  const isConference = pub.category === "Conference";
+  const presentedOnDate = pub.presented_on || pub.presentedOn || pub.conference_date || "";
   const hasHiddenDetails = Boolean(pub.publisher || pub.venue || publisherLogoUrl);
-
-  const handleLogoLoad = (event) => {
-    const { naturalWidth, naturalHeight } = event.currentTarget;
-    if (!naturalWidth || !naturalHeight) return;
-
-    const isSmallLogo = naturalWidth < 100 || naturalHeight < 44;
-    if (!isSmallLogo) {
-      setLogoScale(1);
-      return;
-    }
-
-    const widthScale = 160 / naturalWidth;
-    const heightScale = 64 / naturalHeight;
-    const targetScale = Math.min(widthScale, heightScale, 1.15);
-    setLogoScale(targetScale > 1 ? Number(targetScale.toFixed(2)) : 1);
-  };
 
   return (
     <motion.div
@@ -115,19 +87,42 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
           </div>
 
           {/* KEY DATES Section Header */}
-          <div className="mt-0.5 mb-1">
+          <div className="mt-1 mb-1">
             <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Key Details</p>
           </div>
 
           {/* Details Grid - Labels on left, values on right */}
-          <div className="space-y-0.5 text-xs">
-            {formattedPublicationDate && (
+          <div className="space-y-1 text-xs">
+            {/* Published Date */}
+            {pub.date && (
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1.5">
                   <Calendar size={14} className="text-slate-600" />
-                  <span className="font-semibold text-slate-700">{publicationDateLabel}:</span>
+                  <span className="font-semibold text-slate-700">Published Date:</span>
                 </div>
-                <span className="text-slate-600">{formattedPublicationDate}</span>
+                <span className="text-slate-600">{pub.date.split('T')[0]}</span>
+              </div>
+            )}
+
+            {/* Presented On - Poster only */}
+            {isPoster && presentedOnDate && (
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
+                  <Calendar size={14} className="text-slate-600" />
+                  <span className="font-semibold text-slate-700">Presented On:</span>
+                </div>
+                <span className="text-slate-600">{presentedOnDate.split('T')[0]}</span>
+              </div>
+            )}
+
+            {/* Conference Date */}
+            {isConference && pub.conference_date && (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <Calendar size={14} className="text-slate-600" />
+                  <span className="font-semibold text-slate-700">Conference Dates:</span>
+                </div>
+                <span className="text-slate-600">{pub.conference_date.split('T')[0]}</span>
               </div>
             )}
 
@@ -187,18 +182,13 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
                 <span className="text-xs">No Link</span>
               </div>
             )}
-            <div className="ml-auto flex h-16 w-40 flex-shrink-0 items-center justify-center p-0 overflow-hidden">
+            <div className="ml-auto flex h-16 w-40 flex-shrink-0 items-center justify-center p-0">
               {publisherLogoUrl ? (
                 <img
                   src={publisherLogoUrl}
                   alt={`${pub.publisher || "Publisher"} logo`}
-                  className="max-h-full max-w-full object-contain transition-all duration-200"
-                  style={{
-                    transform: logoScale > 1 ? `scale(${logoScale})` : undefined,
-                    transformOrigin: "center",
-                  }}
+                  className="h-full w-full object-contain"
                   loading="lazy"
-                  onLoad={handleLogoLoad}
                   onError={() => setLogoFailed(true)}
                 />
               ) : (

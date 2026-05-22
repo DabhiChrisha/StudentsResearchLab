@@ -136,7 +136,17 @@ async function buildLeaderboard(period) {
     detailMap[en] = r;
   });
 
-  const maxAtt = PERIOD_MAX_ATT[period] || 1;
+  // Compute max attendance for the period.
+  // For academic-year periods, sum the per-month max values so the
+  // attendance percentage is calculated the same way as monthly periods.
+  let maxAtt;
+  if (isAcademicYearPeriod(period)) {
+    const [startYear] = String(period).split("-").map((p) => parseInt(p, 10));
+    const months = academicYearPeriods(startYear);
+    maxAtt = months.reduce((acc, m) => acc + (PERIOD_MAX_ATT[m] || 0), 0) || (PERIOD_MAX_ATT[period] || 1);
+  } else {
+    maxAtt = PERIOD_MAX_ATT[period] || 1;
+  }
 
   let students = effectiveRows
     .filter((r) => !isExcludedStudent(r.student_name, r.enrollment_no))

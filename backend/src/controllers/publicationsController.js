@@ -5,22 +5,25 @@ exports.getPublications = async (req, res, next) => {
   try {
     const { search, event_type, year, category } = req.query;
 
-    const where = {};
+    const where = {
+      status: 'APPROVED', // Only show approved publications on the public website
+    };
 
     if (year) {
-      where.year = parseInt(year);
-    }
-
-    if (event_type) {
-      where.event_type = {
-        contains: event_type,
-        mode: 'insensitive',
+      // Find publications with published_date or conference_date in that year
+      // Prisma DateTime filtering
+      const startDate = new Date(`${year}-01-01`);
+      const endDate = new Date(`${year}-12-31`);
+      where.published_date = {
+        gte: startDate,
+        lte: endDate,
       };
     }
 
-    if (category) {
-      where.category = {
-        contains: category,
+    if (event_type || category) {
+      // Map event_type or category to type_of_publication
+      where.type_of_publication = {
+        contains: event_type || category,
         mode: 'insensitive',
       };
     }
@@ -34,29 +37,64 @@ exports.getPublications = async (req, res, next) => {
           },
         },
         {
-          student_authors: {
+          conference_location: {
             contains: search,
             mode: 'insensitive',
           },
         },
         {
-          venue: {
+          publisher: {
             contains: search,
             mode: 'insensitive',
           },
-        },
+        }
       ];
     }
 
     const data = await prisma.publication.findMany({
       where,
       orderBy: [
-        { year: 'desc' },
-        { id: 'desc' },
+        { published_date: 'desc' },
       ],
     });
 
-    res.json({ publications: data || [] });
+    // Fetch logos to map manually since relation is not defined in Prisma schema
+    const logoIds = data.map(p => p.publisher_logo_id).filter(id => id !== null);
+    let logosMap = {};
+    if (logoIds.length > 0) {
+      const symbols = await prisma.symbol.findMany({
+        where: { id: { in: logoIds } }
+      });
+      symbols.forEach(sym => {
+        logosMap[sym.id] = sym.logo_url;
+      });
+    }
+
+    // Map the new fields to match the frontend expectations
+    const mappedData = data.map(pub => {
+      // Extract year from published_date
+      const pubYear = pub.published_date ? new Date(pub.published_date).getFullYear() : null;
+      
+      return {
+        id: pub.id,
+        title: pub.title,
+        student_authors: pub.authors ? pub.authors.join(", ") : "",
+        first_author: pub.authors && pub.authors.length > 0 ? pub.authors[0] : "",
+        venue: pub.conference_location || "",
+        date: pub.published_date ? pub.published_date.toISOString() : null,
+        conference_date: pub.conference_date ? pub.conference_date.toISOString() : null,
+        event_type: pub.type_of_publication || "",
+        description: "", // No longer exists in the new schema
+        paper_url: pub.link_to_paper || "",
+        tags: [], // No longer exists
+        category: pub.type_of_publication || "", // For backward compatibility
+        year: pubYear,
+        publisher: pub.publisher || "",
+        logo_url: pub.publisher_logo_id ? logosMap[pub.publisher_logo_id] : "",
+      };
+    });
+
+    res.json({ publications: mappedData || [] });
   } catch (err) {
     next(err);
   }

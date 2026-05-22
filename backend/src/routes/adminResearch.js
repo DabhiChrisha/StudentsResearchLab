@@ -7,6 +7,7 @@ const {
   getJoinRequests,
   updateJoinRequest,
   deleteJoinRequest,
+  getJoinRequestResume,
 } = require("../controllers/adminResearchController");
 const { adminAuthMiddleware, authenticatedUserMiddleware } = require("../middleware/adminAuth");
 
@@ -15,6 +16,7 @@ const router = express.Router();
 // GET routes allow both admin and members (view access)
 router.get("/api/admin/research", authenticatedUserMiddleware, getResearch);
 router.get("/api/admin/join-requests", authenticatedUserMiddleware, getJoinRequests);
+router.get("/api/admin/join-requests/:id/resume", authenticatedUserMiddleware, getJoinRequestResume);
 
 // POST/PUT/DELETE routes require admin authentication only
 router.post("/api/admin/research", adminAuthMiddleware, createResearch);

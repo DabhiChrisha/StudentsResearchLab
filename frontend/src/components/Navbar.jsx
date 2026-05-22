@@ -90,6 +90,32 @@ const Navbar = () => {
 
   const closeSidebar = useCallback(() => setOpen(false), []);
 
+  const handleDownloadGuidelines = useCallback((e) => {
+    e.preventDefault();
+    fetch("/assets/SRL Rules and Regulations.pdf")
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "SRL Rules and Regulations.pdf";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((err) => {
+        console.error("Error downloading PDF:", err);
+        // Fallback: trigger normal download
+        const a = document.createElement("a");
+        a.href = "/assets/SRL Rules and Regulations.pdf";
+        a.download = "SRL Rules and Regulations.pdf";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+  }, []);
+
   // Exact Sequence: 1. Home | 2. SRL Sessions | 3. Achievements | 4. Activities | 5. Publications | 6. Researchers | 7. Leaderboard | 8. About Us
   const menuItems = [
     { label: "Home", path: "/" },
@@ -225,9 +251,9 @@ const Navbar = () => {
                 <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/70 to-transparent opacity-80 -translate-x-full animate-shine" />
               </Link>
               <a
-                href="https://drive.google.com/file/d/1EuI4UqNrmne9VFL1e6qr4hAk_Cyss1pD/view?usp=sharing"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/assets/SRL Rules and Regulations.pdf"
+                onClick={handleDownloadGuidelines}
+                download="SRL Rules and Regulations.pdf"
                 className="relative bg-[#E0F2F1] text-[#0D9488] border border-teal-100 hover:bg-[#B2DFDB] transition-colors shadow-sm rounded-full py-1.5 xl:py-1.5 2xl:py-2 px-3 xl:px-4 2xl:px-5 text-[9px] xl:text-[10px] 2xl:text-[12px] uppercase tracking-wide font-bold overflow-hidden group"
               >
                 <span className="relative z-10">Guidelines</span>
@@ -368,9 +394,12 @@ const Navbar = () => {
               Join Us
             </Link>
             <a
-              href="https://drive.google.com/file/d/1EuI4UqNrmne9VFL1e6qr4hAk_Cyss1pD/view?usp=sharing"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/assets/SRL Rules and Regulations.pdf"
+              onClick={(e) => {
+                closeSidebar();
+                handleDownloadGuidelines(e);
+              }}
+              download="SRL Rules and Regulations.pdf"
               className="flex justify-center w-full py-3 bg-[#E0F2F1] text-[#0D9488] border border-teal-100 font-bold rounded-xl shadow-sm uppercase text-[13px] tracking-wide active:bg-[#B2DFDB] focus:outline-none"
             >
               Guidelines
