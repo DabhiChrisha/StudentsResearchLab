@@ -835,7 +835,7 @@ export default function Researchers() {
                               .slice(0, 2)
                               .map((l) => ({
                                 text: l,
-                                icon: <Library size={16} />,
+                                icon: <Library size={20} />,
                                 color: "teal",
                               })),
                             ...toArr(
@@ -844,14 +844,14 @@ export default function Researchers() {
                               .slice(0, 1)
                               .map((a) => ({
                                 text: a,
-                                icon: <Star size={16} />,
+                                icon: <Star size={20} />,
                                 color: "amber",
                               })),
                             ...toArr(activeMetrics?.achievements)
                               .slice(0, 2)
                               .map((a) => ({
                                 text: a,
-                                icon: <Trophy size={16} />,
+                                icon: <Trophy size={20} />,
                                 color: "teal",
                               })),
                           ].length > 0 ? (
@@ -862,7 +862,7 @@ export default function Researchers() {
                                 .slice(0, 2)
                                 .map((l) => ({
                                   text: l,
-                                  icon: <Library size={16} />,
+                                  icon: <Library size={20} />,
                                   color: "teal",
                                 })),
                               ...toArr(
@@ -871,14 +871,14 @@ export default function Researchers() {
                                 .slice(0, 1)
                                 .map((a) => ({
                                   text: a,
-                                  icon: <Star size={16} />,
+                                  icon: <Star size={20} />,
                                   color: "amber",
                                 })),
                               ...toArr(activeMetrics?.achievements)
                                 .slice(0, 2)
                                 .map((a) => ({
                                   text: a,
-                                  icon: <Trophy size={16} />,
+                                  icon: <Trophy size={20} />,
                                   color: "teal",
                                 })),
                             ].map((item, i) => (
@@ -887,7 +887,7 @@ export default function Researchers() {
                                 className="p-3 rounded-2xl bg-white shadow-sm border border-slate-50 flex justify-center items-center gap-2 hover:border-teal-200 transition-colors"
                               >
                                 <div
-                                  className={`w-7 h-7 rounded-full flex items-center justify-center bg-${item.color}-50 text-${item.color}-600 shrink-0`}
+                                  className={`w-9 h-9 rounded-full flex items-center justify-center bg-${item.color}-50 text-${item.color}-600 shrink-0`}
                                 >
                                   {item.icon}
                                 </div>

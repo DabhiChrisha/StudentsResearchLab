@@ -159,10 +159,9 @@ const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
                                     aria-label={`View certificates for ${item.title}`}
                                     title="Certificates"
                                     onClick={(e) => e.stopPropagation()}
-                                    className="h-8 sm:h-9 px-2 rounded-xl bg-white/60 flex items-center justify-center gap-2 text-secondary hover:bg-secondary hover:text-white transition-all duration-500 shadow-sm"
+                                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/60 flex items-center justify-center text-secondary hover:bg-secondary hover:text-white transition-all duration-500 shadow-sm"
                                 >
-                                    <Award size={15} />
-                                    <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.14em]">Certificates</span>
+                                    <Award size={16} />
                                 </button>
 
                                 <button
