@@ -401,7 +401,7 @@ export default function AddPublication() {
               name="institution"
               value={formData.institution}
               onChange={handleChange}
-              placeholder="Enter your institution"
+              placeholder="Institute name (comma-separated)"
               required
               error={errors.institution}
             />
