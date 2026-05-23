@@ -24,6 +24,36 @@ function normalizeArray(val) {
   }).filter(Boolean);
 }
 
+// Parse certifications safely — supports both old string arrays and new {name, url} objects.
+// Old format: ["AWS Certified"] → [{name: "AWS Certified", url: ""}]
+// New format: [{name: "AWS", url: "https://..."}] → returned as-is
+function parseCertifications(val) {
+  if (!val) return [];
+  let arr;
+  if (Array.isArray(val)) {
+    arr = val;
+  } else if (typeof val === 'string') {
+    try {
+      const parsed = JSON.parse(val);
+      arr = Array.isArray(parsed) ? parsed : [];
+    } catch (_) {
+      arr = val.split(',').map(s => s.trim()).filter(Boolean).map(s => ({ name: s, url: '' }));
+      return arr;
+    }
+  } else {
+    return [];
+  }
+  return arr.map(item => {
+    if (typeof item === 'string' && item.trim()) {
+      return { name: item.trim(), url: '' };
+    }
+    if (typeof item === 'object' && item !== null && (item.name || item.url)) {
+      return { name: item.name || '', url: item.url || '' };
+    }
+    return null;
+  }).filter(Boolean);
+}
+
 // ─── GET /api/researchers ────────────────────────────────────────────────────
 // Source: member_cv_profiles joined with students_details via FK.
 
@@ -76,9 +106,13 @@ exports.getResearchers = async (req, res, next) => {
       
       const leadership      = safeArray(profile.leadership);
       const awards          = safeArray(profile.awards);
-      const certifications  = safeArray(profile.certifications);
+      const certifications  = parseCertifications(profile.certifications);
       const additional      = safeArray(profile.additional_achievements);
-      const achievements    = [...awards, ...certifications, ...additional];
+      const achievements    = [
+        ...awards,
+        ...certifications.map(c => c.name).filter(Boolean),
+        ...additional,
+      ];
 
       // Serialize BigInt values from patents
       const serializedPatents = (profile.patents || []).map(p => ({

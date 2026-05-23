@@ -12,7 +12,7 @@ const Metric = ({ icon: Icon, value, label }) => (
     </div>
 );
 
-const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
+const ChromaGrid = ({ items, onImageClick, onCertClick, isLoading = false }) => {
     const [loadedImages, setLoadedImages] = useState({});
     const [failedImages, setFailedImages] = useState({});
 
@@ -158,7 +158,10 @@ const ChromaGrid = ({ items, onImageClick, isLoading = false }) => {
                                     type="button"
                                     aria-label={`View certificates for ${item.title}`}
                                     title="Certificates"
-                                    onClick={(e) => e.stopPropagation()}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onCertClick?.(item);
+                                    }}
                                     className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/60 flex items-center justify-center text-secondary hover:bg-secondary hover:text-white transition-all duration-500 shadow-sm"
                                 >
                                     <Award size={16} />

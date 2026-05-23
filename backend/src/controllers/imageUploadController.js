@@ -47,7 +47,27 @@ const SECTION_FOLDER_MAP = {
   activity: "srl_activities",
   achievement: "srl_achievements",
   student: "srl_students",
+  certificate: "srl_certificates",
 };
+
+// Multer instance for certificate uploads — images only (PDF converted on frontend), max 10MB
+const uploadCertificate = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  fileFilter: (req, file, cb) => {
+    const allowedMimes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/gif",
+    ];
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error("Invalid file type. Only image files are allowed for certificates. PDF files must be converted to images before uploading."));
+    }
+  },
+});
 
 const uploadImage = async (req, res) => {
   try {
@@ -171,10 +191,65 @@ const uploadMedia = async (req, res) => {
   }
 };
 
+/**
+ * POST /api/admin/upload-certificate
+ * Uploads a single certificate image to Cloudinary (srl_certificates folder).
+ * PDF → image conversion is handled on the frontend before this endpoint is called.
+ * Accessible by any authenticated user (not just admins).
+ *
+ * Body fields:
+ *   file  (multipart) — required, must be an image
+ *
+ * Response: { success: true, data: { url, publicId } }
+ */
+const uploadCertificateHandler = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: "No file uploaded",
+        message: "Please provide an image file to upload.",
+      });
+    }
+
+    // Backend size validation (belt-and-suspenders after multer limit)
+    const MAX_CERT_SIZE = 10 * 1024 * 1024; // 10MB
+    if (req.file.size > MAX_CERT_SIZE) {
+      return res.status(400).json({
+        success: false,
+        error: "File too large",
+        message: `Certificate size must be less than or equal to 10MB. Your file is ${(req.file.size / (1024 * 1024)).toFixed(2)}MB.`,
+      });
+    }
+
+    const uploadResult = await uploadToCloudinary(
+      req.file.buffer,
+      "srl_certificates",
+      req.file.originalname,
+      "image"
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        url: uploadResult.url,
+        publicId: uploadResult.public_id,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Certificate upload failed.",
+    });
+  }
+};
+
 module.exports = {
   upload,
   uploadAny,
+  uploadCertificate,
   uploadImage,
   uploadMedia,
+  uploadCertificateHandler,
   deleteImage,
 };

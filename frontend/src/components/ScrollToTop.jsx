@@ -14,6 +14,7 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
  */
 export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
+  const [certOpen, setCertOpen] = useState(false);
   const circleRef = useRef(null);
   const location = useLocation();
 
@@ -22,6 +23,7 @@ export default function ScrollToTop() {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [location.pathname]);
 
+  // Watch scroll position for visibility + progress ring
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
@@ -43,14 +45,32 @@ export default function ScrollToTop() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Watch for any modal open (cert lightbox OR profile modal) — hide button when either is active
+  useEffect(() => {
+    const check = () =>
+      setCertOpen(
+        document.body.dataset.certOpen === "true" ||
+        document.body.dataset.modalOpen === "true"
+      );
+    check(); // initial check
+    const observer = new MutationObserver(check);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["data-cert-open", "data-modal-open"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+  const show = isVisible && !certOpen;
 
   return (
     <div
-      aria-hidden={!isVisible}
+      aria-hidden={!show}
       className={`fixed bottom-28 md:bottom-8 right-4 md:right-8 z-50
         transition-[opacity,transform] duration-300 ease-out
-        ${isVisible
+        ${show
           ? "opacity-100 translate-y-0 pointer-events-auto"
           : "opacity-0 translate-y-3 pointer-events-none"
         }`}
@@ -87,7 +107,7 @@ export default function ScrollToTop() {
         {/* Button sits centered inside the ring */}
         <button
           onClick={scrollToTop}
-          tabIndex={isVisible ? 0 : -1}
+          tabIndex={show ? 0 : -1}
           className="
             absolute inset-0 m-auto
             w-10 h-10
