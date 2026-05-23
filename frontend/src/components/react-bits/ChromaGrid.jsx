@@ -128,7 +128,7 @@ const ChromaGrid = ({ items, onImageClick, onCertClick, isLoading = false }) => 
                             </h4>
                             <div className="flex items-center gap-1 flex-wrap">
                                 <span className="text-[12px] sm:text-[12px] font-black text-secondary uppercase tracking-[0.1em] px-1 py-0.5 rounded bg-secondary/5">
-                                    BATCH {item.semester}
+                                    BATCH {item.batch || ''}
                                 </span>
                                 <span className="text-[12px] sm:text-[12px] font-bold text-slate-400 uppercase tracking-widest truncate max-w-[96px]">
                                     {item.department}
