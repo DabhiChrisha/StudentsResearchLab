@@ -302,8 +302,8 @@ exports.updateJoinRequest = async (req, res, next) => {
     }
     return res.status(500).json({
       success: false,
-      error: "Internal Server Error",
-      message: error.message || "Failed to update join request",
+      error: "Approval failed",
+      message: "Failed to update join request",
     });
   }
 };

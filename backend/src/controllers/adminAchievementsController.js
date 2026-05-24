@@ -55,7 +55,7 @@ exports.createAchievement = async (req, res, next) => {
       } catch (uploadError) {
         return res.status(500).json({
           error: "Upload failed",
-          message: uploadError.message || "Failed to upload image to Cloudinary",
+          message: "Failed to upload image to Cloudinary",
         });
       }
     }
@@ -170,7 +170,7 @@ exports.updateAchievement = async (req, res, next) => {
       } catch (uploadError) {
         return res.status(500).json({
           error: "Upload failed",
-          message: uploadError.message || "Failed to upload image to Cloudinary",
+          message: "Failed to upload image to Cloudinary",
         });
       }
     }

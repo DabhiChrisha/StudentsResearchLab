@@ -41,7 +41,6 @@ export default function JoinUs({ isModal = false, onClose }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log('Field changed:', name, 'Value:', value);
 
     let processed = value;
     if (name === "contact") {
@@ -207,7 +206,6 @@ export default function JoinUs({ isModal = false, onClose }) {
 
       const json = await res.json();
       const data = json.data;
-      console.log('Success! Data inserted:', data);
       
       // Reset all form fields and clear the PDF file input
       resetForm();

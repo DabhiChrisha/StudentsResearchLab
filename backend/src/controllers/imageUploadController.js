@@ -108,7 +108,7 @@ const uploadImage = async (req, res) => {
     return res.status(500).json({
       success: false,
       error: "Upload failed",
-      message: error.message || "Failed to upload image to Cloudinary",
+      message: "Failed to upload image to Cloudinary",
     });
   }
 };
@@ -137,7 +137,7 @@ const deleteImage = async (req, res) => {
     return res.status(500).json({
       success: false,
       error: "Deletion failed",
-      message: error.message || "Failed to delete image from Cloudinary",
+      message: "Failed to delete image from Cloudinary",
     });
   }
 };
@@ -238,8 +238,8 @@ const uploadCertificateHandler = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      success: false,
-      message: error.message || "Certificate upload failed.",
+      error: "Upload failed",
+      message: "Certificate upload failed.",
     });
   }
 };

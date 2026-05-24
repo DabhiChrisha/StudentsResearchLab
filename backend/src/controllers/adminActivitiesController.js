@@ -68,7 +68,7 @@ exports.createActivity = async (req, res, next) => {
         console.error("[CREATE ACTIVITY] Cloudinary upload error:", uploadError);
         return res.status(500).json({
           error: "Upload failed",
-          message: uploadError.message || "Failed to upload image to Cloudinary",
+          message: "Failed to upload image to Cloudinary",
         });
       }
     }
@@ -163,7 +163,7 @@ exports.updateActivity = async (req, res, next) => {
         console.error("[UPDATE ACTIVITY] Cloudinary upload error:", uploadError);
         return res.status(500).json({
           error: "Upload failed",
-          message: uploadError.message || "Failed to upload image to Cloudinary",
+          message: "Failed to upload image to Cloudinary",
         });
       }
     }

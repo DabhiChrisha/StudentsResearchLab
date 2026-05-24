@@ -7,6 +7,6 @@ exports.getActivities = async (req, res, next) => {
 
     res.json({ data: activities });
   } catch (err) {
-    res.status(500).json({ detail: err.message });
+    next(err);
   }
 };
