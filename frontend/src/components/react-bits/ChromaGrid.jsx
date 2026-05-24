@@ -12,7 +12,7 @@ const Metric = ({ icon: Icon, value, label }) => (
     </div>
 );
 
-const ChromaGrid = ({ items, onImageClick, onCertClick, isLoading = false }) => {
+const ChromaGrid = ({ items, onImageClick, onCertClick, isLoading = false, skeletonCount = 16 }) => {
     const [loadedImages, setLoadedImages] = useState({});
     const [failedImages, setFailedImages] = useState({});
 
@@ -37,7 +37,7 @@ const ChromaGrid = ({ items, onImageClick, onCertClick, isLoading = false }) => 
     if (isLoading) {
         return (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-6 gap-2 sm:gap-3" aria-busy="true" aria-label="Loading researchers">
-                {[...Array(16)].map((_, index) => (
+                {[...Array(skeletonCount)].map((_, index) => (
                     <div
                         key={index}
                         className="group relative flex flex-col overflow-hidden rounded-[1.5rem] bg-slate-50 border border-slate-100 shadow-[0_4px_12px_rgba(0,0,0,0.02)]"

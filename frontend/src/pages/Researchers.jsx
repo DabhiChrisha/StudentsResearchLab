@@ -188,10 +188,24 @@ export default function Researchers() {
     }
   }, [isLoading, researchAssistants.length]);
 
+  // Active student members — excludes RAs and graduated students
   const members = useMemo(
     () =>
       sortedStudents.filter(
-        (s) => !toArr(s.roles).includes("Research Assistant"),
+        (s) =>
+          !toArr(s.roles).includes("Research Assistant") &&
+          s.member_type_effective !== "Graduated",
+      ),
+    [sortedStudents],
+  );
+
+  // Graduated alumni — non-RA students whose effective member type is "Graduated"
+  const graduatedMembers = useMemo(
+    () =>
+      sortedStudents.filter(
+        (s) =>
+          !toArr(s.roles).includes("Research Assistant") &&
+          s.member_type_effective === "Graduated",
       ),
     [sortedStudents],
   );
@@ -285,6 +299,78 @@ export default function Researchers() {
       };
     });
   }, [members, batchMap]);
+
+  // ── build ChromaGrid items for Graduated Alumni ──────────────────────────
+  const graduatedChromaItems = useMemo(() => {
+    return graduatedMembers.map((s) => {
+      const enrollKey = (s.enrollment_no || "").trim().toUpperCase();
+      const batch = batchMap[enrollKey] || s.batch || null;
+
+      const hackathonsArr = toArr(s.hackathons);
+      const srlPubs = toArr(s.srlPublications);
+
+      const rawPapers = toArr(s.research_papers || s.papersPublished);
+      const parsedPapers = rawPapers.map(item => {
+        if (typeof item === 'string') {
+          return { title: item, status: item.toLowerCase().includes('ongoing') ? 'ongoing' : 'completed' };
+        }
+        if (typeof item === 'object' && item !== null) {
+          return { title: item.title || item.name || "", status: item.status || "completed" };
+        }
+        return null;
+      }).filter(Boolean);
+      const completedPapers = parsedPapers.filter(p => p.status !== 'ongoing').map(p => p.title).filter(Boolean);
+      const ongoingPapersList = parsedPapers.filter(p => p.status === 'ongoing').map(p => p.title).filter(Boolean);
+
+      const rawWork = toArr(s.research_work || s.researchWorks);
+      const parsedWork = rawWork.map(w => {
+        if (typeof w === 'string') return { title: w, status: w.toLowerCase().startsWith('ongoing') ? 'ongoing' : 'completed' };
+        if (typeof w === 'object' && w !== null) {
+          return { title: w.title || w.description || "", status: w.status || "completed" };
+        }
+        return null;
+      }).filter(Boolean);
+      const completedWork = parsedWork.filter(w => w.status !== 'ongoing').map(w => w.title).filter(Boolean);
+      const ongoingWorkList = parsedWork.filter(w => w.status === 'ongoing').map(w => w.title).filter(Boolean);
+
+      const totalOngoingProjects = ongoingPapersList.concat(ongoingWorkList);
+      const srlUnderReview = srlPubs.filter(p => p.category === "Paper under Review").length;
+      const srlPublished = srlPubs.length > 0 ? srlPubs.length - srlUnderReview : 0;
+      const publishedCount = srlPubs.length > 0
+        ? srlPublished
+        : completedPapers.length || s.publicationsCount || "--";
+      const ongoingCount = srlUnderReview + totalOngoingProjects.length;
+
+      return {
+        id: s.enrollment_no || s.student_name.toLowerCase().replace(/\s+/g, "-"),
+        enrollment: s.enrollment_no,
+        image: getImageUrl(s.profile_image || s.photo || "/students/schoolstudent.png"),
+        title: s.student_name,
+        subtitle: `${s.department} • Batch ${s.batch || ''}`,
+        batch,
+        department: s.department,
+        reflection: s.reflection || "",
+        email: s.email || "",
+        linkedin: s.linkedin || "",
+        researchWorksCount: completedWork.length || "--",
+        hackathonsCount: hackathonsArr.length || "--",
+        papersPublishedCount: publishedCount,
+        ongoingProjectsCount: ongoingCount,
+        research_papers: rawPapers,
+        research_work: rawWork,
+        hackathons: hackathonsArr,
+        achievements: toArr(s.achievements),
+        certifications: toArr(s.certifications),
+        research_areas: toArr(s.research),
+        achievements_extended: s.achievements_extended || null,
+        srlPublications: srlPubs,
+        patents: toArr(s.patents),
+        metadata: s.metadata || null,
+        // Distinct gradient for graduated alumni — muted slate/lavender palette
+        gradient: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)",
+      };
+    });
+  }, [graduatedMembers, batchMap]);
 
   // ── modal helpers ─────────────────────────────────────────────────────────
 
@@ -726,8 +812,45 @@ export default function Researchers() {
             onImageClick={openModalFor}
             onCertClick={(item) => openCertsFor(item.title, item.certifications)}
             isLoading={isLoading}
+            skeletonCount={12}
           />
         </div>
+
+        {/* ── Graduated Alumni ─────────────────────────────────────── */}
+        {(isLoading || graduatedMembers.length > 0) && (
+          <div className="mb-16">
+            {/* Section header — same structure as Student Members */}
+            <div className="flex items-center justify-between mb-8 border-b border-slate-200 pb-2">
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight">
+                Graduated{" "}
+                <span className="text-slate-500">Alumni</span>
+              </h2>
+              {isLoading ? (
+                <div className="w-32 h-6 skeleton-bone rounded-full" />
+              ) : (
+                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-4 py-1.5 rounded-full">
+                  {graduatedMembers.length} Alumni
+                </div>
+              )}
+            </div>
+
+            {/* Subtle description line */}
+            <p className="text-slate-400 text-sm mb-8 -mt-4 font-medium">
+              Members who have completed their undergraduate program and graduated from the lab.
+            </p>
+
+            {/* ChromaGrid with muted graduated items */}
+            <div className="opacity-85">
+              <ChromaGrid
+                items={graduatedChromaItems}
+                onImageClick={openModalFor}
+                onCertClick={(item) => openCertsFor(item.title, item.certifications)}
+                isLoading={isLoading}
+                skeletonCount={6}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ── Profile Modal ─────────────────────────────────────────── */}

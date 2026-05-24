@@ -10,6 +10,7 @@
   "37": "approved",
   "45": "approved",
   "46": "rejected",
+  "92": "approved",
   "93": "approved",
   "94": "rejected",
   "95": "approved",
@@ -19,5 +20,16 @@
   "99": "rejected",
   "100": "approved",
   "101": "rejected",
-  "102": "approved"
+  "102": "approved",
+  "103": "approved",
+  "104": "approved",
+  "105": "approved",
+  "106": "rejected",
+  "107": "approved",
+  "108": "approved",
+  "109": "approved",
+  "110": "approved",
+  "111": "approved",
+  "112": "approved",
+  "113": "approved"
 }
