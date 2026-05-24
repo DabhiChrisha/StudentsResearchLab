@@ -18,11 +18,6 @@ const ChromaGrid = ({ items, onImageClick, onCertClick, isLoading = false, skele
 
     useEffect(() => {
         // Log all image paths for debugging
-        if (!isLoading) {
-            items.forEach((item, index) => {
-                console.log(`[${index}] ${item.title}: ${item.image}`);
-            });
-        }
     }, [items, isLoading]);
 
     const handleImageLoad = (index) => {

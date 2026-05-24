@@ -34,6 +34,6 @@ exports.submitJoinUs = async (req, res, next) => {
 
     res.json({ data });
   } catch (err) {
-    res.status(500).json({ detail: err.message });
+    next(err);
   }
 };

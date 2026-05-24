@@ -75,6 +75,6 @@ exports.getCvProfile = async (req, res, next) => {
 
     res.json({ data: out });
   } catch (err) {
-    res.status(500).json({ detail: err.message });
+    next(err);
   }
 };

@@ -133,6 +133,6 @@ exports.submitPublication = async (req, res, next) => {
 
     res.json({ data: newSubmission });
   } catch (err) {
-    res.status(500).json({ detail: err.message });
+    next(err);
   }
 };

@@ -133,7 +133,7 @@ router.post("/api/join-us", upload.none(), async (req, res, next) => {
     if (err.code === "P2002") {
       return res.status(400).json({ detail: "This enrollment number or email is already registered." });
     }
-    res.status(500).json({ detail: "Internal Server Error", message: err.message, stack: err.stack });
+    res.status(500).json({ detail: "An unexpected error occurred during submission. Please try again." });
   }
 });
 

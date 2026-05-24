@@ -152,7 +152,7 @@ app.use(sessionsUploadRouter);
 // Global error handler — must be after all routes
 app.use((err, req, res, next) => {
   console.error("[Global Error] code:", err.code, "| meta:", JSON.stringify(err.meta), "| message:", err.message);
-  res.status(500).json({ error: "Internal Server Error", detail: err.message });
+  res.status(500).json({ error: "Internal Server Error", detail: "An unexpected error occurred. Please try again later." });
 });
 
 const PORT = process.env.PORT || 8000;

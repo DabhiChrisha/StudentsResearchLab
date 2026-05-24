@@ -65,7 +65,7 @@ exports.createSession = async (req, res, next) => {
       } catch (uploadError) {
         return res.status(500).json({
           error: "Upload failed",
-          message: uploadError.message || "Failed to upload media to Cloudinary",
+          message: "Failed to upload media to Cloudinary",
         });
       }
     }
@@ -180,7 +180,7 @@ exports.updateSession = async (req, res, next) => {
       } catch (uploadError) {
         return res.status(500).json({
           error: "Upload failed",
-          message: uploadError.message || "Failed to upload media to Cloudinary",
+          message: "Failed to upload media to Cloudinary",
         });
       }
     }
