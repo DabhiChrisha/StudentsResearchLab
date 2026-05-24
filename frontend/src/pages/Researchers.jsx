@@ -67,6 +67,17 @@ export default function Researchers() {
   // Certificates modal state
   const [activeCertStudent, setActiveCertStudent] = useState(null); // { name, certs: [{name,url}] }
 
+  // ── RA skeleton count ─────────────────────────────────────────────────────
+  // Persisted to localStorage so subsequent page visits show the correct
+  // skeleton count instead of an arbitrary hardcoded default.
+  // Key: 'srl_ra_count'. Default: 2 (safe fallback for first-ever visit).
+  const [cachedRaCount, setCachedRaCount] = useState(() => {
+    try {
+      const stored = localStorage.getItem('srl_ra_count');
+      return stored !== null ? Math.max(1, parseInt(stored, 10) || 2) : 2;
+    } catch { return 2; }
+  });
+
   // Leaderboard → batch mapping
   const { data: bMap } = useFetch(async () => {
     const json = await fetchWithTimeout(`${API_BASE_URL}/api/leaderboard`);
@@ -88,7 +99,19 @@ export default function Researchers() {
         signal,
       });
       const data = await res.json();
-      setStudentsData(data.researchers || []);
+      const researchers = data.researchers || [];
+      setStudentsData(researchers);
+
+      // Persist actual RA count so next page load shows matching skeleton
+      const raCount = researchers.filter((r) =>
+        Array.isArray(r.roles)
+          ? r.roles.includes('Research Assistant')
+          : String(r.roles || '').includes('Research Assistant')
+      ).length;
+      if (raCount > 0) {
+        try { localStorage.setItem('srl_ra_count', String(raCount)); } catch { /* ignore */ }
+        setCachedRaCount(raCount);
+      }
     } catch (err) {
       if (err.name !== "AbortError")
         console.error("Failed to fetch researchers:", err);
@@ -137,9 +160,10 @@ export default function Researchers() {
       const bIsPoojan = bName.includes("poojan") && bName.includes("ghetiya");
       if (aIsPoojan && !bIsPoojan) return 1;
       if (!aIsPoojan && bIsPoojan) return -1;
-      const sa = parseInt(a.semester) || 0;
-      const sb = parseInt(b.semester) || 0;
-      if (sa !== sb) return sa - sb;
+      // Sort by batch string DESC (e.g. "2025-29" > "2024-28"), then name ASC
+      const ba = (a.batch || "").trim();
+      const bb = (b.batch || "").trim();
+      if (ba !== bb) return bb.localeCompare(ba); // newer batch first
       return aName.localeCompare(bName);
     });
   }, [studentsData]);
@@ -155,10 +179,33 @@ export default function Researchers() {
     [sortedStudents],
   );
 
+  // Keep cachedRaCount in sync with actual loaded count
+  // (belt-and-suspenders in case fetchResearchers fires before state settles)
+  useEffect(() => {
+    if (!isLoading && researchAssistants.length > 0) {
+      setCachedRaCount(researchAssistants.length);
+      try { localStorage.setItem('srl_ra_count', String(researchAssistants.length)); } catch { /* ignore */ }
+    }
+  }, [isLoading, researchAssistants.length]);
+
+  // Active student members — excludes RAs and graduated students
   const members = useMemo(
     () =>
       sortedStudents.filter(
-        (s) => !toArr(s.roles).includes("Research Assistant"),
+        (s) =>
+          !toArr(s.roles).includes("Research Assistant") &&
+          s.member_type_effective !== "Graduated",
+      ),
+    [sortedStudents],
+  );
+
+  // Graduated alumni — non-RA students whose effective member type is "Graduated"
+  const graduatedMembers = useMemo(
+    () =>
+      sortedStudents.filter(
+        (s) =>
+          !toArr(s.roles).includes("Research Assistant") &&
+          s.member_type_effective === "Graduated",
       ),
     [sortedStudents],
   );
@@ -227,10 +274,9 @@ export default function Researchers() {
           s.profile_image || s.photo || "/students/schoolstudent.png",
         ),
         title: s.student_name,
-        subtitle: `${s.department} • Batch ${s.semester}`,
+        subtitle: `${s.department} • Batch ${s.batch || ''}`,
         batch,
         department: s.department,
-        semester: s.semester,
         reflection: s.reflection || "",
         email: s.email || "",
         linkedin: s.linkedin || "",
@@ -254,6 +300,78 @@ export default function Researchers() {
     });
   }, [members, batchMap]);
 
+  // ── build ChromaGrid items for Graduated Alumni ──────────────────────────
+  const graduatedChromaItems = useMemo(() => {
+    return graduatedMembers.map((s) => {
+      const enrollKey = (s.enrollment_no || "").trim().toUpperCase();
+      const batch = batchMap[enrollKey] || s.batch || null;
+
+      const hackathonsArr = toArr(s.hackathons);
+      const srlPubs = toArr(s.srlPublications);
+
+      const rawPapers = toArr(s.research_papers || s.papersPublished);
+      const parsedPapers = rawPapers.map(item => {
+        if (typeof item === 'string') {
+          return { title: item, status: item.toLowerCase().includes('ongoing') ? 'ongoing' : 'completed' };
+        }
+        if (typeof item === 'object' && item !== null) {
+          return { title: item.title || item.name || "", status: item.status || "completed" };
+        }
+        return null;
+      }).filter(Boolean);
+      const completedPapers = parsedPapers.filter(p => p.status !== 'ongoing').map(p => p.title).filter(Boolean);
+      const ongoingPapersList = parsedPapers.filter(p => p.status === 'ongoing').map(p => p.title).filter(Boolean);
+
+      const rawWork = toArr(s.research_work || s.researchWorks);
+      const parsedWork = rawWork.map(w => {
+        if (typeof w === 'string') return { title: w, status: w.toLowerCase().startsWith('ongoing') ? 'ongoing' : 'completed' };
+        if (typeof w === 'object' && w !== null) {
+          return { title: w.title || w.description || "", status: w.status || "completed" };
+        }
+        return null;
+      }).filter(Boolean);
+      const completedWork = parsedWork.filter(w => w.status !== 'ongoing').map(w => w.title).filter(Boolean);
+      const ongoingWorkList = parsedWork.filter(w => w.status === 'ongoing').map(w => w.title).filter(Boolean);
+
+      const totalOngoingProjects = ongoingPapersList.concat(ongoingWorkList);
+      const srlUnderReview = srlPubs.filter(p => p.category === "Paper under Review").length;
+      const srlPublished = srlPubs.length > 0 ? srlPubs.length - srlUnderReview : 0;
+      const publishedCount = srlPubs.length > 0
+        ? srlPublished
+        : completedPapers.length || s.publicationsCount || "--";
+      const ongoingCount = srlUnderReview + totalOngoingProjects.length;
+
+      return {
+        id: s.enrollment_no || s.student_name.toLowerCase().replace(/\s+/g, "-"),
+        enrollment: s.enrollment_no,
+        image: getImageUrl(s.profile_image || s.photo || "/students/schoolstudent.png"),
+        title: s.student_name,
+        subtitle: `${s.department} • Batch ${s.batch || ''}`,
+        batch,
+        department: s.department,
+        reflection: s.reflection || "",
+        email: s.email || "",
+        linkedin: s.linkedin || "",
+        researchWorksCount: completedWork.length || "--",
+        hackathonsCount: hackathonsArr.length || "--",
+        papersPublishedCount: publishedCount,
+        ongoingProjectsCount: ongoingCount,
+        research_papers: rawPapers,
+        research_work: rawWork,
+        hackathons: hackathonsArr,
+        achievements: toArr(s.achievements),
+        certifications: toArr(s.certifications),
+        research_areas: toArr(s.research),
+        achievements_extended: s.achievements_extended || null,
+        srlPublications: srlPubs,
+        patents: toArr(s.patents),
+        metadata: s.metadata || null,
+        // Distinct gradient for graduated alumni — muted slate/lavender palette
+        gradient: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)",
+      };
+    });
+  }, [graduatedMembers, batchMap]);
+
   // ── modal helpers ─────────────────────────────────────────────────────────
 
   // Build a uniform modal-student object from either a chromaItem or an RA record
@@ -266,7 +384,7 @@ export default function Researchers() {
       return {
         ...s,
         title: s.student_name || s.title,
-        subtitle: s.subtitle || `${s.department} • Batch ${s.semester}`,
+        subtitle: s.subtitle || `${s.department} • Batch ${s.batch || ''}`,
         batch,
       };
     },
@@ -431,48 +549,68 @@ export default function Researchers() {
               </GradientText>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
+            {/* Derive responsive grid class based on actual RA count */}
+            {(() => {
+              // During loading: use cachedRaCount (from localStorage) so skeleton
+              // layout exactly mirrors the final loaded layout — no layout shift.
+              // After load: use actual researchAssistants.length.
+              const displayCount = isLoading ? cachedRaCount : researchAssistants.length;
+
+              // Shared grid class used by BOTH skeleton and loaded state
+              const gridClass =
+                displayCount === 1
+                  ? 'flex justify-center'
+                  : 'grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto';
+
+              return (
+            <div className={gridClass}>
               {isLoading
-                ? [...Array(2)].map((_, idx) => (
-                    <div
-                      key={idx}
-                      className="relative overflow-hidden rounded-[2rem] shadow-xl p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-6 border border-white/60"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, #e5e1baff 100%, #7af8c6ff 100%)",
-                      }}
-                    >
-                      {/* Avatar with white border ring */}
-                      <div className="shrink-0 relative">
-                        <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full skeleton-bone border-4 border-white shadow-[0_15px_40px_rgba(0,0,0,0.08)]" />
+                ? [...Array(displayCount)].map((_, idx) => (
+                  <div
+                    key={idx}
+                    aria-hidden="true"
+                    className={`relative overflow-hidden rounded-[2rem] shadow-xl p-3 sm:p-4 flex flex-col sm:flex-row items-center gap-4 border border-white/60${displayCount === 1 ? " w-full max-w-xl" : ""}`}
+                    style={{ background: "linear-gradient(135deg, #e5e1baff 100%, #7af8c6ff 100%)" }}
+                  >
+                    {/* Avatar — matches actual: relative shrink-0, w-24 h-24 sm:w-28 sm:h-28, rounded-full, border-4 border-white */}
+                    <div className="relative shrink-0">
+                      <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full skeleton-bone border-4 border-white shadow-[0_10px_30px_rgba(0,0,0,0.08)]" />
+                    </div>
+
+                    {/* Content — matches actual: flex-1, text-center sm:text-left, flex flex-col */}
+                    <div className="flex-1 text-center sm:text-left relative z-10 flex flex-col w-full">
+                      {/* Badge pill — matches: inline-flex rounded-full mb-2, self-center sm:self-start */}
+                      <div className="h-5 w-36 skeleton-bone rounded-full mb-2 self-center sm:self-start" />
+
+                      {/* Name h3 — matches: text-2xl font-black font-serif mb-0.5 */}
+                      <div className="h-7 skeleton-bone rounded-lg w-4/5 mb-0.5 mx-auto sm:mx-0" />
+
+                      {/* Dept + batch row — matches: mb-2, flex items-center gap-2 */}
+                      <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
+                        <div className="h-3 skeleton-bone rounded-md w-16" />
+                        <div className="w-1 h-1 rounded-full bg-black/10 shrink-0" />
+                        <div className="h-3 skeleton-bone rounded-md w-20" />
                       </div>
 
-                      {/* Content */}
-                      <div className="flex-1 text-center sm:text-left w-full flex flex-col gap-2.5">
-                        {/* Badge pill */}
-                        <div className="h-5 w-32 skeleton-bone rounded-full self-center sm:self-start" />
-                        {/* Name — two lines mimic serif heading */}
-                        <div className="h-7 skeleton-bone rounded-lg w-3/4 mx-auto sm:mx-0" />
-                        <div className="h-5 skeleton-bone rounded-lg w-1/2 mx-auto sm:mx-0" />
-                        {/* Dept + semester */}
-                        <div className="h-3 bg-black/[0.06] rounded-md w-2/5 mx-auto sm:mx-0" />
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-2 justify-center sm:justify-start mt-0.5">
-                          {[88, 116, 80].map((w, i) => (
-                            <div
-                              key={i}
-                              className="h-6 bg-white/60 rounded-lg border border-black/10"
-                              style={{ width: w }}
-                            />
-                          ))}
-                        </div>
-                        {/* Social buttons pushed to bottom */}
-                        <div className="mt-auto flex items-center justify-center sm:justify-start gap-2 pt-1">
-                          <div className="w-9 h-9 bg-white/60 rounded-xl border border-black/10" />
-                          <div className="w-9 h-9 bg-white/60 rounded-xl border border-black/10" />
-                        </div>
+                      {/* Research tags row — matches: flex flex-wrap gap-1.5 mb-2 */}
+                      <div className="flex flex-wrap gap-1.5 mb-2 justify-center sm:justify-start">
+                        {[80, 108, 72].map((w, i) => (
+                          <div
+                            key={i}
+                            className="h-5 bg-white/60 rounded-lg border border-black/[0.08]"
+                            style={{ width: w }}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Social button row — matches: mt-auto flex gap-2 pt-0.5, p-2 rounded-md buttons */}
+                      <div className="mt-auto flex items-center justify-center sm:justify-start gap-2 pt-0.5">
+                        <div className="w-[31px] h-[31px] bg-white/60 rounded-md border border-black/[0.08]" />
+                        <div className="w-[31px] h-[31px] bg-white/60 rounded-md border border-black/[0.08]" />
+                        <div className="w-[31px] h-[31px] bg-white/60 rounded-md border border-black/[0.08]" />
                       </div>
                     </div>
+                  </div>
                   ))
                 : researchAssistants.map((ra) => {
                     const enrollKey = (ra.enrollment_no || "")
@@ -499,7 +637,7 @@ export default function Researchers() {
                         key={ra.enrollment_no || ra.student_name}
                         whileHover={{ y: -8, scale: 1.01 }}
                         style={{ background: ra.gradient }}
-                        className="group relative overflow-hidden rounded-[2rem] shadow-xl bg-white/40 backdrop-blur-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-center gap-4 border border-white/60 transition-all duration-700 hover:shadow-[0_30px_60px_-12px_rgba(11,61,58,0.15)] cursor-pointer"
+                        className={`group relative overflow-hidden rounded-[2rem] shadow-xl bg-white/40 backdrop-blur-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-center gap-4 border border-white/60 transition-all duration-700 hover:shadow-[0_30px_60px_-12px_rgba(11,61,58,0.15)] cursor-pointer${displayCount === 1 ? " w-full max-w-xl" : ""}`}
                         onClick={() =>
                           openModalFor({
                             id:
@@ -514,7 +652,7 @@ export default function Researchers() {
                                 "/students/schoolstudent.png",
                             ),
                             title: ra.student_name,
-                            subtitle: `${ra.department} • Batch ${ra.semester}`,
+                            subtitle: `${ra.department} • Batch ${ra.batch || ''}`,
                             batch,
                             reflection: ra.reflection || "",
                             email: ra.email || "",
@@ -587,7 +725,7 @@ export default function Researchers() {
                           <div className="text-[12px] font-bold text-slate-500 mb-2 flex items-center justify-center sm:justify-start gap-2">
                             <span>{ra.department}</span>
                             <span className="w-1 h-1 rounded-full bg-slate-300" />
-                            <span>Batch {ra.semester}</span>
+                            <span>Batch {ra.batch || ''}</span>
                           </div>
                           <div className="flex flex-wrap gap-1.5 mb-2 justify-center sm:justify-start">
                             {toArr(ra.research).length > 0 ? (
@@ -650,6 +788,8 @@ export default function Researchers() {
                     );
                   })}
             </div>
+              );
+            })()}
           </div>
         )}
 
@@ -672,8 +812,45 @@ export default function Researchers() {
             onImageClick={openModalFor}
             onCertClick={(item) => openCertsFor(item.title, item.certifications)}
             isLoading={isLoading}
+            skeletonCount={12}
           />
         </div>
+
+        {/* ── Graduated Alumni ─────────────────────────────────────── */}
+        {(isLoading || graduatedMembers.length > 0) && (
+          <div className="mb-16">
+            {/* Section header — same structure as Student Members */}
+            <div className="flex items-center justify-between mb-8 border-b border-slate-200 pb-2">
+              <h2 className="text-3xl font-black text-slate-900 tracking-tight">
+                Graduated{" "}
+                <span className="text-slate-500">Alumni</span>
+              </h2>
+              {isLoading ? (
+                <div className="w-32 h-6 skeleton-bone rounded-full" />
+              ) : (
+                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-4 py-1.5 rounded-full">
+                  {graduatedMembers.length} Alumni
+                </div>
+              )}
+            </div>
+
+            {/* Subtle description line */}
+            <p className="text-slate-400 text-sm mb-8 -mt-4 font-medium">
+              Members who have completed their undergraduate program and graduated from the lab.
+            </p>
+
+            {/* ChromaGrid with muted graduated items */}
+            <div className="opacity-85">
+              <ChromaGrid
+                items={graduatedChromaItems}
+                onImageClick={openModalFor}
+                onCertClick={(item) => openCertsFor(item.title, item.certifications)}
+                isLoading={isLoading}
+                skeletonCount={6}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ── Profile Modal ─────────────────────────────────────────── */}
@@ -745,7 +922,7 @@ export default function Researchers() {
                             {activeStudent.title}
                           </h3>
                           <p className="text-slate-500 font-bold text-sm">
-                            Researcher, BATCH {activeStudent.semester}
+                            Researcher, Batch {activeStudent.batch || ''}
                           </p>
                         </div>
 

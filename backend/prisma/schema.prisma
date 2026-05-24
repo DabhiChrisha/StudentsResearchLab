@@ -123,6 +123,7 @@ model JoinUs {
   research_ongoing     String?   @db.VarChar(3)
   after_ug             String?
   department           String?
+  description          String?
   status               String?   @default("pending") @db.VarChar(20)
 
   @@index([email], map: "idx_join_us_email")

@@ -29,6 +29,7 @@ export default function JoinUs({ isModal = false, onClose }) {
     research_expertise: "",
     published_research: "",
     ongoing_research: "",
+    description: "",
     source: "Website",
   });
   const [resumeFile, setResumeFile] = useState(null);
@@ -123,6 +124,7 @@ export default function JoinUs({ isModal = false, onClose }) {
       research_expertise: "",
       published_research: "",
       ongoing_research: "",
+      description: "",
       source: "Website",
     });
     setResumeFile(null);
@@ -185,6 +187,7 @@ export default function JoinUs({ isModal = false, onClose }) {
       payload.append("research_expertise", formData.research_expertise);
       payload.append("published_research", formData.published_research);
       payload.append("ongoing_research", formData.ongoing_research);
+      payload.append("description", formData.description ? formData.description.trim() : "");
       payload.append("source", formData.source);
       payload.append("resume_link", uploadedResumeLink);
 
@@ -561,6 +564,22 @@ export default function JoinUs({ isModal = false, onClose }) {
                 No
               </label>
             </div>
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              Brief Description
+              <span className="text-red-500 ml-1">*</span>
+            </label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows={3}
+              placeholder="Tell us briefly why you want to join SRL and what you hope to contribute or learn (optional)"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-[#05877a] focus:ring-2 focus:ring-[#05877a]/20 transition-all resize-none"
+            />
           </div>
 
           {/* College - Row 4 */}

@@ -1,7 +1,7 @@
 const prisma = require("../lib/prisma");
 const { broadcast } = require("../utils/sseManager");
 const { syncStudentFromJoinRequest } = require("../lib/syncStudentFromJoinRequest");
-const { sendApprovalEmail } = require("../services/emailService");
+const { sendApprovalEmail, isValidEmail } = require("../services/emailService");
 const { deleteFromCloudinary, extractPublicId } = require("../utils/imageUpload");
 
 const serializeForJson = (value) =>
@@ -177,6 +177,7 @@ exports.updateJoinRequest = async (req, res, next) => {
     const { id } = req.params;
     const { status } = req.body;
 
+    console.log(`[Join Request] updateJoinRequest called for id=${id} status=${status} by admin=${req.admin?.email}`);
     if (!status || !["approved", "rejected", "pending"].includes(status)) {
       return res.status(400).json({
         error: "Invalid input",
@@ -188,6 +189,8 @@ exports.updateJoinRequest = async (req, res, next) => {
       where: { id: BigInt(id) },
     });
 
+    console.log(`[Join Request] fetched joinRequest id=${id} email=${joinRequest?.email} status=${joinRequest?.status}`);
+
     if (!joinRequest) {
       return res.status(404).json({
         error: "Not found",
@@ -195,17 +198,10 @@ exports.updateJoinRequest = async (req, res, next) => {
       });
     }
 
-    let syncedStudent = null;
-    if (status === "approved") {
-      const { student, created } = await syncStudentFromJoinRequest(joinRequest);
-      syncedStudent = serializeForJson(student);
-      console.log(
-        `[Join Request] ${created ? "Created" : "Updated"} student ${student.enrollment_no} from approved request ${id}`,
-      );
-
-      // Trigger approval email asynchronously (fire-and-forget)
-      sendApprovalEmail({ to: joinRequest.email, studentName: joinRequest.name }).catch((emailErr) => {
-        console.error("Failed to send approval email asynchronously:", emailErr);
+    if (joinRequest.status === status) {
+      return res.status(409).json({
+        error: "Conflict",
+        message: `Join request is already ${status}`,
       });
     }
 
@@ -223,11 +219,49 @@ exports.updateJoinRequest = async (req, res, next) => {
       updatedResumeLink = null;
     }
 
-    // Update status in the database
-    await prisma.joinUs.update({
+    // Update status in the database FIRST — capture the updated record
+    const updatedJoinRequest = await prisma.joinUs.update({
       where: { id: BigInt(id) },
       data: { status: status, resume_link: updatedResumeLink },
     });
+
+    let syncedStudent = null;
+    if (status === "approved") {
+      // Use the fresh DB record for further processing and email
+      const freshRequest = updatedJoinRequest || joinRequest;
+
+      const { student, created } = await syncStudentFromJoinRequest(freshRequest);
+      syncedStudent = serializeForJson(student);
+      console.log(
+        `[Join Request] ${created ? "Created" : "Updated"} student ${student.enrollment_no} from approved request ${id}`,
+      );
+
+      const recipientEmail = String(freshRequest.email || "").trim();
+      if (!recipientEmail || !isValidEmail(recipientEmail)) {
+        console.error(
+          `[Join Request] Approval email skipped for request ${id}: invalid applicant email '${freshRequest.email}'`,
+        );
+      } else {
+        console.log(
+          `[Join Request] Approval email execution starting for request ${id}: sending to ${recipientEmail}`,
+        );
+
+        sendApprovalEmail({ to: recipientEmail, studentName: freshRequest.name })
+          .then((info) => {
+            console.log(
+              `[Approval Email] Sent approval email for request ${id} to ${recipientEmail}: accepted=${JSON.stringify(
+                info.accepted,
+              )}, rejected=${JSON.stringify(info.rejected)}, messageId=${info.messageId}`,
+            );
+          })
+          .catch((emailErr) => {
+            console.error(
+              `[Email Error] Failed to send approval email to ${recipientEmail} for request ID ${id}:`,
+              emailErr,
+            );
+          });
+      }
+    }
 
     // Persist status to local JSON file (legacy fallback)
     const fs = require("fs");

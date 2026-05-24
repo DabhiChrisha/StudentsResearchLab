@@ -392,7 +392,7 @@ export default function AddPublication() {
               name="department"
               value={formData.department}
               onChange={handleChange}
-              placeholder="Enter your department"
+              placeholder="CE, IT (comma-separated)"
               required
               error={errors.department}
             />
@@ -401,7 +401,7 @@ export default function AddPublication() {
               name="institution"
               value={formData.institution}
               onChange={handleChange}
-              placeholder="Enter your institution"
+              placeholder="Institute name (comma-separated)"
               required
               error={errors.institution}
             />

@@ -229,7 +229,7 @@ const Activities = () => {
                   initial={{ scale: 0.95, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.95, opacity: 0 }}
-                  className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full mx-4 flex flex-col md:flex-row gap-6 relative border-2 border-sky-100 modal-neon-border"
+                  className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full mx-4 flex flex-col md:flex-row gap-6 relative border-2 border-sky-100 modal-neon-border overflow-hidden"
                   style={{ minHeight: 400, maxHeight: 500 }}
                 >
                   {/* Image */}
@@ -326,7 +326,7 @@ const Activities = () => {
                         Brief:{" "}
                       </span>
                       <div
-                        className="overflow-y-auto pr-2 text-gray-700 text-base"
+                        className="overflow-y-auto overflow-x-hidden break-words whitespace-pre-wrap pr-2 text-gray-700 text-base"
                         style={{ maxHeight: "calc(100% - 2rem)" }}
                       >
                         {modal.brief || modal.description}

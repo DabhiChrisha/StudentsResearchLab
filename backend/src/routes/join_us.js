@@ -3,7 +3,7 @@ const multer = require("multer");
 const prisma = require("../config/prisma");
 const { broadcast } = require("../utils/sseManager");
 const { uploadToCloudinary } = require("../utils/imageUpload");
-const { sendJoinRequestConfirmationEmail } = require("../services/emailService");
+const { sendJoinRequestConfirmationEmail, isValidEmail } = require("../services/emailService");
 
 const router = express.Router();
 
@@ -59,6 +59,7 @@ router.post("/api/join-us", upload.none(), async (req, res, next) => {
       ongoing_research,
       source,
       resume_link,
+      description,
     } = req.body;
 
     // Basic validation
@@ -91,6 +92,8 @@ router.post("/api/join-us", upload.none(), async (req, res, next) => {
         research_publication: published_research,
         research_ongoing: ongoing_research,
         source: source || "Website",
+        description: description || null,
+        status: "pending",
       },
     });
 
@@ -106,9 +109,23 @@ router.post("/api/join-us", upload.none(), async (req, res, next) => {
     });
 
     // Trigger confirmation email asynchronously (fire-and-forget)
-    sendJoinRequestConfirmationEmail({ to: email, studentName: name }).catch((emailErr) => {
-      console.error("Failed to send confirmation email asynchronously:", emailErr);
-    });
+    // Removed setTimeout to prevent serverless suspension issues
+    const recipientEmail = String(email || "").trim();
+    if (!recipientEmail || !isValidEmail(recipientEmail)) {
+      console.error(
+        `[Join Request] Submission confirmation email skipped for request ${serializedData.id}: invalid applicant email '${email}'`,
+      );
+    } else {
+      console.log(
+        `[Join Request] Submission confirmation email execution starting for request ${serializedData.id}: sending to ${recipientEmail}`,
+      );
+      sendJoinRequestConfirmationEmail({ to: recipientEmail, studentName: name }).catch((emailErr) => {
+        console.error(
+          `[Email Error] Failed to send submission confirmation email to ${recipientEmail} for request ID ${serializedData.id}:`,
+          emailErr,
+        );
+      });
+    }
 
     res.json({ success: true, data: serializedData });
   } catch (err) {

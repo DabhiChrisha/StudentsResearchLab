@@ -71,6 +71,7 @@ exports.createStudent = async (req, res, next) => {
       batch,
       gender,
       member_type = "member",
+      member = "student member",
       profile_image,
     } = req.body;
 
@@ -107,6 +108,7 @@ exports.createStudent = async (req, res, next) => {
         batch: batch || null,
         gender: gender || null,
         member_type: member_type === "admin" ? "member" : member_type,
+        member: member === "Research Assistant" ? "Research Assistant" : "student member",
         profile_image: profile_image || null,
       },
     });
@@ -158,6 +160,7 @@ exports.updateStudent = async (req, res, next) => {
       batch,
       gender,
       member_type,
+      member,
       profile_image,
     } = req.body;
 
@@ -186,6 +189,10 @@ exports.updateStudent = async (req, res, next) => {
     if (gender) updateData.gender = gender;
     if (member_type && member_type !== "admin") {
       updateData.member_type = member_type;
+    }
+    // RA toggle: accept "Research Assistant" or anything else (defaults to "student member")
+    if (member !== undefined) {
+      updateData.member = member === "Research Assistant" ? "Research Assistant" : "student member";
     }
     if (profile_image !== undefined) updateData.profile_image = profile_image || null;
 

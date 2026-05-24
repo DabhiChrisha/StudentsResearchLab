@@ -290,31 +290,98 @@ exports.updateMemberCV = async (req, res, next) => {
       }
     }
 
-    // Sync patents if provided (merge: upsert so existing patents are preserved)
+    // Sync patents — full replace strategy:
+    //   1. Update existing patents by patent_id (so editing fields including application_number works correctly)
+    //   2. Create new patents that have no patent_id
+    //   3. Delete patents belonging to this enrollment that are no longer in the submitted list
     if (Array.isArray(patents)) {
       try {
-        // For each patent, upsert (create if not exists, update if exists by application_number)
+        // Validate dates first (allow up to 24 hours in the future to account for local timezone differences)
+        const allowedFutureMargin = new Date();
+        allowedFutureMargin.setDate(allowedFutureMargin.getDate() + 1);
+        allowedFutureMargin.setHours(23, 59, 59, 999);
         for (const p of patents) {
-          if (!p || (!p.patent_title && !p.application_number)) continue; // skip invalid entries
+          if (p?.application_date) {
+            const appDate = new Date(p.application_date);
+            if (appDate > allowedFutureMargin) {
+              return res.status(400).json({
+                success: false,
+                message: `Patent "${p.patent_title || "Untitled"}" cannot have a future application date.`
+              });
+            }
+          }
+        }
 
-          const appNumber = p.application_number || null;
-          if (!appNumber) continue; // require application_number as unique key
+        // Collect the set of patent_ids that arrived in the payload (for existing records)
+        const incomingIds = patents
+          .map((p) => (p?.patent_id ? BigInt(p.patent_id) : null))
+          .filter(Boolean);
 
-          await prisma.patents.upsert({
-            where: { application_number: appNumber },
-            update: {
-              patent_title: p.patent_title || "",
-              application_date: p.application_date ? new Date(p.application_date) : undefined,
-              application_status: p.application_status || "Filed",
-            },
-            create: {
+        // Step 1 & 2 — update existing / create new
+        for (const p of patents) {
+          if (!p || !p.patent_title) continue; // skip blank entries
+
+          const appNumber = (p.application_number || "").trim() || null;
+          const patentId  = p.patent_id ? BigInt(p.patent_id) : null;
+
+          if (patentId) {
+            // ── UPDATE existing record by patent_id ──────────────────────────────
+            await prisma.patents.update({
+              where: { patent_id: patentId },
+              data: {
+                patent_title:       p.patent_title || "",
+                application_number: appNumber || "",
+                application_date:   p.application_date ? new Date(p.application_date) : undefined,
+                application_status: p.application_status || "Filed",
+                updated_at:         new Date(),
+              },
+            });
+          } else {
+            // ── CREATE new record ─────────────────────────────────────────────────
+            // application_number is unique — skip if empty to avoid duplicate-key errors
+            if (!appNumber) continue;
+            // Guard against duplicate application_number from a race condition
+            const existing = await prisma.patents.findUnique({ where: { application_number: appNumber } });
+            if (existing) {
+              // Already exists under a different CV? Just update it.
+              await prisma.patents.update({
+                where: { application_number: appNumber },
+                data: {
+                  patent_title:       p.patent_title || "",
+                  application_date:   p.application_date ? new Date(p.application_date) : undefined,
+                  application_status: p.application_status || "Filed",
+                  updated_at:         new Date(),
+                },
+              });
+            } else {
+              await prisma.patents.create({
+                data: {
+                  enrollment_no:      String(enrollment_no),
+                  patent_title:       p.patent_title || "",
+                  application_date:   p.application_date ? new Date(p.application_date) : undefined,
+                  application_status: p.application_status || "Filed",
+                  application_number: appNumber,
+                },
+              });
+            }
+          }
+        }
+
+        // Step 3 — delete patents that were removed from the list
+        // Only delete patents that belong to this enrollment AND were not included in the submitted list
+        if (incomingIds.length > 0) {
+          await prisma.patents.deleteMany({
+            where: {
               enrollment_no: String(enrollment_no),
-              patent_title: p.patent_title || "",
-              application_date: p.application_date ? new Date(p.application_date) : undefined,
-              application_status: p.application_status || "Filed",
-              application_number: appNumber,
+              patent_id: { notIn: incomingIds },
             },
           });
+        } else if (patents.every((p) => !p?.patent_id)) {
+          // All entries are new (no existing ids sent) — delete all previous patents for this enrollment
+          // only if the submitted list is empty (user cleared all patents)
+          if (patents.length === 0) {
+            await prisma.patents.deleteMany({ where: { enrollment_no: String(enrollment_no) } });
+          }
         }
       } catch (e) {
         console.error(`[Member CV] patents sync error for ${enrollment_no}:`, e?.message || e);

@@ -69,7 +69,7 @@ async function syncStudentFromJoinRequest(joinRequest) {
     semester,
     division,
     batch,
-    member_type: "General Members",
+    member_type: "New Member",
     member: "student member",
   };
 

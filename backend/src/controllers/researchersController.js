@@ -1,6 +1,58 @@
 const prisma = require('../lib/prisma');
 const { shouldExcludeFromResearchers } = require('../lib/adminUtils');
 
+/**
+ * Dynamically compute the effective member type at runtime.
+ *
+ * Logic (layered, highest-priority first):
+ *  1. If batch end year < current year → "Graduated"  (auto)
+ *  2. If storedType === "Graduated"   → "Graduated"   (manual override)
+ *  3. If batch start year is >1 year ago OR storedType === "Senior Member" → "Senior Member"
+ *  4. Otherwise → "New Member"
+ *
+ * Batch format accepted: "2024-28" OR "2024-2028" (dash-separated).
+ * The function never writes to DB — display/computation only.
+ *
+ * @param {string|null} batch     - value from students_details.batch
+ * @param {string|null} storedType - value from students_details.member_type
+ * @returns {string} effective member type label
+ */
+function computeMemberType(batch, storedType) {
+  const currentYear = new Date().getFullYear();
+
+  let joinYear  = null;
+  let endYear   = null;
+
+  if (batch && typeof batch === 'string') {
+    const parts = batch.split('-').map(p => p.trim());
+    if (parts.length === 2) {
+      joinYear = parseInt(parts[0], 10) || null;
+      // Support both "2024-28" and "2024-2028"
+      const rawEnd = parts[1];
+      endYear = rawEnd.length <= 2
+        ? parseInt('20' + rawEnd, 10)
+        : parseInt(rawEnd, 10);
+      if (isNaN(endYear)) endYear = null;
+    }
+  }
+
+  // ── Rule 1 & 2: Graduated ──────────────────────────────────────────────────
+  if ((endYear && currentYear > endYear) || storedType === 'Graduated') {
+    return 'Graduated';
+  }
+
+  // ── Rule 3: Senior Member ─────────────────────────────────────────────────
+  if (
+    (joinYear && (currentYear - joinYear) >= 1) ||
+    storedType === 'Senior Member'
+  ) {
+    return 'Senior Member';
+  }
+
+  // ── Rule 4: Default ───────────────────────────────────────────────────────
+  return 'New Member';
+}
+
 function safeArray(val) {
   if (!val) return [];
   if (Array.isArray(val)) return val.filter(Boolean);
@@ -134,6 +186,12 @@ exports.getResearchers = async (req, res, next) => {
         authors: pub.authors,
       }));
 
+      // Compute effective member type dynamically (never stored back to DB)
+      const effectiveMemberType = computeMemberType(
+        sd.batch || null,
+        sd.member_type || null
+      );
+
       return {
         student_name:  sd.student_name,
         enrollment_no: en,
@@ -141,13 +199,17 @@ exports.getResearchers = async (req, res, next) => {
         photo:         sd.profile_image || null,
         department:    profile.department || sd.department || 'CE',
         semester:      sd.semester      || '',
-        batch:         sd.batch         || '-',
+        batch:         sd.batch         || '',
         email:         sd.email         || '',
         linkedin:      profile.linkedin_id || '',
 
         reflection: profile.reflection || '',
         roles:      sd.member === 'Research Assistant' ? ['Research Assistant'] : [],
         research:   normalizeArray(profile.research_areas),
+
+        // Member type: stored value + runtime-computed effective value
+        member_type:           sd.member_type           || 'New Member',
+        member_type_effective: effectiveMemberType,
 
         hackathons,
         research_papers,
