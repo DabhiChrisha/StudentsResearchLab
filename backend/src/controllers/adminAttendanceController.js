@@ -7,7 +7,7 @@ const { broadcast } = require("../utils/sseManager");
  */
 exports.getAttendance = async (req, res, next) => {
   try {
-    const records = await prisma.leaderboardStat.findMany({
+    const records = await prisma.LeaderboardStat.findMany({
       orderBy: [{ period: "desc" }, { enrollment_no: "asc" }],
     });
 
@@ -37,7 +37,7 @@ exports.getAttendanceByStudent = async (req, res, next) => {
       });
     }
 
-    const records = await prisma.leaderboardStat.findMany({
+    const records = await prisma.LeaderboardStat.findMany({
       where: { enrollment_no: String(enrollmentNo) },
       orderBy: { period: "desc" },
     });
@@ -135,7 +135,7 @@ exports.updateAttendance = async (req, res, next) => {
       });
     }
 
-    const record = await prisma.leaderboardStat.update({
+    const record = await prisma.LeaderboardStat.update({
       where: { id: parseInt(id) },
       data: {
         hours: hours ? parseFloat(hours) : undefined,
@@ -170,7 +170,7 @@ exports.deleteAttendance = async (req, res, next) => {
       });
     }
 
-    await prisma.leaderboardStat.delete({
+    await prisma.LeaderboardStat.delete({
       where: { id: parseInt(id) },
     });
 
