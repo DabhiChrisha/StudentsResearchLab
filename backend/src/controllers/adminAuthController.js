@@ -98,6 +98,8 @@ exports.adminLogin = async (req, res, next) => {
       user: {
         email: normalizedEmail,
         name: name,
+        enrollmentNo,
+        enrollment_no: enrollmentNo,
         role: isAdmin ? "admin" : "member",
         is_admin: isAdmin,
       },
