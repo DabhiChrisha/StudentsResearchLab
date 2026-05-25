@@ -60,7 +60,7 @@ export default function JoinUs({ isModal = false, onClose }) {
       setResumeFileName("");
       return;
     }
-    
+
     setResumeFile(file);
     setResumeFileName(file.name);
     setSubmitStatus({ type: null, message: "" });
@@ -82,13 +82,13 @@ export default function JoinUs({ isModal = false, onClose }) {
     try {
       const payload = new FormData();
       payload.append("resume", file);
-      
+
       const res = await fetch(`${API_BASE_URL}/api/upload-temp-resume`, {
         method: "POST",
         body: payload,
       });
       const data = await res.json();
-      
+
       if (res.ok && data.success) {
         setUploadedResumeLink(data.url);
       } else {
@@ -197,7 +197,7 @@ export default function JoinUs({ isModal = false, onClose }) {
         },
         body: payload,
       });
-      
+
       if (!res.ok) {
         const errorData = await res.json();
         const errMessage = errorData.detail || errorData.message || "Submission failed";
@@ -206,13 +206,13 @@ export default function JoinUs({ isModal = false, onClose }) {
 
       const json = await res.json();
       const data = json.data;
-      
+
       // Reset all form fields and clear the PDF file input
       resetForm();
 
-      setSubmitStatus({ 
-        type: 'success', 
-        message: "Your application has been submitted successfully! We will review it and get back to you soon." 
+      setSubmitStatus({
+        type: 'success',
+        message: "Your application has been submitted successfully! We will review it and get back to you soon."
       });
 
       // Scroll to top so the success message is visible briefly
@@ -230,14 +230,14 @@ export default function JoinUs({ isModal = false, onClose }) {
     } catch (err) {
       console.error('Full error details:', err);
       let errMsg = err.message || 'Unknown error occurred';
-      
+
       if (errMsg.includes('duplicate key')) {
         errMsg = 'A record with this information already exists.';
       }
 
-      setSubmitStatus({ 
-        type: 'error', 
-        message: errMsg 
+      setSubmitStatus({
+        type: 'error',
+        message: errMsg
       });
     }
 
@@ -270,7 +270,7 @@ export default function JoinUs({ isModal = false, onClose }) {
             </svg>
           </button>
         )}
-        
+
         {/* Header — only shown when used as a standalone page, not inside JoinUsModal
             (JoinUsModal renders its own header with the title and logo to avoid duplication) */}
         {!isModal && (
@@ -294,11 +294,10 @@ export default function JoinUs({ isModal = false, onClose }) {
 
         {/* Status Messages */}
         {submitStatus.message && (
-          <div className={`mb-8 p-4 rounded-xl flex items-center gap-3 ${
-            submitStatus.type === 'success' 
-              ? 'bg-green-50 border border-green-300 text-green-800' 
-              : 'bg-red-50 border border-red-200 text-red-700'
-          }`}>
+          <div className={`mb-8 p-4 rounded-xl flex items-center gap-3 ${submitStatus.type === 'success'
+            ? 'bg-green-50 border border-green-300 text-green-800'
+            : 'bg-red-50 border border-red-200 text-red-700'
+            }`}>
             <span className="text-xl leading-none flex-shrink-0">
               {submitStatus.type === 'success' ? '❖' : '✖'}
             </span>
@@ -328,18 +327,18 @@ export default function JoinUs({ isModal = false, onClose }) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
-            <FormInput 
-              label="Name of Student" 
-              name="name" 
-              value={formData.name} 
+            <FormInput
+              label="Name of Student"
+              name="name"
+              value={formData.name}
               onChange={handleChange}
               placeholder="Enter your full name"
               required
             />
-            <FormInput 
-              label="Enrollment Number" 
-              name="enrollment" 
-              value={formData.enrollment} 
+            <FormInput
+              label="Enrollment Number"
+              name="enrollment"
+              value={formData.enrollment}
               onChange={handleChange}
               placeholder="Enter your enrollment number"
               required
@@ -347,10 +346,10 @@ export default function JoinUs({ isModal = false, onClose }) {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <FormSelect 
-              label="Semester" 
-              name="semester" 
-              value={formData.semester} 
+            <FormSelect
+              label="Semester"
+              name="semester"
+              value={formData.semester}
               onChange={handleChange}
               options={[
                 { value: "", label: "Select Semester" },
@@ -365,10 +364,10 @@ export default function JoinUs({ isModal = false, onClose }) {
               ]}
               required
             />
-            <FormSelect 
-              label="Division" 
-              name="division" 
-              value={formData.division} 
+            <FormSelect
+              label="Division"
+              name="division"
+              value={formData.division}
               onChange={handleChange}
               options={[
                 { value: "", label: "Select Division" },
@@ -389,10 +388,10 @@ export default function JoinUs({ isModal = false, onClose }) {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <FormSelect 
-              label="Branch" 
-              name="branch" 
-              value={formData.branch} 
+            <FormSelect
+              label="Branch"
+              name="branch"
+              value={formData.branch}
               onChange={handleChange}
               options={[
                 { value: "", label: "Select Branch" },
@@ -423,10 +422,10 @@ export default function JoinUs({ isModal = false, onClose }) {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <FormInput 
-              label="Batch" 
-              name="batch" 
-              value={formData.batch} 
+            <FormInput
+              label="Batch"
+              name="batch"
+              value={formData.batch}
               onChange={handleChange}
               placeholder="e.g., 2022-2026"
               required
@@ -449,7 +448,7 @@ export default function JoinUs({ isModal = false, onClose }) {
             />
           </div>
 
-          
+
 
           <div className="grid gap-4 md:grid-cols-2">
             <FormInput
@@ -575,7 +574,7 @@ export default function JoinUs({ isModal = false, onClose }) {
               value={formData.description}
               onChange={handleChange}
               rows={3}
-              placeholder="Tell us briefly why you want to join SRL and what you hope to contribute or learn (optional)"
+              placeholder="Describe about any ongoing or completed research works"
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-[#05877a] focus:ring-2 focus:ring-[#05877a]/20 transition-all resize-none"
             />
           </div>
@@ -608,11 +607,11 @@ export default function JoinUs({ isModal = false, onClose }) {
               title="Please enter a valid 10-digit contact number"
               maxLength={10}
             />
-			<FormInput 
-              label="Email ID" 
-              name="email" 
+            <FormInput
+              label="Email ID"
+              name="email"
               type="email"
-              value={formData.email} 
+              value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email"
               required
