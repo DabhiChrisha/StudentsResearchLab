@@ -772,9 +772,10 @@ export default function Researchers() {
                                 e.stopPropagation();
                                 openCertsFor(ra.student_name, ra.certifications);
                               }}
-                              className="p-2 rounded-md bg-slate-50 text-slate-400 border border-slate-200 hover:border-secondary hover:bg-secondary hover:text-white transition-all duration-300 shadow-sm"
+                              className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-[13px] font-black uppercase tracking-wider shadow-sm hover:bg-teal-500 hover:text-white transition-all duration-300"
                             >
                               <Award size={15} />
+                              <span>CERTIFICATES</span>
                             </button>
                           </div>
                         </div>
@@ -979,7 +980,7 @@ export default function Researchers() {
                           className="inline-flex items-center gap-3 px-3 py-2 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-[13px] font-black uppercase tracking-wider shadow-sm hover:bg-teal-500 hover:text-white transition-all duration-300 select-none"
                         >
                           <Award size={16} />
-                          <span className="hidden sm:inline">Certificates</span>
+                          <span className="">CERTIFICATES</span>
                         </button>
                       </div>
                     </div>

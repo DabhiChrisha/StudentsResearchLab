@@ -157,9 +157,10 @@ const ChromaGrid = ({ items, onImageClick, onCertClick, isLoading = false, skele
                                         e.stopPropagation();
                                         onCertClick?.(item);
                                     }}
-                                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/60 flex items-center justify-center text-secondary hover:bg-secondary hover:text-white transition-all duration-500 shadow-sm"
+                                    className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-[13px] font-black uppercase tracking-wider shadow-sm hover:bg-teal-500 hover:text-white transition-all duration-500"
                                 >
                                     <Award size={16} />
+                                    <span>CERTIFICATES</span>
                                 </button>
 
                                 <button
