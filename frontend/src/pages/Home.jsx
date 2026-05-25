@@ -1,9 +1,8 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useRef } from "react";
 import { motion } from "framer-motion";
 import Hero from "../components/Hero";
 import HeadSRL from "../components/HeadSRL";
 import LazySection from "../components/LazySection";
-
 // Lazy-loaded below-the-fold sections (deferred JS bundles + API calls)
 const Objectives = lazy(() => import("../components/Objectives"));
 const Timeline = lazy(() => import("../components/Timeline"));
@@ -34,6 +33,7 @@ const SectionSkeleton = ({ height = 400, label }) => (
 );
 
 const Home = () => {
+  const globeRef = useRef(null);
   return (
     <div className="flex flex-col">
       {/* 1. Hero Section — eagerly loaded (above the fold) */}
@@ -123,9 +123,9 @@ const Home = () => {
                   <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5">
                     {[
                       {
-                        label: "Research Poster Presentations",
-                        value: "4+",
-                        category: "Posters Presented",
+                        label: "SRL Sessions",
+                        value: "1+",
+                        category: "Total Sessions",
                       },
                       {
                         label: "Ongoing Research Projects",
@@ -135,10 +135,10 @@ const Home = () => {
                       {
                         label: (
                           <>
-                            Research Publications: <br /> Papers/Case Studies/Book Chapters
+                            Research Publications: <br /> Papers/Poster/Case Studies/Book Chapters
                           </>
                         ),
-                        value: "10+",
+                        value: "14+",
                         category: "Total Publications",
                       },
                       {
@@ -209,30 +209,28 @@ const Home = () => {
                     viewport={{ once: true }}
                     className="relative h-[380px] md:h-[450px] 2xl:h-[550px] overflow-hidden rounded-[2rem] 2xl:rounded-[3rem] bg-gradient-to-br from-[#cef0ea] via-[#f2e4b3] to-white p-6 md:p-10 2xl:p-14 text-slate-800 shadow-xl border border-white/50 flex flex-col justify-start"
                   >
-                    <h3 className="relative z-20 text-3xl md:text-4xl lg:text-4xl 2xl:text-6xl font-bold tracking-tight leading-[1.1] text-slate-800">
-                      Advancing <br />
-                      knowledge <br />
-                      through <br />
-                      innovative <br />
-                      research.
-                    </h3>
+                    <div className="relative z-20">
+                      <h3 className="relative z-20 text-3xl md:text-4xl lg:text-4xl 2xl:text-6xl font-bold tracking-tight leading-[1.1] text-white">
+                        Advancing <br />
+                        knowledge <br />
+                        through <br />
+                        innovative <br />
+                        research.
+                      </h3>
 
-                    <div className="absolute -right-16 -bottom-10 z-10 w-[300px] md:w-[400px] 2xl:w-[550px] aspect-square flex items-center justify-center pointer-events-auto">
+                      
+                    </div>
+
+                    <div ref={globeRef} className="absolute -right-16 -bottom-10 z-10 w-[300px] md:w-[400px] 2xl:w-[550px] aspect-square flex items-center justify-center pointer-events-auto">
                       <Suspense
                         fallback={
                           <div className="animate-pulse bg-white/10 rounded-full w-64 h-64" />
                         }
                       >
-                        <Earth
-                          className="w-full h-full"
-                          scale={0.9}
-                          dark={0.8}
-                        />
+                        {/* dynamic clip-path applied via JS to match globe position/size */}
+                        <Earth className="w-full h-full" />
                       </Suspense>
                     </div>
-
-                    {/* Subtle Overlay Shine */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent opacity-30" />
                   </motion.div>
                 </div>
               </div>
