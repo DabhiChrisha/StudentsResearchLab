@@ -25,6 +25,7 @@ router.delete("/api/admin/research/:id", adminAuthMiddleware, deleteResearch);
 
 // Join request update/delete require admin authentication
 router.put("/api/admin/join-requests/:id", adminAuthMiddleware, updateJoinRequest);
+router.patch("/api/admin/join-requests/:id", adminAuthMiddleware, updateJoinRequest);
 router.delete("/api/admin/join-requests/:id", adminAuthMiddleware, deleteJoinRequest);
 
 module.exports = router;

@@ -76,7 +76,7 @@ const LeaderBoard = () => {
     const [monthlyStudents, setMonthlyStudents] = useState([]);
     const [top5ByHours, setTop5ByHours] = useState([]);
     const [monthLabel, setMonthLabel] = useState('');
-    const [activeTab, setActiveTab] = useState('overall'); // 'overall', 'monthly', 'hours'
+    const [activeTab, setActiveTab] = useState('monthly'); // 'monthly', 'weekly', 'hours'
 
     // Period selector state
     const [selectedPeriod, setSelectedPeriod] = useState('Apr 2026');
@@ -89,21 +89,17 @@ const LeaderBoard = () => {
     const [sortDir, setSortDir] = useState('desc');
 
     const { loading, error, retry: refetchLeaderboard, refetchSilent } = useFetch(async () => {
-        const [overallJson, monthlyJson, hoursJson] = await Promise.all([
-            fetchWithTimeout(`${API_BASE}/api/leaderboard`,       {}, 10000, { cacheKey: 'lb:overall',  cacheTtl: 60_000 }),
+        const [monthlyJson, hoursJson] = await Promise.all([
             fetchWithTimeout(`${API_BASE}/api/leaderboard/monthly`,{}, 10000, { cacheKey: 'lb:monthly',  cacheTtl: 60_000 }),
             fetchWithTimeout(`${API_BASE}/api/leaderboard/top-hours`, {}, 10000, { cacheKey: 'lb:hours', cacheTtl: 60_000 }),
         ]);
-
-        const parsedOverall = overallJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin');
-        setAllStudents(parsedOverall);
 
         if (monthlyJson && monthlyJson.leaderboard) {
             const parsedMonthly = monthlyJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin');
             setMonthlyStudents(parsedMonthly);
             setMonthLabel((monthlyJson.monthName || MONTH_NAMES[(monthlyJson.month || 1) - 1]) + ' ' + monthlyJson.year);
         } else {
-            setMonthlyStudents(parsedOverall);
+            setMonthlyStudents([]);
             setMonthLabel(MONTH_NAMES[new Date().getMonth()] + ' ' + new Date().getFullYear());
         }
 
@@ -113,13 +109,12 @@ const LeaderBoard = () => {
             setTop5ByHours([]);
         }
 
-        return parsedOverall; // Data returned from hook (though we use local states for complex data)
+        return monthlyJson?.leaderboard ? monthlyJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin') : [];
     });
 
     useEffect(() => {
         const onLive = (e) => {
             if (e.detail?.type !== 'leaderboard_changed') return;
-            invalidateCacheKey('lb:overall');
             invalidateCacheKey('lb:monthly');
             invalidateCacheKey('lb:hours');
             refetchSilent();
@@ -130,7 +125,7 @@ const LeaderBoard = () => {
 
     // Fetch data whenever selectedPeriod changes (for monthly + hours tabs)
     useEffect(() => {
-        if (activeTab === 'overall') return;
+        if (activeTab === 'hours') return;
         const PERIOD_TO_PARAMS = {
             'Dec 2025': { month: 12, year: 2025 },
             'Jan 2026': { month: 1, year: 2026 },
@@ -173,8 +168,8 @@ const LeaderBoard = () => {
     let mainMetricLabel = "pts";
     let mainMetricKey = "score";
     
-    if (activeTab === 'overall' || activeTab === 'monthly') {
-        const base = activeTab === 'monthly' ? (periodStudents.length > 0 ? periodStudents : monthlyStudents) : allStudents;
+    if (activeTab === 'monthly' || activeTab === 'weekly') {
+        const base = periodStudents.length > 0 ? periodStudents : monthlyStudents;
         currentLeaderboard = [...base].sort((a, b) => {
             const rA = parseInt(a.rank, 10);
             const rB = parseInt(b.rank, 10);
@@ -382,8 +377,8 @@ const LeaderBoard = () => {
     };
 
     const getTitle = () => {
-        if (activeTab === 'overall') return "Cumulative Top Researchers";
-        if (activeTab === 'monthly') return `Monthly Top Scores: ${selectedPeriod}`;
+        if (activeTab === 'monthly') return `Monthly Top Score: ${selectedPeriod}`;
+        if (activeTab === 'weekly') return `Weekly Top Score: ${selectedPeriod}`;
         return `Top Hours Dedicated: ${selectedPeriod}`;
     };
 
@@ -501,16 +496,16 @@ const LeaderBoard = () => {
                         >
                             <div className="flex flex-row items-center justify-center gap-3 md:gap-4 w-full flex-wrap md:flex-nowrap">
                                 <button
-                                    onClick={() => setActiveTab('overall')}
-                                    className={`whitespace-nowrap px-5 py-2.5 rounded-full text-[13px] md:text-sm font-extrabold border-2 transition-all ${activeTab === 'overall' ? 'bg-amber-500 border-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-transparent border-amber-200/60 text-gray-500 hover:bg-white hover:border-amber-300 hover:text-amber-600'}`}
-                                >
-                                    Cumulative Top Researchers
-                                </button>
-                                <button
                                     onClick={() => setActiveTab('monthly')}
                                     className={`whitespace-nowrap px-5 py-2.5 rounded-full text-[13px] md:text-sm font-extrabold border-2 transition-all ${activeTab === 'monthly' ? 'bg-amber-500 border-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-transparent border-amber-200/60 text-gray-500 hover:bg-white hover:border-amber-300 hover:text-amber-600'}`}
                                 >
-                                    Monthly Top Scores
+                                    Monthly Top Score
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('weekly')}
+                                    className={`whitespace-nowrap px-5 py-2.5 rounded-full text-[13px] md:text-sm font-extrabold border-2 transition-all ${activeTab === 'weekly' ? 'bg-amber-500 border-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-transparent border-amber-200/60 text-gray-500 hover:bg-white hover:border-amber-300 hover:text-amber-600'}`}
+                                >
+                                    Weekly Top Score
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('hours')}
@@ -519,8 +514,8 @@ const LeaderBoard = () => {
                                     Top Hours Dedicated
                                 </button>
 
-                                {/* Period dropdown — visible on non-overall tabs */}
-                                {activeTab !== 'overall' && (
+                                {/* Period dropdown — visible on non-hours tabs */}
+                                {activeTab !== 'hours' && (
                                     <div className="relative">
                                         <select
                                             value={selectedPeriod}

@@ -104,10 +104,9 @@ model AchievementContent {
 model JoinUs {
   id                   BigInt    @id @default(autoincrement())
   name                 String
-  enrollment           String    @unique(map: "unique_enrollment")
+  enrollment           String
   semester             String
   division             String
-  branch               String
   college              String
   contact              String
   email                String
@@ -123,8 +122,8 @@ model JoinUs {
   research_ongoing     String?   @db.VarChar(3)
   after_ug             String?
   department           String?
-  description          String?
   status               String?   @default("pending") @db.VarChar(20)
+  description          String?
 
   @@index([email], map: "idx_join_us_email")
   @@index([enrollment], map: "idx_join_us_enrollment")

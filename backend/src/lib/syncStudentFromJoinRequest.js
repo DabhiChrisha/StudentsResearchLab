@@ -33,10 +33,7 @@ async function syncStudentFromJoinRequest(joinRequest) {
   const batch = clip(joinRequest.batch, 20) || DEFAULT_BATCH;
   const institute_name =
     clip(joinRequest.college, 100) || DEFAULT_INSTITUTE;
-  const department =
-    clip(joinRequest.department, 50) ||
-    clip(joinRequest.branch, 50) ||
-    null;
+  const department = clip(joinRequest.department, 50) || null;
   const contact_no = clip(joinRequest.contact, 15);
   const division = clip(joinRequest.division, 5);
 
