@@ -969,18 +969,23 @@ export default function Researchers() {
                         )}
                         <button
                           type="button"
-                          className="w-10 h-10 rounded-full bg-teal-100/50 flex items-center justify-center text-teal-700 hover:bg-teal-500 hover:text-white transition-all duration-500 shadow-sm border border-white/50"
                           title="View certificates"
-                          aria-label="View certificates"
+                          aria-label={`View certificates for ${activeStudent.title}`}
                           onClick={(e) => {
                             e.stopPropagation();
-                            openCertsFor(
-                              activeStudent.title,
-                              activeStudent.certifications
-                            );
+                            openCertsFor(activeStudent.title, activeStudent.certifications);
                           }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              openCertsFor(activeStudent.title, activeStudent.certifications);
+                            }
+                          }}
+                          className="inline-flex items-center gap-3 px-3 py-2 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-[13px] font-black uppercase tracking-wider shadow-sm hover:bg-teal-500 hover:text-white transition-all duration-300 select-none"
                         >
-                          <Award size={18} />
+                          <Award size={16} />
+                          <span className="hidden sm:inline">Certificates</span>
                         </button>
                       </div>
                     </div>
@@ -1048,11 +1053,8 @@ export default function Researchers() {
                       </ModalPanel>
 
                       {/* Panel 3: Papers + Analytics */}
-                      <ModalPanel
-                        title="Papers Published & Year"
-                        className="p-3"
-                      >
-                        <ul className="space-y-2 mb-2">
+                      <ModalPanel title="Papers Published & Year" compact className="">
+                        <ul className="space-y-1 mb-1">
                           {(activeMetrics?.papers || [])
                             .slice(0, 2)
                             .map((p, i) => (
@@ -1070,12 +1072,12 @@ export default function Researchers() {
                             </li>
                           )}
                         </ul>
-                        <div className="pt-4 border-t border-black/5">
-                          <h4 className="text-[16px] font-black text-slate-900 flex items-center gap-3 mb-3">
+                          <div className="pt-3 border-t border-black/5">
+                          <h4 className="text-[16px] font-black text-slate-900 flex items-center gap-3 mb-2">
                             <div className="w-2 h-2 rounded-full bg-teal-500" />
                             Execution Analytics:
                           </h4>
-                          <div className="grid grid-cols-3 gap-1.5">
+                          <div className="grid grid-cols-3 gap-1">
                             {[
                               {
                                 label: "Projects",
@@ -1113,7 +1115,7 @@ export default function Researchers() {
                       </ModalPanel>
 
                       {/* Panel 4: Leadership & Awards */}
-                      <ModalPanel title="Leadership & Awards" className="p-5">
+                      <ModalPanel title="Leadership & Awards" compact className="">
                         <div className="flex-1 flex flex-col justify-center space-y-1">
                           {[
                             ...toArr(
@@ -1171,7 +1173,7 @@ export default function Researchers() {
                             ].map((item, i) => (
                               <div
                                 key={i}
-                                className="p-3 rounded-2xl bg-white shadow-sm border border-slate-50 flex justify-center items-center gap-2 hover:border-teal-200 transition-colors"
+                                className="p-2 rounded-2xl bg-white shadow-sm border border-slate-50 flex justify-center items-center gap-2 hover:border-teal-200 transition-colors"
                               >
                                 <div
                                   className={`w-9 h-9 rounded-full flex items-center justify-center bg-${item.color}-50 text-${item.color}-600 shrink-0`}
@@ -1367,12 +1369,13 @@ export default function Researchers() {
 
 // ─── small reusable modal panel ───────────────────────────────────────────────
 
-function ModalPanel({ title, icon, children, className = "" }) {
+function ModalPanel({ title, icon, children, className = "", compact = false }) {
+  const padding = compact ? "p-3" : "p-6";
   const base =
-    "p-6 rounded-[1.25rem] bg-white/50 backdrop-blur-xl border border-white shadow-[0_12px_30px_rgba(0,0,0,0.03)] hover:shadow-lg transition-all duration-400 flex flex-col";
+    "rounded-[1.25rem] bg-white/50 backdrop-blur-xl border border-white shadow-[0_12px_30px_rgba(0,0,0,0.03)] hover:shadow-lg transition-all duration-400 flex flex-col";
   return (
-    <div className={`${base} ${className}`.trim()}>
-      <h4 className="text-[16px] font-black text-slate-900 flex items-center gap-3 mb-4">
+    <div className={`${padding} ${base} ${className}`.trim()}>
+      <h4 className={`text-[16px] font-black text-slate-900 flex items-center gap-3 ${compact ? 'mb-2' : 'mb-4'}`}>
         <div className="w-2 h-2 rounded-full bg-teal-500" />
         {icon && icon}
         {title}:

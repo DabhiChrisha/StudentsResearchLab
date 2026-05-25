@@ -639,9 +639,6 @@ const LeaderBoard = () => {
                                             <button onClick={() => handleSort('attendance')} className="w-32 md:w-48 text-center shrink-0 hidden lg:flex items-center justify-center gap-0.5 hover:text-amber-700 transition-colors">
                                                 Sessions Attended<SortIcon col="attendance" />
                                             </button>
-                                            <button onClick={() => handleSort('hours')} className="w-32 md:w-40 text-center shrink-0 hidden md:flex items-center justify-center gap-0.5 hover:text-amber-700 transition-colors">
-                                                Hours Dedicated<SortIcon col="hours" />
-                                            </button>
                                             <button onClick={() => handleSort('score')} className="w-20 md:w-28 text-center shrink-0 hover:text-amber-700 transition-colors flex items-center justify-center gap-0.5">
                                                 Total Score<SortIcon col="score" />
                                             </button>
@@ -720,14 +717,7 @@ const LeaderBoard = () => {
                                                             <CircularProgress percentage={st.srlAttendanceNum || 0} />
                                                             <span className="text-sm font-extrabold text-[#d97706] whitespace-nowrap">{st.srlAttendance}</span>
                                                         </div>
-                                                        <div className="hidden md:flex w-40 justify-center items-center gap-2">
-                                                            <div className="flex items-center gap-1.5 bg-amber-100/50 px-3 py-1.5 rounded-full border border-amber-200">
-                                                                <Clock className="w-3.5 h-3.5 text-amber-600" />
-                                                                <span className="text-[13px] font-extrabold text-amber-700 whitespace-nowrap">
-                                                                    {st.totalHours}
-                                                                </span>
-                                                            </div>
-                                                        </div>
+                                                        {/* Hours column removed per request */}
                                                         
                                                         {/* Score and Mobile Stats */}
                                                         <div className="w-20 md:w-28 flex flex-col items-center justify-center shrink-0 gap-1">
@@ -736,7 +726,6 @@ const LeaderBoard = () => {
                                                             {/* Mobile-only stats layout */}
                                                             <div className="flex flex-col text-[9px] font-bold text-gray-500 md:hidden pb-1 text-center">
                                                             <span className="text-amber-600">SRL: {st.srlAttendance}</span>
-                                                            <span className="text-emerald-600">{st.totalHours}</span>
                                                         </div>
                                                         </div>
                                                         
