@@ -68,6 +68,8 @@ const parseBackendStudent = (student, index) => {
         semester: student.semester || "6th",
         div: student.div || "-",
         batch: student.batch || "-",
+        ongoingResearchCount: Number(student.ongoing_research_count || 0),
+        publicationCount: Number(student.publication_count || 0),
     };
 };
 
@@ -76,7 +78,7 @@ const LeaderBoard = () => {
     const [monthlyStudents, setMonthlyStudents] = useState([]);
     const [top5ByHours, setTop5ByHours] = useState([]);
     const [monthLabel, setMonthLabel] = useState('');
-    const [activeTab, setActiveTab] = useState('monthly'); // 'monthly', 'weekly', 'hours'
+    const [activeTab, setActiveTab] = useState('overall'); // 'overall', 'monthly', 'hours'
 
     // Period selector state
     const [selectedPeriod, setSelectedPeriod] = useState('Apr 2026');
@@ -85,21 +87,27 @@ const LeaderBoard = () => {
 
     // Table search + sort state
     const [searchQuery, setSearchQuery] = useState('');
-    const [sortKey, setSortKey] = useState(null);   // null | 'rank' | 'name' | 'attendance' | 'hours' | 'score'
+    const [sortKey, setSortKey] = useState(null);   // null | 'rank' | 'name' | 'research' | 'publications' | 'hours' | 'score'
+    // Previous remove-hours variant kept for quick rollback reference:
+    // const [sortKey, setSortKey] = useState(null);   // null | 'rank' | 'name' | 'research' | 'publications' | 'score'
     const [sortDir, setSortDir] = useState('desc');
 
     const { loading, error, retry: refetchLeaderboard, refetchSilent } = useFetch(async () => {
-        const [monthlyJson, hoursJson] = await Promise.all([
+        const [overallJson, monthlyJson, hoursJson] = await Promise.all([
+            fetchWithTimeout(`${API_BASE}/api/leaderboard/weekly`, {}, 10000, { cacheKey: 'lb:overall',  cacheTtl: 60_000 }),
             fetchWithTimeout(`${API_BASE}/api/leaderboard/monthly`,{}, 10000, { cacheKey: 'lb:monthly',  cacheTtl: 60_000 }),
             fetchWithTimeout(`${API_BASE}/api/leaderboard/top-hours`, {}, 10000, { cacheKey: 'lb:hours', cacheTtl: 60_000 }),
         ]);
+
+        const parsedOverall = overallJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin');
+        setAllStudents(parsedOverall);
 
         if (monthlyJson && monthlyJson.leaderboard) {
             const parsedMonthly = monthlyJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin');
             setMonthlyStudents(parsedMonthly);
             setMonthLabel((monthlyJson.monthName || MONTH_NAMES[(monthlyJson.month || 1) - 1]) + ' ' + monthlyJson.year);
         } else {
-            setMonthlyStudents([]);
+            setMonthlyStudents(parsedOverall);
             setMonthLabel(MONTH_NAMES[new Date().getMonth()] + ' ' + new Date().getFullYear());
         }
 
@@ -109,12 +117,13 @@ const LeaderBoard = () => {
             setTop5ByHours([]);
         }
 
-        return monthlyJson?.leaderboard ? monthlyJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin') : [];
+        return parsedOverall; // Data returned from hook (though we use local states for complex data)
     });
 
     useEffect(() => {
         const onLive = (e) => {
             if (e.detail?.type !== 'leaderboard_changed') return;
+            invalidateCacheKey('lb:overall');
             invalidateCacheKey('lb:monthly');
             invalidateCacheKey('lb:hours');
             refetchSilent();
@@ -125,7 +134,7 @@ const LeaderBoard = () => {
 
     // Fetch data whenever selectedPeriod changes (for monthly + hours tabs)
     useEffect(() => {
-        if (activeTab === 'hours') return;
+        if (activeTab === 'overall') return;
         const PERIOD_TO_PARAMS = {
             'Dec 2025': { month: 12, year: 2025 },
             'Jan 2026': { month: 1, year: 2026 },
@@ -168,8 +177,8 @@ const LeaderBoard = () => {
     let mainMetricLabel = "pts";
     let mainMetricKey = "score";
     
-    if (activeTab === 'monthly' || activeTab === 'weekly') {
-        const base = periodStudents.length > 0 ? periodStudents : monthlyStudents;
+    if (activeTab === 'overall' || activeTab === 'monthly') {
+        const base = activeTab === 'monthly' ? (periodStudents.length > 0 ? periodStudents : monthlyStudents) : allStudents;
         currentLeaderboard = [...base].sort((a, b) => {
             const rA = parseInt(a.rank, 10);
             const rB = parseInt(b.rank, 10);
@@ -364,21 +373,9 @@ const LeaderBoard = () => {
         );
     };
 
-    const CircularProgress = ({ percentage }) => {
-        const radius = 8;
-        const circumference = 2 * Math.PI * radius;
-        const strokeDashoffset = circumference - (percentage / 100) * circumference;
-        return (
-            <svg viewBox="0 0 20 20" className="w-6 h-6 transform -rotate-90 shrink-0">
-                <circle cx="10" cy="10" r="8" stroke="#fef08a" strokeWidth="3" fill="none" />
-                <circle cx="10" cy="10" r="8" stroke="#d97706" strokeWidth="3" fill="none" strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round" />
-            </svg>
-        );
-    };
-
     const getTitle = () => {
-        if (activeTab === 'monthly') return `Monthly Top Score: ${selectedPeriod}`;
-        if (activeTab === 'weekly') return `Weekly Top Score: ${selectedPeriod}`;
+        if (activeTab === 'overall') return "Weekly Top Researchers";
+        if (activeTab === 'monthly') return `Monthly Top Scores: ${selectedPeriod}`;
         return `Top Hours Dedicated: ${selectedPeriod}`;
     };
 
@@ -496,16 +493,16 @@ const LeaderBoard = () => {
                         >
                             <div className="flex flex-row items-center justify-center gap-3 md:gap-4 w-full flex-wrap md:flex-nowrap">
                                 <button
+                                    onClick={() => setActiveTab('overall')}
+                                    className={`whitespace-nowrap px-5 py-2.5 rounded-full text-[13px] md:text-sm font-extrabold border-2 transition-all ${activeTab === 'overall' ? 'bg-amber-500 border-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-transparent border-amber-200/60 text-gray-500 hover:bg-white hover:border-amber-300 hover:text-amber-600'}`}
+                                >
+                                    Weekly Top Researchers
+                                </button>
+                                <button
                                     onClick={() => setActiveTab('monthly')}
                                     className={`whitespace-nowrap px-5 py-2.5 rounded-full text-[13px] md:text-sm font-extrabold border-2 transition-all ${activeTab === 'monthly' ? 'bg-amber-500 border-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-transparent border-amber-200/60 text-gray-500 hover:bg-white hover:border-amber-300 hover:text-amber-600'}`}
                                 >
-                                    Monthly Top Score
-                                </button>
-                                <button
-                                    onClick={() => setActiveTab('weekly')}
-                                    className={`whitespace-nowrap px-5 py-2.5 rounded-full text-[13px] md:text-sm font-extrabold border-2 transition-all ${activeTab === 'weekly' ? 'bg-amber-500 border-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-transparent border-amber-200/60 text-gray-500 hover:bg-white hover:border-amber-300 hover:text-amber-600'}`}
-                                >
-                                    Weekly Top Score
+                                    Monthly Top Scores
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('hours')}
@@ -514,8 +511,8 @@ const LeaderBoard = () => {
                                     Top Hours Dedicated
                                 </button>
 
-                                {/* Period dropdown — visible on non-hours tabs */}
-                                {activeTab !== 'hours' && (
+                                {/* Period dropdown — visible on non-overall tabs */}
+                                {activeTab !== 'overall' && (
                                     <div className="relative">
                                         <select
                                             value={selectedPeriod}
@@ -574,8 +571,11 @@ const LeaderBoard = () => {
                                 displayedStudents = [...displayedStudents].sort((a, b) => {
                                     let av, bv;
                                     if (sortKey === 'name') { av = (a.name || '').toLowerCase(); bv = (b.name || '').toLowerCase(); }
-                                    else if (sortKey === 'attendance') { av = a.srlAttendanceNum || 0; bv = b.srlAttendanceNum || 0; }
+                                    else if (sortKey === 'research') { av = a.ongoingResearchCount || 0; bv = b.ongoingResearchCount || 0; }
+                                    else if (sortKey === 'publications') { av = a.publicationCount || 0; bv = b.publicationCount || 0; }
                                     else if (sortKey === 'hours') { av = parseFloat((a.totalHours || '0').replace(' Hrs', '')) || 0; bv = parseFloat((b.totalHours || '0').replace(' Hrs', '')) || 0; }
+                                    // Remove-hours variant:
+                                    // else if (sortKey === 'hours') { av = 0; bv = 0; }
                                     else if (sortKey === 'score') { av = parseFloat(a.score) || 0; bv = parseFloat(b.score) || 0; }
                                     else { 
                                         av = parseInt(a.rank, 10); 
@@ -631,9 +631,29 @@ const LeaderBoard = () => {
                                             <button onClick={() => handleSort('name')} className="flex-1 ml-2 md:ml-4 text-center sm:text-left hover:text-amber-700 transition-colors flex items-center gap-0.5">
                                                 Member Details<SortIcon col="name" />
                                             </button>
-                                            <button onClick={() => handleSort('attendance')} className="w-32 md:w-48 text-center shrink-0 hidden lg:flex items-center justify-center gap-0.5 hover:text-amber-700 transition-colors">
-                                                Sessions Attended<SortIcon col="attendance" />
-                                            </button>
+                                            {activeTab === 'hours' ? (
+                                                <button onClick={() => handleSort('hours')} className="w-32 md:w-40 text-center shrink-0 hidden md:flex items-center justify-center gap-0.5 hover:text-amber-700 transition-colors">
+                                                    Hours Dedicated<SortIcon col="hours" />
+                                                </button>
+                                            ) : (
+                                                <>
+                                                    <button onClick={() => handleSort('research')} className="w-24 md:w-40 text-center shrink-0 hidden lg:flex items-center justify-center gap-0.5 hover:text-amber-700 transition-colors">
+                                                        Ongoing Research<SortIcon col="research" />
+                                                    </button>
+                                                    <button onClick={() => handleSort('publications')} className="w-24 md:w-36 text-center shrink-0 hidden lg:flex items-center justify-center gap-0.5 hover:text-amber-700 transition-colors">
+                                                        Publications<SortIcon col="publications" />
+                                                    </button>
+                                                </>
+                                            )}
+                                            {/*
+                                              Remove-hours variant (kept commented):
+                                              <button onClick={() => handleSort('research')} className="w-24 md:w-40 text-center shrink-0 hidden lg:flex items-center justify-center gap-0.5 hover:text-amber-700 transition-colors">
+                                                  Ongoing Research<SortIcon col="research" />
+                                              </button>
+                                              <button onClick={() => handleSort('publications')} className="w-24 md:w-36 text-center shrink-0 hidden lg:flex items-center justify-center gap-0.5 hover:text-amber-700 transition-colors">
+                                                  Publications<SortIcon col="publications" />
+                                              </button>
+                                            */}
                                             <button onClick={() => handleSort('score')} className="w-20 md:w-28 text-center shrink-0 hover:text-amber-700 transition-colors flex items-center justify-center gap-0.5">
                                                 Total Score<SortIcon col="score" />
                                             </button>
@@ -708,19 +728,52 @@ const LeaderBoard = () => {
                                                         </div>
                                                         
                                                         {/* Desktop Stats columns */}
-                                                        <div className="hidden lg:flex w-48 justify-center items-center gap-2">
-                                                            <CircularProgress percentage={st.srlAttendanceNum || 0} />
-                                                            <span className="text-sm font-extrabold text-[#d97706] whitespace-nowrap">{st.srlAttendance}</span>
-                                                        </div>
-                                                        {/* Hours column removed per request */}
-                                                        
+                                                        {activeTab === 'hours' ? (
+                                                            <div className="hidden md:flex w-40 justify-center items-center gap-2">
+                                                                <div className="flex items-center gap-1.5 bg-amber-100/50 px-3 py-1.5 rounded-full border border-amber-200">
+                                                                    <Clock className="w-3.5 h-3.5 text-amber-600" />
+                                                                    <span className="text-[13px] font-extrabold text-amber-700 whitespace-nowrap">
+                                                                        {st.totalHours}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <>
+                                                                <div className="hidden lg:flex w-40 justify-center items-center">
+                                                                    <span className="text-sm font-extrabold text-[#d97706] whitespace-nowrap">{st.ongoingResearchCount || 0}</span>
+                                                                </div>
+                                                                <div className="hidden lg:flex w-36 justify-center items-center">
+                                                                    <span className="text-sm font-extrabold text-[#7c3aed] whitespace-nowrap">{st.publicationCount || 0}</span>
+                                                                </div>
+                                                            </>
+                                                        )}
+                                                        {/*
+                                                          Remove-hours variant (kept commented):
+                                                          <div className="hidden lg:flex w-40 justify-center items-center">
+                                                              <span className="text-sm font-extrabold text-[#d97706] whitespace-nowrap">{st.ongoingResearchCount || 0}</span>
+                                                          </div>
+                                                          <div className="hidden lg:flex w-36 justify-center items-center">
+                                                              <span className="text-sm font-extrabold text-[#7c3aed] whitespace-nowrap">{st.publicationCount || 0}</span>
+                                                          </div>
+                                                        */}
                                                         {/* Score and Mobile Stats */}
                                                         <div className="w-20 md:w-28 flex flex-col items-center justify-center shrink-0 gap-1">
                                                             <span className="font-black text-lg md:text-xl text-gray-900">{st.score || 0}</span>
                                                             
                                                             {/* Mobile-only stats layout */}
                                                             <div className="flex flex-col text-[9px] font-bold text-gray-500 md:hidden pb-1 text-center">
-                                                            <span className="text-amber-600">SRL: {st.srlAttendance}</span>
+                                                            {activeTab === 'hours' ? (
+                                                                <span className="text-amber-600">Hours: {st.totalHours}</span>
+                                                            ) : (
+                                                                <>
+                                                                    <span className="text-amber-600">Research: {st.ongoingResearchCount || 0}</span>
+                                                                    <span className="text-violet-600">Publications: {st.publicationCount || 0}</span>
+                                                                </>
+                                                            )}
+                                                            {/* Remove-hours mobile variant:
+                                                                <span className="text-amber-600">Research: {st.ongoingResearchCount || 0}</span>
+                                                                <span className="text-violet-600">Publications: {st.publicationCount || 0}</span>
+                                                            */}
                                                         </div>
                                                         </div>
                                                         
