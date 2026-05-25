@@ -188,24 +188,18 @@ export default function Researchers() {
     }
   }, [isLoading, researchAssistants.length]);
 
-  // Active student members — excludes RAs and graduated students
+  // Active student members — show all non-graduated students, including RAs
   const members = useMemo(
     () =>
-      sortedStudents.filter(
-        (s) =>
-          !toArr(s.roles).includes("Research Assistant") &&
-          s.member_type_effective !== "Graduated",
-      ),
+      sortedStudents.filter((s) => s.member_type_effective !== "Graduated"),
     [sortedStudents],
   );
 
-  // Graduated alumni — non-RA students whose effective member type is "Graduated"
+  // Graduated alumni — include all students whose effective member type is "Graduated"
   const graduatedMembers = useMemo(
     () =>
       sortedStudents.filter(
-        (s) =>
-          !toArr(s.roles).includes("Research Assistant") &&
-          s.member_type_effective === "Graduated",
+        (s) => s.member_type_effective === "Graduated",
       ),
     [sortedStudents],
   );

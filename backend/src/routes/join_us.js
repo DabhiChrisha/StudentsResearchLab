@@ -3,7 +3,11 @@ const multer = require("multer");
 const prisma = require("../config/prisma");
 const { broadcast } = require("../utils/sseManager");
 const { uploadToCloudinary } = require("../utils/imageUpload");
-const { sendJoinRequestConfirmationEmail, isValidEmail } = require("../services/emailService");
+const {
+  sendJoinRequestConfirmationEmail,
+  sendAdminNotificationEmail,
+  isValidEmail,
+} = require("../services/emailService");
 
 const router = express.Router();
 
@@ -18,7 +22,7 @@ router.post("/api/upload-temp-resume", (req, res, next) => {
   multerUpload(req, res, (err) => {
     if (err) {
       if (err.code === "LIMIT_FILE_SIZE") {
-        return res.status(400).json({ detail: "Resume PDF size must be less than or equal to 10MB." });
+        return res.status(400).json({ detail: "PDF file size must be less than 10 MB." });
       }
       return res.status(400).json({ detail: err.message });
     }
@@ -29,7 +33,18 @@ router.post("/api/upload-temp-resume", (req, res, next) => {
     if (!req.file) {
       return res.status(400).json({ detail: "No resume file provided." });
     }
-    const uploadRes = await uploadToCloudinary(req.file.buffer, "join_resumes", req.file.originalname || "resume.pdf", "raw");
+
+    const validMimeTypes = ["application/pdf"];
+    if (!validMimeTypes.includes(req.file.mimetype)) {
+      return res.status(400).json({ detail: "Resume must be a PDF file." });
+    }
+
+    const originalName = String(req.file.originalname || "resume.pdf").trim();
+    if (!originalName.toLowerCase().endsWith(".pdf")) {
+      return res.status(400).json({ detail: "Resume file name must end with .pdf." });
+    }
+
+    const uploadRes = await uploadToCloudinary(req.file.buffer, "join_resumes", originalName, "raw");
     res.json({ success: true, url: uploadRes.url });
   } catch (err) {
     console.error("Temp Resume upload failed:", err);
@@ -44,7 +59,6 @@ router.post("/api/join-us", upload.none(), async (req, res, next) => {
       enrollment,
       semester,
       division,
-      branch,
       college,
       contact,
       email,
@@ -63,8 +77,8 @@ router.post("/api/join-us", upload.none(), async (req, res, next) => {
     } = req.body;
 
     // Basic validation
-    if (!name || !enrollment || !email || !contact) {
-      return res.status(400).json({ detail: "Missing required fields: Name, Enrollment, Email, and Contact are required." });
+    if (!name || !enrollment || !email || !contact || !department) {
+      return res.status(400).json({ detail: "Missing required fields: Name, Enrollment, Email, Contact, and Department/Course are required." });
     }
     if (!resume_link) {
       return res.status(400).json({ detail: "Missing resume link. Please wait for the resume to finish uploading." });
@@ -77,7 +91,6 @@ router.post("/api/join-us", upload.none(), async (req, res, next) => {
         enrollment,
         semester: String(semester),
         division,
-        branch,
         college,
         contact,
         email,
@@ -126,6 +139,21 @@ router.post("/api/join-us", upload.none(), async (req, res, next) => {
         );
       });
     }
+
+    // Notify admin recipients about a new join request
+    sendAdminNotificationEmail({
+      studentName: name,
+      email: recipientEmail,
+      enrollment,
+      department,
+      batch,
+      source: source || "Website",
+    }).catch((emailErr) => {
+      console.error(
+        `[Email Error] Failed to send admin notification for join request ID ${serializedData.id}:`,
+        emailErr,
+      );
+    });
 
     res.json({ success: true, data: serializedData });
   } catch (err) {

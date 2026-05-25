@@ -1,7 +1,7 @@
 const prisma = require("../lib/prisma");
 const { broadcast } = require("../utils/sseManager");
 const { syncStudentFromJoinRequest } = require("../lib/syncStudentFromJoinRequest");
-const { sendApprovalEmail, isValidEmail } = require("../services/emailService");
+const { sendApprovalEmail, sendRejectionEmail, isValidEmail } = require("../services/emailService");
 const { deleteFromCloudinary, extractPublicId } = require("../utils/imageUpload");
 
 const serializeForJson = (value) =>
@@ -175,10 +175,20 @@ exports.getJoinRequests = async (req, res, next) => {
 exports.updateJoinRequest = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const rawStatus = String(req.body.status || '').trim().toLowerCase();
+    const normalizedStatusMap = {
+      approved: 'approved',
+      approve: 'approved',
+      accepted: 'approved',
+      rejected: 'rejected',
+      reject: 'rejected',
+      declined: 'rejected',
+      pending: 'pending',
+    };
+    const status = normalizedStatusMap[rawStatus];
 
-    console.log(`[Join Request] updateJoinRequest called for id=${id} status=${status} by admin=${req.admin?.email}`);
-    if (!status || !["approved", "rejected", "pending"].includes(status)) {
+    console.log(`[Join Request] updateJoinRequest called for id=${id} status=${rawStatus} normalized=${status} by admin=${req.admin?.email}`);
+    if (!status) {
       return res.status(400).json({
         error: "Invalid input",
         message: "status must be 'pending', 'approved' or 'rejected'",
@@ -198,7 +208,8 @@ exports.updateJoinRequest = async (req, res, next) => {
       });
     }
 
-    if (joinRequest.status === status) {
+    const currentStatus = String(joinRequest.status || '').trim().toLowerCase();
+    if (currentStatus === status) {
       return res.status(409).json({
         error: "Conflict",
         message: `Join request is already ${status}`,
@@ -246,20 +257,46 @@ exports.updateJoinRequest = async (req, res, next) => {
           `[Join Request] Approval email execution starting for request ${id}: sending to ${recipientEmail}`,
         );
 
-        sendApprovalEmail({ to: recipientEmail, studentName: freshRequest.name })
-          .then((info) => {
-            console.log(
-              `[Approval Email] Sent approval email for request ${id} to ${recipientEmail}: accepted=${JSON.stringify(
-                info.accepted,
-              )}, rejected=${JSON.stringify(info.rejected)}, messageId=${info.messageId}`,
-            );
-          })
-          .catch((emailErr) => {
-            console.error(
-              `[Email Error] Failed to send approval email to ${recipientEmail} for request ID ${id}:`,
-              emailErr,
-            );
-          });
+        try {
+          const info = await sendApprovalEmail({ to: recipientEmail, studentName: freshRequest.name });
+          console.log(
+            `[Approval Email] Sent approval email for request ${id} to ${recipientEmail}: accepted=${JSON.stringify(
+              info.accepted,
+            )}, rejected=${JSON.stringify(info.rejected)}, messageId=${info.messageId}`,
+          );
+        } catch (emailErr) {
+          console.error(
+            `[Email Error] Failed to send approval email to ${recipientEmail} for request ID ${id}:`,
+            emailErr,
+          );
+        }
+      }
+    }
+
+    if (status === "rejected") {
+      const recipientEmail = String(joinRequest.email || "").trim();
+      if (!recipientEmail || !isValidEmail(recipientEmail)) {
+        console.error(
+          `[Join Request] Rejection email skipped for request ${id}: invalid applicant email '${joinRequest.email}'`,
+        );
+      } else {
+        console.log(
+          `[Join Request] Rejection email execution starting for request ${id}: sending to ${recipientEmail}`,
+        );
+
+        try {
+          const info = await sendRejectionEmail({ to: recipientEmail, studentName: joinRequest.name });
+          console.log(
+            `[Rejection Email] Sent rejection email for request ${id} to ${recipientEmail}: accepted=${JSON.stringify(
+              info.accepted,
+            )}, rejected=${JSON.stringify(info.rejected)}, messageId=${info.messageId}`,
+          );
+        } catch (emailErr) {
+          console.error(
+            `[Email Error] Failed to send rejection email to ${recipientEmail} for request ID ${id}:`,
+            emailErr,
+          );
+        }
       }
     }
 

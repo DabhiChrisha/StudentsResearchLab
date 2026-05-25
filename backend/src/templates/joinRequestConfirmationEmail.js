@@ -38,9 +38,9 @@ The Admin Team`;
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Application Received</title>
 </head>
-<body style="margin:0;padding:0;background-color:#f0f4f4;font-family:'Segoe UI',Tahoma,Geneva,Verdana,Arial,sans-serif;">
+<body style="margin:0;padding:0;background-color:#F8E6C1;font-family:'Segoe UI',Tahoma,Geneva,Verdana,Arial,sans-serif;">
 
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f0f4f4;padding:32px 16px;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#F8E6C1;padding:32px 16px;">
     <tr>
       <td align="center">
 
@@ -48,18 +48,18 @@ The Admin Team`;
 
           <!-- HEADER -->
           <tr>
-            <td style="background:linear-gradient(135deg,#05877a 0%,#037a6e 60%,#026b60 100%);padding:40px 40px 32px;text-align:center;">
-              <h1 style="margin:0 0 20px;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">Research Lab</h1>
-              <div style="display:inline-block;background-color:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.35);border-radius:50px;padding:10px 28px;">
-                <p style="margin:0;font-size:15px;font-weight:600;color:#ffffff;letter-spacing:0.5px;">📬 &nbsp;Application Received</p>
+            <td style="background-color:#F8E6C1;padding:40px 40px 32px;text-align:center;border-bottom:1px solid #efd59f;">
+              <h1 style="margin:0 0 20px;font-size:28px;font-weight:700;color:#3f3420;letter-spacing:-0.5px;">Research Lab</h1>
+              <div style="display:inline-block;background-color:rgba(255,255,255,0.45);border:2px solid #e6c681;border-radius:50px;padding:10px 28px;">
+                <p style="margin:0;font-size:15px;font-weight:600;color:#3f3420;letter-spacing:0.5px;">📬 &nbsp;Application Received</p>
               </div>
             </td>
           </tr>
 
           <!-- GREETING -->
           <tr>
-            <td style="background-color:#e6f4f2;padding:20px 40px;text-align:center;border-bottom:1px solid #c8e6e3;">
-              <p style="margin:0;font-size:20px;font-weight:700;color:#037a6e;letter-spacing:-0.3px;">Hello, ${safeName}! 👋</p>
+            <td style="background-color:#fff6e4;padding:20px 40px;text-align:center;border-bottom:1px solid #efd59f;">
+              <p style="margin:0;font-size:20px;font-weight:700;color:#3f3420;letter-spacing:-0.3px;">Hello, ${safeName}! 👋</p>
             </td>
           </tr>
 
@@ -74,7 +74,7 @@ The Admin Team`;
               </p>
 
               <!-- Status card -->
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f0faf9;border-left:4px solid #05877a;border-radius:0 10px 10px 0;margin:0 0 28px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#fff6e4;border-left:4px solid #F8E6C1;border-radius:0 10px 10px 0;margin:0 0 28px;">
                 <tr>
                   <td style="padding:20px 24px;">
                     <p style="margin:0 0 6px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#05877a;">Application Status</p>
@@ -94,7 +94,7 @@ The Admin Team`;
                     <table cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="width:36px;vertical-align:top;">
-                          <div style="width:28px;height:28px;background-color:#e6f4f2;border-radius:50%;text-align:center;line-height:28px;font-size:14px;">👩‍💼</div>
+                          <div style="width:28px;height:28px;background-color:#F8E6C1;border-radius:50%;text-align:center;line-height:28px;font-size:14px;">👩‍💼</div>
                         </td>
                         <td style="padding-left:12px;vertical-align:middle;">
                           <p style="margin:0;font-size:14px;color:#374151;line-height:1.5;"><strong>Admin review</strong> — Our admin team will review your submitted application.</p>
@@ -108,7 +108,7 @@ The Admin Team`;
                     <table cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="width:36px;vertical-align:top;">
-                          <div style="width:28px;height:28px;background-color:#e6f4f2;border-radius:50%;text-align:center;line-height:28px;font-size:14px;">⏳</div>
+                          <div style="width:28px;height:28px;background-color:#F8E6C1;border-radius:50%;text-align:center;line-height:28px;font-size:14px;">⏳</div>
                         </td>
                         <td style="padding-left:12px;vertical-align:middle;">
                           <p style="margin:0;font-size:14px;color:#374151;line-height:1.5;"><strong>Decision in a few days</strong> — The review process may take a few business days.</p>
@@ -122,7 +122,7 @@ The Admin Team`;
                     <table cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="width:36px;vertical-align:top;">
-                          <div style="width:28px;height:28px;background-color:#e6f4f2;border-radius:50%;text-align:center;line-height:28px;font-size:14px;">📧</div>
+                          <div style="width:28px;height:28px;background-color:#F8E6C1;border-radius:50%;text-align:center;line-height:28px;font-size:14px;">📧</div>
                         </td>
                         <td style="padding-left:12px;vertical-align:middle;">
                           <p style="margin:0;font-size:14px;color:#374151;line-height:1.5;"><strong>Email notification</strong> — You will receive another email once a decision has been made.</p>
@@ -168,7 +168,7 @@ The Admin Team`;
 
           <!-- FOOTER -->
           <tr>
-            <td style="background-color:#f8fffe;border-top:1px solid #e5e7eb;padding:20px 40px;text-align:center;border-radius:0 0 16px 16px;">
+            <td style="background-color:#fff6e4;border-top:1px solid #efd59f;padding:20px 40px;text-align:center;border-radius:0 0 16px 16px;">
               <p style="margin:0 0 4px;font-size:12px;color:#9ca3af;">
                 This is an automated email from the Research Lab portal.
               </p>

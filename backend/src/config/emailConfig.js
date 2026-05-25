@@ -18,12 +18,19 @@ const smtp = {
   },
 };
 
+const adminNotificationRecipients = (process.env.JOIN_REQUEST_ADMIN_NOTIFICATION_EMAILS || process.env.NOTIFICATION_EMAILS || "")
+  .split(",")
+  .map((email) => email.trim())
+  .filter(Boolean)
+  .join(",");
+
 module.exports = {
   provider,
   defaultFrom,
   fromName,
   fromAddress,
   smtp,
+  adminNotificationRecipients,
   resendApiKey: process.env.RESEND_API_KEY,
   postmarkApiKey: process.env.POSTMARK_API_KEY,
   sesRegion: process.env.SES_REGION,

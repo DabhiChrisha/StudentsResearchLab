@@ -2,6 +2,8 @@ const nodemailer = require('nodemailer');
 const emailConfig = require('../config/emailConfig');
 const { buildApprovalEmail } = require('../templates/approvalEmail');
 const { buildJoinRequestConfirmationEmail } = require('../templates/joinRequestConfirmationEmail');
+const { buildRejectionEmail } = require('../templates/rejectionEmail');
+const { buildAdminNotificationEmail } = require('../templates/adminNotificationEmail');
 
 let cachedTransporter = null;
 let cachedTransporterVerified = false;
@@ -72,14 +74,21 @@ function getTransporter() {
 }
 
 async function sendEmail({ to, subject, text, html, from }) {
-  const recipient = normalizeEmail(to);
-  if (!recipient) {
+  const recipients = String(to)
+    .split(',')
+    .map((item) => normalizeEmail(item))
+    .filter(Boolean);
+
+  if (recipients.length === 0) {
     throw new Error('Email recipient is required');
   }
-  if (!isValidEmail(recipient)) {
-    throw new Error(`Invalid email recipient: ${recipient}`);
+
+  const invalidRecipient = recipients.find((email) => !isValidEmail(email));
+  if (invalidRecipient) {
+    throw new Error(`Invalid email recipient: ${invalidRecipient}`);
   }
 
+  const recipientList = recipients.join(', ');
   const sender = from || emailConfig.defaultFrom;
   if (!sender) {
     throw new Error('Email sender is not configured. Set EMAIL_FROM_ADDRESS or SMTP_USER.');
@@ -88,18 +97,18 @@ async function sendEmail({ to, subject, text, html, from }) {
   const transporter = getTransporter();
   await verifyTransporter(transporter);
 
-  console.log(`[Email Service] Sending email to ${recipient} from ${sender} subject="${subject}"`);
+  console.log(`[Email Service] Sending email to ${recipientList} from ${sender} subject="${subject}"`);
 
   const info = await transporter.sendMail({
     from: sender,
-    to: recipient,
+    to: recipientList,
     subject,
     text,
     html,
   });
 
   console.log(
-    `[Email Service] Email sendMail result for ${recipient}: accepted=${JSON.stringify(
+    `[Email Service] Email sendMail result for ${recipientList}: accepted=${JSON.stringify(
       info.accepted,
     )}, rejected=${JSON.stringify(info.rejected)}, messageId=${info.messageId}`,
   );
@@ -112,6 +121,30 @@ async function sendApprovalEmail({ to, studentName }) {
   return sendEmail({ to, subject, html, text });
 }
 
+async function sendRejectionEmail({ to, studentName }) {
+  const { subject, html, text } = buildRejectionEmail({ studentName });
+  return sendEmail({ to, subject, html, text });
+}
+
+async function sendAdminNotificationEmail({ studentName, email, enrollment, department, batch, source }) {
+  const recipients = String(emailConfig.adminNotificationRecipients || '').trim();
+  if (!recipients) {
+    console.warn('[Email Service] Admin notification email skipped: no admin recipients configured. Set JOIN_REQUEST_ADMIN_NOTIFICATION_EMAILS in environment.');
+    return null;
+  }
+
+  const { subject, html, text } = buildAdminNotificationEmail({
+    studentName,
+    email,
+    enrollment,
+    department,
+    batch,
+    source,
+  });
+
+  return sendEmail({ to: recipients, subject, html, text });
+}
+
 async function sendJoinRequestConfirmationEmail({ to, studentName }) {
   const { subject, html, text } = buildJoinRequestConfirmationEmail({ studentName });
   return sendEmail({ to, subject, html, text });
@@ -120,7 +153,9 @@ async function sendJoinRequestConfirmationEmail({ to, studentName }) {
 module.exports = {
   sendEmail,
   sendApprovalEmail,
+  sendRejectionEmail,
   sendJoinRequestConfirmationEmail,
+  sendAdminNotificationEmail,
   isValidEmail,
 };
 

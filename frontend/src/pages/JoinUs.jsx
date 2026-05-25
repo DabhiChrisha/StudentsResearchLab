@@ -1,12 +1,11 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_BASE_URL, API_HEADERS } from '../config/apiConfig';
+import { API_BASE_URL } from '../config/apiConfig';
 import joinSrlImg from '../assets/Join SRL.png';
 
 export default function JoinUs({ isModal = false, onClose }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [loadingText, setLoadingText] = useState("");
   const formTopRef = useRef(null);
   // Ref to imperatively reset the uncontrolled file input after submission
   const fileInputRef = useRef(null);
@@ -16,7 +15,6 @@ export default function JoinUs({ isModal = false, onClose }) {
     enrollment: "",
     semester: "",
     division: "",
-    branch: "",
     department: "",
     college: "",
     contact: "",
@@ -32,8 +30,7 @@ export default function JoinUs({ isModal = false, onClose }) {
     description: "",
     source: "Website",
   });
-  const [resumeFile, setResumeFile] = useState(null);
-  const [resumeFileName, setResumeFileName] = useState("");
+  const [formErrors, setFormErrors] = useState({});
   const [uploadingResume, setUploadingResume] = useState(false);
   const [uploadedResumeLink, setUploadedResumeLink] = useState(null);
 
@@ -51,32 +48,31 @@ export default function JoinUs({ isModal = false, onClose }) {
       ...prev,
       [name]: processed,
     }));
+    setFormErrors((prev) => ({ ...prev, [name]: "" }));
+    setSubmitStatus({ type: null, message: "" });
   };
 
   const handleResumeChange = async (e) => {
     const file = e.target.files?.[0] || null;
     if (!file) {
-      setResumeFile(null);
-      setResumeFileName("");
+      setFormErrors((prev) => ({ ...prev, resume_link: "" }));
       return;
     }
 
-    setResumeFile(file);
-    setResumeFileName(file.name);
-    setSubmitStatus({ type: null, message: "" });
-
     const allowedTypes = ["application/pdf"];
     if (!allowedTypes.includes(file.type)) {
-      setSubmitStatus({ type: 'error', message: "Resume must be a PDF file." });
+      setFormErrors((prev) => ({ ...prev, resume_link: "Please upload a PDF file only." }));
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      setSubmitStatus({ type: 'error', message: "Resume PDF size must be less than or equal to 10MB." });
+      setFormErrors((prev) => ({ ...prev, resume_link: "PDF file size must be less than 10 MB." }));
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
 
+    setFormErrors((prev) => ({ ...prev, resume_link: "" }));
+    setSubmitStatus({ type: null, message: "" });
     setUploadingResume(true);
     setUploadedResumeLink(null);
     try {
@@ -92,11 +88,11 @@ export default function JoinUs({ isModal = false, onClose }) {
       if (res.ok && data.success) {
         setUploadedResumeLink(data.url);
       } else {
-        setSubmitStatus({ type: 'error', message: data.detail || "Failed to upload resume." });
+        setFormErrors((prev) => ({ ...prev, resume_link: data.detail || "Failed to upload resume." }));
         if (fileInputRef.current) fileInputRef.current.value = "";
       }
-    } catch (err) {
-      setSubmitStatus({ type: 'error', message: "Network error during upload." });
+    } catch {
+      setFormErrors((prev) => ({ ...prev, resume_link: "Network error during upload." }));
       if (fileInputRef.current) fileInputRef.current.value = "";
     } finally {
       setUploadingResume(false);
@@ -110,7 +106,6 @@ export default function JoinUs({ isModal = false, onClose }) {
       enrollment: "",
       semester: "",
       division: "",
-      branch: "",
       department: "",
       college: "",
       contact: "",
@@ -126,12 +121,9 @@ export default function JoinUs({ isModal = false, onClose }) {
       description: "",
       source: "Website",
     });
-    setResumeFile(null);
-    setResumeFileName("");
+    setFormErrors({});
     setUploadingResume(false);
     setUploadedResumeLink(null);
-    // Imperatively clear the native file input — React state alone cannot reset
-    // uncontrolled file inputs; we must clear the DOM element's value directly.
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -140,29 +132,66 @@ export default function JoinUs({ isModal = false, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setFormErrors({});
+    setSubmitStatus({ type: null, message: "" });
 
-    const validationErrors = [];
-
-    if (!formData.name.trim()) validationErrors.push("Please enter your full name.");
-    if (!formData.enrollment.trim()) validationErrors.push("Please enter your enrollment number.");
-    if (!formData.semester) validationErrors.push("Please select your semester.");
-    if (!formData.branch) validationErrors.push("Please select your branch.");
-    if (!formData.department) validationErrors.push("Please select your department or course.");
-    if (!formData.college) validationErrors.push("Please select your college.");
-    if (!/^\d{10}$/.test(formData.contact)) validationErrors.push("Please enter a valid 10-digit contact number.");
+    const errors = {};
     const trimmedEmail = formData.email.trim();
-    if (!trimmedEmail || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(trimmedEmail)) {
-      validationErrors.push("Please enter a valid email address.");
-    }
-    if (!formData.batch.trim()) validationErrors.push("Please enter your batch.");
-    if (!formData.after_ug) validationErrors.push("Please select what you want to pursue after UG.");
-    if (!formData.cpi.trim()) validationErrors.push("Please enter your CPI till current semester.");
-    if (!formData.ieee_member_2026) validationErrors.push("Please select whether you are an IEEE member in 2026.");
-    if (!formData.ongoing_research) validationErrors.push("Please answer whether you have ongoing research.");
-    if (!uploadedResumeLink) validationErrors.push("Please wait for your resume to finish uploading or select a valid PDF.");
 
-    if (validationErrors.length > 0) {
-      setSubmitStatus({ type: 'error', message: validationErrors[0] });
+    if (!formData.name.trim()) {
+      errors.name = "Please enter your full name.";
+    }
+    if (!formData.enrollment.trim()) {
+      errors.enrollment = "Please enter your enrollment number.";
+    }
+    if (!formData.semester) {
+      errors.semester = "Please select your semester.";
+    }
+    if (!formData.department) {
+      errors.department = "Please select your department or course name.";
+    }
+    if (!formData.college) {
+      errors.college = "Please select your college.";
+    }
+    if (!/^\d{10}$/.test(formData.contact)) {
+      errors.contact = "Please enter a valid 10-digit contact number.";
+    }
+    if (!trimmedEmail) {
+      errors.email = "Please enter your email address.";
+    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(trimmedEmail)) {
+      errors.email = "Please enter a valid email address.";
+    }
+    if (!formData.batch.trim()) {
+      errors.batch = "Please enter your batch.";
+    }
+    if (!formData.after_ug) {
+      errors.after_ug = "Please select what you want to pursue after UG.";
+    }
+    if (!formData.cpi.trim()) {
+      errors.cpi = "Please enter your CPI till the current semester.";
+    }
+    if (!formData.ieee_member_2026) {
+      errors.ieee_member_2026 = "Please select whether you are an IEEE member in 2026.";
+    }
+    if (!formData.research_expertise) {
+      errors.research_expertise = "Please select your research expertise.";
+    }
+    if (!formData.published_research) {
+      errors.published_research = "Please select whether you have published research.";
+    }
+    if (!formData.ongoing_research) {
+      errors.ongoing_research = "Please select whether you have ongoing research.";
+    }
+    if (!formData.description.trim()) {
+      errors.description = "Please provide a brief description of why you want to join SRL.";
+    }
+    if (!uploadedResumeLink) {
+      errors.resume_link = "Please upload your resume in PDF format (max 10 MB).";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      setSubmitStatus({ type: 'error', message: 'Please fix the highlighted fields before submitting.' });
       setLoading(false);
       return;
     }
@@ -173,11 +202,10 @@ export default function JoinUs({ isModal = false, onClose }) {
       payload.append("enrollment", formData.enrollment.trim());
       payload.append("semester", formData.semester);
       payload.append("division", formData.division);
-      payload.append("branch", formData.branch);
       payload.append("department", formData.department);
       payload.append("college", formData.college);
       payload.append("contact", formData.contact);
-      payload.append("email", formData.email.trim().toLowerCase());
+      payload.append("email", trimmedEmail.toLowerCase());
       payload.append("batch", formData.batch.trim());
       payload.append("after_ug", formData.after_ug);
       payload.append("cpi", formData.cpi.trim());
@@ -186,7 +214,7 @@ export default function JoinUs({ isModal = false, onClose }) {
       payload.append("research_expertise", formData.research_expertise);
       payload.append("published_research", formData.published_research);
       payload.append("ongoing_research", formData.ongoing_research);
-      payload.append("description", formData.description ? formData.description.trim() : "");
+      payload.append("description", formData.description.trim());
       payload.append("source", formData.source);
       payload.append("resume_link", uploadedResumeLink);
 
@@ -204,8 +232,7 @@ export default function JoinUs({ isModal = false, onClose }) {
         throw new Error(typeof errMessage === 'string' ? errMessage : JSON.stringify(errMessage));
       }
 
-      const json = await res.json();
-      const data = json.data;
+      await res.json();
 
       // Reset all form fields and clear the PDF file input
       resetForm();
@@ -241,7 +268,6 @@ export default function JoinUs({ isModal = false, onClose }) {
       });
     }
 
-    setLoadingText("");
     setLoading(false);
   };
 
@@ -334,6 +360,7 @@ export default function JoinUs({ isModal = false, onClose }) {
               onChange={handleChange}
               placeholder="Enter your full name"
               required
+              error={formErrors.name}
             />
             <FormInput
               label="Enrollment Number"
@@ -342,6 +369,7 @@ export default function JoinUs({ isModal = false, onClose }) {
               onChange={handleChange}
               placeholder="Enter your enrollment number"
               required
+              error={formErrors.enrollment}
             />
           </div>
 
@@ -363,6 +391,7 @@ export default function JoinUs({ isModal = false, onClose }) {
                 { value: "8", label: "8th Semester" },
               ]}
               required
+              error={formErrors.semester}
             />
             <FormSelect
               label="Division"
@@ -387,14 +416,14 @@ export default function JoinUs({ isModal = false, onClose }) {
             />
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4">
             <FormSelect
-              label="Branch"
-              name="branch"
-              value={formData.branch}
+              label="Department / Course Name"
+              name="department"
+              value={formData.department}
               onChange={handleChange}
               options={[
-                { value: "", label: "Select Branch" },
+                { value: "", label: "Select Department / Course" },
                 { value: "CE", label: "Computer Engineering" },
                 { value: "CSE", label: "Computer Science Engineering" },
                 { value: "IT", label: "Information Technology" },
@@ -404,20 +433,7 @@ export default function JoinUs({ isModal = false, onClose }) {
                 { value: "CIVIL", label: "Civil Engineering" },
               ]}
               required
-            />
-            <FormSelect
-              label="Department/Course Name"
-              name="department"
-              value={formData.department || ""}
-              onChange={handleChange}
-              options={[
-                { value: "", label: "Select Department/Course" },
-                { value: "CE", label: "CE" },
-                { value: "IT", label: "IT" },
-                { value: "CSE", label: "CSE" },
-                { value: "EC", label: "EC" },
-              ]}
-              required
+              error={formErrors.department}
             />
           </div>
 
@@ -458,6 +474,7 @@ export default function JoinUs({ isModal = false, onClose }) {
               onChange={handleChange}
               placeholder="Enter your CPI till current semester"
               required
+              error={formErrors.cpi}
             />
             <FormInput
               label="IEEE Membership number"
@@ -481,6 +498,9 @@ export default function JoinUs({ isModal = false, onClose }) {
                   No
                 </label>
               </div>
+              {formErrors.ieee_member_2026 && (
+                <p className="mt-2 text-sm text-red-600">{formErrors.ieee_member_2026}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">Upload Resume (.pdf)<span className="text-red-500">*</span></label>
@@ -510,6 +530,9 @@ export default function JoinUs({ isModal = false, onClose }) {
                     <span className="ml-2 text-sm font-semibold text-green-700">Resume Uploaded Successfully!</span>
                   </div>
                 )}
+                {formErrors.resume_link && (
+                  <p className="mt-2 text-sm text-red-600">{formErrors.resume_link}</p>
+                )}
               </div>
             </div>
           </div>
@@ -533,6 +556,9 @@ export default function JoinUs({ isModal = false, onClose }) {
                   </label>
                 ))}
               </div>
+              {formErrors.research_expertise && (
+                <p className="mt-2 text-sm text-red-600">{formErrors.research_expertise}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">Research Publication <span className="text-red-500">*</span></label>
@@ -546,6 +572,9 @@ export default function JoinUs({ isModal = false, onClose }) {
                   No
                 </label>
               </div>
+              {formErrors.published_research && (
+                <p className="mt-2 text-sm text-red-600">{formErrors.published_research}</p>
+              )}
             </div>
           </div>
 
@@ -561,6 +590,9 @@ export default function JoinUs({ isModal = false, onClose }) {
                 No
               </label>
             </div>
+            {formErrors.ongoing_research && (
+              <p className="mt-2 text-sm text-red-600">{formErrors.ongoing_research}</p>
+            )}
           </div>
 
           {/* Description */}
@@ -574,9 +606,12 @@ export default function JoinUs({ isModal = false, onClose }) {
               value={formData.description}
               onChange={handleChange}
               rows={3}
-              placeholder="Describe about any ongoing or completed research works"
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-[#05877a] focus:ring-2 focus:ring-[#05877a]/20 transition-all resize-none"
+              placeholder="Describe about any ongoing or completed research works."
+              className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:border-[#05877a] focus:ring-2 focus:ring-[#05877a]/20 transition-all resize-none ${formErrors.description ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-300'}`}
             />
+            {formErrors.description && (
+              <p className="mt-2 text-sm text-red-600">{formErrors.description}</p>
+            )}
           </div>
 
           {/* College - Row 4 */}
@@ -591,6 +626,7 @@ export default function JoinUs({ isModal = false, onClose }) {
               { value: "Vidush Somany Institute of Technology and Research", label: "Vidush Somany Institute of Technology and Research" },
             ]}
             required
+            error={formErrors.college}
           />
 
           {/* Contact and Email - Row 5 */}
@@ -606,6 +642,7 @@ export default function JoinUs({ isModal = false, onClose }) {
               pattern="[0-9]{10}"
               title="Please enter a valid 10-digit contact number"
               maxLength={10}
+              error={formErrors.contact}
             />
             <FormInput
               label="Email ID"
@@ -615,6 +652,7 @@ export default function JoinUs({ isModal = false, onClose }) {
               onChange={handleChange}
               placeholder="Enter your email"
               required
+              error={formErrors.email}
             />
           </div>
 
@@ -647,7 +685,7 @@ export default function JoinUs({ isModal = false, onClose }) {
   );
 }
 
-function FormInput({ label, name, type = "text", value, onChange, placeholder, required = false, ...rest }) {
+function FormInput({ label, name, type = "text", value, onChange, placeholder, required = false, error = "", ...rest }) {
   return (
     <div>
       <label className="block text-sm font-semibold text-gray-700 mb-1.5">
@@ -660,14 +698,15 @@ function FormInput({ label, name, type = "text", value, onChange, placeholder, r
         onChange={onChange}
         placeholder={placeholder}
         required={required}
-        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-[#05877a] focus:ring-2 focus:ring-[#05877a]/20 transition-all"
+        className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 transition-all ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-300 focus:border-[#05877a] focus:ring-[#05877a]/20'}`}
         {...rest}
       />
+      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>
   );
 }
 
-function FormSelect({ label, name, value, onChange, options, required = false }) {
+function FormSelect({ label, name, value, onChange, options, required = false, error = "" }) {
   return (
     <div>
       <label className="block text-sm font-semibold text-gray-700 mb-1.5">
@@ -678,7 +717,7 @@ function FormSelect({ label, name, value, onChange, options, required = false })
         value={value}
         onChange={onChange}
         required={required}
-        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-[#05877a] focus:ring-2 focus:ring-[#05877a]/20 transition-all"
+        className={`w-full px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-all ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-300 border focus:border-[#05877a] focus:ring-[#05877a]/20'}`}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -686,6 +725,7 @@ function FormSelect({ label, name, value, onChange, options, required = false })
           </option>
         ))}
       </select>
+      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>
   );
 }
