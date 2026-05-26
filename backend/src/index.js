@@ -14,6 +14,7 @@ const leaderboardRouter = require("./routes/leaderboard");
 const batchStatsRouter = require("./routes/batch_stats");
 const achievementsRouter = require("./routes/achievements");
 const researchersRouter = require("./routes/researchers");
+const metricsRouter = require("./routes/metrics");
 
 // Import admin routes
 const adminAuthRouter = require("./routes/admin");
@@ -126,6 +127,7 @@ app.use(leaderboardRouter);
 app.use(batchStatsRouter);
 app.use(achievementsRouter);
 app.use(researchersRouter);
+app.use(metricsRouter);
 
 // Register admin routes
 app.use(adminAuthRouter);

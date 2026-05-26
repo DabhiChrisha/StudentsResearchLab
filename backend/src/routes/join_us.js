@@ -18,6 +18,91 @@ const upload = multer({
 
 const multerUpload = upload.single("resume");
 
+const JOIN_US_DUPLICATE_FIELDS = {
+  enrollment: {
+    message: "Enrollment Number already exists.",
+    joinUsField: "enrollment",
+    studentField: "enrollment_no",
+  },
+  contact: {
+    message: "Contact Number already exists.",
+    joinUsField: "contact",
+    studentField: "contact_no",
+  },
+  email: {
+    message: "Email ID already exists.",
+    joinUsField: "email",
+    studentField: "email",
+  },
+};
+
+function normalizeJoinField(field, value) {
+  const normalized = String(value || "").trim();
+  if (field === "email") return normalized.toLowerCase();
+  if (field === "contact") return normalized.replace(/\D/g, "");
+  if (field === "enrollment") return normalized.toUpperCase();
+  return normalized;
+}
+
+async function valueExistsInJoinUs(field, value) {
+  const config = JOIN_US_DUPLICATE_FIELDS[field];
+  const whereValue = field === "email" || field === "enrollment"
+    ? { equals: value, mode: "insensitive" }
+    : value;
+
+  const existing = await prisma.joinUs.findFirst({
+    where: { [config.joinUsField]: whereValue },
+    select: { id: true },
+  });
+
+  return Boolean(existing);
+}
+
+async function valueExistsInStudents(field, value) {
+  const config = JOIN_US_DUPLICATE_FIELDS[field];
+  const whereValue = field === "email" || field === "enrollment"
+    ? { equals: value, mode: "insensitive" }
+    : value;
+
+  const existing = await prisma.studentsDetail.findFirst({
+    where: { [config.studentField]: whereValue },
+    select: { id: true },
+  });
+
+  return Boolean(existing);
+}
+
+async function fieldValueExists(field, value) {
+  const existsInStudents = await valueExistsInStudents(field, value);
+  if (existsInStudents) return true;
+  return await valueExistsInJoinUs(field, value);
+}
+
+async function getJoinUsDuplicateField({ enrollment, contact, email }) {
+  const normalizedEnrollment = normalizeJoinField("enrollment", enrollment);
+  if (normalizedEnrollment) {
+    if (await fieldValueExists("enrollment", normalizedEnrollment)) {
+      return "enrollment";
+    }
+  }
+
+  const normalizedContact = normalizeJoinField("contact", contact);
+  if (normalizedContact) {
+    if (await fieldValueExists("contact", normalizedContact)) {
+      return "contact";
+    }
+  }
+
+  const normalizedEmail = normalizeJoinField("email", email);
+  if (normalizedEmail) {
+    if (await fieldValueExists("email", normalizedEmail)) {
+      return "email";
+    }
+  }
+
+  return null;
+}
+
 router.post("/api/upload-temp-resume", (req, res, next) => {
   multerUpload(req, res, (err) => {
     if (err) {
@@ -49,6 +134,25 @@ router.post("/api/upload-temp-resume", (req, res, next) => {
   } catch (err) {
     console.error("Temp Resume upload failed:", err);
     res.status(500).json({ detail: "Resume upload failed. Please try again later." });
+  }
+});
+
+router.post("/api/join-us/validate-unique", async (req, res) => {
+  try {
+    const duplicateField = await getJoinUsDuplicateField(req.body || {});
+
+    if (duplicateField) {
+      return res.status(409).json({
+        success: false,
+        field: duplicateField,
+        detail: JOIN_US_DUPLICATE_FIELDS[duplicateField].message,
+      });
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Join Us Duplicate Validation Error:", err);
+    res.status(500).json({ detail: "Unable to validate your details. Please try again." });
   }
 });
 
@@ -84,16 +188,33 @@ router.post("/api/join-us", upload.none(), async (req, res, next) => {
       return res.status(400).json({ detail: "Missing resume link. Please wait for the resume to finish uploading." });
     }
 
+    const normalizedEnrollment = normalizeJoinField("enrollment", enrollment);
+    const normalizedContact = normalizeJoinField("contact", contact);
+    const normalizedEmail = normalizeJoinField("email", email);
+    const duplicateField = await getJoinUsDuplicateField({
+      enrollment: normalizedEnrollment,
+      contact: normalizedContact,
+      email: normalizedEmail,
+    });
+
+    if (duplicateField) {
+      return res.status(409).json({
+        success: false,
+        field: duplicateField,
+        detail: JOIN_US_DUPLICATE_FIELDS[duplicateField].message,
+      });
+    }
+
     // Mapping frontend fields to DB columns
     const data = await prisma.joinUs.create({
       data: {
         name,
-        enrollment,
+        enrollment: normalizedEnrollment,
         semester: String(semester),
         division,
         college,
-        contact,
-        email,
+        contact: normalizedContact,
+        email: normalizedEmail,
         batch,
         department,
         after_ug,

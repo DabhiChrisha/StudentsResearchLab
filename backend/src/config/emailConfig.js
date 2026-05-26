@@ -18,9 +18,9 @@ const smtp = {
   },
 };
 
-const adminNotificationRecipients = (process.env.JOIN_REQUEST_ADMIN_NOTIFICATION_EMAILS || process.env.NOTIFICATION_EMAILS || "")
+const adminNotificationRecipients = (process.env.JOIN_REQUEST_ADMIN_NOTIFICATION_EMAILS || process.env.NOTIFICATION_EMAILS || process.env.ADMIN_EMAIL || "")
   .split(",")
-  .map((email) => email.trim())
+  .map((email) => email.trim().replace(/[\'\"]/g, ""))
   .filter(Boolean)
   .join(",");
 
