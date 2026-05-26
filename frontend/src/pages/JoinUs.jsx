@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from '../config/apiConfig';
 import joinSrlImg from '../assets/Join SRL.png';
@@ -9,6 +9,9 @@ export default function JoinUs({ isModal = false, onClose }) {
   const formTopRef = useRef(null);
   // Ref to imperatively reset the uncontrolled file input after submission
   const fileInputRef = useRef(null);
+  const abortControllerRef = useRef(null);
+  const redirectListenerRef = useRef(null);
+  const isMountedRef = useRef(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -35,6 +38,58 @@ export default function JoinUs({ isModal = false, onClose }) {
   const [uploadedResumeLink, setUploadedResumeLink] = useState(null);
 
   const [submitStatus, setSubmitStatus] = useState({ type: null, message: "" });
+
+  const applyDuplicateFieldError = (field, message) => {
+    if (!field || !message) return false;
+    setFormErrors({ [field]: message });
+    setSubmitStatus({ type: 'error', message: 'Please fix the highlighted fields before submitting.' });
+    return true;
+  };
+
+  const cleanupRedirectListener = () => {
+    if (redirectListenerRef.current) {
+      document.removeEventListener("visibilitychange", redirectListenerRef.current);
+      redirectListenerRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      cleanupRedirectListener();
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
+
+  const validateUniqueFields = async ({ enrollment, contact, email }, signal) => {
+    const res = await fetch(`${API_BASE_URL}/api/join-us/validate-unique`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true",
+      },
+      body: JSON.stringify({ enrollment, contact, email }),
+      signal,
+    });
+
+    const data = await res.json();
+    if (res.status === 409) {
+      return {
+        isUnique: false,
+        field: data.field,
+        message: data.detail || data.message || "This value already exists.",
+      };
+    }
+
+    if (!res.ok) {
+      throw new Error(data.detail || data.message || "Validation failed");
+    }
+
+    return { isUnique: true };
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -131,6 +186,12 @@ export default function JoinUs({ isModal = false, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     setLoading(true);
     setFormErrors({});
     setSubmitStatus({ type: null, message: "" });
@@ -197,6 +258,18 @@ export default function JoinUs({ isModal = false, onClose }) {
     }
 
     try {
+      const uniqueValidation = await validateUniqueFields({
+        enrollment: formData.enrollment.trim(),
+        contact: formData.contact,
+        email: trimmedEmail,
+      }, controller.signal);
+
+      if (!uniqueValidation.isUnique) {
+        applyDuplicateFieldError(uniqueValidation.field, uniqueValidation.message);
+        if (isMountedRef.current) setLoading(false);
+        return;
+      }
+
       const payload = new FormData();
       payload.append("name", formData.name.trim());
       payload.append("enrollment", formData.enrollment.trim());
@@ -224,10 +297,16 @@ export default function JoinUs({ isModal = false, onClose }) {
           "ngrok-skip-browser-warning": "true",
         },
         body: payload,
+        keepalive: true,
+        signal: controller.signal,
       });
 
       if (!res.ok) {
         const errorData = await res.json();
+        if (res.status === 409 && applyDuplicateFieldError(errorData.field, errorData.detail || errorData.message)) {
+          if (isMountedRef.current) setLoading(false);
+          return;
+        }
         const errMessage = errorData.detail || errorData.message || "Submission failed";
         throw new Error(typeof errMessage === 'string' ? errMessage : JSON.stringify(errMessage));
       }
@@ -245,19 +324,36 @@ export default function JoinUs({ isModal = false, onClose }) {
       // Scroll to top so the success message is visible briefly
       formTopRef.current?.scrollIntoView({ behavior: 'smooth' });
 
-      // After a short delay, navigate to homepage (or close modal if in modal context)
-      setTimeout(() => {
+      const navigateOrClose = () => {
+        if (!isMountedRef.current) return;
         if (isModal && typeof onClose === 'function') {
           onClose();
         } else {
           navigate("/");
         }
-      }, 2500);
+      };
+
+      if (typeof document !== 'undefined' && document.visibilityState !== 'visible') {
+        const handleVisibility = () => {
+          if (document.visibilityState === 'visible') {
+            cleanupRedirectListener();
+            navigateOrClose();
+          }
+        };
+        redirectListenerRef.current = handleVisibility;
+        document.addEventListener("visibilitychange", handleVisibility);
+      } else {
+        navigateOrClose();
+      }
 
     } catch (err) {
+      if (!isMountedRef.current) return;
       console.error('Full error details:', err);
       let errMsg = err.message || 'Unknown error occurred';
 
+      if (errMsg === 'The user aborted a request.' || errMsg === 'AbortError') {
+        errMsg = 'Submission was cancelled. Please try again.';
+      }
       if (errMsg.includes('duplicate key')) {
         errMsg = 'A record with this information already exists.';
       }
@@ -268,7 +364,7 @@ export default function JoinUs({ isModal = false, onClose }) {
       });
     }
 
-    setLoading(false);
+    if (isMountedRef.current) setLoading(false);
   };
 
   const handleCancel = () => {

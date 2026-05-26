@@ -1,8 +1,9 @@
-import { lazy, Suspense, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Hero from "../components/Hero";
 import HeadSRL from "../components/HeadSRL";
 import LazySection from "../components/LazySection";
+import { fetchImpactMetrics } from "../lib/impactMetrics";
 // Lazy-loaded below-the-fold sections (deferred JS bundles + API calls)
 const Objectives = lazy(() => import("../components/Objectives"));
 const Timeline = lazy(() => import("../components/Timeline"));
@@ -34,6 +35,62 @@ const SectionSkeleton = ({ height = 400, label }) => (
 
 const Home = () => {
   const globeRef = useRef(null);
+  const [impactMetrics, setImpactMetrics] = useState({
+    srlSessions: null,
+    ongoingResearchProjects: null,
+    researchPublications: null,
+    hackathonWinners: null,
+    hackathonFinalists: null,
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchImpactMetricsData = async () => {
+      try {
+        const metrics = await fetchImpactMetrics();
+        if (isMounted) {
+          setImpactMetrics(metrics);
+        }
+      } catch {
+        if (isMounted) {
+          setImpactMetrics({
+            srlSessions: 0,
+            ongoingResearchProjects: 0,
+            researchPublications: 0,
+            hackathonWinners: 0,
+            hackathonFinalists: 0,
+          });
+        }
+      }
+    };
+
+    fetchImpactMetricsData();
+
+    const onLiveUpdate = (event) => {
+      const type = event.detail?.type;
+      if (
+        type === "session_changed" ||
+        type === "publication_approved" ||
+        type === "publication_changed" ||
+        type === "publication_rejected" ||
+        type === "student_changed"
+      ) {
+        fetchImpactMetricsData();
+      }
+    };
+
+    window.addEventListener("srl:live-update", onLiveUpdate);
+    return () => {
+      isMounted = false;
+      window.removeEventListener("srl:live-update", onLiveUpdate);
+    };
+  }, []);
+
+  const formatMetricValue = (value) => (
+    value === null ? "..." : `${value}+`
+  );
+
   return (
     <div className="flex flex-col">
       {/* 1. Hero Section — eagerly loaded (above the fold) */}
@@ -124,12 +181,12 @@ const Home = () => {
                     {[
                       {
                         label: "SRL Sessions",
-                        value: "1+",
+                        value: formatMetricValue(impactMetrics.srlSessions),
                         category: "Total Sessions",
                       },
                       {
                         label: "Ongoing Research Projects",
-                        value: "36+",
+                        value: formatMetricValue(impactMetrics.ongoingResearchProjects),
                         category: "In Progress",
                       },
                       {
@@ -138,14 +195,14 @@ const Home = () => {
                             Research Publications: <br /> Papers/Poster/Case Studies/Book Chapters
                           </>
                         ),
-                        value: "14+",
+                        value: formatMetricValue(impactMetrics.researchPublications),
                         category: "Total Publications",
                       },
                       {
                         label: "Hackathon",
                         isHackathon: true,
-                        winners: "20+",
-                        finalists: "70+",
+                        winners: formatMetricValue(impactMetrics.hackathonWinners),
+                        finalists: formatMetricValue(impactMetrics.hackathonFinalists),
                       },
                     ].map((stat, i) => (
                       <motion.div

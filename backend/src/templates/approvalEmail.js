@@ -13,22 +13,22 @@ function buildApprovalEmail({ studentName }) {
   const safeName = escapeHtml(name);
   const year = new Date().getFullYear();
 
-  const subject = '🎉 Your Application Has Been Approved!';
+  const subject = '🎉 Congratulations — Your SRL Membership Is Confirmed';
 
-  const text = `Hello ${name},
+  const text = `Dear ${name},
 
-Congratulations! Your application has been approved.
+Congratulations on your approval to join SRL. Your application has been reviewed and you are now officially confirmed as a new member.
 
-You are now officially a member of our research community. We're excited to have you on board!
+This is a strong opportunity to contribute, learn, and grow. Please maintain discipline, regularity, and consistency in your work to make the most of your membership.
 
-What's next?
-• Attend upcoming sessions and workshops
-• Connect with fellow researchers and mentors
-• Start contributing to ongoing research projects
+What to focus on next:
+• Attend sessions and research activities regularly
+• Collaborate with mentors and peers
+• Continue working hard with dedication to build your career
 
-If you have any questions, feel free to reach out to the team.
+If you have any questions, please reach out to the SRL team.
 
-Welcome aboard,
+Warm regards,
 The Admin Team`;
 
   const html = `<!DOCTYPE html>
@@ -38,9 +38,9 @@ The Admin Team`;
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Application Approved</title>
 </head>
-<body style="margin:0;padding:0;background-color:#F8E6C1;font-family:'Segoe UI',Tahoma,Geneva,Verdana,Arial,sans-serif;">
+<body style="margin:0;padding:0;background-color:#f0f4f4;font-family:'Segoe UI',Tahoma,Geneva,Verdana,Arial,sans-serif;">
 
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#F8E6C1;padding:32px 16px;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f0f4f4;padding:32px 16px;">
     <tr>
       <td align="center">
 
@@ -48,18 +48,18 @@ The Admin Team`;
 
           <!-- HEADER -->
           <tr>
-            <td style="background-color:#F8E6C1;padding:40px 40px 32px;text-align:center;border-bottom:1px solid #efd59f;">
-              <h1 style="margin:0 0 20px;font-size:28px;font-weight:700;color:#3f3420;letter-spacing:-0.5px;">Research Lab</h1>
-              <div style="display:inline-block;background-color:rgba(255,255,255,0.45);border:2px solid #e6c681;border-radius:50px;padding:10px 28px;">
-                <p style="margin:0;font-size:15px;font-weight:600;color:#3f3420;letter-spacing:0.5px;">✅ &nbsp;Application Approved</p>
+            <td style="background:linear-gradient(135deg,#05877a 0%,#037a6e 60%,#026b60 100%);padding:40px 40px 32px;text-align:center;">
+              <h1 style="margin:0 0 20px;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">Research Lab</h1>
+              <div style="display:inline-block;background-color:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.35);border-radius:50px;padding:10px 28px;">
+                <p style="margin:0;font-size:15px;font-weight:600;color:#ffffff;letter-spacing:0.5px;">✅ &nbsp;Application Approved</p>
               </div>
             </td>
           </tr>
 
           <!-- GREETING -->
           <tr>
-            <td style="background-color:#fff6e4;padding:20px 40px;text-align:center;border-bottom:1px solid #efd59f;">
-              <p style="margin:0;font-size:22px;font-weight:700;color:#3f3420;letter-spacing:-0.3px;">🎉 Congratulations, ${safeName}!</p>
+            <td style="background-color:#e6f4f2;padding:20px 40px;text-align:center;border-bottom:1px solid #c8e6e3;">
+              <p style="margin:0;font-size:22px;font-weight:700;color:#037a6e;letter-spacing:-0.3px;">🎉 Congratulations, ${safeName}!</p>
             </td>
           </tr>
 
@@ -68,13 +68,13 @@ The Admin Team`;
             <td style="padding:36px 40px 28px;">
 
               <p style="margin:0 0 20px;font-size:16px;color:#374151;line-height:1.7;">
-                We are thrilled to inform you that your application has been
+                We are pleased to inform you that your application has been
                 <strong style="color:#05877a;">officially approved</strong>.
-                Welcome to our research community!
+                Welcome to the SRL research community.
               </p>
 
               <!-- Status card -->
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#fff6e4;border-left:4px solid #F8E6C1;border-radius:0 10px 10px 0;margin:0 0 28px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f0faf9;border-left:4px solid #05877a;border-radius:0 10px 10px 0;margin:0 0 28px;">
                 <tr>
                   <td style="padding:20px 24px;">
                     <p style="margin:0 0 6px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#05877a;">You are now an official member</p>
@@ -94,7 +94,7 @@ The Admin Team`;
                     <table cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="width:36px;vertical-align:top;">
-                          <div style="width:28px;height:28px;background-color:#F8E6C1;border-radius:50%;text-align:center;line-height:28px;font-size:14px;">🗓️</div>
+                          <div style="width:28px;height:28px;background-color:#e6f4f2;border-radius:50%;text-align:center;line-height:28px;font-size:14px;">🗓️</div>
                         </td>
                         <td style="padding-left:12px;vertical-align:middle;">
                           <p style="margin:0;font-size:14px;color:#374151;line-height:1.5;"><strong>Attend sessions</strong> — Join upcoming workshops, seminars, and research presentations.</p>
@@ -108,7 +108,7 @@ The Admin Team`;
                     <table cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="width:36px;vertical-align:top;">
-                          <div style="width:28px;height:28px;background-color:#F8E6C1;border-radius:50%;text-align:center;line-height:28px;font-size:14px;">🤝</div>
+                          <div style="width:28px;height:28px;background-color:#e6f4f2;border-radius:50%;text-align:center;line-height:28px;font-size:14px;">🤝</div>
                         </td>
                         <td style="padding-left:12px;vertical-align:middle;">
                           <p style="margin:0;font-size:14px;color:#374151;line-height:1.5;"><strong>Connect with peers</strong> — Collaborate with fellow researchers, mentors, and faculty.</p>
@@ -122,7 +122,7 @@ The Admin Team`;
                     <table cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="width:36px;vertical-align:top;">
-                          <div style="width:28px;height:28px;background-color:#F8E6C1;border-radius:50%;text-align:center;line-height:28px;font-size:14px;">🔬</div>
+                          <div style="width:28px;height:28px;background-color:#e6f4f2;border-radius:50%;text-align:center;line-height:28px;font-size:14px;">🔬</div>
                         </td>
                         <td style="padding-left:12px;vertical-align:middle;">
                           <p style="margin:0;font-size:14px;color:#374151;line-height:1.5;"><strong>Contribute to research</strong> — Begin working on ongoing projects and publish your findings.</p>
@@ -134,7 +134,7 @@ The Admin Team`;
               </table>
 
               <p style="margin:0;font-size:15px;color:#374151;line-height:1.7;">
-                If you have any questions or need assistance, please don't hesitate to reach out to the team. We look forward to your contributions!
+                If you have any questions or need assistance, please do not hesitate to reach out to the team. We look forward to your contributions and continued dedication.
               </p>
 
             </td>
@@ -157,7 +157,7 @@ The Admin Team`;
 
           <!-- FOOTER -->
           <tr>
-            <td style="background-color:#fff6e4;border-top:1px solid #efd59f;padding:20px 40px;text-align:center;border-radius:0 0 16px 16px;">
+            <td style="background-color:#f8fffe;border-top:1px solid #e5e7eb;padding:20px 40px;text-align:center;border-radius:0 0 16px 16px;">
               <p style="margin:0 0 4px;font-size:12px;color:#9ca3af;">
                 This is an automated email from the Research Lab portal.
               </p>
@@ -175,7 +175,6 @@ The Admin Team`;
 
 </body>
 </html>`;
-
   return { subject, text, html };
 }
 

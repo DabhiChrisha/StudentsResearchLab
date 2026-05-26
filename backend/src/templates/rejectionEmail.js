@@ -13,15 +13,15 @@ function buildRejectionEmail({ studentName }) {
   const safeName = escapeHtml(name);
   const year = new Date().getFullYear();
 
-  const subject = '🙏 Update on Your Application Status';
+  const subject = 'Update on Your SRL Application';
 
-  const text = `Hello ${name},
+  const text = `Dear ${name},
 
-Thank you for your application and for your interest in our research lab.
+Thank you for submitting your SRL application and for your interest in our research lab.
 
-After careful review, we are unable to move forward with your application at this time.
+After careful review, we are unable to approve your request at this time.
 
-We encourage you to keep building your skills and to consider applying again in the future.
+We encourage you to continue working hard, maintain discipline, and consider applying again in the future when the next opportunity arises.
 
 If you would like feedback or have any questions, please feel free to reach out.
 
@@ -35,29 +35,32 @@ The Admin Team`;
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Application Status Update</title>
 </head>
-<body style="margin:0;padding:0;background-color:#F8E6C1;font-family:'Segoe UI',Tahoma,Geneva,Verdana,Arial,sans-serif;">
+<body style="margin:0;padding:0;background-color:#f0f4f4;font-family:'Segoe UI',Tahoma,Geneva,Verdana,Arial,sans-serif;">
 
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#F8E6C1;padding:32px 16px;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f0f4f4;padding:32px 16px;">
     <tr>
       <td align="center">
 
         <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(15,23,42,0.08);">
 
+          <!-- HEADER -->
           <tr>
-            <td style="background-color:#F8E6C1;padding:40px 40px 32px;text-align:center;border-bottom:1px solid #efd59f;">
-              <h1 style="margin:0 0 20px;font-size:28px;font-weight:700;color:#3f3420;letter-spacing:-0.5px;">Research Lab</h1>
-              <div style="display:inline-block;background-color:rgba(255,255,255,0.45);border:2px solid #e6c681;border-radius:50px;padding:10px 28px;">
-                <p style="margin:0;font-size:15px;font-weight:600;color:#3f3420;letter-spacing:0.5px;">📩 Application Status Update</p>
+            <td style="background:linear-gradient(135deg,#05877a 0%,#037a6e 60%,#026b60 100%);padding:40px 40px 32px;text-align:center;">
+              <h1 style="margin:0 0 20px;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">Research Lab</h1>
+              <div style="display:inline-block;background-color:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.35);border-radius:50px;padding:10px 28px;">
+                <p style="margin:0;font-size:15px;font-weight:600;color:#ffffff;letter-spacing:0.5px;">📩 Application Status Update</p>
               </div>
             </td>
           </tr>
 
+          <!-- GREETING -->
           <tr>
-            <td style="background-color:#fff6e4;padding:20px 40px;text-align:center;border-bottom:1px solid #efd59f;">
-              <p style="margin:0;font-size:22px;font-weight:700;color:#3f3420;letter-spacing:-0.3px;">Hello, ${safeName}</p>
+            <td style="background-color:#e6f4f2;padding:20px 40px;text-align:center;border-bottom:1px solid #c8e6e3;">
+              <p style="margin:0;font-size:22px;font-weight:700;color:#037a6e;letter-spacing:-0.3px;">Hello, ${safeName}</p>
             </td>
           </tr>
 
+          <!-- BODY -->
           <tr>
             <td style="padding:36px 40px 28px;">
 
@@ -65,10 +68,11 @@ The Admin Team`;
                 Thank you for applying to our research lab. After careful consideration, we are not able to approve your application at this time.
               </p>
 
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#fff6e4;border-left:4px solid #F8E6C1;border-radius:0 10px 10px 0;margin:0 0 28px;">
+              <!-- Status card -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f0faf9;border-left:4px solid #05877a;border-radius:0 10px 10px 0;margin:0 0 28px;">
                 <tr>
                   <td style="padding:20px 24px;">
-                    <p style="margin:0 0 6px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#3b82f6;">What this means</p>
+                    <p style="margin:0 0 6px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#05877a;">What this means</p>
                     <p style="margin:0;font-size:15px;color:#334155;line-height:1.6;">
                       Your application was reviewed but not selected for the current cycle. We appreciate your time and interest.
                     </p>
@@ -77,7 +81,7 @@ The Admin Team`;
               </table>
 
               <p style="margin:0 0 18px;font-size:15px;color:#1f2937;line-height:1.7;">
-                We encourage you to stay connected and consider applying again in the future.
+                We encourage you to stay connected, continue improving your skills, and consider applying again in the future.
               </p>
 
               <p style="margin:0 0 20px;font-size:15px;color:#1f2937;line-height:1.7;">
@@ -92,8 +96,9 @@ The Admin Team`;
             </td>
           </tr>
 
+          <!-- FOOTER -->
           <tr>
-            <td style="padding:24px 40px 32px;text-align:center;">
+            <td style="background-color:#f8fffe;border-top:1px solid #e5e7eb;padding:24px 40px 32px;text-align:center;">
               <p style="margin:0;font-size:12px;color:#9ca3af;">
                 This is an automated email from the Research Lab portal.
               </p>
@@ -111,7 +116,6 @@ The Admin Team`;
 
 </body>
 </html>`;
-
   return { subject, text, html };
 }
 
