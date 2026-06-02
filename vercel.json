@@ -9,14 +9,14 @@
       }
     }
   ],
-  "outputDirectory": "frontend/dist",
+  "outputDirectory": "dist",
   "routes": [
     {
       "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "/frontend/dist/index.html"
+      "dest": "/index.html"
     }
   ]
 }
