@@ -3,11 +3,25 @@ const { broadcast } = require("../utils/sseManager");
 const { syncStudentFromJoinRequest } = require("../lib/syncStudentFromJoinRequest");
 const { sendApprovalEmail, sendRejectionEmail, isValidEmail } = require("../services/emailService");
 const { deleteFromCloudinary, extractPublicId } = require("../utils/imageUpload");
+const os = require("os");
+const path = require("path");
 
 const serializeForJson = (value) =>
   JSON.parse(
     JSON.stringify(value, (_key, val) => (typeof val === "bigint" ? val.toString() : val))
   );
+
+const getJoinStatusFile = () => {
+  const dataDir =
+    process.env.VERCEL || process.env.NODE_ENV === "production"
+      ? path.join(os.tmpdir(), "srl-data")
+      : path.join(__dirname, "..", "data");
+
+  return {
+    dataDir,
+    statusFile: path.join(dataDir, "join_status.json"),
+  };
+};
 
 /**
  * Get all research papers - GET /api/admin/research
@@ -141,8 +155,7 @@ exports.getJoinRequests = async (req, res, next) => {
 
     // Load statuses from local JSON file (if exists)
     const fs = require("fs");
-    const path = require("path");
-    const statusFile = path.join(__dirname, "..", "data", "join_status.json");
+    const { statusFile } = getJoinStatusFile();
     let statuses = {};
     try {
       if (fs.existsSync(statusFile)) {
@@ -302,9 +315,7 @@ exports.updateJoinRequest = async (req, res, next) => {
 
     // Persist status to local JSON file (legacy fallback)
     const fs = require("fs");
-    const path = require("path");
-    const dataDir = path.join(__dirname, "..", "data");
-    const statusFile = path.join(dataDir, "join_status.json");
+    const { dataDir, statusFile } = getJoinStatusFile();
 
     if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 
