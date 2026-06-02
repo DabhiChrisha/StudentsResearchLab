@@ -5,7 +5,6 @@
  * Falls back to localhost for local development.
  * Vercel deployment: Set VITE_API_BASE_URL in the project settings.
  */
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
 /**
  * Default headers for every API request.
@@ -16,3 +15,12 @@ export const API_HEADERS = {
   "Content-Type": "application/json",
   "ngrok-skip-browser-warning": "true",
 };
+
+const rawApiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim() ?? "";
+if (import.meta.env.PROD && !rawApiBaseUrl) {
+  throw new Error(
+    'Missing VITE_API_BASE_URL in production. Set VITE_API_BASE_URL to the deployed backend URL in Vercel environment variables.',
+  );
+}
+
+export const API_BASE_URL = rawApiBaseUrl;

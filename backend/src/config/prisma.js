@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('./env');
 const { PrismaClient } = require('../generated/prisma');
 const { PrismaNeon } = require('@prisma/adapter-neon');
 const { neonConfig } = require('@neondatabase/serverless');

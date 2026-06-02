@@ -8,6 +8,7 @@
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "node ../scripts/create-root-dist.cjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
