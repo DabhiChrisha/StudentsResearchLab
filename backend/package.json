@@ -2,8 +2,9 @@
   "name": "studentsresearchlab-backend-runner",
   "private": true,
   "scripts": {
-    "build": "prisma generate",
+    "build": "npx prisma generate && echo \"Prisma client generated\"",
     "postinstall": "prisma generate",
+    "tsc": "echo \"Backend uses JavaScript; skipping TypeScript compilation\"",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "db:pull": "npx prisma db pull",

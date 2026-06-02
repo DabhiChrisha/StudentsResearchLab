@@ -49,7 +49,10 @@ const ALLOWED_ORIGINS = [
   "http://127.0.0.1:5175",
   "http://127.0.0.1:3000",
   "https://students-research-lab-srl.vercel.app",
-  "https://students-research-lab-admin-portal.vercel.app", // actual admin portal
+  "https://students-research-lab-admin-portal.vercel.app",
+  "https://srl.mmpsrpc.in/",
+  "https://api-srl.mmpsrpc.in/",
+  "https://admin-srl.mmpsrpc.in/"
 ];
 
 app.use(
@@ -77,12 +80,13 @@ app.use(express.json());
 // - Public read-only endpoints: 30s fresh + 5min stale-while-revalidate.
 //   This eliminates redundant DB hits on repeat navigations while keeping
 //   data fresh enough for a lab website updated a few times per day.
+// - /api/activities and /api/researchers are intentionally excluded from
+//   public caching because they are updated by the admin portal and the
+//   main website must reflect new content immediately.
 // - All admin/mutation endpoints: no-store (always fresh).
 const PUBLIC_CACHEABLE = [
   '/api/leaderboard',
-  '/api/researchers',
   '/api/publications',
-  '/api/activities',
   '/api/sessions',
   '/api/achievements',
   '/api/timeline',
