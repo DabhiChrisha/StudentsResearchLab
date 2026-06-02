@@ -54,12 +54,32 @@ const ALLOWED_ORIGINS = [
   "https://api-srl.mmpsrpc.in",
   "https://admin-srl.mmpsrpc.in"
 ];
+const ALLOWED_ORIGIN_SET = new Set(ALLOWED_ORIGINS.map((origin) => origin.replace(/\/$/, "")));
 
 app.use(
   cors({
-    origin: ALLOWED_ORIGINS,
+    origin: (origin, callback) => {
+      // Non-browser clients like curl/Postman often omit Origin entirely.
+      if (!origin) return callback(null, true);
+
+      const normalizedOrigin = origin.replace(/\/$/, "");
+      if (ALLOWED_ORIGIN_SET.has(normalizedOrigin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked origin: ${origin}`));
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "ngrok-skip-browser-warning",
+      "X-Requested-With",
+      "Accept",
+      "Origin",
+    ],
     credentials: true,
+    optionsSuccessStatus: 204,
   }),
 );
 
