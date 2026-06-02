@@ -181,18 +181,22 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal Server Error", detail: "An unexpected error occurred. Please try again later." });
 });
 
-const PORT = process.env.PORT || 8000;
-const server = app.listen(PORT, () => {
-  console.log(`✅ Server is running on port ${PORT}`);
-});
+if (require.main === module) {
+  const PORT = process.env.PORT || 8000;
+  const server = app.listen(PORT, () => {
+    console.log(`✅ Server is running on port ${PORT}`);
+  });
 
-server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.error(`❌ Port ${PORT} is already in use.`);
-    console.error(`   Run: netstat -ano | findstr :${PORT}  → then taskkill /PID <pid> /F`);
-    process.exit(1); // exit so nodemon can retry on next rs / file change
-  } else {
-    console.error('❌ Server error:', err);
-    process.exit(1);
-  }
-});
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`❌ Port ${PORT} is already in use.`);
+      console.error(`   Run: netstat -ano | findstr :${PORT}  → then taskkill /PID <pid> /F`);
+      process.exit(1); // exit so nodemon can retry on next rs / file change
+    } else {
+      console.error('❌ Server error:', err);
+      process.exit(1);
+    }
+  });
+}
+
+module.exports = app;

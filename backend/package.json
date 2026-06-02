@@ -2,7 +2,7 @@
   "name": "studentsresearchlab-backend-runner",
   "private": true,
   "scripts": {
-    "build": "npx prisma generate && node create-dist.cjs",
+    "build": "npx prisma generate",
     "postinstall": "prisma generate",
     "tsc": "echo \"Backend uses JavaScript; skipping TypeScript compilation\"",
     "start": "node src/index.js",
@@ -16,7 +16,7 @@
   },
   "description": "This directory contains the Python-based backend service for the Students Research Lab application.",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "keywords": [],
   "author": "",
   "license": "ISC",
