@@ -50,9 +50,9 @@ const ALLOWED_ORIGINS = [
   "http://127.0.0.1:3000",
   "https://students-research-lab-srl.vercel.app",
   "https://students-research-lab-admin-portal.vercel.app",
-  "https://srl.mmpsrpc.in/",
-  "https://api-srl.mmpsrpc.in/",
-  "https://admin-srl.mmpsrpc.in/"
+  "https://srl.mmpsrpc.in",
+  "https://api-srl.mmpsrpc.in",
+  "https://admin-srl.mmpsrpc.in"
 ];
 
 app.use(
