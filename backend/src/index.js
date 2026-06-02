@@ -1,3 +1,4 @@
+require("./config/env");
 const express = require("express");
 const cors = require("cors");
 const compression = require("compression");
@@ -136,6 +137,11 @@ app.get("/api/health", (req, res) => {
   res.json({
     status: "✅ ok",
     allowed_origins: ALLOWED_ORIGINS,
+    env: {
+      database_url: Boolean(process.env.DATABASE_URL),
+      cloudinary: Boolean(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET),
+      email: Boolean(process.env.SMTP_USER || process.env.RESEND_API_KEY || process.env.POSTMARK_API_KEY),
+    },
   });
 });
 
