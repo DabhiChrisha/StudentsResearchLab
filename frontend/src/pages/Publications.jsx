@@ -33,10 +33,12 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="sm:flex sm:flex-col sm:h-full"
     >
-      <div
-        className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden group flex flex-col relative min-h-[360px] cursor-pointer"
+      <motion.div
+        className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-500 overflow-hidden group flex flex-col relative cursor-pointer sm:h-full"
         style={{backgroundImage: `url('/study.png')`, backgroundSize: '100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}
+        animate={{ minHeight: isExpanded ? "auto" : undefined }}
         onClick={() => setIsExpanded((current) => !current)}
       >
         
@@ -127,7 +129,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
             )}
 
             {hasHiddenDetails && (
-            <div className={`overflow-hidden transition-all duration-300 ease-out ${isExpanded ? "mt-2 max-h-28 opacity-100" : "mt-0 max-h-0 opacity-0 group-hover:mt-2 group-hover:max-h-28 group-hover:opacity-100"}`}>
+            <div className={`hidden sm:block overflow-hidden transition-all duration-300 ease-out ${isExpanded ? "mt-2 max-h-28 opacity-100" : "mt-0 max-h-0 opacity-0 group-hover:mt-2 group-hover:max-h-28 group-hover:opacity-100"}`}>
               <div className="rounded-lg border border-slate-200 bg-white/75 p-2">
                 <div className="min-w-0 space-y-1">
                   {pub.publisher && (
@@ -150,6 +152,53 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
             </div>
             )}
           </div>
+
+          {/* Mobile expand indicator */}
+          <div className="flex justify-center sm:hidden mt-1 mb-0.5">
+            <motion.div
+              animate={{ rotate: isExpanded ? 180 : 0 }}
+              transition={{ duration: 0.25 }}
+              className="text-slate-400"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </motion.div>
+          </div>
+
+          {/* Mobile-only expanded details */}
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                key="mobile-expanded"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="overflow-hidden sm:hidden"
+              >
+                <div className="border-t border-slate-100 mx-3 pt-2 pb-1 space-y-1.5 text-xs">
+                  {pub.publisher && (
+                    <div className="flex items-center gap-1.5">
+                      <BookOpen size={13} className="text-slate-500 shrink-0" />
+                      <span className="font-semibold text-slate-700">Publisher:</span>
+                      <span className="text-slate-600">{pub.publisher}</span>
+                    </div>
+                  )}
+                  {pub.venue && (
+                    <div className="flex items-center gap-1.5">
+                      <Bookmark size={13} className="text-slate-500 shrink-0" />
+                      <span className="font-semibold text-slate-700">Venue:</span>
+                      <span className="text-slate-600 break-words">{pub.venue}</span>
+                    </div>
+                  )}
+                  {pub.description && (
+                    <div className="pt-1">
+                      <p className="text-slate-600 leading-relaxed">{pub.description}</p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Paper Link - Bottom */}
           <div className="mt-auto pt-2 border-t border-gray-200 flex items-center justify-between gap-3">
@@ -182,7 +231,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
                 <span className="text-xs">No Link</span>
               </div>
             )}
-            <div className="ml-auto flex h-16 w-40 flex-shrink-0 items-center justify-center p-0">
+            <div className="ml-auto flex h-14 w-32 sm:h-16 sm:w-40 flex-shrink-0 items-center justify-center self-center p-0">
               {publisherLogoUrl ? (
                 <img
                   src={publisherLogoUrl}
@@ -198,7 +247,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
           </div>
         </div>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
@@ -435,7 +484,7 @@ const Publications = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-5xl lg:text-7xl font-black font-serif text-secondary-dark mb-3 uppercase tracking-tight"
+            className="text-4xl sm:text-5xl lg:text-7xl font-black font-serif text-secondary-dark mb-3 uppercase tracking-tight"
           >
             Publications
           </motion.h1>
@@ -463,7 +512,7 @@ const Publications = () => {
         {/* Filters and Search Hub */}
         <div className="flex flex-col gap-2 mb-8">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-2 bg-slate-50/50 p-1.5 sm:p-2.5 rounded-3xl border border-slate-200 shadow-sm">
-            <div className="flex items-center gap-1.5 overflow-x-auto lg:overflow-visible w-full lg:w-auto lg:scrollbar-hide py-0.5">
+            <div className="flex items-center gap-1.5 overflow-x-auto hide-scrollbar w-full lg:w-auto py-0.5 pb-1" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
               {categories.map((cat) => (
                 <button
                   key={cat}
@@ -599,7 +648,7 @@ const Publications = () => {
           </motion.p>
         ) : null}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 sm:items-stretch">
           <AnimatePresence mode="popLayout">
             {loading ? (
               [...Array(6)].map((_, index) => (

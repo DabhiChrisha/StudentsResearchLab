@@ -537,7 +537,7 @@ export default function Researchers() {
                 animationSpeed={3}
                 showBorder={false}
                 animateOnHover={true}
-                className="text-4xl sm:text-5xl font-serif font-black px-4 py-2"
+                className="text-4xl sm:text-5xl font-serif font-black px-4 py-2 text-center"
               >
                 Research Assistants
               </GradientText>
@@ -742,7 +742,7 @@ export default function Researchers() {
 
                           {/* Bottom row: social links */}
                           <div
-                            className="mt-auto flex items-center gap-2 pt-0.5"
+                            className="mt-auto flex items-center gap-2 pt-0.5 justify-center sm:justify-start"
                             onClick={(e) => e.stopPropagation()}
                           >
                             {ra.email && (

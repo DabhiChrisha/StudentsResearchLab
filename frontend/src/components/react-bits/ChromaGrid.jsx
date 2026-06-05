@@ -116,39 +116,39 @@ const ChromaGrid = ({ items, onImageClick, onCertClick, isLoading = false, skele
                     </div>
 
                     {/* Bottom: Info Section */}
-                    <div className="px-2 pb-2 pt-0 flex-1 flex flex-col">
-                        <div className="mb-0.5">
-                            <h4 className="text-[1.3rem] sm:text-[1.3rem] lg:text-[1.0rem] font-black text-slate-900 mb-0.5 tracking-tight leading-tight group-hover:text-secondary transition-colors duration-500 line-clamp-2 min-h-[1.35em]">
+                    <div className="px-3 pb-3 pt-1 flex-1 flex flex-col">
+                        <div className="mb-1">
+                            <h4 className="text-[1.05rem] sm:text-[1.3rem] lg:text-[1.0rem] font-black text-slate-900 mb-0.5 tracking-tight leading-tight group-hover:text-secondary transition-colors duration-500 line-clamp-2 min-h-[1.35em]">
                                 {item.title}
                             </h4>
                             <div className="flex items-center gap-1 flex-wrap">
-                                <span className="text-[12px] sm:text-[12px] font-black text-secondary uppercase tracking-[0.1em] px-1 py-0.5 rounded bg-secondary/5">
+                                <span className="text-[11px] sm:text-[12px] font-black text-secondary uppercase tracking-[0.1em] px-1 py-0.5 rounded bg-secondary/5">
                                     BATCH {item.batch || ''}
                                 </span>
-                                <span className="text-[12px] sm:text-[12px] font-bold text-slate-400 uppercase tracking-widest truncate max-w-[96px]">
+                                <span className="text-[11px] sm:text-[12px] font-bold text-slate-400 uppercase tracking-widest truncate max-w-[96px]">
                                     {item.department}
                                 </span>
                             </div>
                         </div>
 
                         {/* Quick Stats Badges */}
-                        <div className="flex flex-wrap gap-1 mb-1">
+                        <div className="flex flex-wrap gap-1 mb-2">
                             {(item.research_areas || []).slice(0, 1).map((area, aIdx) => (
-                                <span key={aIdx} className="text-[12px] sm:text-[12px] font-bold text-slate-500 bg-slate-50 border border-slate-100 px-1.5 py-0.5 rounded-md">
+                                <span key={aIdx} className="text-[11px] sm:text-[12px] font-bold text-slate-500 bg-slate-50 border border-slate-100 px-1.5 py-0.5 rounded-md">
                                     {area}
                                 </span>
                             ))}
                         </div>
 
                         {/* Bottom Row: Metrics & Actions */}
-                        <div className="mt-auto pt-1 border-t border-slate-50 flex flex-col gap-1">
-                            <div className="grid grid-cols-3 gap-x-2 gap-y-1.5">
+                        <div className="mt-auto pt-2 border-t border-slate-50 flex flex-col gap-2">
+                            <div className="grid grid-cols-3 gap-x-1 gap-y-1.5">
                                 <Metric icon={Activity} value={item.ongoingProjectsCount} label="Ongoing" />
                                 <Metric icon={Zap} value={item.hackathonsCount} label="Hacks" />
                                 <Metric icon={ScrollText} value={item.papersPublishedCount} label="Papers" />
                             </div>
 
-                            <div className="flex items-center justify-between gap-1">
+                            <div className="flex items-center justify-between gap-1.5">
                                 <button
                                     type="button"
                                     aria-label={`View certificates for ${item.title}`}
@@ -157,9 +157,9 @@ const ChromaGrid = ({ items, onImageClick, onCertClick, isLoading = false, skele
                                         e.stopPropagation();
                                         onCertClick?.(item);
                                     }}
-                                    className="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-[13px] font-black uppercase tracking-wider shadow-sm hover:bg-teal-500 hover:text-white transition-all duration-500"
+                                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-[11px] sm:text-[13px] font-black uppercase tracking-wider shadow-sm hover:bg-teal-500 hover:text-white transition-all duration-500"
                                 >
-                                    <Award size={16} />
+                                    <Award size={13} className="sm:w-4 sm:h-4" />
                                     <span>CERTIFICATES</span>
                                 </button>
 
@@ -171,9 +171,9 @@ const ChromaGrid = ({ items, onImageClick, onCertClick, isLoading = false, skele
                                         e.stopPropagation();
                                         onImageClick(item);
                                     }}
-                                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/60 flex items-center justify-center text-slate-400 hover:bg-secondary hover:text-white transition-all duration-500 shadow-sm"
+                                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/60 flex items-center justify-center text-slate-400 hover:bg-secondary hover:text-white transition-all duration-500 shadow-sm shrink-0"
                                 >
-                                    <ArrowUpRight size={16} />
+                                    <ArrowUpRight size={15} />
                                 </button>
                             </div>
                         </div>

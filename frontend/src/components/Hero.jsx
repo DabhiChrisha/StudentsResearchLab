@@ -72,10 +72,10 @@ export default function Hero() {
           {current === 0 ? (
             /* SLIDE 1: Original Style */
             <div className="max-w-3xl ml-auto text-right self-end mt-auto mb-24 md:mb-0">
-              <h1 className="text-white font-serif text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight drop-shadow-lg leading-tight">
+              <h1 className="text-white font-serif text-5xl sm:text-6xl md:text-6xl lg:text-7xl font-bold tracking-tight drop-shadow-lg leading-tight">
                 Students Research Lab
               </h1>
-              <p className="text-white/90 font-serif text-lg md:text-2xl drop-shadow mt-4 md:mt-6 leading-relaxed font-medium">
+              <p className="text-white/90 font-serif text-xl sm:text-2xl md:text-2xl drop-shadow mt-4 md:mt-6 leading-relaxed font-medium">
                 Fostering a disciplined research culture, consistency in
                 academic practice, and excellence through collaborative
                 scholarly engagement.
@@ -88,15 +88,15 @@ export default function Hero() {
               <img loading="lazy" decoding="async"
                 src={srlLogo}
                 alt="SRL Logo"
-                className="w-12 h-12 sm:w-16 sm:h-16 md:w-24 md:h-24 lg:w-28 lg:h-28 drop-shadow-lg object-contain shrink-0 transition-all duration-700"
+                className="w-24 h-24 sm:w-32 sm:h-32 md:w-24 md:h-24 lg:w-28 lg:h-28 drop-shadow-lg object-contain shrink-0 transition-all duration-700"
               />
 
               {/* Text Container - Same Size for Slide 2 & 3 */}
               <div className="flex flex-col justify-center text-center transition-all duration-700">
-                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl text-white font-serif font-bold tracking-tight drop-shadow-lg leading-none">
+                <h1 className="text-3xl sm:text-4xl md:text-3xl lg:text-5xl text-white font-serif font-bold tracking-tight drop-shadow-lg leading-none">
                   Students Research Lab (SRL)
                 </h1>
-                <p className="text-[10px] sm:text-sm md:text-base lg:text-xl text-white/90 font-serif drop-shadow-md mt-2 italic font-medium leading-tight max-w-4xl mx-auto">
+                <p className="text-sm sm:text-base md:text-base lg:text-xl text-white/90 font-serif drop-shadow-md mt-2 italic font-medium leading-tight max-w-4xl mx-auto">
                   "Fostering a disciplined research culture, consistency in
                   academic practice, and excellence through collaborative
                   scholarly engagement."

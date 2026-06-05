@@ -39,12 +39,12 @@ const Footer = () => {
                 loading="lazy"
                 decoding="async"
                 src="/SRL.svg"
-                alt="Student Research Lab"
+                alt="Students Research Lab"
                 className="h-24 w-auto mb-4"
               />
 
               <p className="text-[#134E4A]/80 leading-relaxed text-xs max-w-[240px]">
-                Student Research Lab (SRL) encourages innovation, collaboration,
+                Students Research Lab (SRL) encourages innovation, collaboration,
                 and applied research through guided academic mentorship.
               </p>
             </div>
@@ -109,7 +109,7 @@ const Footer = () => {
                 </Link>
 
                 <Link
-                  to="/about"
+                  to="/"
                   onClick={scrollToTop}
                   className="hover:underline"
                 >
@@ -133,7 +133,7 @@ const Footer = () => {
               </h4>
 
               <p className="text-xs text-[#134E4A]/80 leading-relaxed mb-2">
-                Student Research Lab (MMPSRPC)
+                Students Research Lab (MMPSRPC)
                 <br />
                 LDRP-ITR, Sector-15, Gandhinagar
               </p>
@@ -222,7 +222,7 @@ const Footer = () => {
 
           {/* COPYRIGHT */}
           <div className="text-center text-[11px] text-[#134E4A]/70">
-            © {new Date().getFullYear()} Student Research Lab · MMPSRPC, KSV
+            © {new Date().getFullYear()} Students Research Lab · MMPSRPC, KSV
           </div>
         </div>
       </div>

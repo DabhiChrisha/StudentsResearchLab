@@ -13,6 +13,16 @@ export default function JoinUs({ isModal = false, onClose }) {
   const redirectListenerRef = useRef(null);
   const isMountedRef = useRef(false);
 
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key !== "Escape") return;
+      if (isModal && onClose) onClose();
+      else navigate(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isModal, onClose, navigate]);
+
   const [formData, setFormData] = useState({
     name: "",
     enrollment: "",
@@ -554,6 +564,7 @@ export default function JoinUs({ isModal = false, onClose }) {
                 { value: "MCA", label: "MCA" },
                 { value: "PhD", label: "PhD" },
                 { value: "Masters in Abroad", label: "Masters in Abroad" },
+                { value: "Placement", label: "Placement" },
                 { value: "Other", label: "Other" },
               ]}
               required

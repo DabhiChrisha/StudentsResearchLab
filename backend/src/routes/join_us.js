@@ -246,18 +246,10 @@ router.post("/api/join-us", upload.none(), async (req, res, next) => {
     // Removed setTimeout to prevent serverless suspension issues
     const recipientEmail = String(email || "").trim();
     if (!recipientEmail || !isValidEmail(recipientEmail)) {
-      console.error(
-        `[Join Request] Submission confirmation email skipped for request ${serializedData.id}: invalid applicant email '${email}'`,
-      );
+      console.error(`[Join Request] Submission confirmation email skipped for request ${serializedData.id}: invalid email`);
     } else {
-      console.log(
-        `[Join Request] Submission confirmation email execution starting for request ${serializedData.id}: sending to ${recipientEmail}`,
-      );
       sendJoinRequestConfirmationEmail({ to: recipientEmail, studentName: name }).catch((emailErr) => {
-        console.error(
-          `[Email Error] Failed to send submission confirmation email to ${recipientEmail} for request ID ${serializedData.id}:`,
-          emailErr,
-        );
+        console.error(`[Email Error] Failed to send submission confirmation email for request ID ${serializedData.id}:`, emailErr);
       });
     }
 

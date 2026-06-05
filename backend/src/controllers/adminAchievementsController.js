@@ -30,10 +30,6 @@ exports.createAchievement = async (req, res, next) => {
     // Support both snake_case and camelCase
     const resolvedMediaUrls = media_urls || mediaUrls || [];
 
-    // DEBUG LOGGING
-    console.log("[CREATE ACHIEVEMENT] Request body:", JSON.stringify(req.body, null, 2));
-    console.log("[CREATE ACHIEVEMENT] Has file:", !!req.file);
-
     // Validate required fields
     if (!title || !title.trim()) {
       return res.status(400).json({
@@ -72,7 +68,6 @@ exports.createAchievement = async (req, res, next) => {
 
     const baseMediaUrls = Array.isArray(resolvedMediaUrls) ? resolvedMediaUrls : [];
     const finalMediaUrls = uploadedUrl ? [...baseMediaUrls, uploadedUrl] : baseMediaUrls;
-    console.log("[CREATE ACHIEVEMENT] Final media_urls:", finalMediaUrls);
     
     // Auto-detect type
     const detectedType = finalMediaUrls.length > 0 && isVideoMedia(finalMediaUrls[0]) ? "video" : "image";
@@ -140,10 +135,6 @@ exports.updateAchievement = async (req, res, next) => {
       );
     };
 
-    // DEBUG LOGGING
-    console.log("[UPDATE ACHIEVEMENT] ID:", id);
-    console.log("[UPDATE ACHIEVEMENT] Request body:", JSON.stringify(req.body, null, 2));
-    console.log("[UPDATE ACHIEVEMENT] Has file:", !!req.file);
 
     const updateData = {};
     if (date_raw !== undefined) updateData.date_raw = date_raw;
@@ -179,7 +170,6 @@ exports.updateAchievement = async (req, res, next) => {
       const baseMediaUrls = Array.isArray(resolvedMediaUrls) ? resolvedMediaUrls : [];
       const finalUrls = [...baseMediaUrls, uploadedUrl];
       updateData.media_urls = finalUrls;
-      console.log("[UPDATE ACHIEVEMENT] Added uploaded file to media_urls:", uploadedUrl);
       
       // Auto-detect type if not explicitly provided
       if (type === undefined) {
@@ -187,15 +177,12 @@ exports.updateAchievement = async (req, res, next) => {
       }
     } else if (resolvedMediaUrls !== undefined) {
       updateData.media_urls = resolvedMediaUrls;
-      console.log("[UPDATE ACHIEVEMENT] Updating media_urls from payload:", resolvedMediaUrls);
       
       // Auto-detect type if not explicitly provided
       if (type === undefined && Array.isArray(resolvedMediaUrls) && resolvedMediaUrls.length > 0) {
         updateData.type = isVideoMedia(resolvedMediaUrls[0]) ? "video" : "image";
       }
     }
-
-    console.log("[UPDATE ACHIEVEMENT] Final updateData:", JSON.stringify(updateData, null, 2));
 
     const achievement = await prisma.achievementContent.update({
       where: { id: parseInt(id) },
