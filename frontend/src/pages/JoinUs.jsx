@@ -564,6 +564,7 @@ export default function JoinUs({ isModal = false, onClose }) {
                 { value: "MCA", label: "MCA" },
                 { value: "PhD", label: "PhD" },
                 { value: "Masters in Abroad", label: "Masters in Abroad" },
+                { value: "Placement", label: "Placement" },
                 { value: "Other", label: "Other" },
               ]}
               required
