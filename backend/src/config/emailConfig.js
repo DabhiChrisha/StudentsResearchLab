@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('./env');
 
 const rawProvider = (process.env.EMAIL_PROVIDER || 'smtp').trim().toLowerCase();
 const provider = rawProvider === 'gmail' ? 'smtp' : rawProvider;
@@ -14,7 +14,7 @@ const smtp = {
   secure: String(process.env.SMTP_SECURE || 'true').toLowerCase() === 'true',
   auth: {
     user: process.env.SMTP_USER?.trim() || '',
-    pass: process.env.SMTP_PASS || '',
+    pass: (process.env.SMTP_PASS || '').trim(),
   },
 };
 

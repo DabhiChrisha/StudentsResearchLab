@@ -102,10 +102,12 @@ exports.createStudent = async (req, res, next) => {
         email,
         contact_no: contact_no || null,
         department: department || null,
-        institute_name: institute_name || null,
+        // DB schema requires non-null strings for institute_name and batch —
+        // default to empty string when not provided to avoid Prisma validation errors.
+        institute_name: institute_name || "",
         semester: parseInt(semester) || 0,
         division: division || null,
-        batch: batch || null,
+        batch: batch || "",
         gender: gender || null,
         member_type: member_type === "admin" ? "member" : member_type,
         member: member === "Research Assistant" ? "Research Assistant" : "student member",
@@ -114,13 +116,13 @@ exports.createStudent = async (req, res, next) => {
     });
 
     // Auto-create a blank CV profile so the student appears on the researchers page
+    // Create member CV profile — only include fields that exist in the schema.
     await prisma.memberCvProfile.create({
       data: {
         enrollment_no,
         student_name,
         department: department || null,
-        semester:   parseInt(semester) || null,
-        institute:  institute_name || null,
+        institute: institute_name || "",
       },
     });
 

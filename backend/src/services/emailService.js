@@ -39,6 +39,7 @@ function createSmtpTransporter() {
     port: smtp.port,
     secure: smtp.secure,
     auth: smtp.auth,
+    family: 4,
   });
 
   console.log(
@@ -57,8 +58,14 @@ async function verifyTransporter(transporter) {
       `[Email Service] SMTP transporter verified successfully for ${emailConfig.smtp.host}:${emailConfig.smtp.port}`,
     );
   } catch (error) {
-    console.error('[Email Service] SMTP transporter verification failed:', error);
-    throw error;
+    // In serverless environments (e.g. Vercel) verify() can fail transiently
+    // due to cold-start network latency or connection reuse limits, even when
+    // the credentials are correct and sendMail would succeed.  Logging the
+    // failure here is sufficient; we let sendMail() decide whether the
+    // transporter is truly broken — it will throw its own descriptive error.
+    console.warn(
+      `[Email Service] SMTP verify step failed (will still attempt sendMail): ${error.message}`,
+    );
   }
 }
 
@@ -99,13 +106,26 @@ async function sendEmail({ to, subject, text, html, from }) {
 
   console.log(`[Email Service] Sending email to ${recipientList} from ${sender} subject="${subject}"`);
 
-  const info = await transporter.sendMail({
-    from: sender,
-    to: recipientList,
-    subject,
-    text,
-    html,
-  });
+  let info;
+  try {
+    info = await transporter.sendMail({
+      from: sender,
+      to: recipientList,
+      subject,
+      text,
+      html,
+    });
+  } catch (sendError) {
+    // Reset the cached transporter so the next attempt gets a fresh connection
+    // instead of retrying with a potentially broken or expired socket.
+    cachedTransporter = null;
+    cachedTransporterVerified = false;
+    console.error(
+      `[Email Service] sendMail failed for ${recipientList} — transporter cache cleared for next attempt:`,
+      sendError,
+    );
+    throw sendError;
+  }
 
   console.log(
     `[Email Service] Email sendMail result for ${recipientList}: accepted=${JSON.stringify(

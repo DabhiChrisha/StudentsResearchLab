@@ -20,8 +20,6 @@ exports.adminLogin = async (req, res, next) => {
     const normalizedEmail = String(email).trim().toLowerCase();
     const passwordValue = String(password).trim();
 
-    console.log(`\n[🔐 AUTH] Login attempt for: ${normalizedEmail}`);
-
     // ============================================
     // STEP 1: Query authorization table for credentials
     // ============================================
@@ -35,15 +33,11 @@ exports.adminLogin = async (req, res, next) => {
     });
 
     if (!adminUser) {
-      console.log(`[❌ AUTH] User not found in authorization table: ${normalizedEmail}`);
       return res.status(401).json({
         error: "Unauthorized",
         message: "Invalid credentials",
       });
     }
-
-    console.log(`[✅ AUTH] User found in authorization table`);
-    console.log(`[🔍 DB VALUES] Email: ${normalizedEmail}, is_admin: ${adminUser.is_admin}, Type: ${typeof adminUser.is_admin}`);
 
     // ============================================
     // STEP 2: Verify password from authorization table
@@ -51,14 +45,11 @@ exports.adminLogin = async (req, res, next) => {
     const storedPassword = String(adminUser.password || "").trim();
 
     if (!storedPassword || storedPassword !== passwordValue) {
-      console.log(`[❌ AUTH] Password verification failed for: ${normalizedEmail}`);
       return res.status(401).json({
         error: "Unauthorized",
         message: "Invalid credentials",
       });
     }
-
-    console.log(`[✅ AUTH] Password verified for: ${normalizedEmail}`);
 
     // ============================================
     // STEP 3: Check admin status from authorization table (is_admin field)
@@ -66,9 +57,6 @@ exports.adminLogin = async (req, res, next) => {
     // IMPORTANT: is_admin status comes ONLY from authorization table
     // Explicitly check for true - null, undefined, false all mean NOT admin
     const isAdmin = adminUser.is_admin === true;
-    
-    const roleEmoji = isAdmin ? "👑 ADMIN" : "👤 USER";
-    console.log(`[✅ AUTH] ${roleEmoji} | is_admin from authorization table: ${adminUser.is_admin} | Email: ${normalizedEmail}`);
 
     // ============================================
     // STEP 4: Get user details from StudentsDetail table (name & enrollment only)
@@ -90,7 +78,6 @@ exports.adminLogin = async (req, res, next) => {
     // ============================================
     const token = generateAdminToken(normalizedEmail, enrollmentNo, name, isAdmin);
 
-    console.log(`[✅ AUTH] ${roleEmoji} login successful - Token generated\n`);
 
     return res.json({
       success: true,

@@ -34,7 +34,7 @@ const Appointment = () => {
                 {
                   icon: MapPin,
                   label: "Visit Us",
-                  text: "Student Research Lab (MMPSRPC), LDRP-ITR, Sector-15, Gandhinagar, Gujarat",
+                  text: "Students Research Lab (MMPSRPC), LDRP-ITR, Sector-15, Gandhinagar, Gujarat",
                   link: "https://maps.app.goo.gl/6Dh75Kw8tDKk7WTU7",
                 },
                 {
@@ -86,7 +86,7 @@ const Appointment = () => {
                     <input
                       id="name"
                       type="text"
-                      placeholder="John Doe"
+                      placeholder="Your Full Name"
                       className="w-full p-4 bg-slate-50 rounded-2xl border-none outline-none focus:ring-2 focus:ring-secondary/20 transition-all font-medium"
                     />
                   </div>
@@ -100,7 +100,7 @@ const Appointment = () => {
                     <input
                       id="email"
                       type="email"
-                      placeholder="john@example.com"
+                      placeholder="your.email@example.com"
                       className="w-full p-4 bg-slate-50 rounded-2xl border-none outline-none focus:ring-2 focus:ring-secondary/20 transition-all font-medium"
                     />
                   </div>

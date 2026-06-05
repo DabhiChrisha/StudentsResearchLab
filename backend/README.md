@@ -98,6 +98,12 @@ CLOUDINARY_API_SECRET=your_api_secret
 # Admin credentials
 ADMIN_EMAIL=adminsrl@gmail.com
 JWT_SECRET=your_long_random_secret_here
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_USER=your_smtp_username
+SMTP_PASS=your_smtp_password_or_app_password
+EMAIL_FROM_ADDRESS=your_from_address@example.com
+JOIN_REQUEST_ADMIN_NOTIFICATION_EMAILS=admin1@example.com,admin2@example.com
 ```
 
 | Variable | Description |
@@ -108,6 +114,12 @@ JWT_SECRET=your_long_random_secret_here
 | `CLOUDINARY_API_SECRET` | Cloudinary API secret |
 | `ADMIN_EMAIL` | Email used for admin login |
 | `JWT_SECRET` | Secret for signing JWT tokens |
+| `SMTP_HOST` | SMTP server hostname for outbound email |
+| `SMTP_PORT` | SMTP server port (usually 465 or 587) |
+| `SMTP_USER` | SMTP username / login |
+| `SMTP_PASS` | SMTP password or app password |
+| `EMAIL_FROM_ADDRESS` | Optional sender address used in outgoing mail |
+| `JOIN_REQUEST_ADMIN_NOTIFICATION_EMAILS` | Comma-separated admin recipients for join request notifications |
 
 > ⚠️ **Never commit `.env` to version control.** It is excluded via `.gitignore`.
 

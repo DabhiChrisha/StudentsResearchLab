@@ -96,9 +96,9 @@ const Objectives = () => {
 
     /* Mobile positions - zigzag layout */
     const mobilePositions = objectives.map((_, i) => {
-        const gap = 84;
+        const gap = 120;
         const top = 145 + i * gap;
-        const left = i % 2 === 0 ? 10 : window.innerWidth / 1.45 - 90;
+        const left = i % 2 === 0 ? "2%" : "50%";
         return { top, left };
     });
 
@@ -221,7 +221,7 @@ const Objectives = () => {
 
 
 
-                <div ref={containerRef} className={`relative ${isMobile ? "h-[1050px]" : "h-[600px]"}`}>
+                <div ref={containerRef} className={`relative ${isMobile ? "h-[1520px]" : "h-[600px]"}`}>
 
                     {/* Animated Lines */}
 
@@ -269,7 +269,7 @@ const Objectives = () => {
                     {/* Center Circle Wrapper for Stable Ref */}
                     <div
                         ref={circleRef}
-                        className={isMobile ? "absolute left-[29%] top-[20px] -translate-x-1/2 w-[110px] h-[110px] z-10" : "absolute left-[-110px] top-[240px] w-[170px] h-[170px] z-10"}
+                        className={isMobile ? "absolute left-1/2 top-[20px] -translate-x-1/2 w-[110px] h-[110px] z-10" : "absolute left-[-110px] top-[240px] w-[170px] h-[170px] z-10"}
                     >
                         <motion.div
                             className="w-full h-full rounded-full border-[7px] border-[#0f766e] bg-white flex items-center justify-center shadow-xl"
@@ -313,7 +313,7 @@ inset 0 0 10px #10b98144
                                     ease: "easeOut"
                                 }}
 
-                                className={`absolute ${isMobile ? "w-[145px] h-[78px]" : "w-[172px] h-[96px] xl:w-[185px] xl:h-[105px] 2xl:w-[210px] 2xl:h-[118px]"} rounded-[80px] flex flex-col items-center justify-center text-center px-4 bg-[#0f766e] overflow-hidden group`}
+                                className={`absolute ${isMobile ? "w-[46vw] h-[100px]" : "w-[172px] h-[96px] xl:w-[185px] xl:h-[105px] 2xl:w-[210px] 2xl:h-[118px]"} rounded-[80px] flex flex-col items-center justify-center text-center px-4 bg-[#0f766e] overflow-hidden group`}
 
                                 style={{
                                     top: pos.top,
@@ -323,7 +323,7 @@ inset 0 0 10px #10b98144
 0 0 18px #61c8a5ff,
 0 0 30px #f1f7f555
 `,
-                                    padding: isMobile ? "8px" : undefined
+                                    padding: isMobile ? "6px 12px" : undefined
                                 }}
                             >
 
@@ -339,11 +339,11 @@ inset 0 0 10px #10b98144
                                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                                 />
 
-                                <h3 className={`${isMobile ? "text-[9.5px]" : "text-[12px] 2xl:text-[15px]"} font-bold text-white font-serif leading-tight break-words max-w-full`}>
+                                <h3 className={`${isMobile ? "text-[12px]" : "text-[12px] 2xl:text-[15px]"} font-bold text-white font-serif leading-tight break-words max-w-full`}>
                                     {obj.title}
                                 </h3>
 
-                                <p className={`${isMobile ? "text-[8.5px]" : "text-[10px] 2xl:text-[11px]"} text-white/85 leading-snug mt-1`}>
+                                <p className={`${isMobile ? "text-[10.5px]" : "text-[10px] 2xl:text-[11px]"} text-white/85 leading-snug mt-1`}>
                                     {obj.description}
                                 </p>
 

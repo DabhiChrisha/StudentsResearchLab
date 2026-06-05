@@ -8,6 +8,18 @@ import { getImageUrl } from '../lib/imageUrl';
 
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+const MONTH_ABBREV_TO_NUM = { Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6, Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12 };
+
+// Parses "Dec 2025" → { month: 12, year: 2025 }; returns null for unrecognised format.
+function parsePeriod(period) {
+    const parts = (period || '').trim().split(' ');
+    if (parts.length !== 2) return null;
+    const month = MONTH_ABBREV_TO_NUM[parts[0]];
+    const year = parseInt(parts[1], 10);
+    if (!month || isNaN(year)) return null;
+    return { month, year };
+}
+
 // Pass-through parser for newly formatted backend objects
 const IMAGE_MAP = {
     "22BECE30091": getImageUrl("/students/Kandarp Gajjar.jpeg"),
@@ -81,7 +93,8 @@ const LeaderBoard = () => {
     const [activeTab, setActiveTab] = useState('overall'); // 'overall', 'monthly', 'hours'
 
     // Period selector state
-    const [selectedPeriod, setSelectedPeriod] = useState('Apr 2026');
+    const [availablePeriods, setAvailablePeriods] = useState([]);
+    const [selectedPeriod, setSelectedPeriod] = useState('');
     const [periodStudents, setPeriodStudents] = useState([]);
     const [periodLoading, setPeriodLoading] = useState(false);
 
@@ -93,10 +106,11 @@ const LeaderBoard = () => {
     const [sortDir, setSortDir] = useState('desc');
 
     const { loading, error, retry: refetchLeaderboard, refetchSilent } = useFetch(async () => {
-        const [overallJson, monthlyJson, hoursJson] = await Promise.all([
+        const [overallJson, monthlyJson, hoursJson, periodsJson] = await Promise.all([
             fetchWithTimeout(`${API_BASE}/api/leaderboard/weekly`, {}, 10000, { cacheKey: 'lb:overall',  cacheTtl: 60_000 }),
             fetchWithTimeout(`${API_BASE}/api/leaderboard/monthly`,{}, 10000, { cacheKey: 'lb:monthly',  cacheTtl: 60_000 }),
             fetchWithTimeout(`${API_BASE}/api/leaderboard/top-hours`, {}, 10000, { cacheKey: 'lb:hours', cacheTtl: 60_000 }),
+            fetchWithTimeout(`${API_BASE}/api/leaderboard/periods`, {}, 10000, { cacheKey: 'lb:periods', cacheTtl: 300_000 }),
         ]);
 
         const parsedOverall = overallJson.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin');
@@ -117,6 +131,16 @@ const LeaderBoard = () => {
             setTop5ByHours([]);
         }
 
+        if (periodsJson && Array.isArray(periodsJson.periods) && periodsJson.periods.length > 0) {
+            setAvailablePeriods(periodsJson.periods);
+            // Auto-select the most recent period (last in the sorted list)
+            setSelectedPeriod(prev => {
+                const latest = periodsJson.periods[periodsJson.periods.length - 1];
+                // Keep current selection if it's still valid; otherwise move to latest
+                return periodsJson.periods.includes(prev) ? prev : latest;
+            });
+        }
+
         return parsedOverall; // Data returned from hook (though we use local states for complex data)
     });
 
@@ -134,15 +158,8 @@ const LeaderBoard = () => {
 
     // Fetch data whenever selectedPeriod changes (for monthly + hours tabs)
     useEffect(() => {
-        if (activeTab === 'overall') return;
-        const PERIOD_TO_PARAMS = {
-            'Dec 2025': { month: 12, year: 2025 },
-            'Jan 2026': { month: 1, year: 2026 },
-            'Feb 2026': { month: 2, year: 2026 },
-            'Mar 2026': { month: 3, year: 2026 },
-            'Apr 2026': { month: 4, year: 2026 },
-        };
-        const params = PERIOD_TO_PARAMS[selectedPeriod];
+        if (activeTab === 'overall' || !selectedPeriod) return;
+        const params = parsePeriod(selectedPeriod);
         if (!params) return;
         setPeriodLoading(true);
         fetchWithTimeout(`${API_BASE}/api/leaderboard/monthly?month=${params.month}&year=${params.year}`)
@@ -520,11 +537,9 @@ const LeaderBoard = () => {
                                             disabled={periodLoading}
                                             className="appearance-none whitespace-nowrap pl-4 pr-8 py-2.5 rounded-full text-[13px] md:text-sm font-extrabold border-2 border-amber-300 bg-white text-amber-700 shadow-sm focus:outline-none focus:border-amber-500 cursor-pointer disabled:opacity-60 transition-all"
                                         >
-                                            <option value="Dec 2025">Dec 2025</option>
-                                            <option value="Jan 2026">Jan 2026</option>
-                                            <option value="Feb 2026">Feb 2026</option>
-                                            <option value="Mar 2026">Mar 2026</option>
-                                            <option value="Apr 2026">Apr 2026</option>
+                                            {availablePeriods.map(period => (
+                                                <option key={period} value={period}>{period}</option>
+                                            ))}
                                         </select>
                                         <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 text-[10px]">▼</div>
                                         {periodLoading && (

@@ -36,7 +36,7 @@ const ImageCarousel = ({ images }) => {
 
 /* Skeleton card while loading */
 const SessionSkeleton = () => (
-  <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.12)]" aria-busy="true" aria-label="Loading session">
+  <div className="bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.12)] md:flex md:flex-col md:h-full" aria-busy="true" aria-label="Loading session">
     <div className="h-64 lg:h-72 skeleton-bone" />
     <div className="px-6 pb-6 pt-4 space-y-3">
       <div className="h-4 skeleton-bone rounded w-3/4" />
@@ -145,7 +145,7 @@ const Sessions = () => {
         )}
 
         {/* Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 items-start">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 md:items-stretch">
           {loading
             ? Array.from({ length: 6 }).map((_, i) => (
                 <SessionSkeleton key={i} />
@@ -158,7 +158,7 @@ const Sessions = () => {
                   rel="noopener noreferrer"
                   whileHover={{ y: -6, scale: 1.012 }}
                   transition={{ type: "spring", stiffness: 220, damping: 22 }}
-                  className="group block bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.12)] transform-gpu will-change-transform"
+                  className="group block bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.12)] transform-gpu will-change-transform md:flex md:flex-col md:h-full"
                 >
                   {/* MEDIA */}
                   <div className="h-64 lg:h-72 bg-white overflow-hidden relative">

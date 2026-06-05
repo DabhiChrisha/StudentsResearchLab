@@ -200,7 +200,7 @@ exports.updateJoinRequest = async (req, res, next) => {
     };
     const status = normalizedStatusMap[rawStatus];
 
-    console.log(`[Join Request] updateJoinRequest called for id=${id} status=${rawStatus} normalized=${status} by admin=${req.admin?.email}`);
+    console.log(`[Join Request] updateJoinRequest called for id=${id} status=${rawStatus} normalized=${status}`);
     if (!status) {
       return res.status(400).json({
         error: "Invalid input",
@@ -211,8 +211,6 @@ exports.updateJoinRequest = async (req, res, next) => {
     const joinRequest = await prisma.joinUs.findUnique({
       where: { id: BigInt(id) },
     });
-
-    console.log(`[Join Request] fetched joinRequest id=${id} email=${joinRequest?.email} status=${joinRequest?.status}`);
 
     if (!joinRequest) {
       return res.status(404).json({
@@ -262,26 +260,12 @@ exports.updateJoinRequest = async (req, res, next) => {
 
       const recipientEmail = String(freshRequest.email || "").trim();
       if (!recipientEmail || !isValidEmail(recipientEmail)) {
-        console.error(
-          `[Join Request] Approval email skipped for request ${id}: invalid applicant email '${freshRequest.email}'`,
-        );
+        console.error(`[Join Request] Approval email skipped for request ${id}: invalid email`);
       } else {
-        console.log(
-          `[Join Request] Approval email execution starting for request ${id}: sending to ${recipientEmail}`,
-        );
-
         try {
-          const info = await sendApprovalEmail({ to: recipientEmail, studentName: freshRequest.name });
-          console.log(
-            `[Approval Email] Sent approval email for request ${id} to ${recipientEmail}: accepted=${JSON.stringify(
-              info.accepted,
-            )}, rejected=${JSON.stringify(info.rejected)}, messageId=${info.messageId}`,
-          );
+          await sendApprovalEmail({ to: recipientEmail, studentName: freshRequest.name });
         } catch (emailErr) {
-          console.error(
-            `[Email Error] Failed to send approval email to ${recipientEmail} for request ID ${id}:`,
-            emailErr,
-          );
+          console.error(`[Email Error] Failed to send approval email for request ID ${id}:`, emailErr);
         }
       }
     }
@@ -289,26 +273,12 @@ exports.updateJoinRequest = async (req, res, next) => {
     if (status === "rejected") {
       const recipientEmail = String(joinRequest.email || "").trim();
       if (!recipientEmail || !isValidEmail(recipientEmail)) {
-        console.error(
-          `[Join Request] Rejection email skipped for request ${id}: invalid applicant email '${joinRequest.email}'`,
-        );
+        console.error(`[Join Request] Rejection email skipped for request ${id}: invalid email`);
       } else {
-        console.log(
-          `[Join Request] Rejection email execution starting for request ${id}: sending to ${recipientEmail}`,
-        );
-
         try {
-          const info = await sendRejectionEmail({ to: recipientEmail, studentName: joinRequest.name });
-          console.log(
-            `[Rejection Email] Sent rejection email for request ${id} to ${recipientEmail}: accepted=${JSON.stringify(
-              info.accepted,
-            )}, rejected=${JSON.stringify(info.rejected)}, messageId=${info.messageId}`,
-          );
+          await sendRejectionEmail({ to: recipientEmail, studentName: joinRequest.name });
         } catch (emailErr) {
-          console.error(
-            `[Email Error] Failed to send rejection email to ${recipientEmail} for request ID ${id}:`,
-            emailErr,
-          );
+          console.error(`[Email Error] Failed to send rejection email for request ID ${id}:`, emailErr);
         }
       }
     }
@@ -426,15 +396,12 @@ exports.getJoinRequestResume = async (req, res, next) => {
       });
     }
 
-    // Fetch the PDF from Cloudinary
-    console.log(`[getJoinRequestResume] Fetching from Cloudinary: ${joinRequest.resume_link}`);
     const response = await fetch(joinRequest.resume_link, {
       headers: {
         "User-Agent": "Mozilla/5.0", // some CDNs block headless fetches
       },
     });
     if (!response.ok) {
-      console.error(`[getJoinRequestResume] Fetch failed. Status: ${response.status} ${response.statusText}, URL: ${joinRequest.resume_link}`);
       throw new Error(`Failed to fetch from Cloudinary: ${response.statusText}`);
     }
 

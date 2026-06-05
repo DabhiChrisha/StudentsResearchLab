@@ -30,15 +30,6 @@ exports.createActivity = async (req, res, next) => {
     // Accept both 'Photo' (capital P, sent by admin portal) and 'photo' (lowercase)
     let photoUrl = Photo || photo;
 
-    // DEBUG LOGGING
-    console.log("[CREATE ACTIVITY] Request body:", JSON.stringify(req.body, null, 2));
-    console.log("[CREATE ACTIVITY] Has file:", !!req.file);
-    if (req.file) {
-      console.log("[CREATE ACTIVITY] File name:", req.file.originalname);
-      console.log("[CREATE ACTIVITY] File size:", req.file.size);
-    }
-    console.log("[CREATE ACTIVITY] Initial photoUrl (from body):", photoUrl);
-
     if (!title) {
       return res.status(400).json({
         error: "Invalid input",
@@ -49,21 +40,17 @@ exports.createActivity = async (req, res, next) => {
     // Handle file upload if a file is present
     if (req.file) {
       try {
-        console.log("[CREATE ACTIVITY] Starting Cloudinary upload...");
         const uploadResult = await uploadToCloudinary(
           req.file.buffer,
           "srl_activities",
           req.file.originalname
         );
-        console.log("[CREATE ACTIVITY] Cloudinary upload result:", JSON.stringify(uploadResult, null, 2));
-        
-        // Validate Cloudinary response
+
         if (!uploadResult || !uploadResult.url) {
           throw new Error(`Cloudinary upload returned invalid response: ${JSON.stringify(uploadResult)}`);
         }
-        
+
         photoUrl = uploadResult.url;
-        console.log("[CREATE ACTIVITY] photoUrl after upload:", photoUrl);
       } catch (uploadError) {
         console.error("[CREATE ACTIVITY] Cloudinary upload error:", uploadError);
         return res.status(500).json({
@@ -73,19 +60,8 @@ exports.createActivity = async (req, res, next) => {
       }
     }
 
-    console.log("[CREATE ACTIVITY] Final photoUrl before DB insert:", photoUrl);
-    console.log("[CREATE ACTIVITY] DB insert data:", JSON.stringify({
-      title,
-      description: description || null,
-      date: date || null,
-      link: link || null,
-      brief: brief || null,
-      Photo: photoUrl || null,
-    }, null, 2));
-
     // Ensure Photo is either a URL string or null (not undefined)
     const finalPhotoValue = photoUrl || null;
-    console.log("[CREATE ACTIVITY] Final Photo value to insert:", finalPhotoValue);
 
     const activity = await prisma.activity.create({
       data: {
@@ -97,8 +73,6 @@ exports.createActivity = async (req, res, next) => {
         Photo: finalPhotoValue,
       },
     });
-
-    console.log("[CREATE ACTIVITY] DB insert successful. Activity created:", JSON.stringify(activity, null, 2));
 
     broadcast('activity_changed', { id: activity.id });
 
@@ -122,16 +96,6 @@ exports.updateActivity = async (req, res, next) => {
     const { title, description, date, link, brief, photo, Photo } = req.body;
     // Accept both 'Photo' (capital P, sent by admin portal) and 'photo' (lowercase)
 
-    // DEBUG LOGGING
-    console.log("[UPDATE ACTIVITY] Activity ID:", id);
-    console.log("[UPDATE ACTIVITY] Request body:", JSON.stringify(req.body, null, 2));
-    console.log("[UPDATE ACTIVITY] Has file:", !!req.file);
-    if (req.file) {
-      console.log("[UPDATE ACTIVITY] File name:", req.file.originalname);
-      console.log("[UPDATE ACTIVITY] File size:", req.file.size);
-    }
-    console.log("[UPDATE ACTIVITY] Initial photo from body (lowercase):", photo, "| Photo (capital P):", Photo, "| resolved:", Photo || photo);
-
     const updateData = {};
     if (title !== undefined) updateData.title = title;
     if (description !== undefined) updateData.description = description;
@@ -144,21 +108,17 @@ exports.updateActivity = async (req, res, next) => {
     let photoUrl = Photo || photo;
     if (req.file) {
       try {
-        console.log("[UPDATE ACTIVITY] Starting Cloudinary upload...");
         const uploadResult = await uploadToCloudinary(
           req.file.buffer,
           "srl_activities",
           req.file.originalname
         );
-        console.log("[UPDATE ACTIVITY] Cloudinary upload result:", JSON.stringify(uploadResult, null, 2));
-        
-        // Validate Cloudinary response
+
         if (!uploadResult || !uploadResult.url) {
           throw new Error(`Cloudinary upload returned invalid response: ${JSON.stringify(uploadResult)}`);
         }
-        
+
         photoUrl = uploadResult.url;
-        console.log("[UPDATE ACTIVITY] photoUrl after upload:", photoUrl);
       } catch (uploadError) {
         console.error("[UPDATE ACTIVITY] Cloudinary upload error:", uploadError);
         return res.status(500).json({
@@ -167,10 +127,6 @@ exports.updateActivity = async (req, res, next) => {
         });
       }
     }
-
-    console.log("[UPDATE ACTIVITY] Final photoUrl:", photoUrl);
-    console.log("[UPDATE ACTIVITY] photoUrl !== undefined?", photoUrl !== undefined);
-    console.log("[UPDATE ACTIVITY] photoUrl truthiness:", Boolean(photoUrl));
 
     // Handle photo field: only update if explicitly provided (non-empty or null)
     // If photoUrl is undefined, skip (don't update Photo field for partial updates)
@@ -186,23 +142,15 @@ exports.updateActivity = async (req, res, next) => {
       // Treat empty strings as null (for clearing the photo)
       if (photoUrl === "") {
         updateData.Photo = null;
-        console.log("[UPDATE ACTIVITY] Clearing Photo (empty string converted to null)");
       } else {
         updateData.Photo = photoUrl;
-        console.log("[UPDATE ACTIVITY] Setting Photo to:", photoUrl);
       }
-    } else {
-      console.log("[UPDATE ACTIVITY] Photo NOT added to updateData (photoUrl is undefined - preserving existing value)");
     }
-
-    console.log("[UPDATE ACTIVITY] Final updateData:", JSON.stringify(updateData, null, 2));
 
     const activity = await prisma.activity.update({
       where: { id: parseInt(id) },
       data: updateData,
     });
-
-    console.log("[UPDATE ACTIVITY] DB update successful. Activity updated:", JSON.stringify(activity, null, 2));
 
     broadcast('activity_changed', { id: activity.id });
 

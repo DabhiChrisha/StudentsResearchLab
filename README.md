@@ -354,8 +354,12 @@ npm start
 - `DATABASE_URL` — Neon PostgreSQL connection string
 - `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
 - `ADMIN_EMAIL`, `JWT_SECRET`
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
+- `EMAIL_FROM_ADDRESS` (optional, defaults to `SMTP_USER`)
+- `JOIN_REQUEST_ADMIN_NOTIFICATION_EMAILS` or `NOTIFICATION_EMAILS` or `ADMIN_EMAIL`
 
 > After deploying the backend, update `VITE_API_BASE_URL` in Vercel to point to your production backend URL.
+> `VITE_API_BASE_URL` must be set at build time for Vercel so the frontend can call the deployed Render backend.
 
 ---
 

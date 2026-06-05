@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (max-width: 1024px) {
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .modal-neon-border::before {
   content: '';
   position: absolute;
