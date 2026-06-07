@@ -36,8 +36,7 @@ function App() {
   useEffect(() => {
     // Wake up Render backend immediately on app load
     fetch(`${API_BASE_URL}/api/health`, { headers: API_HEADERS })
-      .then(() => console.log('✅ Backend is awake'))
-      .catch(() => console.log('⚠️ Backend is waking up, please wait...'));
+      .catch(() => {});
 
     // Keep it awake every 14 minutes
     const keepAlive = setInterval(() => {

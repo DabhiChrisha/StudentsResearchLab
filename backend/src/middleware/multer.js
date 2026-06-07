@@ -16,10 +16,17 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
 });
 
+const ALLOWED_MIMES = new Set([
+  'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+  'image/svg+xml', 'image/avif', 'image/bmp', 'image/tiff',
+  'video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska', 'video/webm',
+]);
+const ALLOWED_EXTS = /\.(jpeg|jpg|png|gif|webp|svg|avif|bmp|tiff|tif|mp4|mov|avi|mkv|webm)$/i;
+
 const fileFilter = (req, file, cb) => {
-  const allowed = /jpeg|jpg|png|gif|webp|svg|mp4|mov|avi|mkv|webm/;
-  const ext = allowed.test(path.extname(file.originalname).toLowerCase());
-  if (ext) cb(null, true);
+  const extOk = ALLOWED_EXTS.test(path.extname(file.originalname));
+  const mimeOk = ALLOWED_MIMES.has(file.mimetype);
+  if (extOk && mimeOk) cb(null, true);
   else cb(new Error('File type not supported'));
 };
 

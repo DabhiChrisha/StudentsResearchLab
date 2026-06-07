@@ -1,364 +1,546 @@
-# 🔬 Students Research Lab (SRL)
+# Students Research Lab
 
-A modern, full-stack web platform for the **Students Research Lab** at KSV University — showcasing researchers, tracking performance, managing sessions, publishing research, and engaging students. Built with **React 19**, **Node.js/Express**, **Prisma ORM**, and **Neon PostgreSQL**.
-
-> 🌐 **Live:** [students-research-lab-srl.vercel.app](https://students-research-lab-srl.vercel.app)
+A full-stack web application for the Students Research Lab (SRL) at LDRP-ITR. The public-facing website presents the lab's research, publications, members, sessions, achievements, and activities, while a companion Express API serves all data from a Neon PostgreSQL database.
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-- [Tech Stack](#-tech-stack)
-- [Architecture](#-architecture)
-- [Key Features](#-key-features)
-- [Folder Structure](#-folder-structure)
-- [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
-- [Running Locally](#-running-locally)
-- [Docker](#-docker)
-- [Deployment](#-deployment)
+- [Project Overview](#project-overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Repository Structure](#repository-structure)
+- [Architecture](#architecture)
+- [Environment Variables](#environment-variables)
+- [Installation & Setup](#installation--setup)
+- [Database Setup](#database-setup)
+- [Cloudinary Setup](#cloudinary-setup)
+- [Development Workflow](#development-workflow)
+- [Build & Deployment](#build--deployment)
+- [API Reference](#api-reference)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
-## 🛠 Tech Stack
+## Project Overview
+
+The Students Research Lab website serves as the public presence of the SRL community. It exposes research publications, member CVs, lab sessions, leaderboards, achievements, and a join-us application form. All content is managed through the companion Admin Portal.
+
+**Live URLs**
+
+| Service | URL |
+|---|---|
+| Main Website | https://srl.mmpsrpc.in |
+| Admin Portal | https://admin-srl.mmpsrpc.in |
+| Backend API | https://api-srl.mmpsrpc.in |
+
+---
+
+## Features
+
+### Public Website
+- **Home** — Hero, lab objectives, about section, animated particle background
+- **Researchers** — Member profiles with CV, research areas, and batch filtering
+- **Student CV** — Individual researcher CV pages with papers, certifications, and patents
+- **Sessions** — Lab session archive with media and attendance info
+- **Publications** — Searchable and filterable research publications list
+- **Add Publication** — Public form for members to submit publications for admin approval
+- **Achievements** — Lab achievement gallery
+- **Activities** — Activity feed with photo gallery and descriptions
+- **Leaderboard** — All-time and monthly rankings (hours, debate scores, hackathons)
+- **Organization Details** — Full member roster with batch and department breakdown
+- **Join Us** — Multi-step application form for prospective members
+- **Appointment** — Contact and appointment booking
+
+### Backend API
+- JWT-authenticated admin API for full CRUD on all content types
+- Server-Sent Events (SSE) for real-time updates pushed to the admin portal
+- Cloudinary integration with automatic WebP conversion for every image upload
+- Scheduled credential generation for newly approved students
+- OTP-based password reset delivered via SMTP email
+- Rate limiting, CORS allowlist, Gzip/Brotli compression, and Helmet security headers
+- Smart HTTP caching: 30s fresh + 5min stale-while-revalidate on public read endpoints
+
+---
+
+## Tech Stack
 
 ### Frontend
 
-| Technology | Purpose |
+| Layer | Technology |
 |---|---|
-| **React 19** | Core UI framework with functional components and hooks |
-| **Vite 7** | Lightning-fast dev server and optimized production builds |
-| **React Router 7** | Client-side routing and navigation |
-| **Tailwind CSS 3** | Utility-first CSS framework for responsive design |
-| **Framer Motion** | Declarative animations and page transitions |
-| **Lucide React** | Modern, customizable icon library |
-| **Swiper** | Touch-friendly carousels and sliders |
-| **tsParticles** | Animated particle backgrounds |
-| **Canvas Confetti** | Celebratory confetti effects (leaderboard, achievements) |
-| **clsx + tailwind-merge** | Conditional and conflict-free class name merging |
-| **XLSX** | Excel data import/export support |
+| Framework | React 19 |
+| Build tool | Vite 7 |
+| Routing | React Router DOM v7 |
+| Styling | Tailwind CSS v3 |
+| Animations | Framer Motion v12 |
+| Particles / 3-D globe | @tsparticles/react, cobe |
+| Icons | Lucide React |
+| HTTP client | Native `fetch` |
+| Node requirement | ≥ 18.0.0 |
 
 ### Backend
 
-| Technology | Purpose |
+| Layer | Technology |
 |---|---|
-| **Node.js 20** | JavaScript runtime |
-| **Express.js 5** | Lightweight HTTP server and REST API framework |
-| **Prisma ORM v7** | Type-safe database client and schema management |
-| **@prisma/adapter-pg** | PostgreSQL driver adapter for Prisma |
-| **pg (node-postgres)** | PostgreSQL connection pooling |
-| **jsonwebtoken** | JWT-based admin authentication |
-| **Cloudinary** | Cloud media (image/video) storage and delivery |
-| **Multer** | Multipart form-data handling for file uploads |
-| **dotenv** | Environment variable management |
-| **Nodemon** | Auto-reloading development server |
+| Runtime | Node.js ≥ 18 |
+| Framework | Express 5 |
+| ORM | Prisma 7 |
+| Database adapter | @prisma/adapter-neon + @prisma/adapter-pg |
+| Authentication | jsonwebtoken + bcryptjs |
+| File uploads | Multer (memory storage) |
+| Cloud storage | Cloudinary SDK v2 |
+| Email | Nodemailer (SMTP) |
+| Security | Helmet, express-rate-limit, CORS |
+| Compression | compression (Gzip/Brotli) |
+| Real-time | Server-Sent Events |
 
-### Database & Hosting
+### Database
 
-| Technology | Purpose |
+| Layer | Technology |
 |---|---|
-| **Neon PostgreSQL** | Serverless PostgreSQL (production database) |
-| **Prisma Migrations** | Schema versioning and database migrations |
-| **Vercel** | Frontend hosting with CI/CD from GitHub |
-| **Render / Railway** | Backend hosting |
-| **Docker** | Containerized backend deployment |
-| **Cloudinary** | CDN-backed media asset storage |
+| Provider | Neon (serverless PostgreSQL) |
+| ORM | Prisma 7 with pg adapter |
+| Schema | `backend/prisma/schema.prisma` |
+| Migrations | Prisma Migrate |
+| Seeding | `backend/prisma/seed.js` |
 
 ---
 
-## 🏗 Architecture
-
-```
-┌──────────────────┐       ┌──────────────────────┐       ┌───────────────────┐
-│                  │       │                      │       │                   │
-│   React SPA      │──────▶│   Express.js API     │──────▶│  Neon PostgreSQL  │
-│   (Vite + Vercel)│  API  │   (Node.js)          │Prisma │  (Serverless DB)  │
-│                  │◀──────│                      │◀──────│                   │
-└──────────────────┘       └──────────────────────┘       └───────────────────┘
-      Frontend                   Backend (Docker)                Database
-```
-
-**How it works:**
-
-1. **React Frontend** — Renders the UI, sends API requests to the Express backend, and keeps the backend alive with periodic health-check pings.
-2. **Express Backend** — Handles authentication, complex data aggregation (leaderboard rankings, attendance calculations), CRUD for admin operations, and file uploads to Cloudinary.
-3. **Neon PostgreSQL** — Hosts all relational data. Managed through **Prisma ORM** with a defined schema and migration history.
-
----
-
-## ✨ Key Features
-
-- **🏠 Home & Landing** — Animated hero, particle effects, about section, interactive timeline, and institute showcase
-- **👥 Researchers Directory** — Searchable profiles with individual student CV pages
-- **🏆 Leaderboard** — Ranked performance display with debate scores, attendance, and hours metrics; monthly and all-time views
-- **📅 Sessions** — Carousel-based view of all research lab sessions with media links
-- **🏅 Achievements** — Showcase of lab accomplishments and milestones
-- **📰 Publications** — Library of research papers (journal and conference) with filter by year and category
-- **📊 Batch Stats** — Per-batch student statistics and performance comparison
-- **📝 Join Us** — Multi-step application form for prospective members
-- **📆 Appointment** — Book consultations with lab coordinators
-- **🏛 Organization Details** — Detailed profiles for partner institutes
-- **🛡 Admin Panel** — JWT-secured admin routes for managing students, activities, research, attendance, timeline, and scores
-- **☁️ Cloudinary Media** — All images and videos served from Cloudinary CDN
-- **🎨 Premium UI** — Animated preloader, page transitions, gradient text, glow effects, spotlight cards, and confetti
-
----
-
-## 📁 Folder Structure
+## Repository Structure
 
 ```
 StudentsResearchLab/
-├── backend/                         # Node.js / Express backend
+├── backend/
 │   ├── prisma/
-│   │   ├── schema.prisma            # Prisma data models
-│   │   ├── migrations/              # SQL migration history
-│   │   └── seed.js                  # Database seeding scripts
+│   │   ├── schema.prisma           # Database schema (22 models)
+│   │   ├── migrations/             # Prisma migration history
+│   │   ├── seed.js                 # Database seed script
+│   │   └── importSrlStudents.js    # Student bulk import utility
 │   ├── src/
-│   │   ├── index.js                 # Server entry point, CORS & route registration
+│   │   ├── index.js                # App entry point, route registration
 │   │   ├── config/
-│   │   │   └── prisma.js            # Prisma client initialization (with pg adapter)
-│   │   ├── routes/                  # Public API route handlers
-│   │   │   ├── sessions.js
-│   │   │   ├── timeline.js
-│   │   │   ├── join_us.js
-│   │   │   ├── publications.js
-│   │   │   ├── cv.js
-│   │   │   ├── papers.js
-│   │   │   ├── activities.js
-│   │   │   ├── leaderboard.js
-│   │   │   ├── batch_stats.js
-│   │   │   ├── achievements.js
-│   │   │   └── researchers.js
-│   │   ├── routes/                  # Admin-only API routes (JWT protected)
-│   │   │   ├── admin.js             # Auth login
-│   │   │   ├── adminStudents.js
-│   │   │   ├── adminActivities.js
-│   │   │   ├── adminScores.js
-│   │   │   ├── adminAttendance.js
-│   │   │   ├── adminTimeline.js
-│   │   │   └── adminResearch.js
-│   │   ├── middleware/              # Auth and validation middleware
-│   │   └── utils/                  # Helper utilities
-│   ├── migrations/                  # Legacy/standalone SQL files
-│   ├── assets/                      # CSV data files used for seeding
-│   ├── prisma.config.ts             # Prisma v7 config (datasource URL)
-│   ├── package.json
+│   │   │   ├── env.js              # Environment variable loader
+│   │   │   └── prisma.js           # Prisma client singleton
+│   │   ├── controllers/            # Route business logic (32 controllers)
+│   │   ├── routes/                 # Express routers (33 route files)
+│   │   ├── middleware/
+│   │   │   ├── adminAuth.js        # JWT authentication middleware
+│   │   │   └── multer.js           # File upload configuration
+│   │   ├── utils/
+│   │   │   ├── imageUpload.js      # Cloudinary upload + WebP conversion
+│   │   │   ├── upload.js           # Disk-path upload helper
+│   │   │   └── sseManager.js       # Server-Sent Events manager
+│   │   └── lib/
+│   │       ├── credentialScheduler.js
+│   │       ├── prisma.js
+│   │       ├── syncStudentFromJoinRequest.js
+│   │       └── adminUtils.js
 │   ├── Dockerfile
-│   └── README.md
+│   └── package.json
 │
-├── frontend/                        # React + Vite application
-│   ├── public/                      # Static assets served from root
+├── frontend/
+│   ├── public/
+│   │   ├── SRL.svg
+│   │   └── SVKM.svg
 │   ├── src/
-│   │   ├── components/              # Reusable UI components
+│   │   ├── App.jsx                 # Root component with routing
+│   │   ├── main.jsx                # React DOM entry point
+│   │   ├── components/
 │   │   │   ├── Navbar.jsx
 │   │   │   ├── Footer.jsx
+│   │   │   ├── Hero.jsx
+│   │   │   ├── Timeline.jsx
 │   │   │   ├── MobileDock.jsx
+│   │   │   ├── JoinUsModal.jsx
 │   │   │   ├── AnimatedPreloader.jsx
 │   │   │   ├── PageTransitionWrapper.jsx
-│   │   │   ├── ScrollToTop.jsx
-│   │   │   └── ErrorBoundary.jsx
-│   │   ├── pages/                   # Route-level page components
+│   │   │   ├── ErrorBoundary.jsx
+│   │   │   ├── LazySection.jsx
+│   │   │   ├── HeadSRL.jsx
+│   │   │   ├── react-bits/
+│   │   │   ├── skeletons/
+│   │   │   └── ui/
+│   │   ├── pages/
 │   │   │   ├── Home.jsx
+│   │   │   ├── Researchers.jsx
+│   │   │   ├── StudentCV.jsx
 │   │   │   ├── Sessions.jsx
+│   │   │   ├── Publications.jsx
+│   │   │   ├── AddPublication.jsx
 │   │   │   ├── Achievements.jsx
 │   │   │   ├── Activities.jsx
-│   │   │   ├── Publications.jsx
-│   │   │   ├── Researchers.jsx
 │   │   │   ├── LeaderBoard.jsx
+│   │   │   ├── OrganizationDetails.jsx
 │   │   │   ├── JoinUs.jsx
 │   │   │   ├── JoinUsSuccess.jsx
-│   │   │   ├── Appointment.jsx
-│   │   │   ├── OrganizationDetails.jsx
-│   │   │   ├── StudentCV.jsx
-│   │   │   └── AddPublication.jsx
+│   │   │   └── Appointment.jsx
 │   │   ├── config/
-│   │   │   └── apiConfig.js         # API base URL and request headers
-│   │   ├── hooks/                   # Custom React hooks
-│   │   ├── lib/                     # Utility functions
-│   │   ├── data/                    # Static JSON data (institutes, etc.)
-│   │   ├── App.jsx                  # Root component with routing
-│   │   ├── main.jsx                 # Entry point
-│   │   └── index.css                # Global styles
+│   │   │   └── apiConfig.js
+│   │   ├── hooks/
+│   │   ├── lib/
+│   │   └── data/
 │   ├── index.html
-│   ├── package.json
 │   ├── vite.config.js
 │   ├── tailwind.config.js
 │   ├── vercel.json
-│   └── README.md
+│   └── package.json
 │
-├── docker-compose.yml               # Multi-service orchestration
-├── Dockerfile                       # Root Dockerfile (frontend nginx)
-├── nginx.conf                       # Nginx reverse-proxy config
-├── package.json                     # Workspace scripts (concurrently)
-├── .gitignore
-└── README.md                        ← You are here
+├── nginx.conf
+├── docker-compose.yml
+├── Dockerfile
+└── vercel.json
 ```
 
 ---
 
-## 🚀 Getting Started
+## Architecture
 
-### Prerequisites
-
-- **Node.js** ≥ 20.x and **npm** ≥ 10.x
-- **Docker** and **Docker Compose** (optional, for containerized setup)
-- A **Neon PostgreSQL** connection string ([neon.tech](https://neon.tech))
-- A **Cloudinary** account for media uploads ([cloudinary.com](https://cloudinary.com))
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/DabhiChrisha/StudentsResearchLab.git
-cd StudentsResearchLab
+```
+Browser
+  │
+  ├── React SPA (React 19, Vite 7, React Router v7)
+  │     └── fetch() → /api/*
+  │
+  └── Express 5 API (Node.js)
+        ├── Middleware: CORS allowlist, Helmet, compression, rate-limit
+        ├── Public routes — no auth required
+        ├── Admin routes — JWT Bearer token required
+        ├── Prisma 7 ORM
+        │     └── Neon PostgreSQL (serverless, pg adapter)
+        ├── Cloudinary SDK v2 (image/video storage + WebP conversion)
+        ├── Nodemailer SMTP (OTP resets, student credential delivery)
+        └── SSE /api/events (real-time push to admin portal)
 ```
 
-### 2. Install All Dependencies
+### Image Upload Pipeline
 
-```bash
-# Install workspace-level dependencies
-npm install
+Every image uploaded through the API is converted to WebP before storage in Cloudinary. Videos and PDFs bypass conversion and are stored as-is.
 
-# Install frontend dependencies
-npm install --prefix frontend
-
-# Install backend dependencies
-npm install --prefix backend
+```
+Client uploads file  (JPEG / PNG / AVIF / BMP / TIFF / GIF / WebP)
+  │
+  └── Multer memory storage → req.file.buffer
+        │
+        └── uploadToCloudinary(buffer, folder, name, resourceType, mimeType)
+              ├── image/convertible  →  Cloudinary upload_stream
+              │                          format: "webp", quality: "auto:best"
+              └── video / raw / PDF  →  Cloudinary upload, no conversion
 ```
 
-### 3. Generate Prisma Client
+### Cloudinary Folder Structure
 
-```bash
-cd backend
-npx prisma generate
-cd ..
 ```
+srl/
+├── activities/
+├── events/
+├── gallery/
+├── researchers/
+├── faculty/
+├── logos/
+├── certificates/
+├── hero/
+├── blogs/
+├── news/
+├── users/
+└── uploads/
+```
+
+### Database Models (22 tables)
+
+| Model | Purpose |
+|---|---|
+| `StudentsDetail` | Student profiles, credentials, admin flag |
+| `MemberCvProfile` | CV data — papers, hackathons, certifications, patents |
+| `SessionContent` | Session metadata, media URLs, LinkedIn link |
+| `SrlSession` | Session date records |
+| `AchievementContent` | Lab achievements with images |
+| `Activity` | Activity entries with photos |
+| `Publication` | Research publications with approval workflow |
+| `publications` | Extended publication table (UUID, tags, categories) |
+| `ResearchPaper` + `PaperAuthor` | Legacy papers with many-to-many authors |
+| `Symbol` | Publisher logos for publications |
+| `LeaderboardStat` | Aggregated monthly performance scores |
+| `DebateScore` | Per-student monthly debate scores |
+| `attendance` | Attendance records with hours logged |
+| `session_attendee` | Session attendance tracking |
+| `session_score` | Session-level scores |
+| `JoinUs` | Prospective member applications |
+| `timeline_entries` | Lab timeline steps |
+| `password_reset_otps` | OTP tokens for password reset |
+| `credential_jobs` | Scheduled student credential jobs |
+| `patents` | Patent applications per student |
+| `authorization` | Legacy authorization records |
 
 ---
 
-## 🔐 Environment Variables
-
-### Frontend — `frontend/.env`
-
-```bash
-# Backend API endpoint (local dev or deployed URL)
-VITE_API_BASE_URL=http://127.0.0.1:8000
-```
-
-> ⚠️ For production, set `VITE_API_BASE_URL` to your deployed backend URL in your hosting dashboard (e.g., Vercel environment variables).
+## Environment Variables
 
 ### Backend — `backend/.env`
 
-```bash
-# Neon PostgreSQL connection string
-DATABASE_URL="postgresql://<user>:<password>@<host>/<dbname>?sslmode=require"
+```env
+# Database (Neon PostgreSQL)
+DATABASE_URL=postgresql://<user>:<password>@<host>/<dbname>?sslmode=require
 
-# Cloudinary credentials
+# Cloudinary
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 
-# Admin authentication
-ADMIN_EMAIL=your_admin_email@example.com
-JWT_SECRET=your_jwt_secret_here
+# JWT
+JWT_SECRET=your_long_random_secret_minimum_32_chars
+
+# SMTP (Gmail App Password recommended)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_USER=your_smtp_username
+SMTP_PASS=your_smtp_app_password
+EMAIL_FROM_ADDRESS=noreply@yourdomain.com
+
+# Admin notification emails for join requests (comma-separated)
+JOIN_REQUEST_ADMIN_NOTIFICATION_EMAILS=admin1@example.com,admin2@example.com
+
+# Server
+PORT=8000
+NODE_ENV=development
 ```
 
-> ⚠️ **Never commit `.env` files to version control.** They are already excluded via `.gitignore`.
+### Frontend — `frontend/.env`
+
+```env
+# Backend API base URL
+# Leave empty in development — Vite proxy handles /api/* → http://localhost:8000
+VITE_BACKEND_URL=https://api-srl.mmpsrpc.in
+
+# Set to "true" to bypass the Vite proxy and hit the backend URL directly
+VITE_USE_DIRECT_API=false
+```
 
 ---
 
-## 🏃 Running Locally
+## Installation & Setup
 
-### Option A — Run Both Together (Recommended)
+### Prerequisites
+- Node.js ≥ 18.0.0
+- npm ≥ 9
+- A Neon PostgreSQL database (or any PostgreSQL instance)
+- A Cloudinary account
 
-From the project root, using the workspace script:
+### 1. Clone the repository
 
 ```bash
-npm run dev
+git clone <repo-url>
+cd StudentsResearchLab
 ```
 
-This starts both frontend and backend concurrently.
+### 2. Install dependencies
 
-### Option B — Run Separately
+```bash
+# Backend
+cd backend && npm install
 
-**Terminal 1 — Backend (Express on port 8000):**
+# Frontend
+cd ../frontend && npm install
+```
+
+### 3. Configure environment variables
+
+```bash
+# Create and fill backend env file
+cp backend/.env.example backend/.env
+# Edit backend/.env — set DATABASE_URL, Cloudinary keys, JWT_SECRET, SMTP config
+
+# Create and fill frontend env file
+cp frontend/.env.example frontend/.env
+# Edit frontend/.env — set VITE_BACKEND_URL for production
+```
+
+---
+
+## Database Setup
 
 ```bash
 cd backend
-npm run dev
+
+# Generate the Prisma client
+npm run db:generate
+# or: npx prisma generate
+
+# Apply all migrations to your database
+npx prisma migrate deploy
+
+# (Optional) Seed initial data
+npm run db:seed
+
+# (Optional) Open Prisma Studio — browser-based DB explorer
+npx prisma studio
 ```
 
-**Terminal 2 — Frontend (Vite on port 5173/5174):**
+---
+
+## Cloudinary Setup
+
+1. Create an account at [cloudinary.com](https://cloudinary.com)
+2. From the Cloudinary dashboard, copy your **Cloud Name**, **API Key**, and **API Secret**
+3. Add those three values to `backend/.env`
+4. Folder structure under `srl/` is created automatically on the first upload — no manual configuration needed
+
+All images are converted to WebP on upload. Videos are stored in their original format.
+
+---
+
+## Development Workflow
 
 ```bash
+# Terminal 1 — backend (auto-restarts on file changes)
+cd backend
+npm run dev
+# → http://localhost:8000
+
+# Terminal 2 — frontend (HMR enabled)
 cd frontend
 npm run dev
+# → http://localhost:5173
+# Vite proxies /api/* → http://localhost:8000 automatically
 ```
 
-| Service | URL |
-|---|---|
-| Frontend | `http://localhost:5173` |
-| Backend API | `http://127.0.0.1:8000` |
-| API Health | `http://127.0.0.1:8000/api/health` |
+Both servers must run simultaneously for the full stack to work locally.
 
 ---
 
-## 🐳 Docker
-
-Docker is recommended for deploying the backend or testing the production build.
-
-### Quick Start
-
-```bash
-# Build and start backend container
-docker compose up --build
-
-# App runs at http://localhost:3000 (nginx proxy)
-```
-
-### Useful Commands
-
-| Goal | Command |
-|---|---|
-| Start in background | `docker compose up --build -d` |
-| View logs | `docker compose logs -f` |
-| Stop all | `docker compose down` |
-| Rebuild backend only | `docker compose up --build backend` |
-
-> 💡 The `DATABASE_URL` and other secrets must be set in your environment or passed via `docker compose` env configuration.
-
----
-
-## 🌐 Deployment
+## Build & Deployment
 
 ### Frontend — Vercel
 
-1. Push code to GitHub
-2. Connect repository to [Vercel](https://vercel.com)
-3. Set **root directory** to `frontend/`
-4. Set environment variable `VITE_API_BASE_URL` to your deployed backend URL
-5. Vercel auto-deploys on push to `main`
+`frontend/vercel.json` configures a catch-all rewrite so React Router handles all client-side navigation.
 
-### Backend — Render / Railway / any Node.js host
-
-**Build command:**
 ```bash
-npm install && npx prisma generate
+cd frontend
+npm run build       # outputs to frontend/dist/
 ```
 
-**Start command:**
-```bash
-npm start
+Required Vercel environment variable:
+```
+VITE_BACKEND_URL = https://api-srl.mmpsrpc.in
 ```
 
-**Required environment variables:**
-- `DATABASE_URL` — Neon PostgreSQL connection string
-- `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
-- `ADMIN_EMAIL`, `JWT_SECRET`
-- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
-- `EMAIL_FROM_ADDRESS` (optional, defaults to `SMTP_USER`)
-- `JOIN_REQUEST_ADMIN_NOTIFICATION_EMAILS` or `NOTIFICATION_EMAILS` or `ADMIN_EMAIL`
+### Backend — Render / Railway / any Node host
 
-> After deploying the backend, update `VITE_API_BASE_URL` in Vercel to point to your production backend URL.
+```bash
+cd backend
+npm run build       # runs prisma generate
+npm start           # node src/index.js
+```
+
+Run migrations before starting the server for the first time:
+```bash
+npx prisma migrate deploy
+```
+
+Required environment variables: all variables from [Backend Environment Variables](#backend--backendenv).
+
+### Docker (full stack)
+
+```bash
+# From the repository root
+docker compose up --build
+```
+
+| Service | Port |
+|---|---|
+| Frontend (Nginx) | 5173 |
+| Backend (Node.js) | 8000 |
+
+---
+
+## API Reference
+
+All admin endpoints require `Authorization: Bearer <jwt>` obtained from `POST /api/admin/login`.
+
+### Authentication
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/api/admin/login` | — | Issue JWT token |
+| POST | `/api/auth/forgot-password` | — | Send OTP to email |
+| POST | `/api/auth/verify-otp` | — | Verify OTP code |
+| POST | `/api/auth/reset-password` | — | Reset password with valid OTP |
+
+### Public Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/sessions` | All lab sessions |
+| GET | `/api/timeline` | Lab timeline entries |
+| GET | `/api/publications` | Research publications |
+| GET | `/api/papers` | Research papers with authors |
+| GET | `/api/activities` | Activity feed |
+| GET | `/api/achievements` | Achievement entries |
+| GET | `/api/researchers` | Researcher profiles |
+| GET | `/api/leaderboard` | All-time rankings |
+| GET | `/api/leaderboard/monthly` | Monthly rankings |
+| GET | `/api/leaderboard/top-hours` | Top contributors by hours |
+| GET | `/api/batch-stats` | Batch performance statistics |
+| GET | `/api/metrics` | Lab impact metrics |
+| GET | `/api/cv/:enrollment_no` | Individual student CV |
+| POST | `/api/join_us` | Submit join application |
+| GET | `/api/events` | SSE stream for real-time updates |
+
+### Admin Endpoints (JWT required)
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET/POST/PUT/DELETE | `/api/admin/students` | Student CRUD |
+| GET/POST/PUT/DELETE | `/api/admin/activities` | Activity CRUD |
+| GET/POST/PUT/DELETE | `/api/admin/achievements` | Achievement CRUD |
+| GET/POST/PUT/DELETE | `/api/admin/sessions` | Session CRUD |
+| GET/POST/PUT/DELETE | `/api/admin/timeline` | Timeline CRUD |
+| GET/POST/PUT/DELETE | `/api/admin/scores` | Score CRUD |
+| GET/POST/PUT/DELETE | `/api/admin/attendance` | Attendance CRUD |
+| GET/POST/PUT/DELETE | `/api/admin/research` | Research project CRUD |
+| GET/POST/PUT/DELETE/PATCH | `/api/admin/publication` | Publication management |
+| GET/PUT | `/api/admin/member-cv` | Member CV management |
+| GET/POST/PUT/DELETE | `/api/admin/session-scores` | Session score CRUD |
+| GET/PUT/DELETE | `/api/admin/join-requests` | Join request management |
+| POST | `/api/admin/upload` | Upload image or video to Cloudinary |
+| POST | `/api/admin/upload-certificate` | Upload certificate image |
+
+---
+
+## Troubleshooting
+
+**`prisma generate` fails**
+Ensure `DATABASE_URL` is set in `backend/.env` and the Neon database is reachable. Run `npx prisma db pull` to verify connectivity.
+
+**CORS errors in the browser**
+The backend allows origins: `localhost:5173`, `localhost:5174`, `localhost:5175`, `localhost:3000`, and the production domains. If you run the frontend on a different port, add it to the `ALLOWED_ORIGINS` array in `backend/src/index.js`.
+
+**Cloudinary upload returns "Invalid image file"**
+The MIME type is not in the accepted list. Supported types: `image/jpeg`, `image/jpg`, `image/png`, `image/gif`, `image/webp`, `image/avif`, `image/bmp`, `image/tiff`.
+
+**SSE connection drops in development**
+Do not set `VITE_USE_DIRECT_API=true` in `frontend/.env` during development. The Vite proxy is required for SSE to work without cross-origin issues.
+
+**OTP emails not sending**
+Use a Gmail App Password (not your account password) and confirm `SMTP_PORT=465`. Verify `SMTP_USER` and `SMTP_PASS` match the credentials in your Google account security settings.
+
+**`EADDRINUSE` on port 8000**
+Another process is using port 8000. Either stop that process or set `PORT=8001` in `backend/.env`.
+our production backend URL.
+> `VITE_API_BASE_URL` must be set at build time for Vercel so the frontend can call the deployed Render backend.
+
+---
+
+## 📄 License
+
+This project is private and intended for use within the **Students Research Lab** at KSV University.
+
+---
+
+<p align="center">
+  Built with ❤️ by the <strong>Students Research Lab</strong> team
+</p>
+our production backend URL.
 > `VITE_API_BASE_URL` must be set at build time for Vercel so the frontend can call the deployed Render backend.
 
 ---

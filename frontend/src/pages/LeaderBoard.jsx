@@ -22,42 +22,42 @@ function parsePeriod(period) {
 
 // Pass-through parser for newly formatted backend objects
 const IMAGE_MAP = {
-    "22BECE30091": getImageUrl("/students/Kandarp Gajjar.jpeg"),
-    "22BEIT30123": getImageUrl("/students/Nancy.jpeg"),
-    "23BECE30493": getImageUrl("/students/Pande Hemant Rameshwarkumar.jpeg"),
-    "23BECE30532": getImageUrl("/students/Patel Krish Himanshu.jpeg"),
-    "23BECE30168": getImageUrl("/students/Patel Banshari Rahulkumar.jpg"),
-    "23BEIT54020": getImageUrl("/students/Jenish Sorathiya.jpeg"),
-    "23BECE30203": getImageUrl("/students/Patel Jainee Hasmukhbhai.jpeg"),
-    "24BECE30489": getImageUrl("/students/Dabhi Chrisha Manish.png"),
-    "24BECE30114": getImageUrl("/students/Kansara Dev Dharmeshkumar.jpeg"),
-    "24BECE30122": getImageUrl("/students/Yash Kumavat.jpeg"),
-    "24BECE30094": getImageUrl("/students/Halvdadiya Rudr.jpeg"),
-    "24BECE30081": getImageUrl("/students/Gajjar Antra Ashvinkumar.jpeg"),
-    "24BECE30099": getImageUrl("/students/Jadeja Bhagyashree.jpeg"),
-    "23BECE30036": getImageUrl("/students/Chavda Yashvi Surendrasinh.jpeg"),
-    "23BECE30059": getImageUrl("/students/Devda Rachita Bharatsinh.jpeg"),
-    "25MECE30003": getImageUrl("/students/Ghetiya Poojan Rahulbhai.jpeg"),
-    "23BECE30521": getImageUrl("/students/Heny Patel.jpeg"),
-    "23BECE30449": getImageUrl("/students/Hetvi Hinsu.jpeg"),
-    "224SBECE30016": getImageUrl("/students/Honey Modha.jpeg"),
-    "23BECE30040": getImageUrl("/students/Janki Chitroda.jpeg"),
-    "23BECE30029": getImageUrl("/students/Kanksha Keyur Buch.jpeg"),
-    "23BECE30101": getImageUrl("/students/Kanudawala Zeel PareshKumar.jpeg"),
-    "23BECE30023": getImageUrl("/students/Krishna Bhatt.jpeg"),
-    "22BEIT30118": getImageUrl("/students/Krutika Vijaybhai Patel.jpeg"),
-    "23BECE30542": getImageUrl("/students/Mihir Patel.png"),
-    "23BECE30144": getImageUrl("/students/Padh Charmi Ketankumar.jpeg"),
-    "23BECE30490": getImageUrl("/students/Panchal Henit Shaileshbhai.jpeg"),
-    "24BECE30541": getImageUrl("/students/Pandya Aayush Viral.jpeg"),
-    "24BECE30548": getImageUrl("/students/Parmar Mahi Nitinchandra.jpeg"),
-    "22BECE30153": getImageUrl("/students/Parva Kumar.jpeg"),
-    "24BECE30436": getImageUrl("/students/Pragati Varu.jpeg"),
-    "224SBECE30059": getImageUrl("/students/Prem Raichura.jpeg"),
-    "22BEIT30133": getImageUrl("/students/Ridham Patel.png"),
-    "23BECE30364": getImageUrl("/students/Rohan Thakar.png"),
-    "24BECE30441": getImageUrl("/students/Yajurshi Velani.png"),
-    "23BECE30058": getImageUrl("/students/Zenisha Devani.jpeg"),
+    "22BECE30091": getImageUrl("/students/Kandarp Gajjar.webp"),
+    "22BEIT30123": getImageUrl("/students/Nancy.webp"),
+    "23BECE30493": getImageUrl("/students/Pande Hemant Rameshwarkumar.webp"),
+    "23BECE30532": getImageUrl("/students/Patel Krish Himanshu.webp"),
+    "23BECE30168": getImageUrl("/students/Patel Banshari Rahulkumar.webp"),
+    "23BEIT54020": getImageUrl("/students/Jenish Sorathiya.webp"),
+    "23BECE30203": getImageUrl("/students/Patel Jainee Hasmukhbhai.webp"),
+    "24BECE30489": getImageUrl("/students/Dabhi Chrisha Manish.webp"),
+    "24BECE30114": getImageUrl("/students/Kansara Dev Dharmeshkumar.webp"),
+    "24BECE30122": getImageUrl("/students/Yash Kumavat.webp"),
+    "24BECE30094": getImageUrl("/students/Halvdadiya Rudr.webp"),
+    "24BECE30081": getImageUrl("/students/Gajjar Antra Ashvinkumar.webp"),
+    "24BECE30099": getImageUrl("/students/Jadeja Bhagyashree.webp"),
+    "23BECE30036": getImageUrl("/students/Chavda Yashvi Surendrasinh.webp"),
+    "23BECE30059": getImageUrl("/students/Devda Rachita Bharatsinh.webp"),
+    "25MECE30003": getImageUrl("/students/Ghetiya Poojan Rahulbhai.webp"),
+    "23BECE30521": getImageUrl("/students/Heny Patel.webp"),
+    "23BECE30449": getImageUrl("/students/Hetvi Hinsu.webp"),
+    "224SBECE30016": getImageUrl("/students/Honey Modha.webp"),
+    "23BECE30040": getImageUrl("/students/Janki Chitroda.webp"),
+    "23BECE30029": getImageUrl("/students/Kanksha Keyur Buch.webp"),
+    "23BECE30101": getImageUrl("/students/Kanudawala Zeel PareshKumar.webp"),
+    "23BECE30023": getImageUrl("/students/Krishna Bhatt.webp"),
+    "22BEIT30118": getImageUrl("/students/Krutika Vijaybhai Patel.webp"),
+    "23BECE30542": getImageUrl("/students/Mihir Patel.webp"),
+    "23BECE30144": getImageUrl("/students/Padh Charmi Ketankumar.webp"),
+    "23BECE30490": getImageUrl("/students/Panchal Henit Shaileshbhai.webp"),
+    "24BECE30541": getImageUrl("/students/Pandya Aayush Viral.webp"),
+    "24BECE30548": getImageUrl("/students/Parmar Mahi Nitinchandra.webp"),
+    "22BECE30153": getImageUrl("/students/Parva Kumar.webp"),
+    "24BECE30436": getImageUrl("/students/Pragati Varu.webp"),
+    "224SBECE30059": getImageUrl("/students/Prem Raichura.webp"),
+    "22BEIT30133": getImageUrl("/students/Ridham Patel.webp"),
+    "23BECE30364": getImageUrl("/students/Rohan Thakar.webp"),
+    "24BECE30441": getImageUrl("/students/Yajurshi Velani.webp"),
+    "23BECE30058": getImageUrl("/students/Zenisha Devani.webp"),
 };
 
 const parseBackendStudent = (student, index) => {
@@ -150,19 +150,26 @@ const LeaderBoard = () => {
             invalidateCacheKey('lb:overall');
             invalidateCacheKey('lb:monthly');
             invalidateCacheKey('lb:hours');
+            // Also clear the period-specific cache for the currently selected period
+            // so the next period-selector fetch gets fresh data after a live update.
+            if (selectedPeriod) invalidateCacheKey(`lb:period:${selectedPeriod}`);
             refetchSilent();
         };
         window.addEventListener('srl:live-update', onLive);
         return () => window.removeEventListener('srl:live-update', onLive);
-    }, [refetchSilent]);
+    }, [refetchSilent, selectedPeriod]);
 
-    // Fetch data whenever selectedPeriod changes (for monthly + hours tabs)
+    // Fetch data whenever selectedPeriod changes (period selector driven)
+    // activeTab is intentionally NOT a dependency — switching tabs must not
+    // re-fetch; data already in monthlyStudents / top5ByHours covers the
+    // default period and only a period-selector change warrants a new request.
     useEffect(() => {
-        if (activeTab === 'overall' || !selectedPeriod) return;
+        if (!selectedPeriod) return;
         const params = parsePeriod(selectedPeriod);
         if (!params) return;
         setPeriodLoading(true);
-        fetchWithTimeout(`${API_BASE}/api/leaderboard/monthly?month=${params.month}&year=${params.year}`)
+        const url = `${API_BASE}/api/leaderboard/monthly?month=${params.month}&year=${params.year}`;
+        fetchWithTimeout(url, {}, 10000, { cacheKey: `lb:period:${selectedPeriod}`, cacheTtl: 60_000 })
             .then(json => {
                 if (json?.leaderboard) {
                     const parsed = json.leaderboard.map(parseBackendStudent).filter(s => s.name !== 'SRL Admin');
@@ -172,7 +179,7 @@ const LeaderBoard = () => {
             })
             .catch(() => {})
             .finally(() => setPeriodLoading(false));
-    }, [selectedPeriod, activeTab]);
+    }, [selectedPeriod]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Column sort handler
     const handleSort = (key) => {

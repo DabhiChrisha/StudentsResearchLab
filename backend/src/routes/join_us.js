@@ -132,7 +132,6 @@ router.post("/api/upload-temp-resume", (req, res, next) => {
     const uploadRes = await uploadToCloudinary(req.file.buffer, "join_resumes", originalName, "raw");
     res.json({ success: true, url: uploadRes.url });
   } catch (err) {
-    console.error("Temp Resume upload failed:", err);
     res.status(500).json({ detail: "Resume upload failed. Please try again later." });
   }
 });
@@ -151,7 +150,6 @@ router.post("/api/join-us/validate-unique", async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
-    console.error("Join Us Duplicate Validation Error:", err);
     res.status(500).json({ detail: "Unable to validate your details. Please try again." });
   }
 });
@@ -246,10 +244,8 @@ router.post("/api/join-us", upload.none(), async (req, res, next) => {
     // Removed setTimeout to prevent serverless suspension issues
     const recipientEmail = String(email || "").trim();
     if (!recipientEmail || !isValidEmail(recipientEmail)) {
-      console.error(`[Join Request] Submission confirmation email skipped for request ${serializedData.id}: invalid email`);
     } else {
       sendJoinRequestConfirmationEmail({ to: recipientEmail, studentName: name }).catch((emailErr) => {
-        console.error(`[Email Error] Failed to send submission confirmation email for request ID ${serializedData.id}:`, emailErr);
       });
     }
 
@@ -261,16 +257,10 @@ router.post("/api/join-us", upload.none(), async (req, res, next) => {
       department,
       batch,
       source: source || "Website",
-    }).catch((emailErr) => {
-      console.error(
-        `[Email Error] Failed to send admin notification for join request ID ${serializedData.id}:`,
-        emailErr,
-      );
-    });
+    }).catch(() => {});
 
     res.json({ success: true, data: serializedData });
   } catch (err) {
-    console.error("Join Us Submission Error Stack:", err);
     if (err.code === "P2002") {
       return res.status(400).json({ detail: "This enrollment number or email is already registered." });
     }

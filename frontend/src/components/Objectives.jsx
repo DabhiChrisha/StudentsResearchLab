@@ -284,7 +284,7 @@ inset 0 0 10px #10b98144
 ` }}
                         >
                             <img loading="lazy" decoding="async"
-                                src={getImageUrl("/innovation1.jpg")}
+                                src={getImageUrl("/innovation1.webp")}
                                 alt="innovation"
                                 className={isMobile ? "w-[75px] object-contain" : "w-[120px] h-[120px] object-contain"}
                             />

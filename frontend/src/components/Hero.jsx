@@ -10,16 +10,16 @@ export default function Hero() {
 
   const slides = [
     {
-      image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754477/my-project/frontend/src/assets/HERO.jpg",
+      image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1780831765/srl/hero/hero-slide-1.webp",
       align:
         "items-center text-center justify-end pb-24 md:items-end md:text-right md:justify-end md:pb-12",
     },
     {
-      image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754479/my-project/frontend/src/assets/hero2.jpg",
+      image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1780831767/srl/hero/hero-slide-2.webp",
       align: "items-center text-center justify-start pt-10 md:pt-8",
     },
     {
-      image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1775754480/my-project/frontend/src/assets/hero3.jpg",
+      image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1780831769/srl/hero/hero-slide-3.webp",
       align: "items-center text-center justify-start pt-10 md:pt-8",
     },
   ];

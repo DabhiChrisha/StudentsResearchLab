@@ -39,7 +39,6 @@ const adminAuthMiddleware = (req, res, next) => {
 
     next();
   } catch (error) {
-    console.error("Auth middleware error:", error.message);
     return res.status(401).json({
       error: "Unauthorized",
       message: "Invalid or expired token",
@@ -84,7 +83,6 @@ const authenticatedUserMiddleware = (req, res, next) => {
 
     next();
   } catch (error) {
-    console.error("Auth middleware error:", error.message);
     return res.status(401).json({
       error: "Unauthorized",
       message: "Invalid or expired token",

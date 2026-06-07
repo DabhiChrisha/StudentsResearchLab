@@ -20,7 +20,6 @@ exports.getTimeline = async (req, res, next) => {
       data: entries.map(serializeTimelineEntry),
     });
   } catch (error) {
-    console.error("Get timeline error:", error);
     next(error);
   }
 };
@@ -81,7 +80,6 @@ exports.createTimelineEntry = async (req, res, next) => {
       data: serializeTimelineEntry(entry),
     });
   } catch (error) {
-    console.error("Create timeline entry error:", error);
     if (error.code === "P2002") {
       return res.status(400).json({
         error: "Conflict",
@@ -122,7 +120,6 @@ exports.updateTimelineEntry = async (req, res, next) => {
       data: serializeTimelineEntry(entry),
     });
   } catch (error) {
-    console.error("Update timeline entry error:", error);
     if (error.code === "P2025") {
       return res.status(404).json({
         error: "Not found",
@@ -151,7 +148,6 @@ exports.deleteTimelineEntry = async (req, res, next) => {
       message: "Timeline entry deleted successfully",
     });
   } catch (error) {
-    console.error("Delete timeline entry error:", error);
     if (error.code === "P2025") {
       return res.status(404).json({
         error: "Not found",

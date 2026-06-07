@@ -50,7 +50,6 @@ export const useFetch = (fetchFn, dependencies = [], maxRetries = 3, retryInterv
             }
         } catch (err) {
             if (err.name === 'AbortError') return; // silently ignore cancellations
-            console.warn(`Fetch attempt ${currentRetry + 1} failed:`, err.message);
 
             if (currentRetry < maxRetries && isMounted) {
                 setTimeout(() => {
@@ -105,7 +104,6 @@ export const useFetch = (fetchFn, dependencies = [], maxRetries = 3, retryInterv
             await fetchFnRef.current();
         } catch (err) {
             if (err.name !== 'AbortError') {
-                console.warn('Silent refetch failed:', err.message);
             }
         }
     }, []);

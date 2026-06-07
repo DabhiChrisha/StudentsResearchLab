@@ -24,8 +24,7 @@ const ChromaGrid = ({ items, onImageClick, onCertClick, isLoading = false, skele
         setLoadedImages(prev => ({ ...prev, [index]: true }));
     };
 
-    const handleImageError = (index, item) => {
-        console.error(`Failed to load image for ${item.title}:`, item.image);
+    const handleImageError = (index) => {
         setFailedImages(prev => ({ ...prev, [index]: true }));
     };
 
@@ -95,7 +94,7 @@ const ChromaGrid = ({ items, onImageClick, onCertClick, isLoading = false, skele
                                         src={getImageUrl(item.image)}
                                         alt={item.title}
                                         onLoad={() => handleImageLoad(index)}
-                                        onError={() => handleImageError(index, item)}
+                                        onError={() => handleImageError(index)}
                                         className="h-full w-full object-cover transition-all duration-1000 group-hover:scale-110"
                                     />
                                     {/* Overlay on hover */}

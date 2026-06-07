@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import JoinUs from '../pages/JoinUs';
-import joinSrlImg from '../assets/Join SRL.png';
+import joinSrlImg from '../assets/Join SRL.webp';
 
 const JoinUsModal = ({ isOpen, onClose }) => {
     return (

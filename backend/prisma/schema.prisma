@@ -220,8 +220,31 @@ model Activity {
 
 model authorization {
   user_ID  String   @id @db.VarChar(150)
-  password String?  @db.VarChar(20)
+  password String?  @db.VarChar(255)
   is_admin Boolean? @default(false)
+}
+
+model credential_jobs {
+  id             BigInt   @id @default(autoincrement())
+  email          String   @db.VarChar(150)
+  enrollment_no  String   @db.VarChar(20)
+  student_name   String   @db.VarChar(150)
+  scheduled_for  DateTime
+  status         String   @default("pending") @db.VarChar(10)
+  created_at     DateTime @default(now())
+
+  @@index([status, scheduled_for], name: "idx_credential_jobs_status_scheduled")
+}
+
+model password_reset_otps {
+  id         BigInt   @id @default(autoincrement())
+  email      String   @db.VarChar(150)
+  otp_hash   String   @db.VarChar(255)
+  expires_at DateTime
+  used       Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  @@index([email], name: "idx_prot_email")
 }
 
 model timeline_entries {

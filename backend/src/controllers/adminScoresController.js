@@ -149,7 +149,6 @@ exports.getScores = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.error("Get scores error:", error);
     next(error);
   }
 };
@@ -195,7 +194,6 @@ exports.getScoresByStudent = async (req, res, next) => {
       data: scores,
     });
   } catch (error) {
-    console.error("Get student scores error:", error);
     next(error);
   }
 };
@@ -270,7 +268,6 @@ exports.createScore = async (req, res, next) => {
       data: score,
     });
   } catch (error) {
-    console.error("Create score error:", error);
     next(error);
   }
 };
@@ -305,7 +302,6 @@ exports.updateScore = async (req, res, next) => {
       data: score,
     });
   } catch (error) {
-    console.error("Update score error:", error);
     if (error.code === "P2025") {
       return res.status(404).json({
         error: "Not found",
@@ -335,7 +331,6 @@ exports.deleteScore = async (req, res, next) => {
       message: "Score deleted successfully",
     });
   } catch (error) {
-    console.error("Delete score error:", error);
     if (error.code === "P2025") {
       return res.status(404).json({
         error: "Not found",
@@ -375,7 +370,6 @@ exports.aggregateScores = async (req, res, next) => {
       data: result,
     });
   } catch (error) {
-    console.error("Aggregate scores error:", error);
     next(error);
   }
 };

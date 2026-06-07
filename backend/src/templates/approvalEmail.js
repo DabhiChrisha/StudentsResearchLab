@@ -21,6 +21,9 @@ Congratulations on your approval to join SRL. Your application has been reviewed
 
 This is a strong opportunity to contribute, learn, and grow. Please maintain discipline, regularity, and consistency in your work to make the most of your membership.
 
+YOUR LOGIN CREDENTIALS ARE ON THEIR WAY
+You will receive a separate email with your portal login credentials within the next 15 minutes. Please check your inbox (and spam folder) shortly.
+
 What to focus on next:
 • Attend sessions and research activities regularly
 • Collaborate with mentors and peers
@@ -80,6 +83,19 @@ The Admin Team`;
                     <p style="margin:0 0 6px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#05877a;">You are now an official member</p>
                     <p style="margin:0;font-size:15px;color:#4b5563;line-height:1.6;">
                       You are officially part of an active community of researchers, innovators, and scholars.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Credential delivery notice -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#fffbeb;border-left:4px solid #f59e0b;border-radius:0 10px 10px 0;margin:0 0 28px;">
+                <tr>
+                  <td style="padding:20px 24px;">
+                    <p style="margin:0 0 6px;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#b45309;">🔐 &nbsp;Your Login Credentials Are On Their Way</p>
+                    <p style="margin:0;font-size:15px;color:#4b5563;line-height:1.6;">
+                      You will receive a <strong>separate email</strong> with your portal login credentials
+                      within the next <strong>15 minutes</strong>. Please check your inbox and spam folder shortly.
                     </p>
                   </td>
                 </tr>

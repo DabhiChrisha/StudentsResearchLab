@@ -104,8 +104,7 @@ const Navbar = () => {
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
       })
-      .catch((err) => {
-        console.error("Error downloading PDF:", err);
+      .catch(() => {
         // Fallback: trigger normal download
         const a = document.createElement("a");
         a.href = "/assets/SRL Rules and Regulations.pdf";
