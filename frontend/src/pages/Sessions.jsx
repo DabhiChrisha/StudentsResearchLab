@@ -168,10 +168,10 @@ const Sessions = () => {
                         muted
                         loop
                         playsInline
-                        preload="metadata"
+                        preload="auto"
                         className="w-full h-full object-contain pointer-events-none transform-gpu"
                       >
-                        <source src={getImageUrl(session.media_urls[0])} />
+                        <source src={getImageUrl(session.media_urls[0])} type="video/mp4" />
                       </video>
                     ) : session.media_urls?.length > 0 ? (
                       <ImageCarousel images={session.media_urls} />
