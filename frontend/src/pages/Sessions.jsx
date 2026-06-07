@@ -162,7 +162,7 @@ const Sessions = () => {
                 >
                   {/* MEDIA */}
                   <div className="h-64 lg:h-72 bg-white overflow-hidden relative">
-                    {isVideoMedia(session.media_urls?.[0]) ? (
+                    {(session.type === "video" || isVideoMedia(session.media_urls?.[0])) ? (
                       <video
                         autoPlay
                         muted
