@@ -45,6 +45,29 @@ const SessionSkeleton = () => (
   </div>
 );
 
+const parseMediaUrls = (value) => {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.filter(Boolean);
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed || trimmed === "[]") return [];
+
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) return parsed.filter(Boolean);
+    } catch {
+      // Fall back to treating it as a single URL or comma-separated list.
+    }
+
+    return trimmed
+      .split(",")
+      .map((url) => url.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+};
+
 const Sessions = () => {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -87,6 +110,16 @@ const Sessions = () => {
       videoExtensions.some((ext) => urlLower.includes(ext)) ||
       urlLower.includes("/video/upload/")
     );
+  };
+
+  const getSessionMediaUrls = (session) => {
+    return [
+      ...parseMediaUrls(session.media_urls),
+      ...parseMediaUrls(session.mediaUrls),
+      ...parseMediaUrls(session.image_url),
+      ...parseMediaUrls(session.video_url),
+      ...parseMediaUrls(session.videoUrl),
+    ];
   };
 
   const filteredSessions =
@@ -150,33 +183,42 @@ const Sessions = () => {
             ? Array.from({ length: 6 }).map((_, i) => (
                 <SessionSkeleton key={i} />
               ))
-            : filteredSessions.map((session) => (
+            : filteredSessions.map((session) => {
+                const mediaUrls = getSessionMediaUrls(session);
+                const mediaUrl =
+                  mediaUrls.find((url) => isVideoMedia(url)) ||
+                  mediaUrls.find(Boolean);
+                const mediaSrc = getImageUrl(mediaUrl);
+                const hasMedia = Boolean(mediaSrc);
+                const isVideo = hasMedia && (session.type === "video" || isVideoMedia(mediaUrl));
+
+                return (
                 <motion.a
                   key={session.id}
-                  href={session.linkedin_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={session.linkedin_url || "#"}
+                  target={session.linkedin_url ? "_blank" : undefined}
+                  rel={session.linkedin_url ? "noopener noreferrer" : undefined}
                   whileHover={{ y: -6, scale: 1.012 }}
                   transition={{ type: "spring", stiffness: 220, damping: 22 }}
                   className="group block bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.12)] transform-gpu will-change-transform md:flex md:flex-col md:h-full"
                 >
                   {/* MEDIA */}
                   <div className="h-64 lg:h-72 bg-white overflow-hidden relative">
-                    {(session.type === "video" || isVideoMedia(session.media_urls?.[0])) ? (
+                    {isVideo ? (
                       <video
+                        key={mediaSrc}
+                        src={mediaSrc}
                         autoPlay
                         muted
                         loop
                         playsInline
-                        preload="auto"
-                        className="w-full h-full object-contain pointer-events-none transform-gpu"
-                      >
-                        <source src={getImageUrl(session.media_urls[0])} type="video/mp4" />
-                      </video>
-                    ) : session.media_urls?.length > 0 ? (
-                      <ImageCarousel images={session.media_urls} />
+                        preload="metadata"
+                        className="block w-full h-full object-contain pointer-events-none transform-gpu"
+                      />
+                    ) : hasMedia ? (
+                      <ImageCarousel images={mediaUrls} />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-slate-50 text-slate-400">
+                      <div className="w-full h-full flex items-center justify-center bg-white text-slate-400">
                         No Media Available
                       </div>
                     )}
@@ -200,7 +242,8 @@ const Sessions = () => {
                     </div>
                   </div>
                 </motion.a>
-              ))}
+                );
+              })}
         </div>
 
         {!loading && !error && filteredSessions.length === 0 && (
