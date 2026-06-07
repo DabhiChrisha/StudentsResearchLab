@@ -169,7 +169,7 @@ const Sessions = () => {
                         loop
                         playsInline
                         preload="auto"
-                        className="w-full h-full object-cover pointer-events-none transform-gpu"
+                        className="w-full h-full object-contain pointer-events-none transform-gpu"
                       >
                         <source src={getImageUrl(session.media_urls[0])} type="video/mp4" />
                       </video>
