@@ -161,17 +161,17 @@ const Sessions = () => {
                   className="group block bg-white rounded-[2rem] overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.12)] transform-gpu will-change-transform md:flex md:flex-col md:h-full"
                 >
                   {/* MEDIA */}
-                  <div className="h-64 lg:h-72 bg-white overflow-hidden relative">
+                  <div className="h-64 lg:h-72 bg-black overflow-hidden relative">
                     {(session.type === "video" || isVideoMedia(session.media_urls?.[0])) ? (
                       <video
                         autoPlay
                         muted
                         loop
                         playsInline
-                        preload="metadata"
-                        className="w-full h-full object-contain pointer-events-none transform-gpu"
+                        preload="auto"
+                        className="w-full h-full object-cover pointer-events-none transform-gpu"
                       >
-                        <source src={getImageUrl(session.media_urls[0])} />
+                        <source src={getImageUrl(session.media_urls[0])} type="video/mp4" />
                       </video>
                     ) : session.media_urls?.length > 0 ? (
                       <ImageCarousel images={session.media_urls} />
