@@ -7,9 +7,12 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
   fileFilter: (req, file, cb) => {
-    const allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+    const allowed = [
+      'image/jpeg', 'image/jpg', 'image/png', 'image/gif',
+      'image/webp', 'image/avif', 'image/bmp', 'image/tiff', 'image/svg+xml',
+    ];
     if (allowed.includes(file.mimetype)) cb(null, true);
-    else cb(new Error('Invalid file type. Only JPEG, PNG, GIF, WebP or SVG images are accepted.'));
+    else cb(new Error('Invalid file type. Only JPEG, PNG, GIF, WebP, AVIF, BMP, TIFF or SVG images are accepted.'));
   },
 });
 
@@ -88,6 +91,13 @@ exports.uploadCustomLogoPublic = async (req, res, next) => {
         message: 'publisher_name is required',
       });
     }
+    if (publisher_name.length > 200) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid input',
+        message: 'publisher_name must be 200 characters or fewer',
+      });
+    }
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -100,11 +110,12 @@ exports.uploadCustomLogoPublic = async (req, res, next) => {
     try {
       uploadResult = await uploadToCloudinary(
         req.file.buffer,
-        'publication-symbols',
+        'srl/logos',
         req.file.originalname,
+        'image',
+        req.file.mimetype,
       );
     } catch (uploadErr) {
-      console.error('Cloudinary upload error:', uploadErr.message);
       return res.status(502).json({
         success: false,
         error: 'Upload failed',
@@ -125,7 +136,6 @@ exports.uploadCustomLogoPublic = async (req, res, next) => {
       logo_url:       symbol.logo_url,
     });
   } catch (err) {
-    console.error('uploadCustomLogoPublic error:', err);
     next(err);
   }
 };
@@ -159,11 +169,12 @@ exports.uploadCustomLogo = async (req, res, next) => {
     try {
       uploadResult = await uploadToCloudinary(
         req.file.buffer,
-        'publication-symbols',
+        'srl/logos',
         req.file.originalname,
+        'image',
+        req.file.mimetype,
       );
     } catch (uploadErr) {
-      console.error('Cloudinary upload error:', uploadErr.message);
       return res.status(502).json({
         success: false,
         error: 'Upload failed',
@@ -185,7 +196,6 @@ exports.uploadCustomLogo = async (req, res, next) => {
       logo_url:       symbol.logo_url,
     });
   } catch (err) {
-    console.error('uploadCustomLogo error:', err);
     next(err);
   }
 };

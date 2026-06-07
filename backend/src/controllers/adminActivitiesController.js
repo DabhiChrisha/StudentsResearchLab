@@ -16,7 +16,6 @@ exports.getActivities = async (req, res, next) => {
       data: activities || [],
     });
   } catch (error) {
-    console.error("Get activities error:", error);
     next(error);
   }
 };
@@ -42,8 +41,10 @@ exports.createActivity = async (req, res, next) => {
       try {
         const uploadResult = await uploadToCloudinary(
           req.file.buffer,
-          "srl_activities",
-          req.file.originalname
+          "srl/activities",
+          req.file.originalname,
+          "image",
+          req.file.mimetype
         );
 
         if (!uploadResult || !uploadResult.url) {
@@ -52,7 +53,6 @@ exports.createActivity = async (req, res, next) => {
 
         photoUrl = uploadResult.url;
       } catch (uploadError) {
-        console.error("[CREATE ACTIVITY] Cloudinary upload error:", uploadError);
         return res.status(500).json({
           error: "Upload failed",
           message: "Failed to upload image to Cloudinary",
@@ -82,7 +82,6 @@ exports.createActivity = async (req, res, next) => {
       data: activity,
     });
   } catch (error) {
-    console.error("Create activity error:", error);
     next(error);
   }
 };
@@ -110,8 +109,10 @@ exports.updateActivity = async (req, res, next) => {
       try {
         const uploadResult = await uploadToCloudinary(
           req.file.buffer,
-          "srl_activities",
-          req.file.originalname
+          "srl/activities",
+          req.file.originalname,
+          "image",
+          req.file.mimetype
         );
 
         if (!uploadResult || !uploadResult.url) {
@@ -120,7 +121,6 @@ exports.updateActivity = async (req, res, next) => {
 
         photoUrl = uploadResult.url;
       } catch (uploadError) {
-        console.error("[UPDATE ACTIVITY] Cloudinary upload error:", uploadError);
         return res.status(500).json({
           error: "Upload failed",
           message: "Failed to upload image to Cloudinary",
@@ -166,7 +166,6 @@ exports.updateActivity = async (req, res, next) => {
         message: "Activity not found",
       });
     }
-    console.error("Update activity error:", error);
     next(error);
   }
 };
@@ -195,7 +194,6 @@ exports.deleteActivity = async (req, res, next) => {
         message: "Activity not found",
       });
     }
-    console.error("Delete activity error:", error);
     next(error);
   }
 };

@@ -4,6 +4,8 @@ const { buildApprovalEmail } = require('../templates/approvalEmail');
 const { buildJoinRequestConfirmationEmail } = require('../templates/joinRequestConfirmationEmail');
 const { buildRejectionEmail } = require('../templates/rejectionEmail');
 const { buildAdminNotificationEmail } = require('../templates/adminNotificationEmail');
+const { buildCredentialEmail } = require('../templates/credentialEmail');
+const { buildOtpEmail } = require('../templates/otpEmail');
 
 let cachedTransporter = null;
 let cachedTransporterVerified = false;
@@ -28,7 +30,6 @@ function createSmtpTransporter() {
   if (!smtp.auth.pass) missing.push('SMTP_PASS');
 
   if (missing.length > 0) {
-    console.error(`[Email Config] Missing required SMTP variables: ${missing.join(', ')}`);
     throw new Error(
       'Missing SMTP configuration. Ensure SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASS are set.',
     );
@@ -42,9 +43,6 @@ function createSmtpTransporter() {
     family: 4,
   });
 
-  console.log(
-    `[Email Service] Created SMTP transporter for ${smtp.host}:${smtp.port} secure=${smtp.secure}`,
-  );
   return transporter;
 }
 
@@ -54,18 +52,12 @@ async function verifyTransporter(transporter) {
   try {
     await transporter.verify();
     cachedTransporterVerified = true;
-    console.log(
-      `[Email Service] SMTP transporter verified successfully for ${emailConfig.smtp.host}:${emailConfig.smtp.port}`,
-    );
   } catch (error) {
     // In serverless environments (e.g. Vercel) verify() can fail transiently
     // due to cold-start network latency or connection reuse limits, even when
     // the credentials are correct and sendMail would succeed.  Logging the
     // failure here is sufficient; we let sendMail() decide whether the
     // transporter is truly broken — it will throw its own descriptive error.
-    console.warn(
-      `[Email Service] SMTP verify step failed (will still attempt sendMail): ${error.message}`,
-    );
   }
 }
 
@@ -104,7 +96,6 @@ async function sendEmail({ to, subject, text, html, from }) {
   const transporter = getTransporter();
   await verifyTransporter(transporter);
 
-  console.log(`[Email Service] Sending email to ${recipientList} from ${sender} subject="${subject}"`);
 
   let info;
   try {
@@ -120,18 +111,8 @@ async function sendEmail({ to, subject, text, html, from }) {
     // instead of retrying with a potentially broken or expired socket.
     cachedTransporter = null;
     cachedTransporterVerified = false;
-    console.error(
-      `[Email Service] sendMail failed for ${recipientList} — transporter cache cleared for next attempt:`,
-      sendError,
-    );
     throw sendError;
   }
-
-  console.log(
-    `[Email Service] Email sendMail result for ${recipientList}: accepted=${JSON.stringify(
-      info.accepted,
-    )}, rejected=${JSON.stringify(info.rejected)}, messageId=${info.messageId}`,
-  );
 
   return info;
 }
@@ -149,7 +130,6 @@ async function sendRejectionEmail({ to, studentName }) {
 async function sendAdminNotificationEmail({ studentName, email, enrollment, department, batch, source }) {
   const recipients = String(emailConfig.adminNotificationRecipients || '').trim();
   if (!recipients) {
-    console.warn('[Email Service] Admin notification email skipped: no admin recipients configured. Set JOIN_REQUEST_ADMIN_NOTIFICATION_EMAILS in environment.');
     return null;
   }
 
@@ -170,12 +150,24 @@ async function sendJoinRequestConfirmationEmail({ to, studentName }) {
   return sendEmail({ to, subject, html, text });
 }
 
+async function sendCredentialEmail({ to, studentName, enrollmentNo }) {
+  const { subject, html, text } = buildCredentialEmail({ studentName, email: to, enrollmentNo });
+  return sendEmail({ to, subject, html, text });
+}
+
+async function sendOtpEmail({ to, studentName, otp }) {
+  const { subject, html, text } = buildOtpEmail({ studentName, otp });
+  return sendEmail({ to, subject, html, text });
+}
+
 module.exports = {
   sendEmail,
   sendApprovalEmail,
   sendRejectionEmail,
   sendJoinRequestConfirmationEmail,
   sendAdminNotificationEmail,
+  sendCredentialEmail,
+  sendOtpEmail,
   isValidEmail,
 };
 

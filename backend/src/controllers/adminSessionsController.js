@@ -9,7 +9,6 @@ const sanitizeMediaUrls = (urls) => {
   return urls.filter((url) => {
     if (!url || typeof url !== "string") return false;
     if (!url.startsWith("https://")) {
-      console.warn(`[Sessions] Dropping invalid media URL (not a full https URL): ${url}`);
       return false;
     }
     return true;
@@ -55,8 +54,10 @@ exports.createSession = async (req, res, next) => {
       try {
         const uploadResult = await uploadToCloudinary(
           req.file.buffer,
-          "srl_sessions",
-          req.file.originalname
+          "srl/events",
+          req.file.originalname,
+          req.file.mimetype.startsWith("video/") ? "video" : "image",
+          req.file.mimetype
         );
         if (!uploadResult || !uploadResult.url || !uploadResult.url.startsWith("https://")) {
           throw new Error(`Cloudinary upload returned invalid response: ${JSON.stringify(uploadResult)}`);
@@ -120,7 +121,6 @@ exports.createSession = async (req, res, next) => {
       data: session,
     });
   } catch (error) {
-    console.error("Create session error:", error);
     if (error.code === "P2002") {
       return res.status(400).json({
         error: "Conflict",
@@ -170,8 +170,10 @@ exports.updateSession = async (req, res, next) => {
       try {
         const uploadResult = await uploadToCloudinary(
           req.file.buffer,
-          "srl_sessions",
-          req.file.originalname
+          "srl/events",
+          req.file.originalname,
+          req.file.mimetype.startsWith("video/") ? "video" : "image",
+          req.file.mimetype
         );
         if (!uploadResult || !uploadResult.url || !uploadResult.url.startsWith("https://")) {
           throw new Error(`Cloudinary upload returned invalid response: ${JSON.stringify(uploadResult)}`);
@@ -220,7 +222,6 @@ exports.updateSession = async (req, res, next) => {
       data: session,
     });
   } catch (error) {
-    console.error("Update session error:", error);
     if (error.code === "P2025") {
       return res.status(404).json({
         error: "Not found",

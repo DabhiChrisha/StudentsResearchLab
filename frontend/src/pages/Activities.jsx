@@ -153,7 +153,7 @@ const Activities = () => {
                               muted
                               playsInline
                               preload="metadata"
-                              poster={getImageUrl("/video-poster.png")}
+                              poster={getImageUrl("/video-poster.webp")}
                             >
                               Sorry, your browser doesn't support embedded
                               videos.
@@ -254,7 +254,7 @@ const Activities = () => {
                               muted
                               playsInline
                               preload="metadata"
-                              poster={getImageUrl("/video-poster.png")}
+                              poster={getImageUrl("/video-poster.webp")}
                             >
                               Sorry, your browser doesn't support embedded videos.
                             </video>
@@ -301,15 +301,24 @@ const Activities = () => {
                   <div className="flex-1 flex flex-col min-w-0 p-4 md:py-5 md:pr-6 md:pl-0 overflow-hidden">
                     {/* Scrollable content */}
                     <div className="flex-1 overflow-y-auto min-h-0 pr-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h2 className="text-2xl font-bold text-gray-900 flex-1">
+                      <div className="flex items-start gap-3 mb-2">
+                        <h2 className="text-2xl font-bold text-gray-900 flex-1 pr-2">
                           {modal.title}
                         </h2>
-                        {modal.year && (
-                          <span className="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-xs font-semibold">
-                            {modal.year}
-                          </span>
-                        )}
+                        <div className="flex items-center gap-2 shrink-0">
+                          {modal.year && (
+                            <span className="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-xs font-semibold">
+                              {modal.year}
+                            </span>
+                          )}
+                          <button
+                            onClick={() => setModal(null)}
+                            className="bg-gray-100 hover:bg-gray-200 rounded-full p-1.5 text-gray-600 hover:text-gray-900 transition-colors"
+                            aria-label="Close"
+                          >
+                            <X size={20} />
+                          </button>
+                        </div>
                       </div>
                       {modal.link && (
                         <a
@@ -344,14 +353,6 @@ const Activities = () => {
                       {modal.date}
                     </div>
                   </div>
-                  {/* Close Button */}
-                  <button
-                    onClick={() => setModal(null)}
-                    className="absolute top-4 right-4 bg-white/80 hover:bg-white rounded-full p-2 shadow text-gray-700"
-                    aria-label="Close"
-                  >
-                    <X size={22} />
-                  </button>
                 </motion.div>
               </motion.div>}
             </AnimatePresence>,

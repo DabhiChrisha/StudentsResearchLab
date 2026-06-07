@@ -22,10 +22,7 @@ export default class ErrorBoundary extends Component {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error, info) {
-    const section = this.props.section ?? 'unknown';
-    console.error(`[ErrorBoundary:${section}]`, error, info.componentStack);
-  }
+  componentDidCatch() {}
 
   reset = () => this.setState({ hasError: false, error: null });
 

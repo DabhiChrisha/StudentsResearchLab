@@ -9,19 +9,12 @@ const upload = multer({
     fileSize: 10 * 1024 * 1024, // 10MB max
   },
   fileFilter: (req, file, cb) => {
-    // Allow only image files (JPEG, PNG, GIF, WebP)
     const allowedMimes = [
-      "image/jpeg",
-      "image/png",
-      "image/gif",
-      "image/webp",
+      "image/jpeg", "image/jpg", "image/png", "image/gif",
+      "image/webp", "image/avif", "image/bmp", "image/tiff",
     ];
-
-    if (allowedMimes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error(`Invalid file type. Only images are allowed.`));
-    }
+    if (allowedMimes.includes(file.mimetype)) cb(null, true);
+    else cb(new Error("Invalid file type. Only images are allowed."));
   },
 });
 
@@ -31,23 +24,29 @@ const uploadAny = multer({
   limits: { fileSize: 100 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedMimes = [
-      "image/jpeg", "image/png", "image/gif", "image/webp",
+      "image/jpeg", "image/jpg", "image/png", "image/gif",
+      "image/webp", "image/avif", "image/bmp", "image/tiff",
       "video/mp4", "video/quicktime", "video/avi", "video/webm", "video/x-matroska",
     ];
-    if (allowedMimes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error("Invalid file type. Only images (JPEG, PNG, GIF, WebP) and videos (MP4, MOV, AVI, WebM, MKV) are allowed."));
-    }
+    if (allowedMimes.includes(file.mimetype)) cb(null, true);
+    else cb(new Error("Invalid file type. Only images (JPEG, PNG, GIF, WebP, AVIF, BMP, TIFF) and videos (MP4, MOV, AVI, WebM, MKV) are allowed."));
   },
 });
 
-// Maps the optional `section` body field to Cloudinary folder names
+// Maps the optional `section` body field to canonical Cloudinary folder names
 const SECTION_FOLDER_MAP = {
-  activity: "srl_activities",
-  achievement: "srl_achievements",
-  student: "srl_students",
-  certificate: "srl_certificates",
+  activity:    "srl/activities",
+  achievement: "srl/gallery",
+  session:     "srl/events",
+  student:     "srl/researchers",
+  researcher:  "srl/researchers",
+  faculty:     "srl/faculty",
+  certificate: "srl/certificates",
+  logo:        "srl/logos",
+  hero:        "srl/hero",
+  blog:        "srl/blogs",
+  news:        "srl/news",
+  user:        "srl/users",
 };
 
 // Multer instance for certificate uploads — images only (PDF converted on frontend), max 10MB
@@ -56,16 +55,11 @@ const uploadCertificate = multer({
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
   fileFilter: (req, file, cb) => {
     const allowedMimes = [
-      "image/jpeg",
-      "image/png",
-      "image/webp",
-      "image/gif",
+      "image/jpeg", "image/jpg", "image/png",
+      "image/webp", "image/avif", "image/bmp", "image/tiff", "image/gif",
     ];
-    if (allowedMimes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error("Invalid file type. Only image files are allowed for certificates. PDF files must be converted to images before uploading."));
-    }
+    if (allowedMimes.includes(file.mimetype)) cb(null, true);
+    else cb(new Error("Invalid file type. Only image files are allowed for certificates."));
   },
 });
 
@@ -89,11 +83,13 @@ const uploadImage = async (req, res) => {
       });
     }
 
-    // Upload to Cloudinary
+    // Upload to Cloudinary — converted to WebP automatically
     const uploadResult = await uploadToCloudinary(
       req.file.buffer,
-      "srl_admin",
-      req.file.originalname
+      "srl/uploads",
+      req.file.originalname,
+      "image",
+      req.file.mimetype
     );
 
     return res.status(200).json({
@@ -104,7 +100,6 @@ const uploadImage = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Image upload error:", error);
     return res.status(500).json({
       success: false,
       error: "Upload failed",
@@ -133,7 +128,6 @@ const deleteImage = async (req, res) => {
       data: deleteResult,
     });
   } catch (error) {
-    console.error("Image deletion error:", error);
     return res.status(500).json({
       success: false,
       error: "Deletion failed",
@@ -165,13 +159,15 @@ const uploadMedia = async (req, res) => {
     }
 
     const { section } = req.body;
-    const folder = SECTION_FOLDER_MAP[section] || "srl_admin";
+    const folder = SECTION_FOLDER_MAP[section] || "srl/uploads";
     const resourceType = req.file.mimetype.startsWith("video/") ? "video" : "image";
 
     const uploadResult = await uploadToCloudinary(
       req.file.buffer,
       folder,
-      req.file.originalname
+      req.file.originalname,
+      resourceType,
+      req.file.mimetype
     );
 
     return res.status(200).json({
@@ -183,7 +179,6 @@ const uploadMedia = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Media upload error:", error);
     return res.status(500).json({
       success: false,
       message: "Upload failed",
@@ -224,9 +219,10 @@ const uploadCertificateHandler = async (req, res) => {
 
     const uploadResult = await uploadToCloudinary(
       req.file.buffer,
-      "srl_certificates",
+      "srl/certificates",
       req.file.originalname,
-      "image"
+      "image",
+      req.file.mimetype
     );
 
     return res.status(200).json({

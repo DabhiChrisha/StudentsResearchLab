@@ -16,7 +16,6 @@ exports.getAchievements = async (req, res, next) => {
       data: achievements,
     });
   } catch (error) {
-    console.error("Get achievements error:", error);
     next(error);
   }
 };
@@ -44,8 +43,10 @@ exports.createAchievement = async (req, res, next) => {
       try {
         const uploadResult = await uploadToCloudinary(
           req.file.buffer,
-          "srl_achievements",
-          req.file.originalname
+          "srl/gallery",
+          req.file.originalname,
+          "image",
+          req.file.mimetype
         );
         uploadedUrl = uploadResult.url;
       } catch (uploadError) {
@@ -104,7 +105,6 @@ exports.createAchievement = async (req, res, next) => {
       data: achievement,
     });
   } catch (error) {
-    console.error("Create achievement error:", error);
     if (error.code === "P2002") {
       return res.status(400).json({
         error: "Conflict",
@@ -154,8 +154,10 @@ exports.updateAchievement = async (req, res, next) => {
       try {
         const uploadResult = await uploadToCloudinary(
           req.file.buffer,
-          "srl_achievements",
-          req.file.originalname
+          "srl/gallery",
+          req.file.originalname,
+          "image",
+          req.file.mimetype
         );
         uploadedUrl = uploadResult.url;
       } catch (uploadError) {
@@ -197,7 +199,6 @@ exports.updateAchievement = async (req, res, next) => {
       data: achievement,
     });
   } catch (error) {
-    console.error("Update achievement error:", error);
     if (error.code === "P2025") {
       return res.status(404).json({
         error: "Not found",
@@ -226,7 +227,6 @@ exports.deleteAchievement = async (req, res, next) => {
       message: "Achievement deleted successfully",
     });
   } catch (error) {
-    console.error("Delete achievement error:", error);
     if (error.code === "P2025") {
       return res.status(404).json({
         error: "Not found",

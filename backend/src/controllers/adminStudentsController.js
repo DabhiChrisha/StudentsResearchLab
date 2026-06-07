@@ -14,6 +14,7 @@ exports.getStudents = async (req, res, next) => {
         ]
       },
       orderBy: { created_at: "desc" },
+      omit: { login_password: true },
     });
 
     res.json({
@@ -21,7 +22,6 @@ exports.getStudents = async (req, res, next) => {
       data: students,
     });
   } catch (error) {
-    console.error("Get students error:", error);
     next(error);
   }
 };
@@ -35,6 +35,7 @@ exports.getStudent = async (req, res, next) => {
 
     const student = await prisma.studentsDetail.findUnique({
       where: { enrollment_no: enrollmentNo },
+      omit: { login_password: true },
     });
 
     if (!student) {
@@ -49,7 +50,6 @@ exports.getStudent = async (req, res, next) => {
       data: student,
     });
   } catch (error) {
-    console.error("Get student error:", error);
     next(error);
   }
 };
@@ -134,7 +134,6 @@ exports.createStudent = async (req, res, next) => {
       data: student,
     });
   } catch (error) {
-    console.error("Create student error:", error);
     if (error.code === "P2002") {
       return res.status(400).json({
         error: "Conflict",
@@ -211,7 +210,6 @@ exports.updateStudent = async (req, res, next) => {
       data: student,
     });
   } catch (error) {
-    console.error("Update student error:", error);
     if (error.code === "P2002") {
       return res.status(400).json({
         error: "Conflict",
@@ -252,7 +250,6 @@ exports.deleteStudent = async (req, res, next) => {
       message: "Student deleted successfully",
     });
   } catch (error) {
-    console.error("Delete student error:", error);
     next(error);
   }
 };

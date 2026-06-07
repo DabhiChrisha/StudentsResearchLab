@@ -17,7 +17,6 @@ exports.getResearchProjects = async (req, res, next) => {
       data: projects,
     });
   } catch (error) {
-    console.error("Get research projects error:", error);
     next(error);
   }
 };
@@ -57,7 +56,6 @@ exports.createResearchProject = async (req, res, next) => {
       data: project,
     });
   } catch (error) {
-    console.error("Create research project error:", error);
     next(error);
   }
 };
@@ -91,7 +89,6 @@ exports.updateResearchProject = async (req, res, next) => {
       data: project,
     });
   } catch (error) {
-    console.error("Update research project error:", error);
     if (error.code === "P2025") {
       return res.status(404).json({
         error: "Not found",
@@ -124,7 +121,6 @@ exports.deleteResearchProject = async (req, res, next) => {
       message: "Research project deleted successfully",
     });
   } catch (error) {
-    console.error("Delete research project error:", error);
     if (error.code === "P2025") {
       return res.status(404).json({
         error: "Not found",

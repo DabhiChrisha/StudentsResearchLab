@@ -300,7 +300,6 @@ const aggregateDebateScoresToLeaderboard = async (prisma, triggerMonth, triggerY
       results,
     };
   } catch (error) {
-    console.error("Error aggregating debate scores to leaderboard:", error);
     throw error;
   }
 };

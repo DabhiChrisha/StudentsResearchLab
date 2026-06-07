@@ -630,9 +630,25 @@ router.get("/api/leaderboard/periods", async (req, res, next) => {
 router.get("/api/leaderboard", async (req, res, next) => {
   try {
     const result = await buildWeeklyLeaderboard();
+
+    if (result.leaderboard.length === 0) {
+      const latestStat = await prisma.leaderboardStat.findFirst({
+        orderBy: { period: "desc" },
+        select: { period: true },
+      });
+      if (latestStat) {
+        const fallbackStudents = await buildLeaderboard(latestStat.period);
+        return res.json({
+          leaderboard: Array.isArray(fallbackStudents) ? fallbackStudents : (fallbackStudents.leaderboard || []),
+          period: latestStat.period,
+          since: result.since,
+          until: result.until,
+        });
+      }
+    }
+
     res.json(result);
   } catch (err) {
-    console.error("GET /api/leaderboard error:", err);
     next(err);
   }
 });
@@ -640,9 +656,27 @@ router.get("/api/leaderboard", async (req, res, next) => {
 router.get("/api/leaderboard/weekly", async (req, res, next) => {
   try {
     const result = await buildWeeklyLeaderboard();
+
+    // Fallback: if no sessions in the last 7 days, serve the most recent
+    // period from leaderboard_stats — same pattern as monthly/top-hours endpoints.
+    if (result.leaderboard.length === 0) {
+      const latestStat = await prisma.leaderboardStat.findFirst({
+        orderBy: { period: "desc" },
+        select: { period: true },
+      });
+      if (latestStat) {
+        const fallbackStudents = await buildLeaderboard(latestStat.period);
+        return res.json({
+          leaderboard: Array.isArray(fallbackStudents) ? fallbackStudents : (fallbackStudents.leaderboard || []),
+          period: latestStat.period,
+          since: result.since,
+          until: result.until,
+        });
+      }
+    }
+
     res.json(result);
   } catch (err) {
-    console.error("GET /api/leaderboard/weekly error:", err);
     next(err);
   }
 });

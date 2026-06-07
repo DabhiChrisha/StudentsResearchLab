@@ -7,7 +7,10 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
   fileFilter: (req, file, cb) => {
-    const allowed = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"];
+    const allowed = [
+      "image/jpeg", "image/jpg", "image/png", "image/gif",
+      "image/webp", "image/avif", "image/bmp", "image/tiff", "image/svg+xml",
+    ];
     if (allowed.includes(file.mimetype)) cb(null, true);
     else cb(new Error("Invalid file type. Only images are allowed."));
   },
@@ -38,8 +41,10 @@ exports.createSymbol = async (req, res, next) => {
 
     const uploadResult = await uploadToCloudinary(
       req.file.buffer,
-      "srl/publisher_logos",
-      req.file.originalname
+      "srl/logos",
+      req.file.originalname,
+      "image",
+      req.file.mimetype
     );
 
     const symbol = await prisma.symbol.create({
@@ -55,7 +60,6 @@ exports.createSymbol = async (req, res, next) => {
       },
     });
   } catch (err) {
-    console.error("Create symbol error:", err);
     next(err);
   }
 };

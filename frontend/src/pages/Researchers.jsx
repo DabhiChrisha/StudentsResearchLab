@@ -12,11 +12,10 @@ import {
   Settings,
   Library,
   Quote,
-  BookOpen,
-  FlaskConical,
   Trophy,
   ChevronLeft,
   ChevronRight,
+  ExternalLink,
 } from "lucide-react";
 import ChromaGrid from "../components/react-bits/ChromaGrid";
 import GradientText from "../components/GradientText";
@@ -113,8 +112,7 @@ export default function Researchers() {
         setCachedRaCount(raCount);
       }
     } catch (err) {
-      if (err.name !== "AbortError")
-        console.error("Failed to fetch researchers:", err);
+      if (err.name !== "AbortError") {}
     } finally {
       // Don't clear loading when the request was intentionally aborted (e.g. StrictMode cleanup)
       if (!signal?.aborted) setIsLoading(false);
@@ -213,7 +211,6 @@ export default function Researchers() {
 
       // All arrays come directly from srl_student_profiles via /api/researchers
       const hackathonsArr = toArr(s.hackathons);
-      const srlPubs = toArr(s.srlPublications);
 
       const rawPapers = toArr(s.research_papers || s.papersPublished);
       const parsedPapers = rawPapers.map(item => {
@@ -231,41 +228,15 @@ export default function Researchers() {
       const completedPapers = parsedPapers.filter(p => p.status !== 'ongoing').map(p => p.title).filter(Boolean);
       const ongoingPapersList = parsedPapers.filter(p => p.status === 'ongoing').map(p => p.title).filter(Boolean);
 
-      const rawWork = toArr(s.research_work || s.researchWorks);
-      const parsedWork = rawWork.map(w => {
-        if (typeof w === 'string') return { title: w, status: w.toLowerCase().startsWith('ongoing') ? 'ongoing' : 'completed' };
-        if (typeof w === 'object' && w !== null) {
-          return {
-            title: w.title || w.description || "",
-            status: w.status || "completed"
-          };
-        }
-        return null;
-      }).filter(Boolean);
-      const completedWork = parsedWork.filter(w => w.status !== 'ongoing').map(w => w.title).filter(Boolean);
-      const ongoingWorkList = parsedWork.filter(w => w.status === 'ongoing').map(w => w.title).filter(Boolean);
-
-      const totalOngoingProjects = ongoingPapersList.concat(ongoingWorkList);
-
-      const srlUnderReview = srlPubs.filter(
-        (p) => p.category === "Paper under Review",
-      ).length;
-      const srlPublished =
-        srlPubs.length > 0 ? srlPubs.length - srlUnderReview : 0;
-
-      const publishedCount =
-        srlPubs.length > 0
-          ? srlPublished
-          : completedPapers.length || s.publicationsCount || "--";
-
-      const ongoingCount = srlUnderReview + totalOngoingProjects.length;
+      const publishedCount = completedPapers.length || s.publicationsCount || "--";
+      const ongoingCount = ongoingPapersList.length;
 
       return {
         id:
           s.enrollment_no || s.student_name.toLowerCase().replace(/\s+/g, "-"),
         enrollment: s.enrollment_no,
         image: getImageUrl(
-          s.profile_image || s.photo || "/students/schoolstudent.png",
+          s.profile_image || s.photo || "/students/schoolstudent.webp",
         ),
         title: s.student_name,
         subtitle: `${s.department} • Batch ${s.batch || ''}`,
@@ -274,19 +245,16 @@ export default function Researchers() {
         reflection: s.reflection || "",
         email: s.email || "",
         linkedin: s.linkedin || "",
-        researchWorksCount: completedWork.length || "--",
         hackathonsCount: hackathonsArr.length || "--",
         papersPublishedCount: publishedCount,
         ongoingProjectsCount: ongoingCount,
         // Send raw database fields forward so activeMetrics can parse them too
         research_papers: rawPapers,
-        research_work: rawWork,
         hackathons: hackathonsArr,
         achievements: toArr(s.achievements),
         certifications: toArr(s.certifications),
         research_areas: toArr(s.research),
         achievements_extended: s.achievements_extended || null,
-        srlPublications: srlPubs,
         patents: toArr(s.patents),
         metadata: s.metadata || null,
         gradient: "linear-gradient(135deg, #dcfce7 0%, #fef9c3 100%)",
@@ -301,7 +269,6 @@ export default function Researchers() {
       const batch = batchMap[enrollKey] || s.batch || null;
 
       const hackathonsArr = toArr(s.hackathons);
-      const srlPubs = toArr(s.srlPublications);
 
       const rawPapers = toArr(s.research_papers || s.papersPublished);
       const parsedPapers = rawPapers.map(item => {
@@ -316,29 +283,13 @@ export default function Researchers() {
       const completedPapers = parsedPapers.filter(p => p.status !== 'ongoing').map(p => p.title).filter(Boolean);
       const ongoingPapersList = parsedPapers.filter(p => p.status === 'ongoing').map(p => p.title).filter(Boolean);
 
-      const rawWork = toArr(s.research_work || s.researchWorks);
-      const parsedWork = rawWork.map(w => {
-        if (typeof w === 'string') return { title: w, status: w.toLowerCase().startsWith('ongoing') ? 'ongoing' : 'completed' };
-        if (typeof w === 'object' && w !== null) {
-          return { title: w.title || w.description || "", status: w.status || "completed" };
-        }
-        return null;
-      }).filter(Boolean);
-      const completedWork = parsedWork.filter(w => w.status !== 'ongoing').map(w => w.title).filter(Boolean);
-      const ongoingWorkList = parsedWork.filter(w => w.status === 'ongoing').map(w => w.title).filter(Boolean);
-
-      const totalOngoingProjects = ongoingPapersList.concat(ongoingWorkList);
-      const srlUnderReview = srlPubs.filter(p => p.category === "Paper under Review").length;
-      const srlPublished = srlPubs.length > 0 ? srlPubs.length - srlUnderReview : 0;
-      const publishedCount = srlPubs.length > 0
-        ? srlPublished
-        : completedPapers.length || s.publicationsCount || "--";
-      const ongoingCount = srlUnderReview + totalOngoingProjects.length;
+      const publishedCount = completedPapers.length || s.publicationsCount || "--";
+      const ongoingCount = ongoingPapersList.length;
 
       return {
         id: s.enrollment_no || s.student_name.toLowerCase().replace(/\s+/g, "-"),
         enrollment: s.enrollment_no,
-        image: getImageUrl(s.profile_image || s.photo || "/students/schoolstudent.png"),
+        image: getImageUrl(s.profile_image || s.photo || "/students/schoolstudent.webp"),
         title: s.student_name,
         subtitle: `${s.department} • Batch ${s.batch || ''}`,
         batch,
@@ -346,18 +297,15 @@ export default function Researchers() {
         reflection: s.reflection || "",
         email: s.email || "",
         linkedin: s.linkedin || "",
-        researchWorksCount: completedWork.length || "--",
         hackathonsCount: hackathonsArr.length || "--",
         papersPublishedCount: publishedCount,
         ongoingProjectsCount: ongoingCount,
         research_papers: rawPapers,
-        research_work: rawWork,
         hackathons: hackathonsArr,
         achievements: toArr(s.achievements),
         certifications: toArr(s.certifications),
         research_areas: toArr(s.research),
         achievements_extended: s.achievements_extended || null,
-        srlPublications: srlPubs,
         patents: toArr(s.patents),
         metadata: s.metadata || null,
         // Distinct gradient for graduated alumni — muted slate/lavender palette
@@ -410,21 +358,12 @@ export default function Researchers() {
   const activeMetrics = useMemo(() => {
     if (!activeStudent) return null;
 
-    const srlPubs = toArr(activeStudent.srlPublications);
-    const underReview = srlPubs.filter(
-      (p) => p.category === "Paper under Review",
-    );
     const patents = toArr(activeStudent.patents);
 
-    // Instead of activeStudent.papers and ongoingResearch, we'll parse the raw DB fields
-    // which should now be in activeStudent.research_papers and activeStudent.research_work.
-    // Let's use activeStudent.research_papers directly if available, fallback to papers.
     const rawPapers = toArr(activeStudent.research_papers || activeStudent.papers);
-    
-    // Parse research papers the same way Member CV does
     const parsedPapers = rawPapers.map(item => {
       if (typeof item === 'string') {
-        return { title: item, status: item.toLowerCase().includes('ongoing') ? 'ongoing' : 'completed' };
+        return { title: item, status: item.toLowerCase().includes('ongoing') ? 'ongoing' : 'completed', link: "" };
       }
       if (typeof item === 'object' && item !== null) {
         return {
@@ -437,50 +376,19 @@ export default function Researchers() {
     }).filter(Boolean);
 
     const completedPapers = parsedPapers.filter(p => p.status !== 'ongoing').map(p => p.title).filter(Boolean);
+    const completedPapersWithLinks = parsedPapers.filter(p => p.status !== 'ongoing' && p.title).map(p => ({ title: p.title, link: p.link || "" }));
     const ongoingPapersList = parsedPapers.filter(p => p.status === 'ongoing').map(p => p.title).filter(Boolean);
 
-    // Parse research work the same way Member CV does
-    const rawWork = toArr(activeStudent.research_work || activeStudent.researchWorks);
-    const parsedWork = rawWork.map(w => {
-      if (typeof w === 'string') return { title: w, status: w.toLowerCase().startsWith('ongoing') ? 'ongoing' : 'completed' };
-      if (typeof w === 'object' && w !== null) {
-        return {
-          title: w.title || w.description || "",
-          status: w.status || "completed"
-        };
-      }
-      return null;
-    }).filter(Boolean);
-
-    const completedWork = parsedWork.filter(w => w.status !== 'ongoing').map(w => w.title).filter(Boolean);
-    const ongoingWorkList = parsedWork.filter(w => w.status === 'ongoing').map(w => w.title).filter(Boolean);
-
-    // Combine ongoing
-    const totalOngoingProjects = ongoingPapersList.concat(ongoingWorkList);
-
-    // Published = non-review srl pubs OR completed papers
-    const published =
-      srlPubs.length > 0
-        ? srlPubs.length - underReview.length
-        : completedPapers.length;
-
     return {
-      research_works_count: completedWork.length,
       hackathons_count: toArr(activeStudent.hackathons).length,
-      papers_published_count: published,
-      // Papers under review + explicit ongoing projects
-      ongoing_projects_count: underReview.length + totalOngoingProjects.length,
+      papers_published_count: completedPapers.length,
+      ongoing_projects_count: ongoingPapersList.length,
       // full arrays
       research_areas: toArr(activeStudent.research_areas),
       hackathons: toArr(activeStudent.hackathons),
       papers: completedPapers,
-      researchWorks: completedWork,
+      papersWithLinks: completedPapersWithLinks,
       achievements: toArr(activeStudent.achievements),
-      ongoingResearch: totalOngoingProjects,
-      filteredSrlPublications: srlPubs.filter(
-        (p) => p.category !== "Paper under Review",
-      ),
-      underReviewSrlPubs: underReview,
       patents: patents,
     };
   }, [activeStudent]);
@@ -611,20 +519,15 @@ export default function Researchers() {
                       .trim()
                       .toUpperCase();
                     const batch = batchMap[enrollKey] || ra.batch || null;
-                    const raSrlPubs = toArr(ra.srlPublications);
-                    const raSrlUnderReview = raSrlPubs.filter(
-                      (p) => p.category === "Paper under Review",
-                    ).length;
-                    // ONGOING: papers under review + explicit ongoing_research items
-                    const raOngoing =
-                      raSrlUnderReview + toArr(ra.ongoingResearch).length;
-                    // PAPERS: non-review srl pubs OR simple papers_published list
-                    const raPublished =
-                      raSrlPubs.length > 0
-                        ? raSrlPubs.length - raSrlUnderReview
-                        : toArr(ra.papersPublished).length;
                     const raHackathons = toArr(ra.hackathons);
-                    const raResearchWorks = toArr(ra.researchWorks);
+                    const raRawPapers = toArr(ra.research_papers || ra.papersPublished);
+                    const raParsedPapers = raRawPapers.map(item => {
+                      if (typeof item === 'string') return { status: item.toLowerCase().includes('ongoing') ? 'ongoing' : 'completed' };
+                      if (typeof item === 'object' && item !== null) return { status: item.status || "completed" };
+                      return null;
+                    }).filter(Boolean);
+                    const raPublished = raParsedPapers.filter(p => p.status !== 'ongoing').length;
+                    const raOngoing = raParsedPapers.filter(p => p.status === 'ongoing').length;
 
                     return (
                       <motion.article
@@ -643,7 +546,7 @@ export default function Researchers() {
                             image: getImageUrl(
                               ra.profile_image ||
                                 ra.photo ||
-                                "/students/schoolstudent.png",
+                                "/students/schoolstudent.webp",
                             ),
                             title: ra.student_name,
                             subtitle: `${ra.department} • Batch ${ra.batch || ''}`,
@@ -652,18 +555,14 @@ export default function Researchers() {
                             email: ra.email || "",
                             linkedin: ra.linkedin || "",
                             hackathons: raHackathons,
-                            papers: toArr(ra.papersPublished),
-                            researchWorks: raResearchWorks,
+                            research_papers: raRawPapers,
                             achievements: toArr(ra.achievements),
-                            ongoingResearch: toArr(ra.ongoingResearch),
                             certifications: toArr(ra.certifications),
                             research_areas: toArr(ra.research),
                             achievements_extended:
                               ra.achievements_extended || null,
-                            srlPublications: raSrlPubs,
                             patents: toArr(ra.patents),
                             metadata: ra.metadata || null,
-                            researchWorksCount: raResearchWorks.length || "--",
                             hackathonsCount: raHackathons.length || "--",
                             papersPublishedCount: raPublished,
                             ongoingProjectsCount: raOngoing,
@@ -683,7 +582,7 @@ export default function Researchers() {
                               src={getImageUrl(
                                 ra.profile_image ||
                                   ra.photo ||
-                                  "/students/schoolstudent.png",
+                                  "/students/schoolstudent.webp",
                               )}
                               alt={ra.student_name}
                               className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:blur-[1.5px]"
@@ -902,7 +801,7 @@ export default function Researchers() {
                             decoding="async"
                             src={getImageUrl(
                               activeStudent.image ||
-                                "/students/schoolstudent.png",
+                                "/students/schoolstudent.webp",
                             )}
                             alt={activeStudent.title}
                             className="w-full h-full object-cover"
@@ -1047,69 +946,42 @@ export default function Researchers() {
                         )}
                       </ModalPanel>
 
-                      {/* Panel 3: Papers + Analytics */}
+                      {/* Panel 3: Papers Published & Year */}
                       <ModalPanel title="Papers Published & Year" compact className="">
-                        <ul className="space-y-1 mb-1">
-                          {(activeMetrics?.papers || [])
-                            .slice(0, 2)
-                            .map((p, i) => (
-                              <li
-                                key={i}
-                                className="flex items-start gap-3 text-[13px] font-bold text-slate-700 leading-tight"
-                              >
-                                <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0" />
-                                <span>{p}</span>
-                              </li>
-                            ))}
-                          {!activeMetrics?.papers?.length && (
+                        <ul className="space-y-1">
+                          {(activeMetrics?.papersWithLinks || []).length > 0 ? (
+                            (activeMetrics.papersWithLinks)
+                              .slice(0, 2)
+                              .map((p, i) => (
+                                <li
+                                  key={i}
+                                  className="flex items-start gap-3 text-[13px] font-bold text-slate-700 leading-tight"
+                                >
+                                  <div className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0" />
+                                  <span className="flex items-center gap-1">
+                                    <span>{p.title}</span>
+                                    {p.link && (
+                                      <a
+                                        href={p.link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        <ExternalLink size={14} className="text-teal-500 shrink-0 hover:text-teal-700 transition-colors duration-200" />
+                                      </a>
+                                    )}
+                                  </span>
+                                </li>
+                              ))
+                          ) : (
                             <li>
                               <EmptyHint text="No publications yet" />
                             </li>
                           )}
                         </ul>
-                          <div className="pt-3 border-t border-black/5">
-                          <h4 className="text-[16px] font-black text-slate-900 flex items-center gap-3 mb-2">
-                            <div className="w-2 h-2 rounded-full bg-teal-500" />
-                            Execution Analytics:
-                          </h4>
-                          <div className="grid grid-cols-3 gap-1">
-                            {[
-                              {
-                                label: "Projects",
-                                val: activeMetrics?.ongoing_projects_count ?? 0,
-                                alt: "Ongoing",
-                              },
-                              {
-                                label: "Hackathons",
-                                val: activeMetrics?.hackathons_count ?? 0,
-                                alt: "Total",
-                              },
-                              {
-                                label: "Published",
-                                val: activeMetrics?.papers_published_count ?? 0,
-                                alt: "Research",
-                              },
-                            ].map((m, i) => (
-                              <div
-                                key={i}
-                                className="p-2 rounded-2xl bg-teal-50/50 border border-teal-100/50 text-center"
-                              >
-                                <p className="text-[9px] font-black uppercase text-slate-800 mb-1">
-                                  {m.alt}
-                                </p>
-                                <p className="text-lg font-black text-teal-700">
-                                  {m.val}
-                                </p>
-                                <p className="text-[9px] font-bold text-slate-800 uppercase tracking-tighter">
-                                  {m.label}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
                       </ModalPanel>
 
-                      {/* Panel 4: Leadership & Awards */}
+                      {/* Panel 3b: Leadership & Awards */}
                       <ModalPanel title="Leadership & Awards" compact className="">
                         <div className="flex-1 flex flex-col justify-center space-y-1">
                           {[
@@ -1188,72 +1060,44 @@ export default function Researchers() {
                         </div>
                       </ModalPanel>
 
-                      {/* Panel 5: Research Works (from srl_student_profiles.research_works) */}
-                      {toArr(activeMetrics?.researchWorks).length > 0 && (
-                        <ModalPanel
-                          title="Research Works"
-                          icon={
-                            <FlaskConical size={14} className="text-teal-500" />
-                          }
-                        >
-                          <ul className="space-y-4">
-                            {toArr(activeMetrics.researchWorks).map((w, i) => (
-                              <li
-                                key={i}
-                                className="flex items-start gap-4 text-[14px] font-bold text-slate-700 leading-tight"
-                              >
-                                <div className="w-1.5 h-1.5 rounded-full bg-teal-400 shrink-0 mt-1.5" />
-                                <span>{w}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </ModalPanel>
-                      )}
+                      {/* Panel 4: Execution Analytics */}
+                      <ModalPanel title="Execution Analytics" compact className="">
+                        <div className="grid grid-cols-3 gap-1">
+                          {[
+                            {
+                              label: "Projects",
+                              val: activeMetrics?.ongoing_projects_count ?? 0,
+                              alt: "Ongoing",
+                            },
+                            {
+                              label: "Hackathons",
+                              val: activeMetrics?.hackathons_count ?? 0,
+                              alt: "Total",
+                            },
+                            {
+                              label: "Published",
+                              val: activeMetrics?.papers_published_count ?? 0,
+                              alt: "Research",
+                            },
+                          ].map((m, i) => (
+                            <div
+                              key={i}
+                              className="p-2 rounded-2xl bg-teal-50/50 border border-teal-100/50 text-center"
+                            >
+                              <p className="text-[9px] font-black uppercase text-slate-800 mb-1">
+                                {m.alt}
+                              </p>
+                              <p className="text-lg font-black text-teal-700">
+                                {m.val}
+                              </p>
+                              <p className="text-[9px] font-bold text-slate-800 uppercase tracking-tighter">
+                                {m.label}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </ModalPanel>
 
-                      {/* Panel 6: SRL Publications (structured — previously computed but never rendered) */}
-                      {toArr(activeMetrics?.filteredSrlPublications).length >
-                        0 && (
-                        <ModalPanel
-                          title="SRL Publications"
-                          icon={
-                            <BookOpen size={14} className="text-teal-500" />
-                          }
-                        >
-                          <ul className="space-y-5">
-                            {toArr(activeMetrics.filteredSrlPublications).map(
-                              (pub, i) => (
-                                <li key={i} className="space-y-1">
-                                  <p className="text-[14px] font-black text-slate-800 leading-snug">
-                                    {pub.title}
-                                  </p>
-                                  {pub.venue && (
-                                    <p className="text-[11px] font-bold text-teal-600 uppercase tracking-wide">
-                                      {pub.venue}
-                                    </p>
-                                  )}
-                                  <div className="flex flex-wrap gap-2 mt-1">
-                                    {pub.type && (
-                                      <span className="px-2 py-0.5 rounded-full bg-teal-50 border border-teal-100 text-[10px] font-black text-teal-700 uppercase tracking-wider">
-                                        {pub.type}
-                                      </span>
-                                    )}
-                                    {pub.date && (
-                                      <span className="text-[11px] font-medium text-slate-400">
-                                        {pub.date}
-                                      </span>
-                                    )}
-                                    {pub.conferenceGrant && (
-                                      <span className="px-2 py-0.5 rounded-full bg-amber-50 border border-amber-100 text-[10px] font-black text-amber-700 uppercase tracking-wider">
-                                        Grant
-                                      </span>
-                                    )}
-                                  </div>
-                                </li>
-                              ),
-                            )}
-                          </ul>
-                        </ModalPanel>
-                      )}
 
                       {/* Panel 7: Patents */}
                       {toArr(activeMetrics?.patents).length > 0 && (

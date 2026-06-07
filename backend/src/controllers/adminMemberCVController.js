@@ -286,7 +286,6 @@ exports.updateMemberCV = async (req, res, next) => {
           });
         }
       } catch (e) {
-        console.warn(`[Member CV] studentsDetail update warning for ${enrollment_no}:`, e?.message || e);
       }
     }
 
@@ -384,7 +383,6 @@ exports.updateMemberCV = async (req, res, next) => {
           }
         }
       } catch (e) {
-        console.error(`[Member CV] patents sync error for ${enrollment_no}:`, e?.message || e);
         // don't fail the whole request for patents sync; continue
       }
     }
@@ -412,7 +410,6 @@ exports.updateMemberCV = async (req, res, next) => {
 
     res.json({ success: true, data: serialized, message: "CV profile updated successfully" });
   } catch (error) {
-    console.error("[Member CV] Update error:", error);
     next(error);
   }
 };

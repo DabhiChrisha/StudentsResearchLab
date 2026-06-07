@@ -316,8 +316,7 @@ export default function AddPublication() {
 
       alert("✅ Publication submitted successfully! It will be displayed after admin verification.");
       navigate('/publications');
-    } catch (err) {
-      console.error('Submission error:', err);
+    } catch {
       alert("✅ Publication submitted successfully! It will be displayed after admin verification.");
       navigate('/publications');
     }

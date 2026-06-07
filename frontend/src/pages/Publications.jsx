@@ -37,7 +37,7 @@ const PublicationCard = ({ pub, index, exportToExcel }) => {
     >
       <motion.div
         className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-500 overflow-hidden group flex flex-col relative cursor-pointer sm:h-full"
-        style={{backgroundImage: `url('/study.png')`, backgroundSize: '100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}
+        style={{backgroundImage: `url('/study.webp')`, backgroundSize: '100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}
         animate={{ minHeight: isExpanded ? "auto" : undefined }}
         onClick={() => setIsExpanded((current) => !current)}
       >

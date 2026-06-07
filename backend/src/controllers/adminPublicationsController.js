@@ -128,7 +128,6 @@ exports.getPublications = async (req, res, next) => {
 
     res.json({ success: true, data: publicationsWithLogo.map(toAdminPublicationResponse) });
   } catch (error) {
-    console.error("Get publications error:", error);
     next(error);
   }
 };
@@ -157,7 +156,6 @@ exports.getPublication = async (req, res, next) => {
 
     res.json({ success: true, data: toAdminPublicationResponse(publication) });
   } catch (error) {
-    console.error("Get publication error:", error);
     next(error);
   }
 };
@@ -214,7 +212,6 @@ exports.createPublication = async (req, res, next) => {
       data: toAdminPublicationResponse(publication),
     });
   } catch (error) {
-    console.error("Create publication error:", error.code, error.meta, error.message);
     if (error.code === "P2003") {
       return res.status(400).json({ error: "Invalid input", message: "Invalid publisher_logo_id — referenced symbol does not exist" });
     }
@@ -274,7 +271,6 @@ exports.updatePublication = async (req, res, next) => {
       data: toAdminPublicationResponse(publication),
     });
   } catch (error) {
-    console.error("Update publication error:", error.code, error.meta, error.message);
     if (error.code === "P2025") {
       return res.status(404).json({ error: "Not found", message: "Publication not found" });
     }
@@ -301,7 +297,6 @@ exports.deletePublication = async (req, res, next) => {
 
     res.json({ success: true, message: "Publication deleted successfully" });
   } catch (error) {
-    console.error("Delete publication error:", error);
     if (error.code === "P2025") {
       return res.status(404).json({ error: "Not found", message: "Publication not found" });
     }
@@ -352,7 +347,6 @@ exports.approvePublication = async (req, res, next) => {
       data:    toAdminPublicationResponse(publication),
     });
   } catch (error) {
-    console.error("Approve publication error:", error);
     if (error.code === "P2025") {
       return res.status(404).json({ error: "Not found", message: "Publication not found" });
     }
@@ -403,7 +397,6 @@ exports.rejectPublication = async (req, res, next) => {
       data:    toAdminPublicationResponse(publication),
     });
   } catch (error) {
-    console.error("Reject publication error:", error);
     if (error.code === "P2025") {
       return res.status(404).json({ error: "Not found", message: "Publication not found" });
     }

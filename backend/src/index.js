@@ -2,6 +2,7 @@ require("./config/env");
 const express = require("express");
 const cors = require("cors");
 const compression = require("compression");
+const { startCredentialScheduler } = require("./lib/credentialScheduler");
 
 // Import routes
 const sessionsRouter = require("./routes/sessions");
@@ -38,8 +39,10 @@ const adminSymbolsRouter      = require("./routes/adminSymbols");
 const publicationSymbolRouter = require("./routes/publicationSymbol");
 const eventsRouter            = require("./routes/events");
 const sessionsUploadRouter   = require("./routes/sessionsUpload");
+const authRouter             = require("./routes/authRoutes");
 
 const app = express();
+
 const ALLOWED_ORIGINS = [
   "http://localhost:5173",
   "http://localhost:5174",
@@ -53,6 +56,7 @@ const ALLOWED_ORIGINS = [
   "https://students-research-lab-admin-portal.vercel.app",
   "https://srl.mmpsrpc.in",
   "https://api-srl.mmpsrpc.in",
+  "authentic-carolin-presurgical.ngrok-free.dev",
   "https://admin-srl.mmpsrpc.in"
 ];
 const ALLOWED_ORIGIN_SET = new Set(ALLOWED_ORIGINS.map((origin) => origin.replace(/\/$/, "")));
@@ -135,13 +139,8 @@ app.get("/", (req, res) => {
 
 app.get("/api/health", (req, res) => {
   res.json({
-    status: "✅ ok",
-    allowed_origins: ALLOWED_ORIGINS,
-    env: {
-      database_url: Boolean(process.env.DATABASE_URL),
-      cloudinary: Boolean(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET),
-      email: Boolean(process.env.SMTP_USER || process.env.RESEND_API_KEY || process.env.POSTMARK_API_KEY),
-    },
+    status: "healthy",
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -180,26 +179,23 @@ app.use(adminSymbolsRouter);
 app.use(publicationSymbolRouter);
 app.use(eventsRouter);
 app.use(sessionsUploadRouter);
+app.use(authRouter);
 
 // Global error handler — must be after all routes
 app.use((err, req, res, next) => {
-  console.error("[Global Error] code:", err.code, "| meta:", JSON.stringify(err.meta), "| message:", err.message);
   res.status(500).json({ error: "Internal Server Error", detail: "An unexpected error occurred. Please try again later." });
 });
 
 if (require.main === module) {
   const PORT = process.env.PORT || 8000;
-  const server = app.listen(PORT, () => {
-    console.log(`✅ Server is running on port ${PORT}`);
-  });
+  const server = app.listen(PORT, () => {});
+
+  startCredentialScheduler();
 
   server.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
-      console.error(`❌ Port ${PORT} is already in use.`);
-      console.error(`   Run: netstat -ano | findstr :${PORT}  → then taskkill /PID <pid> /F`);
       process.exit(1); // exit so nodemon can retry on next rs / file change
     } else {
-      console.error('❌ Server error:', err);
       process.exit(1);
     }
   });

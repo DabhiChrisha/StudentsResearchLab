@@ -17,7 +17,6 @@ exports.getAttendance = async (req, res, next) => {
       count: records.length,
     });
   } catch (error) {
-    console.error("Get attendance error:", error);
     next(error);
   }
 };
@@ -49,7 +48,6 @@ exports.getAttendanceByStudent = async (req, res, next) => {
       count: records.length,
     });
   } catch (error) {
-    console.error("Get student attendance error:", error);
     next(error);
   }
 };
@@ -115,7 +113,6 @@ exports.markAttendance = async (req, res, next) => {
       data: record,
     });
   } catch (error) {
-    console.error("Mark attendance error:", error);
     next(error);
   }
 };
@@ -151,7 +148,6 @@ exports.updateAttendance = async (req, res, next) => {
       data: record,
     });
   } catch (error) {
-    console.error("Update attendance error:", error);
     next(error);
   }
 };
@@ -181,7 +177,6 @@ exports.deleteAttendance = async (req, res, next) => {
       message: "Attendance deleted successfully",
     });
   } catch (error) {
-    console.error("Delete attendance error:", error);
     next(error);
   }
 };

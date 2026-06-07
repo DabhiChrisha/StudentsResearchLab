@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from '../config/apiConfig';
-import joinSrlImg from '../assets/Join SRL.png';
+import joinSrlImg from '../assets/Join SRL.webp';
 
 export default function JoinUs({ isModal = false, onClose }) {
   const navigate = useNavigate();
@@ -358,7 +358,6 @@ export default function JoinUs({ isModal = false, onClose }) {
 
     } catch (err) {
       if (!isMountedRef.current) return;
-      console.error('Full error details:', err);
       let errMsg = err.message || 'Unknown error occurred';
 
       if (errMsg === 'The user aborted a request.' || errMsg === 'AbortError') {

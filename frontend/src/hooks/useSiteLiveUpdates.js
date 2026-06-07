@@ -38,9 +38,7 @@ export function useSiteLiveUpdates() {
     };
 
     LIVE_EVENTS.forEach((name) => es.addEventListener(name, onEvent));
-    es.onerror = (event) => {
-      console.error('SSE connection error', event);
-    };
+    es.onerror = () => {};
 
     return () => es.close();
   }, []);

@@ -3,6 +3,8 @@ const { broadcast } = require("../utils/sseManager");
 const { syncStudentFromJoinRequest } = require("../lib/syncStudentFromJoinRequest");
 const { sendApprovalEmail, sendRejectionEmail, isValidEmail } = require("../services/emailService");
 const { deleteFromCloudinary, extractPublicId } = require("../utils/imageUpload");
+
+const CREDENTIAL_DELAY_MS = 15 * 60 * 1000; // 15 minutes
 const os = require("os");
 const path = require("path");
 
@@ -38,7 +40,6 @@ exports.getResearch = async (req, res, next) => {
       data: papers || [],
     });
   } catch (error) {
-    console.error("Get research error:", error);
     next(error);
   }
 };
@@ -82,7 +83,6 @@ exports.createResearch = async (req, res, next) => {
       data: paper,
     });
   } catch (error) {
-    console.error("Create research error:", error);
     next(error);
   }
 };
@@ -111,7 +111,6 @@ exports.updateResearch = async (req, res, next) => {
       data: paper,
     });
   } catch (error) {
-    console.error("Update research error:", error);
     next(error);
   }
 };
@@ -138,7 +137,6 @@ exports.deleteResearch = async (req, res, next) => {
         message: "Research paper not found",
       });
     }
-    console.error("Delete research error:", error);
     next(error);
   }
 };
@@ -163,7 +161,6 @@ exports.getJoinRequests = async (req, res, next) => {
         statuses = JSON.parse(raw || "{}");
       }
     } catch (err) {
-      console.error("Failed to read join_status.json:", err.message);
       statuses = {};
     }
 
@@ -177,7 +174,6 @@ exports.getJoinRequests = async (req, res, next) => {
       data: merged,
     });
   } catch (error) {
-    console.error("Get join requests error:", error);
     next(error);
   }
 };
@@ -200,7 +196,6 @@ exports.updateJoinRequest = async (req, res, next) => {
     };
     const status = normalizedStatusMap[rawStatus];
 
-    console.log(`[Join Request] updateJoinRequest called for id=${id} status=${rawStatus} normalized=${status}`);
     if (!status) {
       return res.status(400).json({
         error: "Invalid input",
@@ -233,9 +228,7 @@ exports.updateJoinRequest = async (req, res, next) => {
       if (publicId) {
         try {
           await deleteFromCloudinary(publicId, "raw");
-          console.log(`[Join Request] Deleted rejected resume from Cloudinary: ${publicId}`);
         } catch (err) {
-          console.error("Failed to delete resume from Cloudinary:", err);
         }
       }
       updatedResumeLink = null;
@@ -254,18 +247,27 @@ exports.updateJoinRequest = async (req, res, next) => {
 
       const { student, created } = await syncStudentFromJoinRequest(freshRequest);
       syncedStudent = serializeForJson(student);
-      console.log(
-        `[Join Request] ${created ? "Created" : "Updated"} student ${student.enrollment_no} from approved request ${id}`,
-      );
 
       const recipientEmail = String(freshRequest.email || "").trim();
       if (!recipientEmail || !isValidEmail(recipientEmail)) {
-        console.error(`[Join Request] Approval email skipped for request ${id}: invalid email`);
       } else {
         try {
           await sendApprovalEmail({ to: recipientEmail, studentName: freshRequest.name });
         } catch (emailErr) {
-          console.error(`[Email Error] Failed to send approval email for request ID ${id}:`, emailErr);
+        }
+
+        // Schedule credential email to be delivered 15 minutes after approval
+        try {
+          await prisma.credential_jobs.create({
+            data: {
+              email: recipientEmail,
+              enrollment_no: String(freshRequest.enrollment || student.enrollment_no || "").toUpperCase().trim(),
+              student_name: String(freshRequest.name || "").trim(),
+              scheduled_for: new Date(Date.now() + CREDENTIAL_DELAY_MS),
+              status: "pending",
+            },
+          });
+        } catch (jobErr) {
         }
       }
     }
@@ -273,12 +275,10 @@ exports.updateJoinRequest = async (req, res, next) => {
     if (status === "rejected") {
       const recipientEmail = String(joinRequest.email || "").trim();
       if (!recipientEmail || !isValidEmail(recipientEmail)) {
-        console.error(`[Join Request] Rejection email skipped for request ${id}: invalid email`);
       } else {
         try {
           await sendRejectionEmail({ to: recipientEmail, studentName: joinRequest.name });
         } catch (emailErr) {
-          console.error(`[Email Error] Failed to send rejection email for request ID ${id}:`, emailErr);
         }
       }
     }
@@ -308,7 +308,6 @@ exports.updateJoinRequest = async (req, res, next) => {
       data: { id, status, student: syncedStudent },
     });
   } catch (error) {
-    console.error("Update join request error:", error);
     if (error.code === "P2002") {
       return res.status(409).json({
         success: false,
@@ -349,9 +348,7 @@ exports.deleteJoinRequest = async (req, res, next) => {
       if (publicId) {
         try {
           await deleteFromCloudinary(publicId, "raw");
-          console.log(`[Join Request] Deleted resume from Cloudinary for deleted request ${id}`);
         } catch (err) {
-          console.error("Failed to delete resume from Cloudinary:", err);
         }
       }
     }
@@ -372,7 +369,6 @@ exports.deleteJoinRequest = async (req, res, next) => {
         message: "Join request not found",
       });
     }
-    console.error("Delete join request error:", error);
     next(error);
   }
 };
@@ -412,7 +408,6 @@ exports.getJoinRequestResume = async (req, res, next) => {
     res.setHeader("Content-Disposition", `inline; filename="resume_${id}.pdf"`);
     res.send(buffer);
   } catch (error) {
-    console.error("Get join request resume error:", error);
     next(error);
   }
 };
