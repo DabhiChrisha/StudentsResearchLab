@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Mail, MapPin } from "lucide-react";
 import { getImageUrl } from "../lib/imageUrl";
 
-const mamPhoto = "https://res.cloudinary.com/dv66zfsc6/image/upload/v1780831764/srl/faculty/dr-himani-trivedi.webp";
+const mamPhoto = "https://res.cloudinary.com/dtcslekyh/image/upload/v1781216785/srl_website/faculty/dr-himani-trivedi.webp";
 
 export default function HeadSRL() {
   return (
