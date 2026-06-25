@@ -5,7 +5,7 @@ export const organizationData = {
     title: "Sarva Vidyalaya Kelavani Mandal",
     subtitle: "કર ભલા હોગા ભલા.",
     image: getImageUrl("/SVKM.svg"),
-    heroImage: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1780831771/srl/hero/svkm-campus.webp",
+    heroImage: "https://res.cloudinary.com/dtcslekyh/image/upload/v1781216788/srl_website/hero/svkm-campus.webp",
     website: "https://svkm.org.in/",
     description: [
       `Sarva Vidyalaya Kelavani Mandal (SVKM) was established in 1919 by the philanthropist Pujya Chhaganbha. His guiding principle, "કર ભલા, હોગા ભલા" (Do good, and good will come), has driven the trust's growth in education. What began with just six students has now expanded to educating more than 54,000 students across various schools and colleges in Kadi and Gandhinagar.
@@ -29,12 +29,12 @@ export const organizationData = {
     founders: [
       {
         name: "Pujya Chhaganbha",
-        image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1780831773/srl/faculty/pujya-chhaganbhai.webp",
+        image: "https://res.cloudinary.com/dtcslekyh/image/upload/v1781216790/srl_website/faculty/pujya-chhaganbhai.webp",
         quote: "કર ભલા હોગા ભલા.",
       },
       {
         name: "Shri Maneklal M. Patel",
-        image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1780831776/srl/faculty/shri-maneklal-patel.webp",
+        image: "https://res.cloudinary.com/dtcslekyh/image/upload/v1781216791/srl_website/faculty/shri-maneklal-patel.webp",
         quote: "શિક્ષણ એ જ સાચી સેવા છે.",
       },
     ],
@@ -51,14 +51,14 @@ export const organizationData = {
       email: "info@svkm.org.in",
       // phone: "+91 2764 242996",
       mapEmbed:
-        "https://maps.google.com/maps?q=Sarva+Vidyalaya+Campus+Kadi&t=&z=15&ie=UTF8&iwloc=&output=embed",
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3664.7144091649193!2d72.3259331!3d23.2898247!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395c19aef2bb365d%3A0x27fe4fde3925ec5c!2sS%20V%20Campus!5e0!3m2!1sen!2sin!4v1782359403882!5m2!1sen!2sin",
     },
   },
   ksv: {
     title: "Kadi Sarva Vishwavidyalaya",
     subtitle: "કર ભલા હોગા ભલા.",
     image: getImageUrl("/KSV.svg"),
-    heroImage: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1780831778/srl/hero/ksv-campus.webp",
+    heroImage: "https://res.cloudinary.com/dtcslekyh/image/upload/v1781216792/srl_website/hero/ksv-campus.webp",
     website: "https://ksv.ac.in/",
     description: [
       "Kadi Sarva Vishwavidyalaya (KSV) was established through the Gujarat State Government Act 21 of 2007 in May 2007 and is approved by the UGC (Ref F.9-18/2008(cpp-1) March 19, 2009).",
@@ -90,7 +90,7 @@ export const organizationData = {
       linkedin:
         "https://www.linkedin.com/school/kadi-sarva-vishwavidyalaya-gandihnagar/",
       mapEmbed:
-        "https://maps.google.com/maps?q=Kadi+Sarva+Vishwavidyalaya+Kadi+Campus&t=&z=15&ie=UTF8&iwloc=&output=embed",
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3664.446536513446!2d72.62057541856468!3d23.239024422526743!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395c2b9338c0dbf1%3A0x17fdfeca417ac752!2sKSV%20University!5e0!3m2!1sen!2sin!4v1782359751771!5m2!1sen!2sin",
     },
   },
   mmpsrpc: {
@@ -98,7 +98,7 @@ export const organizationData = {
     subtitle: "For the students, By the students, Of the students!",
     website: "https://www.mmpsrpc.in/",
     image: getImageUrl("/MMPSRPC.svg"),
-    heroImage: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1780831779/srl/hero/mmpsrpc-campus.webp",
+    heroImage: "https://res.cloudinary.com/dtcslekyh/image/upload/v1781216792/srl_website/hero/mmpsrpc-campus.webp",
     description: [
       "Founded in 2024, M. M. Patel Students Research Project Cell has been at the forefront of fostering academic excellence and innovative research among students at KSV University. Our journey began with a vision to create a platform where students could explore their research potential and contribute to the academic community.",
       "Over the years, we have grown from a small group of enthusiastic researchers to a vibrant community of researchers, mentors, and faculty members. Our commitment to nurturing talent and pushing the boundaries of knowledge has remained unwavering throughout our journey.",
@@ -119,7 +119,7 @@ export const organizationData = {
         name: "Shri Vallabhbhai M. Patel",
         designation:
           "Chairman, Sarva Vidyalaya Kelvani Mandal, Kadi & Gandhinagar. President, Kadi Sarva Vishwavidyalaya Gandhinagar.",
-        image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1780831782/srl/faculty/chairman.webp",
+        image: "https://res.cloudinary.com/dtcslekyh/image/upload/v1781216793/srl_website/faculty/chairman.webp",
         cardQuote:
           "Knowledge is valuable, but wisdom with compassion, that's what truly builds a better tomorrow.",
         mainQuote:
@@ -133,7 +133,7 @@ export const organizationData = {
         header: "Message from Head of MMPSRPC, KSV",
         name: "Dr. Himani Trivedi",
         designation: "Head of M. M. Patel Students Research Project Cell",
-        image: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1780831783/srl/faculty/dr-himani-trivedi-main.webp",
+        image: "https://res.cloudinary.com/dtcslekyh/image/upload/v1781216794/srl_website/faculty/dr-himani-trivedi-main.webp",
         cardQuote:
           "Growth comes from steady effort, continuous learning, and discipline.",
         mainQuote:
@@ -184,14 +184,14 @@ export const organizationData = {
       email: "mmpsrpc@ksv.ac.in",
       linkedin: "https://www.linkedin.com/company/mmpsrpc",
       mapEmbed:
-        "https://maps.google.com/maps?q=LDRP+Institute+of+Technology+and+Research+Gandhinagar&t=&z=15&ie=UTF8&iwloc=&output=embed",
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3630.3746168574253!2d72.6352256974423!3d23.240418972791314!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395c2b933477ba9f%3A0xe440409e66bea08a!2sLDRP%20Institute%20of%20Technology%20and%20Research!5e0!3m2!1sen!2sin!4v1782359658894!5m2!1sen!2sin",
     },
   },
   ieee: {
     title: "IEEE Student Branch\nKadi Sarva Vishwavidyalaya",
     subtitle: "Empowering Students through Innovation and Leadership",
     image: "https://ieee-ksv-sb.mmpsrpc.in/Pasted-Graphic.svg",
-    heroImage: "https://res.cloudinary.com/dv66zfsc6/image/upload/v1780831785/srl/hero/ieee-ksv.webp",
+    heroImage: "https://res.cloudinary.com/dtcslekyh/image/upload/v1781216795/srl_website/hero/ieee-ksv.webp",
     website: "https://ieee-ksv-sb.mmpsrpc.in/",
     sections: {
       intro: [
@@ -450,7 +450,7 @@ export const organizationData = {
       linkedin:
         "https://www.linkedin.com/company/ieee-student-branch-ksv/posts/?feedView=all",
       mapEmbed:
-        "https://maps.google.com/maps?q=LDRP+Institute+of+Technology+and+Research+Gandhinagar&t=&z=15&ie=UTF8&iwloc=&output=embed",
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3664.446536513446!2d72.62057541856468!3d23.239024422526743!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395c2b9338c0dbf1%3A0x17fdfeca417ac752!2sKSV%20University!5e0!3m2!1sen!2sin!4v1782359751771!5m2!1sen!2sin",
     },
   },
 };

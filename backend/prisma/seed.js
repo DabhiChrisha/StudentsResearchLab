@@ -113,12 +113,12 @@ async function main() {
     // Cloudinary URLs were generated via: npm run logos:upload
     // IDs are stable — frontend fetches logos by ID. Do NOT change them.
     const publishers = [
-      { id: 1, publisher_name: 'IEEE Xplore',               logo_url: 'https://res.cloudinary.com/dv66zfsc6/image/upload/v1778256982/publication-symbols/ieee_xplore.jpg' },
-      { id: 2, publisher_name: 'VMFRDU',                    logo_url: 'https://res.cloudinary.com/dv66zfsc6/image/upload/v1778256991/publication-symbols/vmfrdu.png' },
-      { id: 3, publisher_name: 'Springer',                  logo_url: 'https://res.cloudinary.com/dv66zfsc6/image/upload/v1778256986/publication-symbols/springer.webp' },
-      { id: 4, publisher_name: 'INDERSCIENCE',              logo_url: 'https://res.cloudinary.com/dv66zfsc6/image/upload/v1778256984/publication-symbols/inderscience.webp' },
-      { id: 5, publisher_name: 'Wolters Kluwer',            logo_url: 'https://res.cloudinary.com/dv66zfsc6/image/upload/v1778256992/publication-symbols/wolters_kluwer.png' },
-      { id: 6, publisher_name: 'CEUR Workshop Proceedings', logo_url: 'https://res.cloudinary.com/dv66zfsc6/image/upload/v1778256979/publication-symbols/ceur.png' },
+      { id: 1, publisher_name: 'IEEE Xplore',               logo_url: 'https://res.cloudinary.com/dtcslekyh/image/upload/v1781216734/srl_website/logos/ieee-xplore.webp' },
+      { id: 2, publisher_name: 'VMFRDU',                    logo_url: 'https://res.cloudinary.com/dtcslekyh/image/upload/v1781216737/srl_website/logos/vmfrdu.webp' },
+      { id: 3, publisher_name: 'Springer',                  logo_url: 'https://res.cloudinary.com/dtcslekyh/image/upload/v1781216740/srl_website/logos/springer.webp' },
+      { id: 4, publisher_name: 'INDERSCIENCE',              logo_url: 'https://res.cloudinary.com/dtcslekyh/image/upload/v1781216736/srl_website/logos/inderscience.webp' },
+      { id: 5, publisher_name: 'Wolters Kluwer',            logo_url: 'https://res.cloudinary.com/dtcslekyh/image/upload/v1781216736/srl_website/logos/wolters-kluwer.webp' },
+      { id: 6, publisher_name: 'CEUR Workshop Proceedings', logo_url: 'https://res.cloudinary.com/dtcslekyh/image/upload/v1781216739/srl_website/logos/ceur-workshop-proceedings.webp' },
       { id: 7, publisher_name: 'Other',                     logo_url: '' }, // sentinel — custom logos uploaded at runtime via POST /api/publication-symbol/upload
     ];
 
