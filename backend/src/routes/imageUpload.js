@@ -23,9 +23,10 @@ router.post(
 );
 
 // Shared media upload — accepts images and videos, maps section to Cloudinary folder
+// authenticatedUserMiddleware (not admin-only): members upload their own profile photo here
 router.post(
   "/api/admin/upload",
-  adminAuthMiddleware,
+  authenticatedUserMiddleware,
   uploadAny.single("file"),
   uploadMedia
 );
