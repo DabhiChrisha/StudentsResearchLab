@@ -3,6 +3,7 @@ import { Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { getImageUrl } from "../lib/imageUrl";
+import { API_BASE_URL, API_HEADERS } from "../config/apiConfig";
 
 // Logo assets (Paths from public directory)
 const srlLogo = getImageUrl("/SRL.svg");
@@ -92,26 +93,26 @@ const Navbar = () => {
 
   const handleDownloadGuidelines = useCallback((e) => {
     e.preventDefault();
-    fetch("/assets/SRL Rules and Regulations.pdf")
-      .then((response) => response.blob())
-      .then((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "SRL Rules and Regulations.pdf";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      })
-      .catch(() => {
-        // Fallback: trigger normal download
-        const a = document.createElement("a");
-        a.href = "/assets/SRL Rules and Regulations.pdf";
-        a.download = "SRL Rules and Regulations.pdf";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+    fetch(`${API_BASE_URL}/api/guidelines`, { headers: API_HEADERS })
+      .then((response) => response.json())
+      .then(({ data }) => {
+        const pdfUrl = data.pdf_url;
+        return fetch(pdfUrl)
+          .then((response) => response.blob())
+          .then((blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "SRL Rules and Regulations.pdf";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          })
+          .catch(() => {
+            // Fallback: open the PDF directly so the user can still reach it
+            window.open(pdfUrl, "_blank", "noopener,noreferrer");
+          });
       });
   }, []);
 

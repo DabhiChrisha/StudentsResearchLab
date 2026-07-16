@@ -40,6 +40,8 @@ const publicationSymbolRouter = require("./routes/publicationSymbol");
 const eventsRouter            = require("./routes/events");
 const sessionsUploadRouter   = require("./routes/sessionsUpload");
 const authRouter             = require("./routes/authRoutes");
+const guidelinesRouter       = require("./routes/guidelines");
+const adminGuidelinesRouter  = require("./routes/adminGuidelines");
 
 const app = express();
 
@@ -180,6 +182,8 @@ app.use(publicationSymbolRouter);
 app.use(eventsRouter);
 app.use(sessionsUploadRouter);
 app.use(authRouter);
+app.use(guidelinesRouter);
+app.use(adminGuidelinesRouter);
 
 // Global error handler — must be after all routes
 app.use((err, req, res, next) => {
