@@ -119,12 +119,12 @@ router.post("/api/upload-temp-resume", (req, res, next) => {
       return res.status(400).json({ detail: "No resume file provided." });
     }
 
-    const validMimeTypes = ["application/pdf"];
-    if (!validMimeTypes.includes(req.file.mimetype)) {
+    const originalName = String(req.file.originalname || "resume.pdf").trim();
+    const isPdf = req.file.mimetype === "application/pdf" ||
+      (["", "application/octet-stream"].includes(req.file.mimetype) && originalName.toLowerCase().endsWith(".pdf"));
+    if (!isPdf) {
       return res.status(400).json({ detail: "Resume must be a PDF file." });
     }
-
-    const originalName = String(req.file.originalname || "resume.pdf").trim();
     if (!originalName.toLowerCase().endsWith(".pdf")) {
       return res.status(400).json({ detail: "Resume file name must end with .pdf." });
     }
