@@ -124,8 +124,11 @@ export default function JoinUs({ isModal = false, onClose }) {
       return;
     }
 
-    const allowedTypes = ["application/pdf"];
-    if (!allowedTypes.includes(file.type)) {
+    // Some mobile browsers (iOS Safari, files shared via WhatsApp/Drive) report
+    // an empty or generic file.type for PDFs, so fall back to extension check.
+    const isPdf = file.type === "application/pdf" ||
+      (["", "application/octet-stream"].includes(file.type) && file.name.toLowerCase().endsWith(".pdf"));
+    if (!isPdf) {
       setFormErrors((prev) => ({ ...prev, resume_link: "Please upload a PDF file only." }));
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
